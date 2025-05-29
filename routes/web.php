@@ -1,12 +1,7 @@
 <?php
 
-
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\SanPhamController;
-
-Route::get('/', function () {
-    return view('welcome');
-});
+use Illuminate\Support\Facades\Route;
 
 //san pham
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -25,4 +20,3 @@ Route::prefix('sanphams')->name('sanphams.')->group(function () {
     Route::post('/{id}/isHot', [SanPhamController::class, 'isHot'])->name('isHot');
 });
 });
-
