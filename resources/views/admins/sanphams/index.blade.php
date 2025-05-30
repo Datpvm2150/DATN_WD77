@@ -91,6 +91,7 @@
                             <thead>
                                 <tr>
                                     <th scope="col">Sản phẩm</th>
+                                    <th scope="col">Hình ảnh</th>
                                     <th scope="col">Danh mục</th>
                                     <th scope="col">Ngày tạo</th>
                                     <th scope="col">Hot</th>
@@ -113,6 +114,18 @@
                                                     style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
                                                     Tên: {{ $sanpham->ten_san_pham }}</li>
                                             </ul>
+                                        </td>
+                                        <td style="text-align: center; vertical-align: middle;">
+                                            @if ($sanpham->anh_san_pham)
+                                                <div
+                                                    style="display: flex; justify-content: center; align-items: center; height: 100%;">
+                                                    <img src="{{ asset($sanpham->anh_san_pham) }}" alt="Hình ảnh"
+                                                        width="80" height="80"
+                                                        style="object-fit: cover; border-radius: 6px;">
+                                                </div>
+                                            @else
+                                                <span class="text-muted">Không có ảnh</span>
+                                            @endif
                                         </td>
                                         <td>
                                             <ul style="list-style-type: none; margin: 0px; padding: 0px">
