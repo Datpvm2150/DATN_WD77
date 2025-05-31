@@ -39,7 +39,7 @@ class DanhMucController extends Controller
             [
                 'ten_danh_muc.required' => 'Tên danh mục không được để trống',
                 'ten_danh_muc.string' => 'Tên danh mục phải là chuỗi',
-                'ten_danh_mucunique' => 'Tên danh mục đã tồn tại',
+                'ten_danh_muc.unique' => 'Tên danh mục đã tồn tại',
                 'ten_danh_muc.max' => 'Tên danh mục không quá 255 ký tự',
 
                 'anh_danh_muc.image' => 'Ảnh danh mục phải là ảnh',
