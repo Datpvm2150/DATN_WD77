@@ -27,7 +27,7 @@ class SanPhamController extends Controller
             $query->where('danh_muc_id', $request->danh_muc_id);
         }
         // Lọc theo ngày tạo
-        if ($request->filled(key: 'ngay_tao')) {
+        if ($request->filled( 'ngay_tao')) {
             $query->whereDate('created_at', $request->ngay_tao);
         }
         // Lọc theo trạng thái
