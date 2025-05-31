@@ -54,7 +54,7 @@
                                 <div class="col-lg-4">
                                     {{-- Mã sản phẩm --}}
                                     <div class="mb-3">
-                                        <label for="ma_san_pham" class="form-label"">Mã sản phẩm</label>
+                                        <label for="ma_san_pham" class="form-label">Mã sản phẩm</label>
                                         <input type="text" id="ma_san_pham" name="ma_san_pham" class="form-control"
                                             placeholder="Mã sản phẩm" value="{{ old('ma_san_pham') }}">
                                         @error('ma_san_pham')
