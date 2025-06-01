@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\SanPhamController;
+use App\Http\Controllers\Admin\BaiVietController;
 use Illuminate\Support\Facades\Route;
 
 
@@ -30,5 +31,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/update', [BannerController::class, 'update'])->name('update');
         Route::post('/{id}/onOffBanner', [BannerController::class, 'onOffBanner'])->name('onOffBanner');
         Route::delete('/{id}', [BannerController::class, 'destroy'])->name('destroy');
+    });
+    // Bài viết
+    Route::prefix('baiviets')->name('baiviets.')->group(function () {
+        Route::get('/', [BaiVietController::class, 'index'])->name('index');
+        Route::get('create', [BaiVietController::class, 'create'])->name('create');
+        Route::post('store', [BaiVietController::class, 'store'])->name('store');
+        Route::get('/{id}', [BaiVietController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [BaiVietController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [BaiVietController::class, 'update'])->name('update');
+        Route::post('/{id}/onOffBaiViet', [BaiVietController::class, 'onOffBaiViet'])->name('onOffBaiViet');
+        Route::delete('/{id}/destroy', [BaiVietController::class, 'destroy'])->name('destroy');
+        Route::get('/{id}', [BaiVietController::class, 'show'])->name('show');
     });
 });
