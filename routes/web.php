@@ -1,9 +1,10 @@
 <?php
 
-use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\admin\DanhMucController;
 use App\Http\Controllers\Admin\SanPhamController;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,6 +34,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/onOffBanner', [BannerController::class, 'onOffBanner'])->name('onOffBanner');
         Route::delete('/{id}', [BannerController::class, 'destroy'])->name('destroy');
     });
+
     // Bài viết
     Route::prefix('baiviets')->name('baiviets.')->group(function () {
         Route::get('/', [BaiVietController::class, 'index'])->name('index');
@@ -44,6 +46,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/onOffBaiViet', [BaiVietController::class, 'onOffBaiViet'])->name('onOffBaiViet');
         Route::delete('/{id}/destroy', [BaiVietController::class, 'destroy'])->name('destroy');
         Route::get('/{id}', [BaiVietController::class, 'show'])->name('show');
+
     //danh muc
     Route::prefix('danhmucs')->name('danhmucs.')->group(function () {
         Route::get('/', [DanhMucController::class, 'index'])->name('index');
@@ -57,4 +60,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
 
     });
+
 });

@@ -72,7 +72,7 @@ class SanPhamController extends Controller
                 'dung_luong_id.*' => ['required', 'exists:dung_luongs,id'],
                 'mau_sac_id.*' => ['required', 'exists:mau_sacs,id'],
                 'gia_cu.*' => ['required', 'numeric', 'min:1', 'max:4000000000'],
-                'gia_moi.*' => ['required', 'numeric', 'min:1', 'max:4000000000'],
+                'gia_moi.*' => ['nullable', 'numeric', 'min:1', 'max:4000000000'],
                 'so_luong.*' => ['required', 'min:0', 'max:4000000000', 'integer'],
             ],
             [
@@ -113,7 +113,6 @@ class SanPhamController extends Controller
                 'gia_cu.*.min' => 'Giá cũ phải lớn hơn hoặc bằng 1.',
                 'gia_cu.*.max' => 'Giá cũ phải nhỏ hơn 4 tỷ.',
 
-                'gia_moi.*.required' => 'Giá mới không được để trống.',
                 'gia_moi.*.numeric' => 'Giá mới phải là số.',
                 'gia_moi.*.min' => 'Giá mới phải lớn hơn hoặc bằng 1.',
                 'gia_moi.*.max' => 'Giá mới phải nhỏ hơn 4 tỷ.',
@@ -297,7 +296,7 @@ class SanPhamController extends Controller
             'dung_luong_id.*' => ['required', 'exists:dung_luongs,id'],
             'mau_sac_id.*' => ['required', 'exists:mau_sacs,id'],
             'gia_cu.*' => ['required', 'numeric', 'min:1', 'max:4000000000'],
-            'gia_moi.*' => ['required', 'numeric', 'min:1', 'max:4000000000'],
+            'gia_moi.*' => ['nullable', 'numeric', 'min:1', 'max:4000000000'],
             'so_luong.*' => ['required', 'numeric', 'min:0', 'max:4000000000'],
             'trangthai.*' => ['nullable', 'boolean'],
 
@@ -344,7 +343,6 @@ class SanPhamController extends Controller
                 'gia_cu.*.min' => 'Giá cũ phải lớn hơn hoặc bằng 1.',
                 'gia_cu.*.max' => 'Giá cũ phải nhỏ hơn 4 tỷ.',
 
-                'gia_moi.*.required' => 'Giá mới không được để trống.',
                 'gia_moi.*.numeric' => 'Giá mới phải là số.',
                 'gia_moi.*.min' => 'Giá mới phải lớn hơn hoặc bằng 1.',
                 'gia_moi.*.max' => 'Giá mới phải nhỏ hơn 4 tỷ.',
