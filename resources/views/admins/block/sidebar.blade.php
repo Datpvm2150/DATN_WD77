@@ -27,6 +27,7 @@
             <ul id="side-menu">
 
                 <li class="menu-title">Quản trị</li>
+
                 <li class="menu-title">Kinh doanh</li>
 
                 <li>
@@ -53,6 +54,7 @@
                 </li>
 
                 <li>
+
                     <a href='#danhmucs' data-bs-toggle="collapse">
                         <i data-feather="list"></i>
                         <span> Danh mục </span>
@@ -65,11 +67,14 @@
                             </li>
                             <li>
                                 <a class='tp-link' href="{{ route('admin.danhmucs.create') }}">Thêm mới</a>
+
                             </li>
                         </ul>
                     </div>
                 </li>
+
                 <li>
+
                     <a href="#bannerSection" data-bs-toggle="collapse">
                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
                             fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
@@ -95,6 +100,26 @@
                         </ul>
                     </div>
                 </li>
+
+                    <a href="#baiviets" data-bs-toggle="collapse">
+                        <i data-feather="table"></i>
+                        <span>Tin tức </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="baiviets">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.baiviets.index') }}">Danh sách</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.baiviets.create') }}">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
+                
+
             </ul>
         </div>
         <!-- End Sidebar -->
