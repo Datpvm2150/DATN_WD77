@@ -1,8 +1,9 @@
 <?php
 
-use App\Http\Controllers\Admin\BannerController;
-use App\Http\Controllers\Admin\SanPhamController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\admin\DanhMucController;
+use App\Http\Controllers\Admin\SanPhamController;
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -30,5 +31,17 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/update', [BannerController::class, 'update'])->name('update');
         Route::post('/{id}/onOffBanner', [BannerController::class, 'onOffBanner'])->name('onOffBanner');
         Route::delete('/{id}', [BannerController::class, 'destroy'])->name('destroy');
+    });
+    //danh muc
+    Route::prefix('danhmucs')->name('danhmucs.')->group(function () {
+        Route::get('/', [DanhMucController::class, 'index'])->name('index');
+        Route::get('create', [DanhMucController::class, 'create'])->name('create');
+        Route::post('store', [DanhMucController::class, 'store'])->name('store');
+        Route::get('/{id}/show', [DanhMucController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [DanhMucController::class, 'edit'])->name('edit');
+        Route::put('/{id}/update', [DanhMucController::class, 'update'])->name('update');
+        Route::delete('/{id}/destroy', [DanhMucController::class, 'destroy'])->name('destroy');
+        Route::delete('/{id}/softDelete', [DanhMucController::class, 'softDelete'])->name('softDelete');
+        Route::post('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
     });
 });

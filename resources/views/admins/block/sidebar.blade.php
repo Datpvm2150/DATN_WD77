@@ -51,6 +51,23 @@
                 </ul>
             </div>
         </li>
+        <li>
+            <a href='#danhmucs' data-bs-toggle="collapse">
+                <i data-feather="list"></i>
+                <span> Danh mục </span>
+                <span class="menu-arrow"></span>
+            </a>
+            <div class="collapse" id="danhmucs">
+                <ul class="nav-second-level">
+                    <li>
+                        <a class='tp-link' href="{{ route('admin.danhmucs.index') }}">Danh sách</a>
+                    </li>
+                    <li>
+                        <a class='tp-link' href="{{ route('admin.danhmucs.create') }}">Thêm mới</a>
+                    </li>
+                </ul>
+            </div>
+        </li>
 
 
 
