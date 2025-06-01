@@ -101,9 +101,10 @@
                     </div>
                 </li>
 
+                <li>
                     <a href="#baiviets" data-bs-toggle="collapse">
                         <i data-feather="table"></i>
-                        <span>Tin tức </span>
+                        <span>Tin tức</span>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="baiviets">
@@ -117,9 +118,6 @@
                         </ul>
                     </div>
                 </li>
-
-                
-
             </ul>
         </div>
         <!-- End Sidebar -->

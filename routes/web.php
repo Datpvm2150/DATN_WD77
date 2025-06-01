@@ -6,7 +6,6 @@ use App\Http\Controllers\Admin\SanPhamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
-use Illuminate\Support\Facades\Route;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     //san pham
@@ -46,7 +45,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/onOffBaiViet', [BaiVietController::class, 'onOffBaiViet'])->name('onOffBaiViet');
         Route::delete('/{id}/destroy', [BaiVietController::class, 'destroy'])->name('destroy');
         Route::get('/{id}', [BaiVietController::class, 'show'])->name('show');
-
+ });
     //danh muc
     Route::prefix('danhmucs')->name('danhmucs.')->group(function () {
         Route::get('/', [DanhMucController::class, 'index'])->name('index');
