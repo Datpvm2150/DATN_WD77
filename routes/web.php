@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\SanPhamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
+use App\Http\Controllers\Admin\KhuyenMaiController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     //san pham
@@ -59,5 +60,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
 
     });
-
+    // Khuyến mãi 
+    Route::prefix('khuyen_mais')->name('khuyen_mais.')->group(function () {
+        Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
+        Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
+        Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
+        Route::get('/{id}/show', [KhuyenMaiController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
+    });
 });
