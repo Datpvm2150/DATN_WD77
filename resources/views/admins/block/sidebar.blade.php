@@ -29,7 +29,7 @@
                 <li class="menu-title">Quản trị</li>
 
                 <li class="menu-title">Kinh doanh</li>
-
+                {{-- Sản phẩm --}}
                 <li>
                     <a href="#sanpham" data-bs-toggle="collapse">
                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
@@ -52,7 +52,7 @@
                         </ul>
                     </div>
                 </li>
-
+                {{-- Danh mục --}}
                 <li>
 
                     <a href='#danhmucs' data-bs-toggle="collapse">
@@ -72,7 +72,7 @@
                         </ul>
                     </div>
                 </li>
-
+                {{-- Banner --}}
                 <li>
 
                     <a href="#bannerSection" data-bs-toggle="collapse">
@@ -100,7 +100,25 @@
                         </ul>
                     </div>
                 </li>
-
+                {{-- Dung lượng --}}
+                <li>
+                    <a href='#dungluongs' data-bs-toggle="collapse">
+                        <i data-feather="package"></i>
+                        <span> Dung lượng </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="dungluongs">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.dungluongs.index') }}">Danh sách</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.dungluongs.create') }}">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                {{-- Tin tức --}}
                 <li>
                     <a href="#baiviets" data-bs-toggle="collapse">
                         <i data-feather="table"></i>
