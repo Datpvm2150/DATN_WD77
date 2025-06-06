@@ -1,11 +1,14 @@
 <?php
 
-
+// Admin Routes
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\SanPhamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
+
+// Client Routes
+use App\Http\Controllers\Client\TrangChuController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     //san pham
@@ -61,3 +64,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 
 });
+// Trang chủ
+Route::get('/', [TrangChuController::class, 'index'])->name('/');
+Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
