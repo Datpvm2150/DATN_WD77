@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KhuyenMai;
+use Carbon\Carbon;
 
 class KhuyenMaiController extends Controller
 {
@@ -18,11 +19,11 @@ class KhuyenMaiController extends Controller
        }
 
        $khuyenMais = $query->get();
-        return view('admins.khuyenmais.index', compact('khuyenMais'));
+        return view('admins.khuyen_mais.index', compact('khuyenMais'));
     }
 
     public function create() {
-        return view('admins.khuyenmais.create');
+        return view('admins.khuyen_mais.create');
     }
 
     public function store(Request $request) {
@@ -58,7 +59,74 @@ class KhuyenMaiController extends Controller
             'trang_thai' => 1,
         ];
         KhuyenMai::create($data);
-        return redirect()->route('admin.khuyenmais.index')->with('success', 'Khuyến mãi đã được tạo thành công.');
+        return redirect()->route('admin.khuyen_mais.index')->with('success', 'Khuyến mãi đã được tạo thành công.');
     }
 
+    public function edit($id)
+    {
+        $KhuyenMai = KhuyenMai::find($id);
+    
+        if (!$KhuyenMai) {
+            return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
+        }
+    
+        // Định dạng ngày giờ để hiển thị trong form
+        $KhuyenMai->ngay_bat_dau = Carbon::parse($KhuyenMai->ngay_bat_dau)->format('Y-m-d H:i:s');
+        $KhuyenMai->ngay_ket_thuc = Carbon::parse($KhuyenMai->ngay_ket_thuc)->format('Y-m-d H:i:s');
+    
+        return view('admins.khuyen_mais.update', compact('KhuyenMai'));
+    }
+    
+        public function update(Request $request, $id)
+        {
+            $request->validate([
+                'ma_khuyen_mai' => 'required|string|unique:khuyen_mais,ma_khuyen_mai,' . $id, // Ensure unique code, excluding current record
+                'phan_tram_khuyen_mai' => 'required|integer|min:1|max:99',
+                'giam_toi_da' => 'required|nullable|integer|numeric|min:0|max:1000000000',
+                'ngay_bat_dau' => 'required|date',
+                'ngay_ket_thuc' => 'required|date|after_or_equal:ngay_bat_dau',
+            ], [
+                'ma_khuyen_mai.required' => 'Mã khuyến mãi không được để trống.',
+                'ma_khuyen_mai.unique' => 'Mã khuyến mãi đã tồn tại. Vui lòng nhập mã khác.',
+                'phan_tram_khuyen_mai.required' => 'Phần trăm khuyến mãi không được để trống.',
+                'phan_tram_khuyen_mai.integer' => 'Phần trăm khuyến mãi phải là một số nguyên.',
+                'phan_tram_khuyen_mai.min' => 'Phần trăm khuyến mãi phải lớn hơn 0.',
+                'phan_tram_khuyen_mai.max' => 'Phần trăm khuyến mãi phải nhỏ hơn 100.',
+                'giam_toi_da.required' => 'Mã khuyến mãi không được để trống.',
+                'giam_toi_da.integer' => 'Giảm tối đa phải là một số nguyên.',
+                'giam_toi_da.numeric' => 'Giảm tối đa phải là một số.',
+                'giam_toi_da.min' => 'Giảm tối đa phải là lớn hơn 0.',
+                'giam_toi_da.max' => 'Giảm tối đa phải là nhỏ hơn 1 tỷ.',
+                'ngay_bat_dau.required' => 'Ngày bắt đầu không được để trống.',
+                'ngay_ket_thuc.required' => 'Ngày kết thúc không được để trống.',
+                'ngay_ket_thuc.after_or_equal' => 'Ngày kết thúc phải lớn hơn hoặc bằng ngày bắt đầu.',
+            ]);
+            
+            // Find the promotion record by ID
+            $khuyenMai = KhuyenMai::find($id);
+            
+            if (!$khuyenMai) {
+                return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
+            }
+            
+            // Update promotion data
+            $khuyenMai->update([
+                'ma_khuyen_mai' => $request->ma_khuyen_mai,
+                'phan_tram_khuyen_mai' => $request->phan_tram_khuyen_mai,
+                'giam_toi_da' => $request->giam_toi_da,
+                'ngay_bat_dau' => $request->ngay_bat_dau,
+                'ngay_ket_thuc' => $request->ngay_ket_thuc,
+            ]);
+            
+            // Automatically update status if promotion has ended
+            $now = Carbon::now();
+            if ($khuyenMai->ngay_ket_thuc < $now) {
+                $khuyenMai->update(['trang_thai' => false]);
+            } else {
+                $khuyenMai->update(['trang_thai' => true]);
+            }
+            
+            return redirect()->route('admin.khuyen_mais.index')->with('success', 'Khuyến mãi đã được cập nhật thành công.');
+          }
+        
 }
