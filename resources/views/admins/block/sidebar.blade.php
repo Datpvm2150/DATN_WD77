@@ -118,6 +118,24 @@
                         </ul>
                     </div>
                 </li>
+                {{-- mau sac --}}
+                <li>
+                    <a href='#mausacs' data-bs-toggle="collapse">
+                        <i data-feather="package"></i>
+                        <span> Màu sắc </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="mausacs">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.mausacs.index') }}">Danh sách</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.mausacs.create') }}">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </div>
         <!-- End Sidebar -->
