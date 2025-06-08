@@ -10,6 +10,7 @@ use App\Http\Controllers\Admin\SanPhamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
+use App\Http\Controllers\Admin\KhuyenMaiController;
 
 // Client Routes
 use App\Http\Controllers\Client\TrangChuController;
@@ -87,7 +88,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/onOffMauSac', [MauSacController::class, 'onOffMauSac'])->name('onOffMauSac');
         Route::delete('/{id}/destroy', [MauSacController::class, 'destroy'])->name('destroy');
     });
-
+    // Khuyến mãi 
+    Route::prefix('khuyen_mais')->name('khuyen_mais.')->group(function () {
+  Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
+    Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
+    Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
+    Route::get('/{id}', [KhuyenMaiController::class, 'show'])->name('show');
+    Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
+    Route::put('/{id}', [KhuyenMaiController::class, 'update'])->name('update');
+    Route::get('/update-expired', [KhuyenMaiController::class, 'updateExpiredKhuyenMai'])->name('updateExpired');
+    Route::post('/{id}/onOffKhuyenMai', [KhuyenMaiController::class, 'onOffKhuyenMai'])->name('onOffKhuyenMai');
+    Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
+    });
 });
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');

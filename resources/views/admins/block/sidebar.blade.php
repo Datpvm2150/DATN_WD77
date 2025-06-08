@@ -118,6 +118,23 @@
                         </ul>
                     </div>
                 </li>
+                <li>
+                    <a href="#promotionSection" data-bs-toggle="collapse">
+                        <i class="fas fa-tag"></i>
+                        <span> Khuyến mãi </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="promotionSection">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.khuyen_mais.index') }}">Danh sách</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.khuyen_mais.create') }}">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+            </li>
 
                 <li>
                     <a href="#tags" data-bs-toggle="collapse">
@@ -152,6 +169,7 @@
                         </ul>
                     </div>
                 </li>
+
             </ul>
         </div>
         <!-- End Sidebar -->
