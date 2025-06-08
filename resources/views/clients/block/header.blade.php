@@ -1,116 +1,78 @@
-<div class="tp-footer-area" data-bg-color="footer-bg-grey">
-    <div class="tp-footer-top pt-95 pb-40">
-       <div class="container">
-          <div class="row">
-             <div class="col-xl-4 col-lg-3 col-md-4 col-sm-6">
-                <div class="tp-footer-widget footer-col-1 mb-50">
-                   <div class="tp-footer-widget-content">
-                      <div class="tp-footer-logo">
-                         <a href="index.html">
-                           <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo" style="width:150px; height:40px;">
+<div class="tp-header-area" style="background: #fff; padding: 20px 0;">
+    <div class="container" style="max-width: 1400px; margin: 0 auto;">
+        <div class="tp-mega-menu-wrapper p-relative">
+            <div class="row align-items-center" style="display: flex; align-items: center;">
+                <!-- Logo -->
+                <div class="col-xl-3 col-lg-3 col-md-3 col-6" style="flex: 0 0 25%; max-width: 25%;">
+                    <div class="logo">
+                        <a href="{{ route('trangchu') }}">
+                            <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo" style="width:150px; height:40px;">
                         </a>
-                      </div>
-                      <p class="tp-footer-desc">Chúng tôi là một nhóm các nhà thiết kế và phát triển tạo ra LaptopStore chất lượng cao.</p>
-                      <div class="tp-footer-social">
-                         <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
-                         <a href="#"><i class="fa-brands fa-twitter"></i></a>
-                         <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
-                         <a href="#"><i class="fa-brands fa-vimeo-v"></i></a>
-                      </div>
-                   </div>
+                    </div>
                 </div>
-             </div>
-             <div class="col-xl-2 col-lg-3 col-md-4 col-sm-6">
-                <div class="tp-footer-widget footer-col-2 mb-50">
-                   <h4 class="tp-footer-widget-title">Tài khoản của tôi</h4>
-                   <div class="tp-footer-widget-content">
-                      <ul>
-                         <li><a href="#">Theo dõi đơn hàng</a></li>                       
-                         <li><a href="#">Danh sách yêu thích</a></li>
-                         <li><a href="#">Tài khoản của tôi</a></li>
-                         <li><a href="#">Lịch sử đơn hàng</a></li>
-                      </ul>
-                   </div>
+                <!-- Menu -->
+                <div class="col-xl-6 col-lg-6 col-md-6 d-none d-md-block" style="flex: 0 0 50%; max-width: 50%; display: flex; justify-content: center;">
+                    <div class="tp-header-sticky-menu main-menu menu-style-1" style="width: 100%;">
+                        <nav id="mobile-menu" style="display: block;">
+                            <ul style="display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; justify-content: center;">
+                                <li class="has-mega-menu">
+                                    <a href="{{ route('trangchu') }}" style="font-weight: 600; color: #111; text-decoration: none;">Trang chủ</a>
+                                </li>
+                                <li>
+                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Sản phẩm</a>
+                                </li>
+                                <li>
+                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Tin tức</a>
+                                </li>
+                                <li>
+                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Liên hệ</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
                 </div>
-             </div>
-             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                <div class="tp-footer-widget footer-col-3 mb-50">
-                   <h4 class="tp-footer-widget-title">Thông tin</h4>
-                   <div class="tp-footer-widget-content">
-                      <ul>
-                         
-                         <li><a href="#">Chính sách bảo mật</a></li>
-                         <li><a href="#">Điều khoản & Điều kiện</a></li>
-                         <li><a href="#">Tin tức mới nhất</a></li>
-                         <li><a href="#">Liên hệ với chúng tôi</a></li>
-                         <li><a href="#">Hướng dẫn mua online</a></li>
-                      </ul>
-                   </div>
+                <!-- Actions -->
+                <div class="col-xl-3 col-lg-3 col-md-3 col-6" style="flex: 0 0 25%; max-width: 25%; display: flex; justify-content: flex-end;">
+                    <div class="tp-header-action d-flex align-items-center justify-content-end ml-50" style="display: flex; gap: 20px;">
+                        <div class="tp-header-action-item d-none d-lg-block">
+                            <a href="#" class="tp-header-action-btn" style="display: flex; align-items: center;">
+                                <!-- Heart Icon -->
+                                <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M11.239 18.8538C13.4096 17.5179 15.4289 15.9456 17.2607 14.1652C18.5486 12.8829 19.529 11.3198 20.1269 9.59539C21.2029 6.25031 19.9461 2.42083 16.4289 1.28752C14.5804 0.692435 12.5616 1.03255 11.0039 2.20148C9.44567 1.03398 7.42754 0.693978 5.57894 1.28752C2.06175 2.42083 0.795919 6.25031 1.87187 9.59539C2.46978 11.3198 3.45021 12.8829 4.73806 14.1652C6.56988 15.9456 8.58917 17.5179 10.7598 18.8538L10.9949 19L11.239 18.8538Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M7.26062 5.05302C6.19531 5.39332 5.43839 6.34973 5.3438 7.47501" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <span class="tp-header-action-badge"></span>
+                            </a>
+                        </div>
+                        <div class="tp-header-action-item">
+                            <button type="button" class="tp-header-action-btn cartmini-open-btn" style="background: none; border: none; display: flex; align-items: center;">
+                                <!-- Cart Icon -->
+                                <svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" clip-rule="evenodd" d="M6.48626 20.5H14.8341C17.9004 20.5 20.2528 19.3924 19.5847 14.9348L18.8066 8.89359C18.3947 6.66934 16.976 5.81808 15.7311 5.81808H5.55262C4.28946 5.81808 2.95308 6.73341 2.4771 8.89359L1.69907 14.9348C1.13157 18.889 3.4199 20.5 6.48626 20.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M6.34902 5.5984C6.34902 3.21232 8.28331 1.27803 10.6694 1.27803V1.27803C11.8184 1.27316 12.922 1.72619 13.7362 2.53695C14.5504 3.3477 15.0081 4.44939 15.0081 5.5984V5.5984" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M7.70365 10.1018H7.74942" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                    <path d="M13.5343 10.1018H13.5801" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
+                                </svg>
+                                <span class="tp-header-action-badge">
+                                    <span id="total-quantity-show">
+                                        <span>0</span>
+                                    </span>
+                                </span>
+                            </button>
+                        </div>
+                        <div class="tp-header-action-item d-lg-none">
+                            <button type="button" class="tp-header-action-btn tp-offcanvas-open-btn" style="background: none; border: none;">
+                                <!-- Hamburger Icon -->
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="16" viewBox="0 0 30 16">
+                                    <rect x="10" width="20" height="2" fill="currentColor"></rect>
+                                    <rect x="5" y="7" width="25" height="2" fill="currentColor"></rect>
+                                    <rect x="10" y="14" width="20" height="2" fill="currentColor"></rect>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-             </div>
-             <div class="col-xl-3 col-lg-3 col-md-4 col-sm-6">
-                <div class="tp-footer-widget footer-col-4 mb-50">
-                   <h4 class="tp-footer-widget-title" Talk To Us>Liên hệ</h4>
-                   <div class="tp-footer-widget-content">
-                      <div class="tp-footer-talk mb-20">
-                         <span>Có thắc mắc? Gọi cho chúng tôi</span>
-                         <h4><a href="tel:849-876-543-21">+(84)989 275 330</a></h4>
-                      </div>
-                      <div class="tp-footer-contact">
-                         <div class="tp-footer-contact-item d-flex align-items-start">
-                            <div class="tp-footer-contact-icon">
-                               <span>
-                                  <svg width="18" height="16" viewBox="0 0 18 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                     <path d="M1 5C1 2.2 2.6 1 5 1H13C15.4 1 17 2.2 17 5V10.6C17 13.4 15.4 14.6 13 14.6H5" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                     <path d="M13 5.40039L10.496 7.40039C9.672 8.05639 8.32 8.05639 7.496 7.40039L5 5.40039" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                     <path d="M1 11.4004H5.8" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                     <path d="M1 8.19922H3.4" stroke="currentColor" stroke-width="1.5" stroke-miterlimit="10" stroke-linecap="round" stroke-linejoin="round"/>
-                                  </svg>
-                               </span>
-                            </div>
-                            <div class="tp-footer-contact-content">
-                               <p><a href="mailto:loviongs.@gmail.com">nguyenthanhtrung97@gmail.com</a></p>
-                            </div>
-
-                         </div>
-                         <div class="tp-footer-contact-item d-flex align-items-start">
-                            <div class="tp-footer-contact-icon">
-                               <span>
-                                  <svg width="17" height="20" viewBox="0 0 17 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                     <path d="M8.50001 10.9417C9.99877 10.9417 11.2138 9.72668 11.2138 8.22791C11.2138 6.72915 9.99877 5.51416 8.50001 5.51416C7.00124 5.51416 5.78625 6.72915 5.78625 8.22791C5.78625 9.72668 7.00124 10.9417 8.50001 10.9417Z" stroke="currentColor" stroke-width="1.5"/>
-                                     <path d="M1.21115 6.64496C2.92464 -0.887449 14.0841 -0.878751 15.7889 6.65366C16.7891 11.0722 14.0406 14.8123 11.6313 17.126C9.88298 18.8134 7.11704 18.8134 5.36006 17.126C2.95943 14.8123 0.210885 11.0635 1.21115 6.64496Z" stroke="currentColor" stroke-width="1.5"/>
-                                  </svg>
-                               </span>
-                            </div>
-                            <div class="tp-footer-contact-content">
-                               <p><a href="" target="_blank">Ấp 7,An Phước,Long Thành <br> Đồng Nai</a></p>
-                            </div>
-                         </div>
-                      </div>
-                   </div>
-                </div>
-             </div>
-          </div>
-       </div>
+            </div>
+        </div>
     </div>
-    <div class="tp-footer-bottom">
-       <div class="container">
-          <div class="tp-footer-bottom-wrapper">
-             <div class="row align-items-center">
-                <div class="col-md-6">
-                   <div class="tp-footer-copyright">
-                      <p>© 2024 Công ty cổ phần LaptopStore <a href="index.html">.</a>.</p>
-                   </div>
-                </div>
-                <!-- <div class="col-md-6">
-                   <div class="tp-footer-payment text-md-end">
-                      <p>
-                         <img src="{{ asset('assets/client/img/footer/footer-pay.png') }}" alt="">
-                      </p>
-                   </div>
-                </div> -->
-             </div>
-          </div>
-       </div>
-    </div>
- </div>
+</div>

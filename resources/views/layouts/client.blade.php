@@ -63,7 +63,8 @@
                                     stroke-linecap="round"></circle>
                             </svg>
                         </div>
-                        <img src="{{ asset('assets/client/img/logo/preloader/preloader-icon.png') }}" alt="" style="width: 50px">
+                        <img src="{{ asset('assets/client/img/logo/preloader/preloader-icon.png') }}" alt=""
+                            style="width: 50px">
                     </div>
                     <p class="tp-preloader-subtitle">Loading</p>
                 </div>
@@ -101,9 +102,10 @@
             </div>
             <div class="offcanvas__content">
                 <div class="offcanvas__top mb-70 d-flex justify-content-between align-items-center">
-                    <div class="offcanvas__logo logo" >
-                        <a href="index.html" >
-                            <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo" style="width:150px; height:40px;">
+                    <div class="offcanvas__logo logo">
+                        <a href="index.html">
+                            <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo"
+                                style="width:150px; height:40px;">
                         </a>
                     </div>
                 </div>
@@ -116,7 +118,7 @@
                     </div>
                 </div>
                 <div class="tp-main-menu-mobile fix d-lg-none mb-40"></div>
-                
+
                 <div class="offcanvas__contact align-items-center d-none">
                     <div class="offcanvas__contact-icon mr-20">
                         <span>
@@ -132,62 +134,62 @@
                 <div class="offcanvas__btn">
                     <a href="contact.html" class="tp-btn-2 tp-btn-border-2">Liên hệ với chúng tôi</a>
                 </div>
+            </div>
+
+        </div>
+    </div>
+    <div class="body-overlay"></div>
+    <!-- offcanvas area end -->
+
+    <!-- mobile menu area start -->
+    <div id="tp-bottom-menu-sticky" class="tp-mobile-menu d-lg-none">
+        <div class="container">
+            <div class="row row-cols-5">
+                <div class="col">
+                    <div class="tp-mobile-item text-center">
+                        <a href="shop.html" class="tp-mobile-item-btn">
+                            <i class="flaticon-store"></i>
+                            <span>Cửa hàng</span>
+                        </a>
+                    </div>
                 </div>
-                
+                <div class="col">
+                    <div class="tp-mobile-item text-center">
+                        <button class="tp-mobile-item-btn tp-search-open-btn">
+                            <i class="flaticon-search-1"></i>
+                            <span>Tìm kiếm</span>
+                        </button>
+                    </div>
                 </div>
-                </div>
-                <div class="body-overlay"></div>
-                <!-- offcanvas area end -->
-                
-                <!-- mobile menu area start -->
-                <div id="tp-bottom-menu-sticky" class="tp-mobile-menu d-lg-none">
-                    <div class="container">
-                        <div class="row row-cols-5">
-                            <div class="col">
-                                <div class="tp-mobile-item text-center">
-                                    <a href="shop.html" class="tp-mobile-item-btn">
-                                        <i class="flaticon-store"></i>
-                                        <span>Cửa hàng</span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="tp-mobile-item text-center">
-                                    <button class="tp-mobile-item-btn tp-search-open-btn">
-                                        <i class="flaticon-search-1"></i>
-                                        <span>Tìm kiếm</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="tp-mobile-item text-center">
-                                    {{-- <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
+                <div class="col">
+                    <div class="tp-mobile-item text-center">
+                        {{-- <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
                                         <i class="flaticon-love"></i>
                                         <span>Danh sách yêu thích</span>
                                     </a> --}}
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="tp-mobile-item text-center">
-                                    <a href="profile.html" class="tp-mobile-item-btn">
-                                        <i class="flaticon-user"></i>
-                                        <span>Tài khoản</span>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="tp-mobile-item text-center">
-                                    <button class="tp-mobile-item-btn tp-offcanvas-open-btn">
-                                        <i class="flaticon-menu-1"></i>
-                                        <span>Menu</span>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
-                <!-- mobile menu area end -->
-                
+                <div class="col">
+                    <div class="tp-mobile-item text-center">
+                        <a href="profile.html" class="tp-mobile-item-btn">
+                            <i class="flaticon-user"></i>
+                            <span>Tài khoản</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="tp-mobile-item text-center">
+                        <button class="tp-mobile-item-btn tp-offcanvas-open-btn">
+                            <i class="flaticon-menu-1"></i>
+                            <span>Menu</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- mobile menu area end -->
+
 
     <!-- search area start -->
     <section class="tp-search-area">
@@ -326,7 +328,8 @@
                     <div class="col-xl-3 col-lg-3 col-md-3 col-6">
                         <div class="logo">
                             <a href="">
-                                <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo" style="width:150px; height:40px;">
+                                <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo"
+                                    style="width:150px; height:40px;">
                             </a>
                         </div>
                     </div>
@@ -335,24 +338,24 @@
                             <nav id="mobile-menu">
                                 <ul>
                                     <li class="has-mega-menu">
-                                       <a href="{{ route('trangchu') }}">Trang chủ</a>
-        
+                                        <a href="{{ route('trangchu') }}">Trang chủ</a>
+
                                     </li>
                                     <li>
-                                       <a href="#">Sản phẩm</a>
-                                    </li>                   
-        
+                                        <a href="#">Sản phẩm</a>
+                                    </li>
+
                                     <li>
-                                       <a href="#">Tin tức</a>
+                                        <a href="#">Tin tức</a>
                                     </li>
                                     <li><a href="#">Liên hệ</a></li>
-                                 </ul>
+                                </ul>
                             </nav>
 
                         </div>
                     </div>
                     <div class="col-xl-3 col-lg-3 col-md-3 col-6">
-                        <div class="tp-header-action d-flex align-items-center justify-content-end ml-50">                 
+                        <div class="tp-header-action d-flex align-items-center justify-content-end ml-50">
                             <div class="tp-header-action-item d-none d-lg-block">
                                 <a href="#" class="tp-header-action-btn">
                                     <svg width="22" height="20" viewBox="0 0 22 20" fill="none"
@@ -497,7 +500,7 @@
     <script src="{{ asset('assets/client/js/chitietsp.js') }}"></script>
     <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
 
-    
+
 </body>
 
 <!-- Mirrored from template.wphix.com/shofy-prv/shofy/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 29 Sep 2024 13:19:32 GMT -->

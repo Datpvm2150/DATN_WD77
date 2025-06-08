@@ -43,7 +43,8 @@
                                 <div class="col-xl-7 col-lg-6 col-md-6">
                                     <div class="tp-slider-thumb text-end">
                                         <img src="{{ asset('storage/' . $bannersHea->anh_banner) }}" width="420px"
-                                            height="350px" style="object-fit: contain; border-radius: 10%;" alt="slider-img">
+                                            height="350px" style="object-fit: contain; border-radius: 10%;"
+                                            alt="slider-img">
                                     </div>
                                 </div>
                             </div>
@@ -170,10 +171,10 @@
                                                     @if ($product->is_hot == true)
                                                         <div class="tp-product-badge">
                                                             <span class="product-hot">Hot</span>
-                                                        </div> 
+                                                        </div>
                                                     @endif
 
-                                               
+
                                                 </div>
                                                 <!-- product content -->
                                                 <div class="tp-product-content">
@@ -589,7 +590,7 @@
                                                     {{ $newProduct->ten_san_pham }}
                                                 </a>
                                             </h3>
-                                    
+
                                             <div class="tp-product-rating d-flex align-items-center">
                                                 <div class="tp-product-rating-icon">
                                                     @php
@@ -835,7 +836,7 @@
                                                         <span class="product-hot">Hot</span>
                                                     </div>
 
-                                             
+
                                                 </div>
                                                 <!-- product content -->
                                                 <div class="tp-product-content">
