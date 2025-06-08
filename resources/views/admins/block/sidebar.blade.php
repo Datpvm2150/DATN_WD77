@@ -118,6 +118,25 @@
                         </ul>
                     </div>
                 </li>
+
+                <li>
+                    <a href="#tags" data-bs-toggle="collapse">
+                        <i class="fas fa-tags"></i>
+                        <span> Thẻ Tag </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="tags">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.tag.index') }}">Danh sách</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.tag.create') }}">Thêm mới</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+                
             </ul>
         </div>
         <!-- End Sidebar -->
