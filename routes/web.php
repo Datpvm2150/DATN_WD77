@@ -1,12 +1,14 @@
 <?php
 
-// Admin Routes
+
+
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\admin\TagController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\SanPhamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DanhMucController;
-
 use App\Http\Controllers\Admin\BaiVietController;
 
 // Client Routes
@@ -63,6 +65,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{id}/softDelete', [DanhMucController::class, 'softDelete'])->name('softDelete');
         Route::post('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
     });
+
+    Route::prefix('tag')->name('tag.')->group(function () {
+        Route::get('/', [TagController::class, 'index'])->name('index');
+        Route::get('create', [TagController::class, 'create'])->name('create');
+        Route::post('store', [TagController::class, 'store'])->name('store');
+        Route::get('/{id}/edit', [TagController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [TagController::class, 'update'])->name('update');
+        Route::post('/{id}/onOffTag', [TagController::class, 'onOffTag'])->name('onOffTag');
+        Route::delete('/{id}', [TagController::class, 'destroy'])->name('destroy');
+    });
+
+
     //mau sac
     Route::prefix('mausacs')->name('mausacs.')->group(function () {
         Route::get('/', [MauSacController::class, 'index'])->name('index');
@@ -73,6 +87,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/onOffMauSac', [MauSacController::class, 'onOffMauSac'])->name('onOffMauSac');
         Route::delete('/{id}/destroy', [MauSacController::class, 'destroy'])->name('destroy');
     });
+
 });
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
