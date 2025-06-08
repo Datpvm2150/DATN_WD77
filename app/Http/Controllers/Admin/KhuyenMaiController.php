@@ -18,8 +18,8 @@ class KhuyenMaiController extends Controller
         $query->where('ngay_ket_thuc', '<=', $request->input('ngay_ket_thuc'));
        }
 
-       $khuyenMais = $query->get();
-        return view('admins.khuyen_mais.index', compact('khuyenMais'));
+       $KhuyenMais = $query->get();
+        return view('admins.khuyen_mais.index', compact('KhuyenMais'));
     }
 
     public function create() {
@@ -128,5 +128,54 @@ class KhuyenMaiController extends Controller
             
             return redirect()->route('admin.khuyen_mais.index')->with('success', 'Khuyến mãi đã được cập nhật thành công.');
           }
-        
+        public function destroy($id)
+        {
+        // Tìm kiếm bản ghi Khuyến Mãi theo ID
+            $khuyenMai = KhuyenMai::find($id);
+            if (!$khuyenMai) {
+                return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
+            }
+        // Xóa bản ghi
+            $khuyenMai->delete();
+            return redirect()->route('admin.khuyen_mais.index')->with('success', 'Khuyến mãi đã được xóa thành công.');
+        }
+        public function onOffKhuyenMai($id) 
+        {
+            // Lấy bảng ghi khuyến mãi theo Id
+            $khuyenMai = KhuyenMai::find($id);
+
+            if (!$khuyenMai) {
+                return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
+            }
+            // So sánh ngày hiện tại với ngày kết thúc của khuyến mãi 
+            $now = Carbon::now();
+            if($khuyenMai->ngay_ket_thuc < $now) {
+                 // Nếu ngày hiện tại đã qua ngày kết thúc
+                 return redirect()->back()->with('error', 'Khuyến mãi đã hết thời gian, không thể thay đổi trạng thái.');
+            }
+
+            // Cập nhật trạng thái khuyến mãi nếu còn hạn
+            if($khuyenMai->trang_thai) {
+                // Nếu trạng thái đang hoạt động, chuyển thành ngừng hoạt động
+                $khuyenMai->trang_thai = false;
+                $khuyenMai->save();
+                return redirect()->back()->with('success', 'Khuyến mãi đã được ngừng hoạt động.');
+            } else {
+                // Nếu trạng thái đang ngừng hoạt động, chuyển thành hoạt động
+                $khuyenMai->trang_thai = true;
+                $khuyenMai->save();
+                return redirect()->back()->with('success', 'Khuyến mãi đã được kích hoạt.');
+            }
+        }
+        public function updateExpiredKhuyenMai()
+        {
+            $now = Carbon::now();
+            // Cập nhật trạng thái khuyến mãi là hết hạn
+            $updatedCount = KhuyenMai::where('ngay_ket_thuc', '<', $now)
+                ->where(['trang_thai' => true]) // chỉ cập nhật trạng thái hiện tại vẫn còn hoạt động
+                ->update(['trang_thai' => false]);
+
+                 // Trả về thông báo hoặc view nếu cần
+        return redirect()->back()->with('success', "Đã cập nhật trạng thái của $updatedCount khuyến mãi.");
+        }
 }

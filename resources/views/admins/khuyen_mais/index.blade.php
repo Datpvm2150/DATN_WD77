@@ -70,16 +70,16 @@
                         </thead>
 
                         <tbody>
-                            @foreach ($khuyenMais as $khuyenmai)
+                            @foreach ($KhuyenMais as $khuyenmai)
                             <tr>
                                 <td>{{ $khuyenmai->id }}</td>
                                 <td>{{ $khuyenmai->ma_khuyen_mai }}</td>
                                 <td>{{ $khuyenmai->phan_tram_khuyen_mai }}%</td>
-                                <td>{{ number_format($khuyenmai->giam_toi_da, 0, ',', '.') }} VNĐ</td>
+                                <td>{{ number_format($khuyenmai->giam_toi_da, 0, ',', '.') }} VND</td>
                                 <td>{{ $khuyenmai->ngay_bat_dau }}</td>
                                 <td>{{ $khuyenmai->ngay_ket_thuc }}</td>
                                 <td>
-                                    @if( $khuyenmai->trang_thai == 1 )
+                                    @if ($khuyenmai->trang_thai == 1)
                                     <span class="badge badge-success bg-success">Hoạt động</span>
                                     @else
                                     <span class="badge badge-danger bg-danger">Ngừng hoạt động</span>
@@ -97,20 +97,20 @@
                                                 <a class="dropdown-item"
                                                     href="{{ route('admin.khuyen_mais.edit', $khuyenmai->id) }}">Sửa</a>
                                                 @if ($khuyenmai->trang_thai == 1)
-                                                <form action="" method="post">
+                                                <form action="{{ route('admin.khuyen_mais.onOffKhuyenMai', $khuyenmai->id) }}" method="post">
                                                     @csrf
                                                     @method('post')
                                                     <button class="dropdown-item" href="#">Ngừng hoạt động</button>
                                                 </form>
                                                 @else
-                                                <form action="" method="post">
+                                                <form action="{{ route('admin.khuyen_mais.onOffKhuyenMai', $khuyenmai->id) }}" method="post">
                                                     @csrf
                                                     @method('post')
                                                     <button class="dropdown-item" href="#">Hoạt động</button>
                                                 </form>
                                                 @endif
 
-                                                <form action="" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?');">
+                                                <form action="{{ route('admin.khuyen_mais.destroy', $khuyenmai->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?');">
                                                     @method('DELETE')
                                                     @csrf
                                                     <button type="submit" class="dropdown-item">Xóa</button>
@@ -118,6 +118,8 @@
 
                                             </div>
                                         </div>
+
+
                                     </div>
                                 </td>
                             </tr>
