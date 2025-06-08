@@ -1,16 +1,11 @@
 <?php
-
-
-
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\admin\TagController;
+use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\SanPhamController;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
-
 use App\Http\Controllers\Admin\DungLuongController;
 
 use App\Http\Controllers\Admin\KhuyenMaiController;
@@ -120,5 +115,5 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 // Trang chủ
-Route::get('/', [TrangChuController::class, 'index'])->name('/');
-Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
+// Route::get('/', [TrangChuController::class, 'index'])->name('/');
+// Route::get('/trangchu', action: [TrangChuController::class, 'index'])->name('trangchu');
