@@ -32,7 +32,7 @@ class DanhMucController extends Controller
         // Sử dụng validate để xác thực dữ liệu
         $validatedData = $request->validate(
             [
-                'ten_danh_muc' => 'required|string|gitx:255|unique:danh_mucs,ten_danh_muc',
+                'ten_danh_muc' => 'required|string|max:255|unique:danh_mucs,ten_danh_muc',
                 'mo_ta' => 'nullable|string',
                 'anh_danh_muc' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],
