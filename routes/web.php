@@ -4,7 +4,7 @@
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\SanPhamController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\admin\DanhMucController;
+use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
 use App\Http\Controllers\Admin\DungLuongController;
 
