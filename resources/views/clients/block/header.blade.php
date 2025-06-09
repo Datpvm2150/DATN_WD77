@@ -354,7 +354,7 @@
                                     <li>
                                         <a href="#">Tin tức</a>
                                     </li>
-                                    <li><a href="#">Liên hệ</a></li>
+                                    <li><a href="{{ route('lienhe') }}">Liên hệ</a></li>
                                 </ul>
                             </nav>
                         </div>
