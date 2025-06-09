@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\admin;
+namespace App\Http\Controllers\Admin;
 
 use App\Models\DanhMuc;
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ class DanhMucController extends Controller
 {
     public function index()
     {
-        $danhmucs = DanhMuc::all();
+        $danhmucs = DanhMuc::withTrashed()->get();
         return view('admins.danhmucs.index', compact('danhmucs'));
     }
 
@@ -39,7 +39,7 @@ class DanhMucController extends Controller
             [
                 'ten_danh_muc.required' => 'Tên danh mục không được để trống',
                 'ten_danh_muc.string' => 'Tên danh mục phải là chuỗi',
-                'ten_danh_mucunique' => 'Tên danh mục đã tồn tại',
+                'ten_danh_muc.unique' => 'Tên danh mục đã tồn tại',
                 'ten_danh_muc.max' => 'Tên danh mục không quá 255 ký tự',
 
                 'anh_danh_muc.image' => 'Ảnh danh mục phải là ảnh',
@@ -81,7 +81,7 @@ class DanhMucController extends Controller
         // Validate dữ liệu đầu vào, bỏ qua bản ghi hiện tại khi kiểm tra tính duy nhất
         $validatedData = $request->validate(
             [
-                'ten_danh_muc' => 'required|string|max:255|unique:danh_mucs,ten_danh_muc',
+                'ten_danh_muc' => 'required|string|max:255|unique:danh_mucs,ten_danh_muc,' .$danhmucs->id,
                 'mo_ta' => 'nullable|string',
                 'anh_danh_muc' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             ],
