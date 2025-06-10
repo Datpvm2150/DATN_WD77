@@ -1,4 +1,6 @@
 <?php
+
+use App\Http\Controllers\Admin\DanhGiaSanPhamController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\BannerController;
@@ -52,7 +54,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{id}', [BaiVietController::class, 'update'])->name('update');
         Route::post('/{id}/onOffBaiViet', [BaiVietController::class, 'onOffBaiViet'])->name('onOffBaiViet');
         Route::delete('/{id}/destroy', [BaiVietController::class, 'destroy'])->name('destroy');
-
     });
     //danh muc
     Route::prefix('danhmucs')->name('danhmucs.')->group(function () {
@@ -65,7 +66,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{id}/destroy', [DanhMucController::class, 'destroy'])->name('destroy');
         Route::delete('/{id}/softDelete', [DanhMucController::class, 'softDelete'])->name('softDelete');
         Route::post('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
-
     });
     // dung lượng
     Route::prefix('dungluongs')->name('dungluongs.')->group(function () {
@@ -76,7 +76,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::put('/{id}/update', [DungLuongController::class, 'update'])->name('update');
         Route::post('/{id}/onOffDungLuong', [DungLuongController::class, 'onOffDungLuong'])->name('onOffDungLuong');
         Route::delete('/{id}/destroy', [DungLuongController::class, 'destroy'])->name('destroy');
-
     });
 
     Route::prefix('tag')->name('tag.')->group(function () {
@@ -102,16 +101,28 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
     // Khuyến mãi 
     Route::prefix('khuyen_mais')->name('khuyen_mais.')->group(function () {
-  Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
-    Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
-    Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
-    Route::get('/{id}', [KhuyenMaiController::class, 'show'])->name('show');
-    Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
-    Route::put('/{id}', [KhuyenMaiController::class, 'update'])->name('update');
-    Route::get('/update-expired', [KhuyenMaiController::class, 'updateExpiredKhuyenMai'])->name('updateExpired');
-    Route::post('/{id}/onOffKhuyenMai', [KhuyenMaiController::class, 'onOffKhuyenMai'])->name('onOffKhuyenMai');
-    Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
+        Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
+        Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
+        Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
+        Route::get('/{id}', [KhuyenMaiController::class, 'show'])->name('show');
+        Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
+        Route::put('/{id}', [KhuyenMaiController::class, 'update'])->name('update');
+        Route::get('/update-expired', [KhuyenMaiController::class, 'updateExpiredKhuyenMai'])->name('updateExpired');
+        Route::post('/{id}/onOffKhuyenMai', [KhuyenMaiController::class, 'onOffKhuyenMai'])->name('onOffKhuyenMai');
+        Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
+    });
 
+    Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
+        // Route hiển thị danh sách đánh giá
+        Route::get('/', [DanhGiaSanPhamController::class, 'index'])->name('index');
+
+        // Route xem chi tiết đánh giá
+        Route::get( '/danh-gia/{danhGiaId}', [DanhGiaSanPhamController::class, 'show'])->name('show');
+
+        // Route trả lời đánh giá (admin trả lời)
+        Route::post('/danh-gia/{danhGiaId}/tra-loi', [DanhGiaSanPhamController::class, 'traLoi'])->name('traLoi');
+
+        Route::put('admin/danhgias/tra-loi/{id}', [DanhGiaSanPhamController::class, 'updateResponse'])->name('traLoi.update');
     });
 });
 // Trang chủ
