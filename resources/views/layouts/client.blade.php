@@ -304,7 +304,7 @@
                     <div class="cartmini__empty text-center">
                         <img src="{{ asset('assets/client/img/product/cartmini/empty-cart.png') }}" alt="">
                         <p>Giỏ hàng của bạn trống</p>
-                        <a href="{{ route('trangchu') }}" class="tp-btn">Đi tới cửa hàng</a>
+                        {{-- <a href="{{ route('trangchu') }}" class="tp-btn">Đi tới cửa hàng</a> --}}
                         <input type="number" hidden name="" id="total-quantity-cart"
                             value="{{ isset(Session::get('cart')->totalProduct) ? Session::get('cart')->totalProduct : 0 }}">
                     </div>
@@ -338,7 +338,7 @@
                             <nav id="mobile-menu">
                                 <ul>
                                     <li class="has-mega-menu">
-                                        <a href="{{ route('trangchu') }}">Trang chủ</a>
+                                        {{-- <a href="{{ route('trangchu') }}">Trang chủ</a> --}}
 
                                     </li>
                                     <li>
@@ -504,5 +504,6 @@
 </body>
 
 <!-- Mirrored from template.wphix.com/shofy-prv/shofy/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 29 Sep 2024 13:19:32 GMT -->
+
 
 </html>

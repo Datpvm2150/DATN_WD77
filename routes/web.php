@@ -2,12 +2,15 @@
 
 
 
+use App\Http\Controllers\Client\ChiTietSanPhamController;
+
+use App\Http\Controllers\Client\YeuThichController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\TagController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\SanPhamController;
-use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
 
@@ -16,7 +19,7 @@ use App\Http\Controllers\Admin\DungLuongController;
 use App\Http\Controllers\Admin\KhuyenMaiController;
 
 // Client Routes
-use App\Http\Controllers\Client\TrangChuController;
+// use App\Http\Controllers\Client\TrangChuController;
 
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -105,7 +108,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/onOffMauSac', [MauSacController::class, 'onOffMauSac'])->name('onOffMauSac');
         Route::delete('/{id}/destroy', [MauSacController::class, 'destroy'])->name('destroy');
     });
-    // Khuyến mãi 
+    // Khuyến mãi
     Route::prefix('khuyen_mais')->name('khuyen_mais.')->group(function () {
   Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
     Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
@@ -119,6 +122,23 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
     });
 });
+//client
 // Trang chủ
-Route::get('/', [TrangChuController::class, 'index'])->name('/');
-Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
+// Route::get('/', [TrangChuController::class, 'index'])->name('/');
+// Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
+// Chi tiết sản phẩm
+Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->name('chitietsanpham');
+Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
+Route::get('/sanpham/lay-gia-bien-the', [ChiTietSanPhamController::class, 'layGiaBienThe'])->name('sanpham.lay_gia_bien_the');
+Route::get('/get-so-luong-bien-the', [ChiTietSanPhamController::class, 'getSoLuongBienThe'])->name('sanpham.get_so_luong_bien_the');
+// Route cho việc trả lời đánh giá
+Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'reply'])->name('admin.danhgia.reply');
+// Route để sửa câu trả lời
+Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
+
+
+ // yêu thích
+Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
+Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
+Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
+Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
