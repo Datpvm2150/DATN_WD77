@@ -342,7 +342,7 @@
 
                                     </li>
                                     <li>
-                                        <a href="#">Sản phẩm</a>
+                                        <a href="{{route('san-pham')}}">Sản phẩm</a>
                                     </li>
 
                                     <li>
