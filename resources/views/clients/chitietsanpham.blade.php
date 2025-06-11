@@ -44,32 +44,29 @@
             <div class="row">
                 <div class="col-xl-7 col-lg-6">
                     <div class="tp-product-details-thumb-wrapper tp-tab d-sm-flex">
-                        <nav>
-                            <div class="nav flex-sm-column" id="productDetailsNavThumb" role="tablist">
-                                @foreach ($anhsanphams as $index => $anhsanpham)
-                                <button style="width: 100px" class="nav-link {{ $loop->first ? 'active' : '' }}"
-                                    id="nav-{{ $index + 1 }}-tab" data-bs-toggle="tab"
-                                    data-bs-target="#nav-{{ $index + 1 }}" type="button" role="tab"
-                                    aria-controls="nav-{{ $index + 1 }}"
-                                    aria-selected="{{ $loop->first ? 'true' : 'false' }}">
-                                    <img src="{{ asset($anhsanpham->hinh_anh) }}" class="img-thumbnail"
-                                        alt="Ảnh sản phẩm" width="100px">
-                                </button>
-                                @endforeach
-                            </div>
-                        </nav>
-                        <div class="tab-content m-img" id="productDetailsNavContent">
-                            @foreach ($anhsanphams as $index => $anhsanpham)
-                            <div class="tab-pane fade {{ $loop->first ? 'show active' : '' }}" id="nav-{{ $index + 1 }}"
-                                role="tabpanel" aria-labelledby="nav-{{ $index + 1 }}-tab">
-                                <div class="tp-product-details-nav-main-thumb">
-                                    <img src="{{ asset($anhsanpham->hinh_anh) }}" class="img-fluid rounded-4"
-                                        alt="Ảnh chi tiết sản phẩm">
-                                </div>
-                            </div>
-                            @endforeach
-                        </div>
-                    </div>
+    <nav>
+        <div class="nav flex-sm-column" id="productDetailsNavThumb" role="tablist">
+            <button style="width: 100px" class="nav-link active"
+                id="nav-1-tab" data-bs-toggle="tab"
+                data-bs-target="#nav-1" type="button" role="tab"
+                aria-controls="nav-1"
+                aria-selected="true">
+                <img src="{{ asset($sanpham->anh_san_pham) }}" class="img-thumbnail"
+                    alt="Ảnh sản phẩm" width="100px">
+            </button>
+        </div>
+    </nav>
+    <div class="tab-content m-img" id="productDetailsNavContent">
+        <div class="tab-pane fade show active" id="nav-1"
+            role="tabpanel" aria-labelledby="nav-1-tab">
+            <div class="tp-product-details-nav-main-thumb">
+                <img src="{{ asset($sanpham->anh_san_pham) }}" class="img-fluid rounded-4"
+                    alt="Ảnh chi tiết sản phẩm">
+            </div>
+        </div>
+    </div>
+</div>
+
                 </div> <!-- col end -->
                 <div class="col-xl-5 col-lg-6">
                     <div class="tp-product-details-wrapper">
@@ -1103,20 +1100,20 @@
                         @foreach ($sanPhamMoiNhat as $sanPham)
 <div class="swiper-slide">
     <div class="tp-product-item-3 tp-product-style-primary mb-50">
+
         <div class="tp-product-thumb-3 mb-15 fix p-relative z-index-1">
-            <a href="{{ route('chitietsanpham', ['id' => $sanPham->id]) }}">
-                <img src="{{ asset($sanPham->anh_san_pham) }}" alt="{{ $sanPham->ten_san_pham }}">
-            </a>
+    <a href="{{ route('chitietsanpham', ['id' => $sanpham->id]) }}">
+        <img src="{{ asset($anhsanphams->first()->hinh_anh ?? 'images/no-image.jpg') }}" alt="{{ $sanpham->ten_san_pham }}">
+    </a>
 
-            <!-- product action -->
-            <div class="tp-product-action-3 tp-product-action-4 has-shadow tp-product-action-primaryStyle">
-                <div class="tp-product-action-item-3 d-flex flex-column">
-
-                </div>
-            </div>
-
-
+    <!-- product action -->
+    <div class="tp-product-action-3 tp-product-action-4 has-shadow tp-product-action-primaryStyle">
+        <div class="tp-product-action-item-3 d-flex flex-column">
+            <!-- nút yêu thích, mua hàng nếu cần -->
         </div>
+    </div>
+</div>
+
         <div class="tp-product-content-3">
             <div class="tp-product-tag-3">
                 <span>{{ $sanPham->danhMuc ? $sanPham->danhMuc->ten_danh_muc : '' }}</span>

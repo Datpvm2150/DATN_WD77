@@ -28,7 +28,7 @@ class ChiTietSanPhamController extends Controller
         if (!$sanpham) {
             return abort(404, 'Sản phẩm không tồn tại');
         }
-
+      $anh_chinh = $sanpham->anh_san_pham;
         // Tăng lượt xem
         $sanpham->increment('luot_xem');
 
@@ -46,6 +46,7 @@ class ChiTietSanPhamController extends Controller
     ->get();
 
         $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->get();
+//  $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->orderBy('id')->get();
 
         $mauSacIds = $bienthesanphams->pluck('mau_sac_id')->unique();
         $mauSacs = MauSac::whereIn('id', $mauSacIds)->where('trang_thai', 1)->get();
@@ -101,6 +102,7 @@ if (Auth::check()) {
         return view('clients.chitietsanpham', compact(
             'danhMucs',
             'sanpham',
+            'anh_chinh',
             'bienthesanphams',
             'anhsanphams',
             'tagsanphams',
