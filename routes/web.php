@@ -14,7 +14,7 @@ use App\Http\Controllers\Admin\KhuyenMaiController;
 
 // Client Routes
 use App\Http\Controllers\Client\TrangChuController;
-
+use App\Http\Controllers\Client\TrangSanPhamController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     //san pham
@@ -127,4 +127,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 // Trang chủ
 // Route::get('/', [TrangChuController::class, 'index'])->name('/');
-// Route::get('/trangchu', action: [TrangChuController::class, 'index'])->name('trangchu');
+Route::get('/trangchu', action: [TrangChuController::class, 'index'])->name('trangchu'); 
+// Trang sản phẩm
+Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
+// Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');

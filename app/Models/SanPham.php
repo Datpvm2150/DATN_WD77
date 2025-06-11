@@ -40,4 +40,43 @@ class SanPham extends Model
     {
         return $this->hasMany(TagSanPham::class);
     }
+    // public function yeuThichs()
+    // {
+    //     return $this->hasMany(YeuThich::class);
+    // }
+
+    public function danhGias()
+    {
+        return $this->hasMany(DanhGiaSanPham::class);
+    }
+    // public function chiTietHoaDons()
+    // {
+    //     return $this->hasMany(ChiTietHoaDon::class, 'bien_the_san_pham_id', 'id'); // Sử dụng cột đúng
+    // }
+    
+
+    public function bienThe()
+    {
+        return $this->hasMany(BienTheSanPham::class, 'san_pham_id');
+    }
+
+    public function danhmucs()
+    {
+    return $this->belongsTo(DanhMuc::class, 'danh_muc_id');
+    }
+    
+    public function getAvgRatingAttribute()
+    {
+        return $this->danhGias()->avg('diem_so');
+    }
+
+    public function users()
+    {
+        return $this->belongsToMany(User::class, 'yeu_thichs', 'san_pham_id', 'user_id');
+    }
+    public function hasBeenReviewedBy($user)
+{
+    return $this->reviews()->where('user_id', $user->id)->exists();
+}
+
 }
