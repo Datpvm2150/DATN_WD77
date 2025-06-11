@@ -136,9 +136,9 @@
                                         @foreach($products as $product)
                                             <div class="tp-shop-widget-product-item d-flex align-items-center">
                                                 <div class="tp-shop-widget-product-thumb">
-                                                    {{-- <a href="{{ route('chitietsanpham', $product->id) }}">
+                                                    <a href="{{ route('chitietsanpham', $product->id) }}">
                                                         <img src="{{ asset($product->anh_san_pham) }}" alt="{{ $product->ten_san_pham }}">
-                                                    </a> --}}
+                                                    </a>
                                                 </div>
                         
                                                 <div class="tp-shop-widget-product-content">
@@ -157,7 +157,7 @@
                                                         </div>
                                                     </div>
                                                     <h4 class="tp-shop-widget-product-title">
-                                                        {{-- <a href="{{ route('chitietsanpham', $product->id) }}">{{ $product->ten_san_pham }}</a> --}}
+                                                        <a href="{{ route('chitietsanpham', $product->id) }}">{{ $product->ten_san_pham }}</a>
                                                     </h4>
                                                     <div class="tp-shop-widget-product-price-wrapper">
                                                         @if ($product->bienTheSanPhams->isNotEmpty())
@@ -271,8 +271,7 @@
                                             <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6">
                                                 <div class="tp-product-item p-relative transition-3 mb-25">
                                                     <div class="tp-product-thumb p-relative fix m-img">
-                                                        {{-- <a href="{{ route('chitietsanpham', $item->id) }}"> --}}
-                                                            <a>
+                                                        <a href="{{ route('chitietsanpham', $item->id) }}">
                                                             <img width="254px" height="214px" style="object-fit: contain"
                                                                 src="{{ asset($item->anh_san_pham) }}"
                                                                 alt="product-electronic">
@@ -306,8 +305,7 @@
                                                         </div>
                                                         <h3 class="tp-product-title"
                                                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 199px;">
-                                                            {{-- <a href="{{ route('chitietsanpham', $item->id) }}"> --}}
-                                                                <a>
+                                                            <a href="{{ route('chitietsanpham', $item->id) }}">
                                                                 {{ $item->ten_san_pham }}
                                                             </a>
                                                         </h3>
@@ -373,7 +371,7 @@
                                                                     <a href="#">{{ $item->danhMuc->ten_danh_muc }}</a>
                                                                 </div>
                                                                 <h3 class="tp-product-title-2">
-                                                                    {{-- <a href="{{ route('chitietsanpham', $item->id) }}">{{ $item->ten_san_pham }}</a> --}}
+                                                                    <a href="{{ route('chitietsanpham', $item->id) }}">{{ $item->ten_san_pham }}</a>
                                                                 </h3>
                                                                 <div class="tp-product-rating-icon tp-product-rating-icon-2">
                                                                     @for ($i = 0; $i < 5; $i++)
@@ -396,7 +394,7 @@
                                                                 </div>
                                                                 <p>{{ Str::limit(strip_tags($item->mo_ta), 100) }}</p>
                                                                 <div class="tp-product-list-add-to-cart">
-                                                                    {{-- <a href="{{ route('chitietsanpham', ['id'=>$item->id]) }}"><button class="tp-product-list-add-to-cart-btn">Chi tiết sản phẩm</button></a> --}}
+                                                                    <a href="{{ route('chitietsanpham', ['id'=>$item->id]) }}"><button class="tp-product-list-add-to-cart-btn">Chi tiết sản phẩm</button></a>
                                                                 </div>
                                                             </div>
                                                         </div>
