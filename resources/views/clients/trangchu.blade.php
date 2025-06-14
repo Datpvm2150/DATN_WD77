@@ -627,12 +627,30 @@
                                                     <span>({{ $newProduct->danhGias->count() }} Reviews)</span>
                                                 </div>
                                             </div>
-                                            <div class="tp-product-price-wrapper">
+                                            {{-- <div class="tp-product-price-wrapper">
                                                 <span
                                                     class="tp-product-price old-price">{{ number_format($newProduct->bienTheSanPhams->first()->gia_cu, 0, ',', '.') }}đ</span>
                                                 <span
                                                     class="tp-product-price new-price">{{ number_format($newProduct->bienTheSanPhams->first()->gia_moi, 0, ',', '.') }}đ</span>
-                                            </div>
+                                            </div> --}}
+                                            @php
+    $bienThe = $newProduct->bienTheSanPhams->first();
+@endphp
+
+@if ($bienThe)
+    <div class="tp-product-price-wrapper">
+        @if ($bienThe->gia_cu && $bienThe->gia_cu > $bienThe->gia_moi)
+            <span class="tp-product-price old-price">
+                {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
+            </span>
+        @endif
+
+        <span class="tp-product-price new-price">
+            {{ number_format($bienThe->gia_moi, 0, ',', '.') }}đ
+        </span>
+    </div>
+@endif
+
                                         </div>
                                     </div>
                                 </div>
