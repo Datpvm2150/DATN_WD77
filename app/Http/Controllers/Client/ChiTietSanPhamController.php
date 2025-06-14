@@ -11,6 +11,7 @@ use App\Models\MauSac;
 use App\Models\SanPham;
 use App\Models\TagSanPham;
 use App\Models\BienTheSanPham;
+use App\Models\YeuThich;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -87,17 +88,25 @@ class ChiTietSanPhamController extends Controller
 $isLoved = [];
 $products = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')->get();
 
-if (Auth::check()) {
-    $yeuThichs = Auth::user()->sanPhamYeuThichs()->pluck('san_pham_id')->toArray();
-    foreach ($products as $product) {
-        $isLoved[$product->id] = in_array($product->id, $yeuThichs);
-    }
-} else {
-    // Người dùng chưa đăng nhập, đánh dấu tất cả sản phẩm là chưa yêu thích
-    foreach ($products as $product) {
-        $isLoved[$product->id] = false;
-    }
+// if (Auth::check()) {
+//     $yeuThichs = Auth::user()->sanPhamYeuThichs()->pluck('san_pham_id')->toArray();
+//     foreach ($products as $product) {
+//         $isLoved[$product->id] = in_array($product->id, $yeuThichs);
+//     }
+// } else {
+//     // Người dùng chưa đăng nhập, đánh dấu tất cả sản phẩm là chưa yêu thích
+//     foreach ($products as $product) {
+//         $isLoved[$product->id] = false;
+//     }
+// }
+$products = SanPham::with('yeuThichs')->get();
+
+$loveCount = [];
+foreach ($products as $product) {
+    $loveCount[$product->id] = $product->yeuThichs->count();
 }
+
+
 
         return view('clients.chitietsanpham', compact(
             'danhMucs',
