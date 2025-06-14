@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\admin\DanhMucController;
 use App\Http\Controllers\Admin\SanPhamController;
 use App\Http\Controllers\Admin\BaiVietController;
+use App\Http\Controllers\Admin\AdminController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     //san pham
@@ -55,6 +56,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::delete('/{id}/destroy', [DanhMucController::class, 'destroy'])->name('destroy');
         Route::delete('/{id}/softDelete', [DanhMucController::class, 'softDelete'])->name('softDelete');
         Route::post('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
-
     });
+});
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/admins', [AdminController::class, 'index'])->name('admins');
+    Route::get('/admins/create', [AdminController::class, 'create'])->name('admins.create');
+    Route::post('/admins', [AdminController::class, 'store'])->name('admins.store');
+    Route::get('/admins/{id}', [AdminController::class, 'show'])->name('admins.show');
+    Route::get('/admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
+    Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update');
 });
