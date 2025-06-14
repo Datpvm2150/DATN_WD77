@@ -40,4 +40,8 @@ class SanPham extends Model
     {
         return $this->hasMany(TagSanPham::class);
     }
+        public function yeuThichs()
+    {
+        return $this->hasMany(YeuThich::class ,'san_pham_id');
+    }
 }
