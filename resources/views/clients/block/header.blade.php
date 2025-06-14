@@ -5,7 +5,7 @@
                 <!-- Logo -->
                 <div class="col-xl-3 col-lg-3 col-md-3 col-6" style="flex: 0 0 25%; max-width: 25%;">
                     <div class="logo">
-                        {{-- <a href="{{ route('trangchu') }}"> --}}
+                        <a href="{{ route('trangchu') }}">
                             <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo" style="width:150px; height:40px;">
                         </a>
                     </div>
@@ -16,10 +16,10 @@
                         <nav id="mobile-menu" style="display: block;">
                             <ul style="display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; justify-content: center;">
                                 <li class="has-mega-menu">
-                                    {{-- <a href="{{ route('trangchu') }}" style="font-weight: 600; color: #111; text-decoration: none;">Trang chủ</a> --}}
+                                    <a href="{{ route('trangchu') }}" style="font-weight: 600; color: #111; text-decoration: none;">Trang chủ</a>
                                 </li>
                                 <li>
-                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Sản phẩm</a>
+                                    <a href="{{ route('san-pham') }}" style="font-weight: 600; color: #111; text-decoration: none;">Sản phẩm</a>
                                 </li>
                                 <li>
                                     <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Tin tức</a>

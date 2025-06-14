@@ -1,10 +1,8 @@
 <!-- Left Sidebar Start -->
 <div class="app-sidebar-menu">
     <div class="h-100" data-simplebar>
-
         <!-- Sidebar Menu -->
         <div id="sidebar-menu">
-
             <!-- Logo Box -->
             <div class="logo-box">
                 <a class='logo logo-light' href='index.html'>
@@ -36,11 +34,9 @@
                 <!-- Sản phẩm -->
                 <li>
                     <a href="#sanpham" data-bs-toggle="collapse">
-                        <!-- Icon -->
                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                            fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
-                            <path
-                                d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z">
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z">
                             </path>
                         </svg>
                         <span> Sản phẩm </span>
@@ -56,7 +52,7 @@
 
                 <!-- Danh mục -->
                 <li>
-                    <a href='#danhmucs' data-bs-toggle="collapse">
+                    <a href="#danhmucs" data-bs-toggle="collapse">
                         <i data-feather="list"></i>
                         <span> Danh mục </span>
                         <span class="menu-arrow"></span>
@@ -72,9 +68,8 @@
                 <!-- Banner -->
                 <li>
                     <a href="#bannerSection" data-bs-toggle="collapse">
-                        <!-- Icon -->
                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
-                            fill="none" stroke-linecap="round" stroke-linejoin="round" class="css-i6dzq1">
+                            fill="none" stroke-linecap="round" stroke-linejoin="round">
                             <rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect>
                             <line x1="7" y1="2" x2="7" y2="22"></line>
                             <line x1="17" y1="2" x2="17" y2="22"></line>
@@ -97,7 +92,7 @@
 
                 <!-- Dung lượng -->
                 <li>
-                    <a href='#dungluongs' data-bs-toggle="collapse">
+                    <a href="#dungluongs" data-bs-toggle="collapse">
                         <i data-feather="package"></i>
                         <span> Dung lượng </span>
                         <span class="menu-arrow"></span>
@@ -157,7 +152,7 @@
 
                 <!-- Màu sắc -->
                 <li>
-                    <a href='#mausacs' data-bs-toggle="collapse">
+                    <a href="#mausacs" data-bs-toggle="collapse">
                         <i data-feather="package"></i>
                         <span> Màu sắc </span>
                         <span class="menu-arrow"></span>
@@ -170,10 +165,22 @@
                     </div>
                 </li>
 
+                <!-- Đánh giá -->
+                <li>
+                    <a href="#danhgias" data-bs-toggle="collapse">
+                        <i data-feather="package"></i>
+                        <span> Đánh giá </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="danhgias">
+                        <ul class="nav-second-level">
+                            <li><a class='tp-link' href="{{ route('admin.Danhgias.index') }}">Danh sách</a></li>
+                        </ul>
+                    </div>
+                </li>
             </ul>
         </div>
         <!-- End Sidebar -->
-
         <div class="clearfix"></div>
     </div>
 </div>

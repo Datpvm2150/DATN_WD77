@@ -163,10 +163,10 @@
                 </div>
                 <div class="col">
                     <div class="tp-mobile-item text-center">
-                        {{-- <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
+                        <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
                                         <i class="flaticon-love"></i>
                                         <span>Danh sách yêu thích</span>
-                                    </a> --}}
+                                    </a>
                     </div>
                 </div>
                 <div class="col">
@@ -304,7 +304,7 @@
                     <div class="cartmini__empty text-center">
                         <img src="{{ asset('assets/client/img/product/cartmini/empty-cart.png') }}" alt="">
                         <p>Giỏ hàng của bạn trống</p>
-                        {{-- <a href="{{ route('trangchu') }}" class="tp-btn">Đi tới cửa hàng</a> --}}
+                        <a href="{{ route('trangchu') }}" class="tp-btn">Đi tới cửa hàng</a>
                         <input type="number" hidden name="" id="total-quantity-cart"
                             value="{{ isset(Session::get('cart')->totalProduct) ? Session::get('cart')->totalProduct : 0 }}">
                     </div>
@@ -338,11 +338,11 @@
                             <nav id="mobile-menu">
                                 <ul>
                                     <li class="has-mega-menu">
-                                        {{-- <a href="{{ route('trangchu') }}">Trang chủ</a> --}}
+                                        <a href="{{ route('trangchu') }}">Trang chủ</a>
 
                                     </li>
                                     <li>
-                                        <a href="#">Sản phẩm</a>
+                                        <a href="{{route('san-pham')}}">Sản phẩm</a>
                                     </li>
 
                                     <li>
@@ -369,7 +369,7 @@
                                             stroke-linejoin="round" />
                                     </svg>
                                     <span class="tp-header-action-badge">
-                                        {{-- @if (Auth::user())
+                                        @if (Auth::user())
                                             <span id="favorite-count">
                                                 <span>
                                                     {{ Auth::user()->sanPhamYeuThichs()->count() }}
@@ -381,7 +381,7 @@
                                                     0
                                                 </span>
                                             </span>
-                                        @endif --}}
+                                        @endif
                                     </span>
                                 </a>
                             </div>
