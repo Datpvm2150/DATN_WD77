@@ -10,7 +10,7 @@
                            <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo" style="width:150px; height:40px;">
                         </a>
                       </div>
-                      <p class="tp-footer-desc">Chúng tôi là một nhóm các nhà thiết kế và phát triển tạo ra LaptopStore chất lượng cao.</p>
+                      <p class="tp-footer-desc">Nhóm WD-77 luôn mang lại trải nghiệm tốt cho người dùng.</p>
                       <div class="tp-footer-social">
                          <a href="#"><i class="fa-brands fa-facebook-f"></i></a>
                          <a href="#"><i class="fa-brands fa-twitter"></i></a>
@@ -54,7 +54,7 @@
                    <div class="tp-footer-widget-content">
                       <div class="tp-footer-talk mb-20">
                          <span>Có thắc mắc? Gọi cho chúng tôi</span>
-                         <h4><a href="tel:849-876-543-21">+(84)989 275 330</a></h4>
+                         <h4><a href="tel:849-876-543-21">+(84)98030867</a></h4>
                       </div>
                       <div class="tp-footer-contact">
                          <div class="tp-footer-contact-item d-flex align-items-start">
@@ -69,7 +69,7 @@
                                </span>
                             </div>
                             <div class="tp-footer-contact-content">
-                               <p><a href="mailto:loviongs.@gmail.com">nguyenthanhtrung97@gmail.com</a></p>
+                               <p><a href="mailto:loviongs.@gmail.com">quandmph50159@gmail.com</a></p>
                             </div>
 
                          </div>
@@ -83,7 +83,7 @@
                                </span>
                             </div>
                             <div class="tp-footer-contact-content">
-                               <p><a href="" target="_blank">Ấp 7,An Phước,Long Thành <br> Đồng Nai</a></p>
+                               <p><a href="" target="_blank">Cao Đẳng FPT Polytechnic <br> Hà Nội</a></p>
                             </div>
                          </div>
                       </div>
@@ -99,7 +99,7 @@
              <div class="row align-items-center">
                 <div class="col-md-6">
                    <div class="tp-footer-copyright">
-                      <p>© 2024 Công ty cổ phần LaptopStore <a href="index.html">.</a>.</p>
+                      <p>© 2025 Nhóm dự án WD-77 <a href="index.html">.</a>.</p>
                    </div>
                 </div>
                 <!-- <div class="col-md-6">

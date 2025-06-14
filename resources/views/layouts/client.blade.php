@@ -163,10 +163,10 @@
                 </div>
                 <div class="col">
                     <div class="tp-mobile-item text-center">
-                        {{-- <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
+                        <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
                                         <i class="flaticon-love"></i>
                                         <span>Danh sách yêu thích</span>
-                                    </a> --}}
+                                    </a>
                     </div>
                 </div>
                 <div class="col">
@@ -342,7 +342,7 @@
 
                                     </li>
                                     <li>
-                                        <a href="#">Sản phẩm</a>
+                                        <a href="{{route('san-pham')}}">Sản phẩm</a>
                                     </li>
 
                                     <li>
@@ -369,7 +369,7 @@
                                             stroke-linejoin="round" />
                                     </svg>
                                     <span class="tp-header-action-badge">
-                                        {{-- @if (Auth::user())
+                                        @if (Auth::user())
                                             <span id="favorite-count">
                                                 <span>
                                                     {{ Auth::user()->sanPhamYeuThichs()->count() }}
@@ -381,7 +381,7 @@
                                                     0
                                                 </span>
                                             </span>
-                                        @endif --}}
+                                        @endif
                                     </span>
                                 </a>
                             </div>
@@ -504,5 +504,6 @@
 </body>
 
 <!-- Mirrored from template.wphix.com/shofy-prv/shofy/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 29 Sep 2024 13:19:32 GMT -->
+
 
 </html>
