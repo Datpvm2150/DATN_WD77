@@ -120,4 +120,4 @@ Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
 
 // Liên Hệ
 Route::get('/lienhe', [LienHeController::class, 'index'])->name('lienhe');
-Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store')->middleware('auth');
+Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store');
