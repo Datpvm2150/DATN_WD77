@@ -96,7 +96,7 @@
                                             if (data.length > 0) {
                                                 data.forEach(function(sanPham, index) {
                                                     html += `
-                        <a href="/chitietsanpham/${sanPham.id}" class="suggestion-item d-block px-2 py-1" data-index="${index}" data-value="${sanPham.ten_san_pham}">
+                        <a href="#" class="suggestion-item d-block px-2 py-1" data-index="${index}" data-value="${sanPham.ten_san_pham}">
                            <div class="product-suggestion d-flex align-items-center mb-1">
                               <div class="product-img">
                                  <img src="${sanPham.anh_san_pham}" alt="${sanPham.ten_san_pham}" class="img-fluid" style="width: 60px; height: 60px; object-fit: cover;">
