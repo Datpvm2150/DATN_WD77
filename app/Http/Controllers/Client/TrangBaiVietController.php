@@ -9,7 +9,8 @@ use Illuminate\Http\Request;
 
 class TrangBaiVietController extends Controller
 {
-   public function index(Request $request) {
+   public function index(Request $request)
+    {
      // Lấy tất cả danh mục
     $danhMucs = DanhMuc::withCount('baiViets')->get();
 
@@ -31,7 +32,7 @@ class TrangBaiVietController extends Controller
     }
 
     // Phân trang
-    $baiVietQuery->orderBy('created_at', 'desc')->paginate(6);
+    $baiViet = $baiVietQuery->orderBy('created_at', 'desc')->paginate(6);
 
     // Lấy thông tin người dùng đã đăng nhập
     $user = auth()->user();
@@ -42,4 +43,31 @@ class TrangBaiVietController extends Controller
     // Trả về view với các biến cần thiết
     return view('clients.baiviet', compact('baiViet', 'user', 'latestPosts', 'danhMucs'));
    }
+
+    public function show($id, Request $request)
+    {
+    $danhMucs = DanhMuc::withCount('baiViets')->get();
+    $danhMucId = $request->input('danh_muc');
+    $baiVietQuery = BaiViet::where('trang_thai', true);
+    if ($danhMucId) {
+        $baiVietQuery->where('danh_muc_id', $danhMucId);
+    }
+    $post = BaiViet::with(['user', 'danhMuc'])->findOrFail($id);
+
+    $user = auth()->user();
+
+    $latestPosts = BaiViet::where('trang_thai', true)
+        ->orderBy('created_at', 'desc')
+        ->take(5)
+        ->get();
+
+    return view('clients.chitietbaiviet', [
+        'post' => $post,
+        'user' => $user,
+        'latestPosts' => $latestPosts,
+        'danhMucs' => $danhMucs,
+    ]);
+}
+
+
 }

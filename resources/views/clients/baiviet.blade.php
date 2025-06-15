@@ -1,4 +1,34 @@
-  <!-- section title area end -->
+@extends('layouts.client')
+
+@section('css')
+    <style>
+        .tp-blog-list-thumb img {
+            width: 100%; /* Hoặc giá trị cụ thể như '300px' nếu cần */
+            height: 250px; /* Đặt chiều cao cố định */
+            object-fit: cover; /* Đảm bảo ảnh không bị méo, chỉ crop phần thừa */
+            display: block; /* Loại bỏ khoảng trắng dưới ảnh nếu có */
+        }
+    </style>
+@endsection
+
+@section('content')
+    <!-- section title area start -->
+    <section class="tp-section-title-area pt-95 pb-80">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-8">
+                    <div class="tp-section-title-wrapper-7">
+                        <h3 class="tp-section-title-7">Tin tức</h3>
+                        <div class="breadcrumb__list">
+                            <span><a href="{{ route('trangchu') }}">Trang chủ</a></span>
+                            <span>Tin tức</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- section title area end -->
 
     <!-- blog grid area start -->
     <section class="tp-blog-grid-area pb-120">
@@ -18,7 +48,7 @@
                                     @foreach ($baiViet as $baiviet)
                                         <div class="tp-blog-list-item d-md-flex d-lg-block d-xl-flex">
                                             <div class="tp-blog-list-thumb">                                           
-                                                <a href="">
+                                                <a href="{{ route('chitietbaiviet', ['id' => $baiviet->id]) }}">
                                                     <img src="{{ $baiviet->anh_bai_viet ? asset('storage/' . $baiviet->anh_bai_viet) : 'assets/img/blog/grid/blog-grid-1.jpg' }}"
                                                         alt="{{ $baiviet->tieu_de }}">
                                                 </a>
@@ -44,14 +74,14 @@
                                                         </span>                                                      
                                                     </div>
                                                     <h3 class="tp-blog-grid-title">
-                                                        <a href="{{ route('chitietsanpham', ['id' => $baiviet->id]) }}">
+                                                        <!-- <a href=""> route chitietsanpham  -->
                                                             {{ Str::limit($baiviet->tieu_de, 50) }}
                                                         </a>
                                                     </h3>
                                                     <p>{{ Str::limit(strip_tags($baiviet->noi_dung), 100) }}</p>
 
                                                     <div class="tp-blog-grid-btn">
-                                                        <a href=""
+                                                        <a href="{{ route('chitietbaiviet', ['id' => $baiviet->id]) }}"
                                                             class="tp-link-btn-3">
                                                             Đọc thêm
                                                             <span>

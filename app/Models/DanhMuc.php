@@ -26,4 +26,7 @@ class DanhMuc extends Model
         return $this->hasMany(SanPham::class,'danh_muc_id');
     }
 
+    public function baiViets() {
+        return $this->hasMany(BaiViet::class);
+    }
 }
