@@ -161,7 +161,7 @@
                                         <div class="col-xl-3 col-lg-3 col-sm-6">
                                             <div class="tp-product-item p-relative transition-3 mb-25">
                                                 <div class="tp-product-thumb p-relative fix m-img">
-                                                    <a href="{{ route('chitietsanpham', $product->id) }}">
+                                                    <a href="#">
                                                         <img width="254px" height="214px" style="object-fit: contain"
                                                             src="{{ asset($product->anh_san_pham) }}"
                                                             alt="product-electronic">
@@ -184,7 +184,7 @@
                                                     </div> --}}
                                                     <h3 class="tp-product-title"
                                                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 199px;">
-                                                        <a href="{{ route('chitietsanpham', $product->id) }}">
+                                                        <a href="#">
                                                             {{ $product->ten_san_pham }}
                                                         </a>
                                                     </h3>
@@ -317,7 +317,7 @@
                             <p
                                 style="max-height: 4.5em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 350px;">
                                 {{ $product->mo_ta }}</p>
-                            <a style="color: #0989ff" href="{{ route('chitietsanpham', $product->id) }}">Xem thêm</a>
+                            <a style="color: #0989ff" href="#">Xem thêm</a>
                             <!-- variations -->
                             <div class="tp-product-details-variation">
                                 <div class="tp-product-details-variation-item">
@@ -339,7 +339,7 @@
                             </div>
 
                             <div class="tp-product-details-action-wrapper">
-                                <a href="{{ route('chitietsanpham', $product->id) }}">
+                                <a href="#">
                                     <button class="tp-product-details-buy-now-btn w-100">Chi tiết sản
                                         phẩm</button>
                                 </a>
@@ -999,7 +999,7 @@
 
                             <!-- actions -->
                             <div class="tp-product-details-action-wrapper">
-                                <a href="{{ route('chitietsanpham', $randProduct->id) }}">
+                                <a href="#">
                                     <button class="tp-product-details-buy-now-btn w-100">Chi tiết sản
                                         phẩm</button>
                                 </a>
