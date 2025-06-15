@@ -7,7 +7,7 @@ use App\Http\Controllers\admin\TagController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\SanPhamController;
-use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Client\TrangBaiVietController;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
 
@@ -107,7 +107,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
     // Khuyến mãi 
     Route::prefix('khuyen_mais')->name('khuyen_mais.')->group(function () {
-  Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
+    Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
     Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
     Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
     Route::get('/{id}', [KhuyenMaiController::class, 'show'])->name('show');
@@ -118,7 +118,18 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
 
     });
+
+
+    
 });
+
+/////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
+    // Bài viết
+    Route::get('/bai-viet', [TrangBaiVietController::class, 'index'])->name('bai-viet');
+    Route::get('/bai-viet/{id}', [TrangBaiVietController::class, 'show'])->name('chitietbaiviet');
+    Route::get('/baiviet/{danh_muc}', [TrangBaiVietController::class, 'filterByCategory'])->name('baiviet.danhmuc');
+
+    
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
 Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
