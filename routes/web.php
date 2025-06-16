@@ -4,14 +4,14 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\admin\TagController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\MauSacController;
-use App\Http\Controllers\Admin\SanPhamController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
+use App\Http\Controllers\Admin\DanhMucController;
 
 // Client Routes
+use App\Http\Controllers\Admin\SanPhamController;
 use App\Http\Controllers\Client\TrangChuController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -92,3 +92,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
 Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
+// giỏ hàng
+Route::get('/Cart-Index', [CartController::class, 'index'])->name('cart.index');
+Route::get('/Cart-List-Drop', [CartController::class, 'CartListDrop'])->name('cart.list.drop');
+Route::get('/Cart-List', [CartController::class, 'CartList'])->name('cart.list');
+Route::get('/Add-Cart/{id}', [CartController::class, 'AddCart'])->name('cart.add');
+Route::get('/Delete-Item-Cart/{id}', [CartController::class, 'DeleteItemCart'])->name('cart.delete.item');
+Route::get('/Delete-Item-List-Cart/{id}', [CartController::class, 'DeleteItemListCart'])->name('cart.delete.item.list');
+Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])->name('cart.update.item');
+Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
+Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
