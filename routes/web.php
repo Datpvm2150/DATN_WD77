@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
@@ -13,9 +12,11 @@ use App\Http\Controllers\Admin\KhuyenMaiController;
 use App\Http\Controllers\Admin\DanhGiaSanPhamController;
 
 use App\Http\Controllers\Client\TrangChuController;
+use App\Http\Controllers\Client\LienHeController;
 use App\Http\Controllers\Client\TrangSanPhamController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\YeuThichController;
+
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // San phẩm
@@ -114,15 +115,20 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/update-expired', [KhuyenMaiController::class, 'updateExpiredKhuyenMai'])->name('updateExpired');
         Route::post('/{id}/onOffKhuyenMai', [KhuyenMaiController::class, 'onOffKhuyenMai'])->name('onOffKhuyenMai');
         Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
-    });
 
-    // Đánh giá
-    Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
-        Route::get('/', [DanhGiaSanPhamController::class, 'index'])->name('index');
-        Route::get('/danh-gia/{danhGiaId}', [DanhGiaSanPhamController::class, 'show'])->name('show');
-        Route::post('/danh-gia/{danhGiaId}/tra-loi', [DanhGiaSanPhamController::class, 'traLoi'])->name('traLoi');
-        Route::put('admin/danhgias/tra-loi/{id}', [DanhGiaSanPhamController::class, 'updateResponse'])->name('traLoi.update');
     });
+});
+
+// Liên Hệ
+Route::get('/lienhe', [LienHeController::class, 'index'])->name('lienhe');
+Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store');
+
+// Đánh giá
+Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
+    Route::get('/', [DanhGiaSanPhamController::class, 'index'])->name('index');
+    Route::get('/danh-gia/{danhGiaId}', [DanhGiaSanPhamController::class, 'show'])->name('show');
+    Route::post('/danh-gia/{danhGiaId}/tra-loi', [DanhGiaSanPhamController::class, 'traLoi'])->name('traLoi');
+    Route::put('admin/danhgias/tra-loi/{id}', [DanhGiaSanPhamController::class, 'updateResponse'])->name('traLoi.update');
 });
 
 // Client

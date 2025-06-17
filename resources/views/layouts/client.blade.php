@@ -241,7 +241,7 @@
                             @foreach (Session::get('cart')->products as $idbt => $product)
                                 <div class="cartmini__widget-item">
                                     <div class="cartmini__thumb">
-                                        <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}">
+                                        <a href="#">
                                             <img src="{{ asset($product['productInfo']->anh_san_pham) }}"
                                                 alt="{{ $product['productInfo']->ten_san_pham ?? 'Product Image' }}">
                                         </a>
@@ -249,7 +249,7 @@
                                     <div class="cartmini__content">
                                         <h5 class="cartmini__title"
                                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
-                                            <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}"
+                                            <a href="#"
                                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
                                                 {{ isset($product['productInfo']->ten_san_pham) ? $product['productInfo']->ten_san_pham : 'Tên sản phẩm không có' }}
                                             </a>
