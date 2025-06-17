@@ -161,7 +161,7 @@
                                         <div class="col-xl-3 col-lg-3 col-sm-6">
                                             <div class="tp-product-item p-relative transition-3 mb-25">
                                                 <div class="tp-product-thumb p-relative fix m-img">
-                                                    <a href="{{ route('chitietsanpham', $product->id) }}">
+                                                    <a href="#">
                                                         <img width="254px" height="214px" style="object-fit: contain"
                                                             src="{{ asset($product->anh_san_pham) }}"
                                                             alt="product-electronic">
@@ -184,7 +184,7 @@
                                                     </div> --}}
                                                     <h3 class="tp-product-title"
                                                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 199px;">
-                                                        <a href="{{ route('chitietsanpham', $product->id) }}">
+                                                        <a href="#">
                                                             {{ $product->ten_san_pham }}
                                                         </a>
                                                     </h3>
@@ -317,7 +317,7 @@
                             <p
                                 style="max-height: 4.5em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 350px;">
                                 {{ $product->mo_ta }}</p>
-                            <a style="color: #0989ff" href="{{ route('chitietsanpham', $product->id) }}">Xem thêm</a>
+                            <a style="color: #0989ff" href="#">Xem thêm</a>
                             <!-- variations -->
                             <div class="tp-product-details-variation">
                                 <div class="tp-product-details-variation-item">
@@ -339,7 +339,7 @@
                             </div>
 
                             <div class="tp-product-details-action-wrapper">
-                                <a href="{{ route('chitietsanpham', $product->id) }}">
+                                <a href="#">
                                     <button class="tp-product-details-buy-now-btn w-100">Chi tiết sản
                                         phẩm</button>
                                 </a>
@@ -551,7 +551,7 @@
                                 </div>
                             @endforeach --}}
                             <div class="tp-product-gadget-btn">
-                                {{-- <a href="{{ route('san-pham') }}" class="tp-link-btn">Sản phẩm khác
+                                <a href="{{ route('san-pham') }}" class="tp-link-btn">Sản phẩm khác
                                     <svg width="15" height="13" viewBox="0 0 15 13" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path d="M13.9998 6.19656L1 6.19656" stroke="currentColor" stroke-width="1.5"
@@ -559,7 +559,7 @@
                                         <path d="M8.75674 0.975394L14 6.19613L8.75674 11.4177" stroke="currentColor"
                                             stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                     </svg>
-                                </a> --}}
+                                </a>
                             </div>
                         </div>
 
@@ -627,12 +627,30 @@
                                                     <span>({{ $newProduct->danhGias->count() }} Reviews)</span>
                                                 </div>
                                             </div>
-                                            <div class="tp-product-price-wrapper">
+                                            {{-- <div class="tp-product-price-wrapper">
                                                 <span
                                                     class="tp-product-price old-price">{{ number_format($newProduct->bienTheSanPhams->first()->gia_cu, 0, ',', '.') }}đ</span>
                                                 <span
                                                     class="tp-product-price new-price">{{ number_format($newProduct->bienTheSanPhams->first()->gia_moi, 0, ',', '.') }}đ</span>
-                                            </div>
+                                            </div> --}}
+                                            @php
+    $bienThe = $newProduct->bienTheSanPhams->first();
+@endphp
+
+@if ($bienThe)
+    <div class="tp-product-price-wrapper">
+        @if ($bienThe->gia_cu && $bienThe->gia_cu > $bienThe->gia_moi)
+            <span class="tp-product-price old-price">
+                {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
+            </span>
+        @endif
+
+        <span class="tp-product-price new-price">
+            {{ number_format($bienThe->gia_moi, 0, ',', '.') }}đ
+        </span>
+    </div>
+@endif
+
                                         </div>
                                     </div>
                                 </div>
@@ -999,7 +1017,7 @@
 
                             <!-- actions -->
                             <div class="tp-product-details-action-wrapper">
-                                <a href="{{ route('chitietsanpham', $randProduct->id) }}">
+                                <a href="#">
                                     <button class="tp-product-details-buy-now-btn w-100">Chi tiết sản
                                         phẩm</button>
                                 </a>
