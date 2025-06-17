@@ -1,4 +1,89 @@
 <div class="tp-header-area p-relative z-index-11">
+    <!-- header top start  -->
+    {{-- <div class="tp-header-top black-bg p-relative z-index-1 d-none d-md-block">
+       <div class="container">
+          <div class="row align-items-center">
+             <div class="col-md-6">
+                <div class="tp-header-welcome d-flex align-items-center">
+                   <span>
+                      <svg width="22" height="19" viewBox="0 0 22 19" fill="none" xmlns="http://www.w3.org/2000/svg">
+                         <path d="M14.6364 1H1V12.8182H14.6364V1Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                         <path d="M14.6364 5.54545H18.2727L21 8.27273V12.8182H14.6364V5.54545Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                         <path d="M5.0909 17.3636C6.3461 17.3636 7.36363 16.3461 7.36363 15.0909C7.36363 13.8357 6.3461 12.8182 5.0909 12.8182C3.83571 12.8182 2.81818 13.8357 2.81818 15.0909C2.81818 16.3461 3.83571 17.3636 5.0909 17.3636Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                         <path d="M16.9091 17.3636C18.1643 17.3636 19.1818 16.3461 19.1818 15.0909C19.1818 13.8357 18.1643 12.8182 16.9091 12.8182C15.6539 12.8182 14.6364 13.8357 14.6364 15.0909C14.6364 16.3461 15.6539 17.3636 16.9091 17.3636Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                      </svg>
+                   </span>
+                   <p>Miễn phí vận chuyển nhanh cho đơn hàng từ 570 nghìn Việt Nam Đồng</p>
+                </div>
+             </div>
+             <div class="col-md-6">
+                <div class="tp-header-top-right d-flex align-items-center justify-content-end">
+                   <div class="tp-header-top-menu d-flex align-items-center justify-content-end">
+                      <div class="tp-header-top-menu-item tp-header-lang">
+                         <span class="tp-header-lang-toggle" id="tp-header-lang-toggle">English</span>
+                         <ul>
+                            <li>
+                               <a href="#">Spanish</a>
+                            </li>
+                            <li>
+                               <a href="#">Russian</a>
+                            </li>
+                            <li>
+                               <a href="#">Portuguese</a>
+                            </li>
+                         </ul>
+                      </div>
+                      <div class="tp-header-top-menu-item tp-header-currency">
+                         <span class="tp-header-currency-toggle" id="tp-header-currency-toggle">USD</span>
+                         <ul>
+                            <li>
+                               <a href="#">EUR</a>
+                            </li>
+                            <li>
+                               <a href="#">CHF</a>
+                            </li>
+                            <li>
+                               <a href="#">GBP</a>
+                            </li>
+                            <li>
+                               <a href="#">KWD</a>
+                            </li>
+                         </ul>
+                      </div>
+                      <div class="tp-header-top-menu-item tp-header-setting">
+                         <span class="tp-header-setting-toggle" id="tp-header-setting-toggle">Cài đặt</span>
+                         <ul>
+                            <li>
+                               <a href="{{route('customer.profileUser')}}">Tài khoản</a>
+                            </li>
+                            <li>
+                               <a href="{{ route('yeuthich') }}">Yêu thích</a>
+                            </li>
+                            <li>
+                               <a href="{{ route('cart.index') }}">Giỏ hàng</a>
+                            </li>
+                            <li>
+                                <form id="logout-form-clients"
+                                action="{{ route('customer.logout') }}" method="POST"
+                                style="display: none;">
+                                @csrf
+                            </form>
+
+                            <a class='dropdown-item notify-item' href="#"
+                                onclick="event.preventDefault(); document.getElementById('logout-form-clients').submit();">
+                                <i class="mdi mdi-location-exit fs-16 align-middle"></i>
+                                <span>Đăng xuất</span>
+                            </a>
+                            </li>
+                         </ul>
+                      </div>
+                   </div>
+                </div>
+             </div>
+          </div>
+       </div>
+    </div> --}}
+
     <!-- header main start -->
     <div class="tp-header-main tp-header-sticky">
         <div class="container">
@@ -11,12 +96,11 @@
                         </a>
                     </div>
                 </div>
-
                 <div class="col-xl-6 col-lg-7 d-none d-lg-block">
 
 
                     <div class="tp-header-search pl-70">
-                        <form action="#" method="GET">
+                        <form action="{{ route('san-pham') }}" method="GET">
                             <div class="tp-header-search-wrapper d-flex align-items-center">
                                 <div class="tp-header-search-box">
                                     <input type="text" id="search" name="search"
@@ -38,27 +122,6 @@
                                 </div>
                             </div>
                         </form>
-
-                <!-- Menu -->
-                <div class="col-xl-6 col-lg-6 col-md-6 d-none d-md-block" style="flex: 0 0 50%; max-width: 50%; display: flex; justify-content: center;">
-                    <div class="tp-header-sticky-menu main-menu menu-style-1" style="width: 100%;">
-                        <nav id="mobile-menu" style="display: block;">
-                            <ul style="display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; justify-content: center;">
-                                <li class="has-mega-menu">
-                                    <a href="{{ route('trangchu') }}" style="font-weight: 600; color: #111; text-decoration: none;">Trang chủ</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('san-pham') }}" style="font-weight: 600; color: #111; text-decoration: none;">Sản phẩm</a>
-                                </li>
-                                <li>
-                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Tin tức</a>
-                                </li>
-                                <li>
-                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Liên hệ</a>
-                                </li>
-                            </ul>
-                        </nav>
-
                     </div>
                 </div>
                 <style>
@@ -91,7 +154,7 @@
                 </style>
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                <script>
+                {{-- <script>
                     $(document).ready(function() {
                         let currentAjaxRequest = null; // Lưu yêu cầu AJAX hiện tại
                         let selectedSuggestionIndex = -1; // Chỉ số gợi ý hiện được chọn
@@ -107,7 +170,7 @@
 
                                 // Gửi yêu cầu AJAX mới
                                 currentAjaxRequest = $.ajax({
-                                    url: "#", // URL gọi route
+                                    url: "{{ route('search.sanpham') }}", // URL gọi route
                                     method: 'GET',
                                     data: {
                                         search: searchTerm
@@ -118,7 +181,7 @@
                                             if (data.length > 0) {
                                                 data.forEach(function(sanPham, index) {
                                                     html += `
-                        <a href="#" class="suggestion-item d-block px-2 py-1" data-index="${index}" data-value="${sanPham.ten_san_pham}">
+                        <a href="/chitietsanpham/${sanPham.id}" class="suggestion-item d-block px-2 py-1" data-index="${index}" data-value="${sanPham.ten_san_pham}">
                            <div class="product-suggestion d-flex align-items-center mb-1">
                               <div class="product-img">
                                  <img src="${sanPham.anh_san_pham}" alt="${sanPham.ten_san_pham}" class="img-fluid" style="width: 60px; height: 60px; object-fit: cover;">
@@ -165,22 +228,22 @@
                             }
                         });
                     });
-                </script>
+                </script> --}}
 
                 <div class="col-xl-4 col-lg-3 col-md-8 col-6">
                     <div class="tp-header-main-right d-flex align-items-center justify-content-end">
                         <div class="tp-header-login d-none d-lg-block">
 
-                            @if (Auth::check())
+                            {{-- @if (Auth::check()) --}}
                                 <a href="{{ route('customer.profileUser') }}" class="d-flex align-items-center">
                                     <div class="tp-header-login-icon">
                                         <span>
-                                            @if (Auth::user()->anh_dai_dien)
+                                            {{-- @if (Auth::user()->anh_dai_dien) --}}
                                                 <!-- Hiển thị ảnh đại diện -->
-                                                <img src="{{ asset('storage/' . Auth::user()->anh_dai_dien) }}"
+                                                {{-- <img src="{{ asset('storage/' . Auth::user()->anh_dai_dien) }}"
                                                     alt="Avatar"
-                                                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover">
-                                            @else
+                                                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"> --}}
+                                            {{-- @else --}}
                                                 <!-- SVG mặc định nếu không có ảnh đại diện -->
                                                 <svg width="17" height="21" viewBox="0 0 17 21" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -192,16 +255,17 @@
                                                         stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                                         stroke-linejoin="round" />
                                                 </svg>
-                                            @endif
+                                            {{-- @endif --}}
                                         </span>
                                     </div>
                                     <div class="tp-header-login-content d-none d-xl-block">
-                                        <span>Xin chào {{ Auth::user()->ten }}</span>
+                                        {{-- <span>Xin chào {{ Auth::user()->ten }}</span> --}}
+                                        <span>Xin Chào User</span>
                                         <h5 class="tp-header-login-title">Tài khoản của bạn</h5>
                                     </div>
                                 </a>
-                            @else
-                                <a href="#" class="d-flex align-items-center">
+                            {{-- @else
+                                <a href="{{ route('customer.login') }}" class="d-flex align-items-center">
                                     <div class="tp-header-login-icon">
                                         <span>
                                             <svg width="17" height="21" viewBox="0 0 17 21" fill="none"
@@ -220,7 +284,7 @@
                                         <h5 class="tp-header-login-title">Đăng nhập</h5>
                                     </div>
                                 </a>
-                            @endif
+                            @endif --}}
 
 
                             {{-- <a href="profile.html" class="d-flex align-items-center">
@@ -235,13 +299,13 @@
                          <div class="tp-header-login-content d-none d-xl-block">
                             <span>Hello, Sign In</span>
                             <h5 class="tp-header-login-title">Your Account</h5>
-                         </div>
-                      </a> --}}
+                         </div> --}}
+                      </a>
                         </div>
                         <div class="tp-header-action d-flex align-items-center ml-50">
 
                             <div class="tp-header-action-item d-none d-lg-block">
-                                <a href="#" class="tp-header-action-btn">
+                                <a href="{{ route('yeuthich') }}" class="tp-header-action-btn">
                                     <svg width="22" height="20" viewBox="0 0 22 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -342,9 +406,9 @@
                             </button>
                             <nav class="tp-category-menu-content">
                                 <ul>
-                                    {{-- @foreach ($danhMucs as $danhMuc)
+                                    {{-- @foreach ($danhMucs as $danhMuc) --}}
                                         <li>
-                                            <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $danhMuc->id]) }}">
+                                            {{-- <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $danhMuc->id]) }}"> --}}
                                                 <span>
                                                     <svg width="8" height="8" viewBox="0 0 8 8"
                                                         fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -352,10 +416,10 @@
                                                             fill="currentColor" />
                                                     </svg>
                                                 </span>
-                                                {{ $danhMuc->ten_danh_muc }}
+                                                {{-- {{ $danhMuc->ten_danh_muc }} --}}
                                             </a>
                                         </li>
-                                    @endforeach --}}
+                                    {{-- @endforeach --}}
                                 </ul>
                             </nav>
                         </div>
@@ -370,11 +434,11 @@
 
                                     </li>
                                     <li>
-                                        <a href="#">Sản phẩm</a>
+                                        <a href="{{ route('san-pham') }}">Sản phẩm</a>
                                     </li>
 
                                     <li>
-                                        <a href="#">Tin tức</a>
+                                        <a href="{{ route('bai-viet') }}">Tin tức</a>
                                     </li>
                                     <li><a href="{{ route('lienhe') }}">Liên hệ</a></li>
                                 </ul>

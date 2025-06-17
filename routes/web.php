@@ -19,6 +19,7 @@ use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\YeuThichController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\TrangBaiVietController;
+use App\Http\Controllers\Client\TaiKhoanController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // San phẩm
@@ -138,7 +139,6 @@ Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
     Route::put('admin/danhgias/tra-loi/{id}', [DanhGiaSanPhamController::class, 'updateResponse'])->name('traLoi.update');
 });
 
-// Client
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
 Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
@@ -168,3 +168,7 @@ Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeut
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
 
+// Customer Routes
+Route::prefix('customer')->name('customer.')->group(function () {
+     Route::get('profile',[TaiKhoanController::class,'profileUser'])->name('profileUser');
+});
