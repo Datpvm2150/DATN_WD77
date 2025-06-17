@@ -11,6 +11,7 @@
                         </a>
                     </div>
                 </div>
+
                 <div class="col-xl-6 col-lg-7 d-none d-lg-block">
 
 
@@ -37,6 +38,27 @@
                                 </div>
                             </div>
                         </form>
+
+                <!-- Menu -->
+                <div class="col-xl-6 col-lg-6 col-md-6 d-none d-md-block" style="flex: 0 0 50%; max-width: 50%; display: flex; justify-content: center;">
+                    <div class="tp-header-sticky-menu main-menu menu-style-1" style="width: 100%;">
+                        <nav id="mobile-menu" style="display: block;">
+                            <ul style="display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; justify-content: center;">
+                                <li class="has-mega-menu">
+                                    <a href="{{ route('trangchu') }}" style="font-weight: 600; color: #111; text-decoration: none;">Trang chủ</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('san-pham') }}" style="font-weight: 600; color: #111; text-decoration: none;">Sản phẩm</a>
+                                </li>
+                                <li>
+                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Tin tức</a>
+                                </li>
+                                <li>
+                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Liên hệ</a>
+                                </li>
+                            </ul>
+                        </nav>
+
                     </div>
                 </div>
                 <style>
