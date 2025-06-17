@@ -19,7 +19,7 @@
                                     <a href="{{ route('trangchu') }}" style="font-weight: 600; color: #111; text-decoration: none;">Trang chủ</a>
                                 </li>
                                 <li>
-                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Sản phẩm</a>
+                                    <a href="{{ route('san-pham') }}" style="font-weight: 600; color: #111; text-decoration: none;">Sản phẩm</a>
                                 </li>
                                 <li>
                                     <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Tin tức</a>
