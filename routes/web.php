@@ -107,7 +107,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 /////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
     // Bài viết
-    Route::get('/bai-viet', [TrangBaiVietController::class, 'index'])->name('bai-viet');
+    Route::get('/bai-viet', [TrangBaiVietController::class, 'index'])->name('bai-viet-1');
     Route::get('/bai-viet/{id}', [TrangBaiVietController::class, 'show'])->name('chitietbaiviet');
     Route::get('/baiviet/{danh_muc}', [TrangBaiVietController::class, 'filterByCategory'])->name('baiviet.danhmuc');
 
