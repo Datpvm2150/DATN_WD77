@@ -136,6 +136,8 @@ class KhuyenMaiController extends Controller
                 return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
             }
         // Xóa bản ghi
+            $khuyenMai->trang_thai = false;
+            $khuyenMai->save();
             $khuyenMai->delete();
             return redirect()->route('admin.khuyen_mais.index')->with('success', 'Khuyến mãi đã được xóa thành công.');
         }
@@ -177,5 +179,39 @@ class KhuyenMaiController extends Controller
 
                  // Trả về thông báo hoặc view nếu cần
         return redirect()->back()->with('success', "Đã cập nhật trạng thái của $updatedCount khuyến mãi.");
+        }
+
+        public function trash(Request $request) {
+            $query = KhuyenMai::query();
+            if($request->has(('ngay_bat_dau')) && $request->input('ngay_ket_thuc')) {
+                $query->where('ngay_bat_dau', '>=', $request->input('ngay_bat_dau'));
+            }
+
+            if($request->has('ngay_ket_thuc') && $request->input('ngay_ket_thuc')) {
+                $query->where('ngay_ket_thuc', '<=', $request->input('ngay_ket_thuc'));
+            }
+            
+            $KhuyenMais = $query->onlyTrashed()->get();
+            return view('admins.khuyen_mais.trash', compact('KhuyenMais'));
+        }
+
+        public function restore($id) {
+            $khuyenMai = KhuyenMai::withTrashed()->find($id);
+            if($khuyenMai) {
+                $khuyenMai->trang_thai = true;
+                $khuyenMai->save();
+                $khuyenMai->restore();
+                return redirect()->back()->with('success', 'khôi phục thành công');
+            }
+            return redirect()->back()->with('error', 'Khuyến mãi chưa bị xóa mềm');
+        }
+
+        public function forceDelete($id) {
+            $khuyenMai = KhuyenMai::withTrashed()->find($id);
+            if($khuyenMai) {
+                $khuyenMai->forceDelete();
+                return redirect()->route('admin.khuyen_mais.trash')->with('success', 'Khuyến mãi đã được xóa thành công.');
+            }
+            return redirect()->route('admin.khuyen_mais.trash')->with('success', 'Khuyến mãi không tồn tại.');
         }
 }

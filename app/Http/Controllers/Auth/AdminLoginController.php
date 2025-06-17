@@ -24,7 +24,7 @@ class AdminLoginController extends Controller
         // // khi đăng nhập ở client có role:admin,staff thì không cần đăng nhập
         if (Auth::check()) {
             if(Auth::user()->vai_tro=='admin' || Auth::user()->vai_tro=='staff'){
-                return redirect()->route('admin.dashboard');
+                return redirect()->route('admin.khuyen_mais.index'); //admin.dashboard
             }
             return view('auth.admin_login',compact('danhMucs'));
         } else {
@@ -58,7 +58,7 @@ class AdminLoginController extends Controller
             // Chuyển hướng dựa trên vai trò
             // Chuyển hướng dựa trên vai trò
             if ($user->vai_tro == 'admin' || $user->vai_tro == 'staff') {
-                return redirect()->route('admin.dashboard');
+                 return redirect()->route('admin.khuyen_mais.index'); //admin.dashboard
             } 
             // elseif ($user->vai_tro == 'staff') {
             //     return redirect()->route('staff.dashboard'); // Thêm route dành cho staff
