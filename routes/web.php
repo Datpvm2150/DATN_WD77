@@ -5,19 +5,20 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\SanPhamController;
-use App\Http\Controllers\Client\TrangBaiVietController;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
 use App\Http\Controllers\Admin\DungLuongController;
 use App\Http\Controllers\Admin\KhuyenMaiController;
 use App\Http\Controllers\Admin\DanhGiaSanPhamController;
 
+// Client Routes
 use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\LienHeController;
 use App\Http\Controllers\Client\TrangSanPhamController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\YeuThichController;
-
+use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\TrangBaiVietController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     // San phẩm
@@ -141,6 +142,18 @@ Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
 Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
+
+// giỏ hàng
+Route::get('/Cart-Index', [CartController::class, 'index'])->name('cart.index');
+Route::get('/Cart-List-Drop', [CartController::class, 'CartListDrop'])->name('cart.list.drop');
+Route::get('/Cart-List', [CartController::class, 'CartList'])->name('cart.list');
+Route::get('/Add-Cart/{id}', [CartController::class, 'AddCart'])->name('cart.add');
+Route::get('/Delete-Item-Cart/{id}', [CartController::class, 'DeleteItemCart'])->name('cart.delete.item');
+Route::get('/Delete-Item-List-Cart/{id}', [CartController::class, 'DeleteItemListCart'])->name('cart.delete.item.list');
+Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])->name('cart.update.item');
+Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
+Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
+
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
 
 Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->name('chitietsanpham');
@@ -154,3 +167,4 @@ Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name(
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
+
