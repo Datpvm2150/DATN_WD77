@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\SanPhamController;
+use App\Http\Controllers\Client\TrangBaiVietController;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
 use App\Http\Controllers\Admin\DungLuongController;
@@ -115,9 +116,14 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/update-expired', [KhuyenMaiController::class, 'updateExpiredKhuyenMai'])->name('updateExpired');
         Route::post('/{id}/onOffKhuyenMai', [KhuyenMaiController::class, 'onOffKhuyenMai'])->name('onOffKhuyenMai');
         Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
-
     });
 });
+
+/////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
+// Bài viết
+Route::get('/bai-viet', [TrangBaiVietController::class, 'index'])->name('bai-viet');
+Route::get('/bai-viet/{id}', [TrangBaiVietController::class, 'show'])->name('chitietbaiviet');
+Route::get('/baiviet/{danh_muc}', [TrangBaiVietController::class, 'filterByCategory'])->name('baiviet.danhmuc');
 
 // Liên Hệ
 Route::get('/lienhe', [LienHeController::class, 'index'])->name('lienhe');
@@ -132,6 +138,7 @@ Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
 });
 
 // Client
+// Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
 Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
