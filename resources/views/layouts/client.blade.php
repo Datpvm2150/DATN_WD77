@@ -163,10 +163,10 @@
                 </div>
                 <div class="col">
                     <div class="tp-mobile-item text-center">
-                        {{-- <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
+                        <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
                                         <i class="flaticon-love"></i>
                                         <span>Danh sách yêu thích</span>
-                                    </a> --}}
+                                    </a>
                     </div>
                 </div>
                 <div class="col">
@@ -241,7 +241,7 @@
                             @foreach (Session::get('cart')->products as $idbt => $product)
                                 <div class="cartmini__widget-item">
                                     <div class="cartmini__thumb">
-                                        <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}">
+                                        <a href="#">
                                             <img src="{{ asset($product['productInfo']->anh_san_pham) }}"
                                                 alt="{{ $product['productInfo']->ten_san_pham ?? 'Product Image' }}">
                                         </a>
@@ -249,7 +249,7 @@
                                     <div class="cartmini__content">
                                         <h5 class="cartmini__title"
                                             style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
-                                            <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}"
+                                            <a href="#"
                                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
                                                 {{ isset($product['productInfo']->ten_san_pham) ? $product['productInfo']->ten_san_pham : 'Tên sản phẩm không có' }}
                                             </a>
@@ -342,7 +342,7 @@
 
                                     </li>
                                     <li>
-                                        <a href="#">Sản phẩm</a>
+                                        <a href="{{route('san-pham')}}">Sản phẩm</a>
                                     </li>
 
                                     <li>
@@ -369,7 +369,7 @@
                                             stroke-linejoin="round" />
                                     </svg>
                                     <span class="tp-header-action-badge">
-                                        {{-- @if (Auth::user())
+                                        @if (Auth::user())
                                             <span id="favorite-count">
                                                 <span>
                                                     {{ Auth::user()->sanPhamYeuThichs()->count() }}
@@ -381,7 +381,7 @@
                                                     0
                                                 </span>
                                             </span>
-                                        @endif --}}
+                                        @endif
                                     </span>
                                 </a>
                             </div>
@@ -504,5 +504,6 @@
 </body>
 
 <!-- Mirrored from template.wphix.com/shofy-prv/shofy/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 29 Sep 2024 13:19:32 GMT -->
+
 
 </html>
