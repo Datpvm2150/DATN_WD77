@@ -96,11 +96,12 @@
                         </a>
                     </div>
                 </div>
+
                 <div class="col-xl-6 col-lg-7 d-none d-lg-block">
 
 
                     <div class="tp-header-search pl-70">
-                        <form action="{{ route('san-pham') }}" method="GET">
+                        <form action="#" method="GET">
                             <div class="tp-header-search-wrapper d-flex align-items-center">
                                 <div class="tp-header-search-box">
                                     <input type="text" id="search" name="search"
@@ -122,6 +123,27 @@
                                 </div>
                             </div>
                         </form>
+
+                <!-- Menu -->
+                <div class="col-xl-6 col-lg-6 col-md-6 d-none d-md-block" style="flex: 0 0 50%; max-width: 50%; display: flex; justify-content: center;">
+                    <div class="tp-header-sticky-menu main-menu menu-style-1" style="width: 100%;">
+                        <nav id="mobile-menu" style="display: block;">
+                            <ul style="display: flex; gap: 40px; list-style: none; margin: 0; padding: 0; justify-content: center;">
+                                <li class="has-mega-menu">
+                                    <a href="{{ route('trangchu') }}" style="font-weight: 600; color: #111; text-decoration: none;">Trang chủ</a>
+                                </li>
+                                <li>
+                                    <a href="{{ route('san-pham') }}" style="font-weight: 600; color: #111; text-decoration: none;">Sản phẩm</a>
+                                </li>
+                                <li>
+                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Tin tức</a>
+                                </li>
+                                <li>
+                                    <a href="#" style="font-weight: 600; color: #111; text-decoration: none;">Liên hệ</a>
+                                </li>
+                            </ul>
+                        </nav>
+
                     </div>
                 </div>
                 <style>
@@ -147,30 +169,29 @@
                         /* Đảm bảo phần tử hiển thị lên trên các phần tử khác */
                     }
 
-                    .product-img {
-                        margin-right: 20px;
-                        /* Tạo khoảng cách giữa ảnh và tên */
-                    }
-                </style>
-                <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+                .product-img {
+                    margin-right: 20px; /* Tạo khoảng cách giữa ảnh và tên */
+                 }
+               </style>
+               <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-                {{-- <script>
+                <script>
                     $(document).ready(function() {
                         let currentAjaxRequest = null; // Lưu yêu cầu AJAX hiện tại
                         let selectedSuggestionIndex = -1; // Chỉ số gợi ý hiện được chọn
 
-                        $('#search').on('input', function() {
-                            var searchTerm = $(this).val().trim(); // Lấy giá trị nhập vào và loại bỏ khoảng trắng
+   $('#search').on('input', function() {
+      var searchTerm = $(this).val().trim(); // Lấy giá trị nhập vào và loại bỏ khoảng trắng
 
-                            if (searchTerm.length > 0) {
-                                // Hủy yêu cầu AJAX trước đó nếu có
-                                if (currentAjaxRequest) {
-                                    currentAjaxRequest.abort();
-                                }
+      if (searchTerm.length > 0) {
+         // Hủy yêu cầu AJAX trước đó nếu có
+         if (currentAjaxRequest) {
+            currentAjaxRequest.abort();
+         }
 
                                 // Gửi yêu cầu AJAX mới
                                 currentAjaxRequest = $.ajax({
-                                    url: "{{ route('search.sanpham') }}", // URL gọi route
+                                    url: "#", // URL gọi route
                                     method: 'GET',
                                     data: {
                                         search: searchTerm
@@ -181,7 +202,7 @@
                                             if (data.length > 0) {
                                                 data.forEach(function(sanPham, index) {
                                                     html += `
-                        <a href="/chitietsanpham/${sanPham.id}" class="suggestion-item d-block px-2 py-1" data-index="${index}" data-value="${sanPham.ten_san_pham}">
+                        <a href="#" class="suggestion-item d-block px-2 py-1" data-index="${index}" data-value="${sanPham.ten_san_pham}">
                            <div class="product-suggestion d-flex align-items-center mb-1">
                               <div class="product-img">
                                  <img src="${sanPham.anh_san_pham}" alt="${sanPham.ten_san_pham}" class="img-fluid" style="width: 60px; height: 60px; object-fit: cover;">
@@ -191,34 +212,33 @@
                               </div>
                            </div>
                         </a>`;
-                                                });
-                                            } else {
-                                                html =
-                                                    '<p class="text-muted px-2 py-1">Không tìm thấy sản phẩm nào.</p>';
-                                            }
+                     });
+                  } else {
+                     html = '<p class="text-muted px-2 py-1">Không tìm thấy sản phẩm nào.</p>';
+                  }
 
-                                            $('#searchResults').html(html).show();
-                                            selectedSuggestionIndex = -1; // Reset chỉ số gợi ý được chọn
-                                        }
-                                    },
-                                    error: function() {
-                                        $('#searchResults').html('').hide(); // Ẩn gợi ý nếu có lỗi
-                                    }
-                                });
-                            } else {
-                                if (currentAjaxRequest) {
-                                    currentAjaxRequest.abort(); // Hủy yêu cầu hiện tại
-                                }
-                                $('#searchResults').html('').hide(); // Ẩn kết quả tìm kiếm khi input trống
-                            }
-                        });
+                  $('#searchResults').html(html).show();
+                  selectedSuggestionIndex = -1; // Reset chỉ số gợi ý được chọn
+               }
+            },
+            error: function() {
+               $('#searchResults').html('').hide(); // Ẩn gợi ý nếu có lỗi
+            }
+         });
+      } else {
+         if (currentAjaxRequest) {
+            currentAjaxRequest.abort(); // Hủy yêu cầu hiện tại
+         }
+         $('#searchResults').html('').hide(); // Ẩn kết quả tìm kiếm khi input trống
+      }
+   });
 
-                        // Ẩn gợi ý tìm kiếm khi nhấn ra ngoài
-                        $(document).on('click', function(event) {
-                            if (!$(event.target).closest('#search, #searchResults').length) {
-                                $('#searchResults').hide(); // Ẩn kết quả tìm kiếm
-                            }
-                        });
+   // Ẩn gợi ý tìm kiếm khi nhấn ra ngoài
+   $(document).on('click', function(event) {
+      if (!$(event.target).closest('#search, #searchResults').length) {
+         $('#searchResults').hide(); // Ẩn kết quả tìm kiếm
+      }
+   });
 
                         // Hiển thị lại gợi ý khi nhấp vào ô tìm kiếm nếu input không trống
                         $('#search').on('click', function() {
@@ -228,22 +248,22 @@
                             }
                         });
                     });
-                </script> --}}
+                </script>
 
                 <div class="col-xl-4 col-lg-3 col-md-8 col-6">
                     <div class="tp-header-main-right d-flex align-items-center justify-content-end">
                         <div class="tp-header-login d-none d-lg-block">
 
-                            {{-- @if (Auth::check()) --}}
+                            @if (Auth::check())
                                 <a href="{{ route('customer.profileUser') }}" class="d-flex align-items-center">
                                     <div class="tp-header-login-icon">
                                         <span>
-                                            {{-- @if (Auth::user()->anh_dai_dien) --}}
+                                            @if (Auth::user()->anh_dai_dien)
                                                 <!-- Hiển thị ảnh đại diện -->
-                                                {{-- <img src="{{ asset('storage/' . Auth::user()->anh_dai_dien) }}"
+                                                <img src="{{ asset('storage/' . Auth::user()->anh_dai_dien) }}"
                                                     alt="Avatar"
-                                                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover"> --}}
-                                            {{-- @else --}}
+                                                    style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover">
+                                            @else
                                                 <!-- SVG mặc định nếu không có ảnh đại diện -->
                                                 <svg width="17" height="21" viewBox="0 0 17 21" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -255,17 +275,16 @@
                                                         stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                                                         stroke-linejoin="round" />
                                                 </svg>
-                                            {{-- @endif --}}
+                                            @endif
                                         </span>
                                     </div>
                                     <div class="tp-header-login-content d-none d-xl-block">
-                                        {{-- <span>Xin chào {{ Auth::user()->ten }}</span> --}}
-                                        <span>Xin Chào User</span>
+                                        <span>Xin chào {{ Auth::user()->ten }}</span>
                                         <h5 class="tp-header-login-title">Tài khoản của bạn</h5>
                                     </div>
                                 </a>
-                            {{-- @else
-                                <a href="{{ route('customer.login') }}" class="d-flex align-items-center">
+                            @else
+                                <a href="#" class="d-flex align-items-center">
                                     <div class="tp-header-login-icon">
                                         <span>
                                             <svg width="17" height="21" viewBox="0 0 17 21" fill="none"
@@ -284,10 +303,10 @@
                                         <h5 class="tp-header-login-title">Đăng nhập</h5>
                                     </div>
                                 </a>
-                            @endif --}}
+                            @endif
 
 
-                            {{-- <a href="profile.html" class="d-flex align-items-center">
+                      {{-- <a href="profile.html" class="d-flex align-items-center">
                          <div class="tp-header-login-icon">
                             <span>
                                <svg width="17" height="21" viewBox="0 0 17 21" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -299,13 +318,13 @@
                          <div class="tp-header-login-content d-none d-xl-block">
                             <span>Hello, Sign In</span>
                             <h5 class="tp-header-login-title">Your Account</h5>
-                         </div> --}}
-                      </a>
+                         </div>
+                      </a> --}}
                         </div>
                         <div class="tp-header-action d-flex align-items-center ml-50">
 
                             <div class="tp-header-action-item d-none d-lg-block">
-                                <a href="{{ route('yeuthich') }}" class="tp-header-action-btn">
+                                <a href="#" class="tp-header-action-btn">
                                     <svg width="22" height="20" viewBox="0 0 22 20" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -350,41 +369,41 @@
                                         <path d="M13.5343 10.1018H13.5801" stroke="currentColor" stroke-width="1.5"
                                             stroke-linecap="round" stroke-linejoin="round" />
 
-                                    </svg>
-                                    <span class="tp-header-action-badge">
-                                        @if (Session::has('cart'))
-                                            <span id="total-quantity-show">
-                                                <span>
-                                                    {{ Session::has('cart') ? Session::get('cart')->totalProduct : 0 }}
-                                                </span>
-                                            </span>
-                                        @else
-                                            <span id="total-quantity-show">
-                                                <span>
-                                                    0
-                                                </span>
-                                            </span>
-                                        @endif
+                            </svg>
+                           <span class="tp-header-action-badge">
+                              @if (Session::has('cart'))
+                                 <span id="total-quantity-show">
+                                    <span>
+                                       {{ Session::has('cart') ? Session::get('cart')->totalProduct : 0 }}
                                     </span>
-                                </button>
-                            </div>
-                            <div class="tp-header-action-item d-lg-none">
-                                <button type="button" class="tp-header-action-btn tp-offcanvas-open-btn">
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="16"
-                                        viewBox="0 0 30 16">
-                                        <rect x="10" width="20" height="2" fill="currentColor" />
-                                        <rect x="5" y="7" width="25" height="2" fill="currentColor" />
-                                        <rect x="10" y="14" width="20" height="2" fill="currentColor" />
-                                    </svg>
-                                </button>
-                            </div>
+                                 </span>
+                              @else
+                                 <span id="total-quantity-show">
+                                    <span>
+                                       0
+                                    </span>
+                                 </span>
+                              @endif
+                           </span>
+                         </button>
+                      </div>
+                      <div class="tp-header-action-item d-lg-none">
+                         <button type="button" class="tp-header-action-btn tp-offcanvas-open-btn">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="16" viewBox="0 0 30 16">
+                               <rect x="10" width="20" height="2" fill="currentColor"/>
+                               <rect x="5" y="7" width="25" height="2" fill="currentColor"/>
+                               <rect x="10" y="14" width="20" height="2" fill="currentColor"/>
+                            </svg>
+                         </button>
+                      </div>
 
-                        </div>
-                    </div>
+                   </div>
                 </div>
-            </div>
-        </div>
+             </div>
+          </div>
+       </div>
     </div>
+
 
     <!-- header bottom start -->
     <div class="tp-header-bottom tp-header-bottom-border d-none d-lg-block">
@@ -406,7 +425,7 @@
                             </button>
                             <nav class="tp-category-menu-content">
                                 <ul>
-                                    {{-- @foreach ($danhMucs as $danhMuc) --}}
+                                    {{-- @foreach ($danhMucs as $danhMuc)
                                         <li>
                                             {{-- <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $danhMuc->id]) }}"> --}}
                                                 <span>
@@ -419,7 +438,7 @@
                                                 {{-- {{ $danhMuc->ten_danh_muc }} --}}
                                             </a>
                                         </li>
-                                    {{-- @endforeach --}}
+                                    @endforeach --}}
                                 </ul>
                             </nav>
                         </div>
@@ -434,11 +453,11 @@
 
                                     </li>
                                     <li>
-                                        <a href="{{ route('san-pham') }}">Sản phẩm</a>
+                                        <a href="#">Sản phẩm</a>
                                     </li>
 
                                     <li>
-                                        <a href="{{ route('bai-viet') }}">Tin tức</a>
+                                        <a href="#">Tin tức</a>
                                     </li>
                                     <li><a href="{{ route('lienhe') }}">Liên hệ</a></li>
                                 </ul>

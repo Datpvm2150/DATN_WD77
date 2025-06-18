@@ -85,19 +85,19 @@
                                         <div class="tp-product-category-item text-center">
                                             <div class="tp-product-category-thumb"
                                                 style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
-                                                {{-- <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $danhMuc->id]) }}">
+                                                <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $danhMuc->id]) }}">
                                                     <img src="{{ asset($danhMuc->anh_danh_muc) }}"
                                                         alt="{{ $danhMuc->ten_danh_muc }}"
                                                         style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
-                                                </a> --}}
+                                                </a>
                                             </div>
                                             <div class="tp-product-category-content">
-                                                {{-- <h3 class="tp-product-category-title">
+                                                <h3 class="tp-product-category-title">
                                                     <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $danhMuc->id]) }}">
                                                         {{ $danhMuc->ten_danh_muc }}
                                                     </a>
                                                 </h3>
-                                                <p>{{ $danhMuc->san_phams_count }} Sản phẩm</p> --}}
+                                                <p>{{ $danhMuc->san_phams_count }} Sản phẩm</p>
                                             </div>
                                         </div>
                                     </div>
@@ -503,10 +503,10 @@
                                                 </div>
                                                 <!-- product content -->
                                                 <div class="tp-product-content">
-                                                    {{-- <div class="tp-product-category">
+                                                    <div class="tp-product-category">
                                                         <a href="{{ isset($product->danhMuc->id) ? route('sanpham.danhmuc', $product->danhMuc->id) : '#' }}">
                                                             {{ isset($product->danhMuc->ten_danh_muc) ? $product->danhMuc->ten_danh_muc : '...' }}</a>
-                                                    </div> --}}
+                                                    </div>
                                                     <h3 class="tp-product-title"
                                                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 199px;">
                                                         <a href="#">
@@ -866,7 +866,7 @@
                                     alt="">
                             </div>
                             <h3 class="tp-product-gadget-categories-title">Sản phẩm <br> Tiện ích</h3>
-                            {{-- @foreach ($danhMucs as $danhMuc)
+                            @foreach ($danhMucs as $danhMuc)
                                 <div class="tp-product-gadget-categories-list">
                                     <ul>
                                         <li><a
@@ -874,7 +874,7 @@
                                         </li>
                                     </ul>
                                 </div>
-                            @endforeach --}}
+                            @endforeach
                             <div class="tp-product-gadget-btn">
                                 <a href="{{ route('san-pham') }}" class="tp-link-btn">Sản phẩm khác
                                     <svg width="15" height="13" viewBox="0 0 15 13" fill="none"
@@ -952,12 +952,12 @@
                                                     <span>({{ $newProduct->danhGias->count() }} Reviews)</span>
                                                 </div>
                                             </div>
-                                            {{-- <div class="tp-product-price-wrapper">
+                                            <div class="tp-product-price-wrapper">
                                                 <span
                                                     class="tp-product-price old-price">{{ number_format($newProduct->bienTheSanPhams->first()->gia_cu, 0, ',', '.') }}đ</span>
                                                 <span
                                                     class="tp-product-price new-price">{{ number_format($newProduct->bienTheSanPhams->first()->gia_moi, 0, ',', '.') }}đ</span>
-                                            </div> --}}
+                                            </div>
                                             @php
                                                 $bienThe = $newProduct->bienTheSanPhams->first();
                                             @endphp
@@ -1374,7 +1374,7 @@
                 <div class="col-xl-8 col-md-6">
                     <div class="tp-blog-more-wrapper d-flex justify-content-md-end">
                         <div class="tp-blog-more mb-50 text-md-end">
-                            {{-- <a href="{{ route('bai-viet') }}" class="tp-btn tp-btn-2 tp-btn-blue">Xem tất cả tin tức
+                            <a href="{{ route('bai-viet') }}" class="tp-btn tp-btn-2 tp-btn-blue">Xem tất cả tin tức
                                 <svg width="17" height="14" viewBox="0 0 17 14" fill="none"
                                     xmlns="http://www.w3.org/2000/svg">
                                     <path d="M16 6.99976L1 6.99976" stroke="currentColor" stroke-width="1.5"
@@ -1382,7 +1382,7 @@
                                     <path d="M9.9502 0.975414L16.0002 6.99941L9.9502 13.0244" stroke="currentColor"
                                         stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" />
                                 </svg>
-                            </a> --}}
+                            </a>
                             <span class="tp-blog-more-border"></span>
                         </div>
                     </div>
@@ -1411,10 +1411,10 @@
                                             </h3>
                                             <div class="tp-blog-tag">
                                                 <span><i class="fa-light fa-tag"></i></span>
-                                                {{-- @if ($baiViet->danhMuc)
+                                                @if ($baiViet->danhMuc)
                                                     <a href="{{ route('bai-viet', ['danh_muc' => $danhMuc->id]) }}">
                                                         {{ $baiViet->danhMuc->ten_danh_muc }}</a>
-                                                @endif --}}
+                                                @endif
                                             </div>
                                             <p>{{ Str::limit(strip_tags($baiViet->noi_dung), 60) }}</p>
                                             <div class="tp-blog-btn">

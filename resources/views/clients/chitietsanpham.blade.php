@@ -482,7 +482,7 @@
                                 </div>
                             </div>
 
-                            {{-- <button class="tp-product-details-buy-now-btn w-100"onclick="addToCartAndRedirect({{ $sanpham->id }}, '{{ route('cart.index') }}')">Mua ngay</button> --}}
+                            <button class="tp-product-details-buy-now-btn w-100"onclick="addToCartAndRedirect({{ $sanpham->id }}, '{{ route('cart.index') }}')">Mua ngay</button>
                         </div>
                         <script>
 
@@ -551,9 +551,9 @@
                             <div class="tp-product-details-query-item d-flex align-items-center">
                                 <span>Danh mục: </span>
                                 <p>
-                                    {{-- <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $sanpham->danhMuc->id]) }}">
+                                    <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $sanpham->danhMuc->id]) }}">
                                         {{ $sanpham->danhMuc ? $sanpham->danhMuc->ten_danh_muc : '' }}
-                                    </a> --}}
+                                    </a>
                                 </p>
                             </div>
                             <div class="tp-product-details-query-item d-flex align-items-center">

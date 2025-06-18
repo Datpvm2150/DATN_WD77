@@ -1,4 +1,5 @@
 <?php
+
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
@@ -18,6 +19,7 @@ use App\Http\Controllers\Client\TrangSanPhamController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\YeuThichController;
 use App\Http\Controllers\Client\CartController;
+use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Client\TrangBaiVietController;
 use App\Http\Controllers\Client\TaiKhoanController;
 
@@ -119,6 +121,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::post('/{id}/onOffKhuyenMai', [KhuyenMaiController::class, 'onOffKhuyenMai'])->name('onOffKhuyenMai');
         Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
     });
+    // Đánh giá
+    Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
+        Route::get('/', [DanhGiaSanPhamController::class, 'index'])->name('index');
+        Route::get('/danh-gia/{danhGiaId}', [DanhGiaSanPhamController::class, 'show'])->name('show');
+        Route::post('/danh-gia/{danhGiaId}/tra-loi', [DanhGiaSanPhamController::class, 'traLoi'])->name('traLoi');
+        Route::put('admin/danhgias/tra-loi/{id}', [DanhGiaSanPhamController::class, 'updateResponse'])->name('traLoi.update');
+    });
 });
 
 /////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
@@ -131,13 +140,7 @@ Route::get('/baiviet/{danh_muc}', [TrangBaiVietController::class, 'filterByCateg
 Route::get('/lienhe', [LienHeController::class, 'index'])->name('lienhe');
 Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store');
 
-// Đánh giá
-Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
-    Route::get('/', [DanhGiaSanPhamController::class, 'index'])->name('index');
-    Route::get('/danh-gia/{danhGiaId}', [DanhGiaSanPhamController::class, 'show'])->name('show');
-    Route::post('/danh-gia/{danhGiaId}/tra-loi', [DanhGiaSanPhamController::class, 'traLoi'])->name('traLoi');
-    Route::put('admin/danhgias/tra-loi/{id}', [DanhGiaSanPhamController::class, 'updateResponse'])->name('traLoi.update');
-});
+
 
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
@@ -155,6 +158,8 @@ Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount']
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
 
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
+Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
+
 
 Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->name('chitietsanpham');
 Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
@@ -168,7 +173,3 @@ Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeut
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
 
-// Customer Routes
-Route::prefix('customer')->name('customer.')->group(function () {
-     Route::get('profile',[TaiKhoanController::class,'profileUser'])->name('profileUser');
-});
