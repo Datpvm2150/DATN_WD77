@@ -40,7 +40,9 @@
                                 <a class='tp-link' href='{{ route('admin.admins') }}'>Quản trị viên</a>
                             </li>
 
-
+                            <li>
+                                <a class='tp-link' href='{{ route('admin.khachhangs') }}'>Khách hàng</a>
+                            </li>
                         </ul>
                     </div>
                 </li>

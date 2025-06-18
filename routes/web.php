@@ -6,6 +6,7 @@ use App\Http\Controllers\admin\DanhMucController;
 use App\Http\Controllers\Admin\SanPhamController;
 use App\Http\Controllers\Admin\BaiVietController;
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
 
 Route::prefix('admin')->name('admin.')->group(function () {
     //san pham
@@ -59,6 +60,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+//tai khoan admin
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/admins', [AdminController::class, 'index'])->name('admins');
     Route::get('/admins/create', [AdminController::class, 'create'])->name('admins.create');
@@ -66,4 +68,16 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/admins/{id}', [AdminController::class, 'show'])->name('admins.show');
     Route::get('/admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
     Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update');
+});
+
+//khachhang
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/khachhangs', [UserController::class, 'khachhangs'])->name('khachhangs'); // Display users list
+    Route::get('/taikhoans/{id}', [UserController::class, 'show'])->name('taikhoans.show'); // Show user details
+});
+//profile
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::put('/update/{id}', [UserController::class, 'updateProfile'])->name('updateProfile');
+    Route::put('/profile/updatePassword', [UserController::class, 'updatePassword'])->name('profile.updatePassword');
 });
