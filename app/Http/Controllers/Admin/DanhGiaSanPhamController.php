@@ -44,6 +44,12 @@ class DanhGiaSanPhamController extends Controller
 
         return view('admins.danhgias.index', compact('danhGias', 'sanPhams'));
     }
+    public function show($id)
+{
+    $danhGia = DanhGiaSanPham::findOrFail($id);
+    return view('admins.Danhgias.show', compact('danhGia'));
+}
+
 
     // public function show($danhGiaId)
     // {
