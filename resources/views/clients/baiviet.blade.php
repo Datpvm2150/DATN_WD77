@@ -74,7 +74,7 @@
                                                         </span>                                                      
                                                     </div>
                                                     <h3 class="tp-blog-grid-title">
-                                                         <a href="{{ route('chitietsanpham')}}">   
+                                                         <a href="{{ route('chitietsanpham', ['id' => $baiviet->id]) }}">
                                                             {{ Str::limit($baiviet->tieu_de, 50) }}
                                                         </a>
                                                     </h3>
