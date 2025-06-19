@@ -49,11 +49,11 @@
                                                 style="width: 100px; display: none;">
                                         </div>
 
-                                        {{-- <div class="mb-3">
+                                        <div class="mb-3">
                                             <label class="form-label">Tên người đăng</label>
                                             <input class="form-control" type="text" name="user_id"
                                                 value="{{ auth()->user()->ten }}" disabled>
-                                        </div> --}}
+                                        </div>
 
                                         <div class="mb-3">
                                             <label for="danh_muc_id" class="form-label">Danh mục</label>

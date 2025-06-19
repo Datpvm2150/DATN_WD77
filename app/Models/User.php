@@ -2,47 +2,64 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var list<string>
-     */
     protected $fillable = [
-        'name',
+        'ten',
         'email',
-        'password',
+        'mat_khau',
+        'so_dien_thoai',
+        'anh_dai_dien',
+        'vai_tro',
+        'dia_chi',
+        'ngay_sinh',
     ];
 
-    /**
-     * The attributes that should be hidden for serialization.
-     *
-     * @var list<string>
-     */
     protected $hidden = [
-        'password',
+        'mat_khau',
         'remember_token',
     ];
 
-    /**
-     * Get the attributes that should be cast.
-     *
-     * @return array<string, string>
-     */
-    protected function casts(): array
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'mat_khau' => 'hashed',
+    ];
+
+    public function getAuthPassword()
     {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
+        return $this->mat_khau;
+    }
+
+    // Các mối quan hệ với các bảng khác
+    public function baiViets()
+    {
+        return $this->hasMany(BaiViet::class);
+    }
+
+    public function danhGias()
+    {
+        return $this->hasMany(DanhGiaSanPham::class);
+    }
+
+    // public function hoaDons()
+    // {
+    //     return $this->hasMany(HoaDon::class);
+    // }
+
+    // public function lienHes()
+    // {
+    //     return $this->hasMany(lien_hes::class);
+    // }
+    public function sanPhamYeuThichs()
+    {
+        return $this->belongsToMany(SanPham::class, 'yeu_thichs', 'user_id', 'san_pham_id');
     }
 }
