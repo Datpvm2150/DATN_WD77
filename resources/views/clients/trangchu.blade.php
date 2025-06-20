@@ -128,7 +128,7 @@
         </div>
     </section>
     {{-- hết danh mục  --}}
-    <section class="tp-product-arrival-area pt-50">
+    {{-- <section class="tp-product-arrival-area pt-50">
         <div class="container">
             <div class="row">
                 <div class="col-xl-12">
@@ -453,7 +453,7 @@
                 </div>
             </div>
         </div>
-    </section>
+    </section> --}}
 
 
 

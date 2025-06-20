@@ -173,3 +173,9 @@ Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeut
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
 
+
+// Customer Routes
+Route::prefix('customer')->name('customer.')->group(function () {
+     Route::get('profile',[TaiKhoanController::class,'profileUser'])->name('profileUser');
+});
+

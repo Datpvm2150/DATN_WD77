@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Storage;
 
 class TaiKhoanController extends Controller
 {
-
     public function profileUser()
     {
         return view('clients.taikhoan.profile');
