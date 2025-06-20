@@ -16,6 +16,9 @@ class TaiKhoanController extends Controller
 {
     public function profileUser()
     {
-        return view('clients.taikhoan.profile');
+        $user = Auth::user();
+        $danhMuc = DanhMuc::all();
+        return view('clients.taikhoan.profile', compact('user', 'danhMuc'));
     }
+    
 }

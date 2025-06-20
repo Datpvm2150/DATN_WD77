@@ -25,6 +25,11 @@ use App\Http\Controllers\Client\YeuThichController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Client\TrangBaiVietController;
+use App\Http\Controllers\Client\TaiKhoanController;
+use App\Http\Controllers\Auth\CustomerLoginController;
+use App\Http\Controllers\Auth\CustomerForgotPassword;
+use App\Http\Controllers\Auth\CustomerRegisterController;
+
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -207,6 +212,7 @@ Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store')
 
 
 
+// Client
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
 Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');

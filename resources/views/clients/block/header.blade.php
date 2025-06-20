@@ -179,7 +179,7 @@
                                     </div>
                                 </a>
                             @else
-                                <a href="#" class="d-flex align-items-center">
+                                <a href="{{ route('customer.login') }}" class="d-flex align-items-center">
                                     <div class="tp-header-login-icon">
                                         <span>
                                             <svg width="17" height="21" viewBox="0 0 17 21" fill="none"
