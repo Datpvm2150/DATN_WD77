@@ -11,6 +11,10 @@ use App\Http\Controllers\Admin\BaiVietController;
 use App\Http\Controllers\Admin\DungLuongController;
 use App\Http\Controllers\Admin\KhuyenMaiController;
 use App\Http\Controllers\Admin\DanhGiaSanPhamController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Auth\AdminLoginController;
+use App\Http\Controllers\Auth\AdminForgotPasswordController;
 
 // Client Routes
 use App\Http\Controllers\Client\TrangChuController;
@@ -21,9 +25,20 @@ use App\Http\Controllers\Client\YeuThichController;
 use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Client\TrangBaiVietController;
-use App\Http\Controllers\Client\TaiKhoanController;
 
+// Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
+
+    Route::get('/', [AdminLoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [AdminLoginController::class, 'login'])->name('login.post');
+    Route::post('logout', [AdminLoginController::class, 'logout'])->name('logout');
+    Route::get('forgot-password', [AdminForgotPasswordController::class, 'showLinkRequestForm'])->name('password.request');
+    Route::post('forgot-password', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
+    Route::get('reset-password/{token}', [AdminForgotPasswordController::class, 'showResetForm'])->name('password.reset');
+    Route::post('reset-password', [AdminForgotPasswordController::class, 'reset'])->name('password.update');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // San phẩm
     Route::prefix('sanphams')->name('sanphams.')->group(function () {
         Route::get('/', [SanPhamController::class, 'index'])->name('index');
@@ -130,7 +145,57 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+//tai khoan admin
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/admins', [AdminController::class, 'index'])->name('admins');
+    Route::get('/admins/create', [AdminController::class, 'create'])->name('admins.create');
+    Route::post('/admins', [AdminController::class, 'store'])->name('admins.store');
+    Route::get('/admins/{id}', [AdminController::class, 'show'])->name('admins.show');
+    Route::get('/admins/{id}/edit', [AdminController::class, 'edit'])->name('admins.edit');
+    Route::put('/admins/{id}', [AdminController::class, 'update'])->name('admins.update');
+});
+
+//khachhang
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/khachhangs', [UserController::class, 'khachhangs'])->name('khachhangs'); // Display users list
+    Route::get('/taikhoans/{id}', [UserController::class, 'show'])->name('taikhoans.show'); // Show user details
+});
+//profile
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/profile', [UserController::class, 'profile'])->name('profile');
+    Route::put('/update/{id}', [UserController::class, 'updateProfile'])->name('updateProfile');
+    Route::put('/profile/updatePassword', [UserController::class, 'updatePassword'])->name('profile.updatePassword');
+});
+
+// chuyển hướng nếu người dùng nhập route không tồn tại trong admin
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::fallback(function () {
+        return redirect('admin');
+    });
+});
+
 /////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
+Route::prefix('customer')->name('customer.')->group(function () {
+    Route::get('login', [CustomerLoginController::class, 'showLoginForm'])->name('login');
+    Route::post('login', [CustomerLoginController::class, 'login'])->name('login.post');
+    Route::get('register', [CustomerRegisterController::class, 'showRegistrationForm'])->name('register');
+    Route::post('register', [CustomerRegisterController::class, 'register'])->name('register.post');
+    Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
+    Route::get('profile',[TaiKhoanController::class,'profileUser'])->name('profileUser');
+    Route::put('/editProfile/{id}',[TaiKhoanController::class,'update'])->name('update.profileUser');
+    Route::get('/donhang',[TaiKhoanController::class,'index'])->name('donhang');
+    Route::put('changepassword',[TaiKhoanController::class,'changePassword'])->name('changePassword');
+    Route::match(['get', 'post'], '/{id}/chitietdonhang', [TaiKhoanController::class, 'show'])->name('donhang.chitiet');
+    Route::post('/{id}/cancel',[TaiKhoanController::class,'cancelOrder'])->name('cancelOrder');
+    Route::post('/{id}/getOrder',[TaiKhoanController::class,'getOrder'])->name('getOrder');
+    Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('customer.orders.filter');
+    // quên mk customer
+    Route::get('/show-form-forgot',[CustomerForgotPassword::class,'ShowformForgotPasswword'])->name('forgotPassword');
+    Route::post('/forgot-password',[CustomerForgotPassword::class,'SendEmailForgot'])->name('password.email');
+    Route::get('reset-password/{token}', [CustomerForgotPassword::class, 'formResetPassword'])->name('password.reset');
+    Route::post('reset-pass',[CustomerForgotPassword::class, 'resetPassword'])->name('password.change');
+});
+
 // Bài viết
 Route::get('/bai-viet', [TrangBaiVietController::class, 'index'])->name('bai-viet');
 Route::get('/bai-viet/{id}', [TrangBaiVietController::class, 'show'])->name('chitietbaiviet');
@@ -172,10 +237,3 @@ Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name(
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
-
-
-// Customer Routes
-Route::prefix('customer')->name('customer.')->group(function () {
-     Route::get('profile',[TaiKhoanController::class,'profileUser'])->name('profileUser');
-});
-

@@ -38,7 +38,7 @@
 
                         <form action="{{ route('admin.baiviets.index') }}" method="GET"
                             style="max-width: 1000px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; display: flex; align-items: center; gap: 15px;">
-                            {{-- <div style="flex: 1; min-width: 200px;">
+                            <div style="flex: 1; min-width: 200px;">
                                 <label for="user_id" style="display: block; font-weight: bold; margin-bottom: 5px;">Người
                                     đăng:</label>
                                 <select name="user_id" id="user_id"
@@ -50,7 +50,7 @@
                                         </option>
                                     @endforeach
                                 </select>
-                            </div> --}}
+                            </div>
 
                             <div style="flex: 1; min-width: 200px;">
                                 <label for="ngay_dang" style="display: block; font-weight: bold; margin-bottom: 5px;">Ngày

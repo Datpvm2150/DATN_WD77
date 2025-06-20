@@ -28,6 +28,25 @@
                 <!-- Quản trị -->
                 <li class="menu-title">Quản trị</li>
 
+                <li>
+                    <a href="#sidebarTables" data-bs-toggle="collapse">
+                        <i data-feather="users"></i>
+                        <span> Quản lý tài khoản </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="sidebarTables">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href='{{ route('admin.admins') }}'>Quản trị viên</a>
+                            </li>
+
+                            <li>
+                                <a class='tp-link' href='{{ route('admin.khachhangs') }}'>Khách hàng</a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <!-- Kinh doanh -->
                 <li class="menu-title">Kinh doanh</li>
 
