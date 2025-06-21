@@ -72,25 +72,25 @@
 
                                                     <div class="profile__main-inner d-flex flex-wrap align-items-center">
                                                         <div class="profile__main-thumb">
-                                                            {{-- @if ($profile->anh_dai_dien != '')
+                                                            @if ($profile->anh_dai_dien != '')
                                                                 <img src="{{ asset('storage/' . $profile->anh_dai_dien) }}"
                                                                     class="rounded-circle avatar-xxl img-thumbnail float-start"
                                                                     alt="Avatar" style="object-fit: cover">
                                                             @else
                                                                 <img src="{{ isset($user) && $user->anh_dai_dien ? Storage::url($user->anh_dai_dien) : asset('assets/client/img/about/anhchuadangnhap.jpg') }}" alt="">
-                                                            @endif --}}
+                                                            @endif
 
-                                                            {{-- <div class="profile__main-thumb-edit">
+                                                            <div class="profile__main-thumb-edit">
                                                                 <input id="profile-thumb-input" class="profile-img-popup"
                                                                     name="anh_dai_dien" type="file">
                                                                 <label for="profile-thumb-input"><i
                                                                         class="fa-light fa-camera"></i></label>
-                                                            </div> --}}
+                                                            </div>
                                                         </div>
-                                                        {{-- <div class="profile__main-content">
+                                                       <div class="profile__main-content">
                                                             <h4 class="profile__main-title">Xin chào {{ $profile->ten }}
-                                                            </h4> --}}
-                                                            {{-- <p>You have <span>08</span> notifications</p> --}}
+                                                            </h4>
+                                                            <p>Bạn có <span>0</span> thông báo</p>
                                                         </div>
 
                                                     </div>
@@ -297,7 +297,7 @@
                                                         <div class="profile__input-box">
                                                             <div class="profile__input">
                                                                 <input type="text" placeholder="Enter username"
-                                                                    value="shahnewzname">
+                                                                    value="FB">
                                                                 <span>
                                                                     <i class="fa-brands fa-facebook-f"></i>
                                                                 </span>
@@ -308,7 +308,7 @@
                                                         <div class="profile__input-box">
                                                             <div class="profile__input">
                                                                 <input type="text" placeholder="Enter username"
-                                                                    value="shahnewzname">
+                                                                    value="TW">
                                                                 <span><i class="fa-brands fa-twitter"></i></span>
                                                             </div>
                                                         </div>
@@ -398,7 +398,7 @@
                                                     <div class="col-xxl-12">
                                                         <div class="profile__input-box">
                                                             <div class="profile__input">
-                                                                <textarea placeholder="Enter your bio">Hi there, this is my bio...</textarea>
+                                                                <textarea placeholder="Enter your bio">Tiêu Sử Của Bạn.....</textarea>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -416,7 +416,7 @@
                                 <div class="tab-pane fade" id="nav-password" role="tabpanel"
                                     aria-labelledby="nav-password-tab">
                                     <div class="profile__password">
-                                        {{-- <form action="{{ route('customer.changePassword') }}" method="POST"> --}}
+                                        <form action="{{ route('customer.changePassword') }}" method="POST">
                                             @csrf
                                             @method('PUT')
                                             <div class="row">
