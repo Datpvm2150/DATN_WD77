@@ -14,7 +14,8 @@ use Illuminate\Support\Facades\Storage;
 
 class TaiKhoanController extends Controller
 {
-    public function index() {
+    public function index()
+    {
         //lấy thông tin người dùng đang đăng nhập
         $user = Auth::user();  // Lấy người dùng hiện tại
     }
@@ -35,16 +36,36 @@ class TaiKhoanController extends Controller
     {
         $user = Auth::user();
 
-        // Xác thực mật khẩu cũ, mật khẩu mới và xác nhận mật khẩu mới
-        $request->validate([
-            'mat_khau_cu' => 'required', // Bắt buộc phải nhập mật khẩu cũ
-            'mat_khau_moi' => 'required|min:8|confirmed' // Mật khẩu mới phải ít nhất 8 ký tự và khớp với xác nhận mật khẩu
-        ]);
-
         // Kiểm tra mật khẩu cũ
         if (!Hash::check($request->input('mat_khau_cu'), $user->mat_khau)) {
-            return redirect()->back()->with('error', 'Mật khẩu cũ không đúng.');
+            return redirect()->back()
+                ->withErrors(['mat_khau_cu' => 'Mật Khẩu Cũ Không Đúng.'])
+                ->withInput();
         }
+
+        // Kiểm tra mật khẩu mới có trùng với mật khẩu cũ không
+        if (Hash::check($request->input('mat_khau_moi'), $user->mat_khau)) {
+            return redirect()->back()
+                ->withErrors(['mat_khau_moi' => 'Bạn đang sử dụng mật khẩu này.'])
+                ->withInput();
+        }
+
+        // Xác thực mật khẩu cũ, mật khẩu mới và xác nhận mật khẩu mới
+        $request->validate(
+            [
+                'mat_khau_cu' => 'required', // Bắt buộc phải nhập mật khẩu cũ
+                'mat_khau_moi' => 'required|min:8|confirmed', // Mật khẩu mới phải ít nhất 8 ký tự
+                'mat_khau_moi_confirmation' => 'required', // Xác nhận mật khẩu mới phải được nhập và khớp với mật khẩu mới
+            ],
+            [
+                'mat_khau_cu.required' => 'Mật khẩu cũ không được để trống.',
+                'mat_khau_moi.required' => 'Mật khẩu mới không được để trống.',
+                'mat_khau_moi.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
+                'mat_khau_moi_confirmation.required' => 'Xác nhận mật khẩu mới không được để trống.',
+                'mat_khau_moi.confirmed' => 'Mật khẩu mới và xác nhận mật khẩu mới không khớp.',
+            ]
+        );
+
 
 
         // Cập nhật mật khẩu mới
@@ -54,7 +75,8 @@ class TaiKhoanController extends Controller
         return redirect()->back()->with('success', 'Đổi mật khẩu thành công!');
     }
 
-    public function edit($id){
+    public function edit($id)
+    {
         // Lấy thông tin người dùng theo ID
         $user = Auth::user();
         if ($user->id != $id) {
@@ -65,13 +87,27 @@ class TaiKhoanController extends Controller
     public function update(Request $request, string $id)
     {
         //Validate dữ liệu từ form
-        $request->validate([
-            'ten' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'so_dien_thoai' => 'nullable|string|max:20',
-            'anh_dai_dien' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'dia_chi' => 'nullable|string',
-        ]);
+        $request->validate(
+            [
+                'ten' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $id,
+                'so_dien_thoai' => 'nullable|string|max:20',
+                'anh_dai_dien' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'dia_chi' => 'nullable|string',
+            ],
+            [
+                "ten.required" => "Tên không được để trống.",
+                "email.required" => "Email không được để trống.",
+                "email.email" => "Email không hợp lệ.",
+                "email.unique" => "Email đã được sử dụng.",
+                "so_dien_thoai.max" => "Số điện thoại không được vượt quá 20 ký tự.",
+                "anh_dai_dien.image" => "Ảnh đại diện phải là một tệp hình ảnh.",
+                "anh_dai_dien.mimes" => "Ảnh đại diện phải có định dạng jpeg, png, jpg, gif hoặc svg.",
+                "anh_dai_dien.max" => "Ảnh đại diện không được vượt quá 2MB.",
+                "dia_chi.string" => "Địa chỉ phải là một chuỗi ký tự.",
+                "dia_chi.max" => "Địa chỉ không được vượt quá 255 ký tự."
+            ]
+        );
 
         $users = Auth::user();
         $users->ten = $request->get('ten');

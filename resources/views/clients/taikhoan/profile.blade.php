@@ -24,9 +24,10 @@
                         <div class="profile__tab mr-40">
                             <nav>
                                 <div class="nav nav-tabs tp-tab-menu flex-column" id="profile-tab" role="tablist">
-                                    <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-profile" type="button" role="tab"
-                                        aria-controls="nav-profile" aria-selected="false"><span><i
+                                    <button class="nav-link @if(!$errors->has('mat_khau_cu') && !$errors->has('mat_khau_moi') && !$errors->has('mat_khau_moi_confirmation')) active @endif"
+                                        id="nav-profile-tab" data-bs-toggle="tab" data-bs-target="#nav-profile"
+                                        type="button" role="tab" aria-controls="nav-profile"
+                                        aria-selected="{{ !$errors->has('mat_khau_cu') && !$errors->has('mat_khau_moi') && !$errors->has('mat_khau_moi_confirmation') ? 'true' : 'false' }}"><span><i
                                                 class="fa-regular fa-user-pen"></i></span>Tài khoản</button>
                                     <button class="nav-link" id="nav-information-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-information" type="button" role="tab"
@@ -37,8 +38,9 @@
                                         aria-controls="nav-address" aria-selected="false"><span><i
                                                 class="fa-light fa-location-dot"></i></span> Address </button> --}}
                                     {{-- <a href="{{ route('customer.donhang') }}" class="nav-link"><span><i class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a> --}}
-                                    <a href="#" class="nav-link"><span><i class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a>
-                                      {{--  <button class="nav-link" id="nav-order-tab" data-bs-toggle="tab"
+                                    <a href="#" class="nav-link"><span><i
+                                                class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a>
+                                    {{--  <button class="nav-link" id="nav-order-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-order" type="button" role="tab" aria-controls="nav-order"
                                         aria-selected="false"><span><i class="fa-light fa-clipboard-list-check"></i></span>
                                         My Orders </button> --}}
@@ -46,15 +48,16 @@
                                         data-bs-target="#nav-notification" type="button" role="tab"
                                         aria-controls="nav-notification" aria-selected="false"><span><i
                                                 class="fa-regular fa-bell"></i></span> Notification</button> --}}
-                                    <button class="nav-link" id="nav-password-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-password" type="button" role="tab"
-                                        aria-controls="nav-password" aria-selected="false"><span><i
+                                    <button class="nav-link @if($errors->has('mat_khau_cu') || $errors->has('mat_khau_moi') || $errors->has('mat_khau_moi_confirmation')) active @endif"
+                                        id="nav-password-tab" data-bs-toggle="tab" data-bs-target="#nav-password"
+                                        type="button" role="tab" aria-controls="nav-password"
+                                        aria-selected="{{ $errors->has('mat_khau_cu') || $errors->has('mat_khau_moi') || $errors->has('mat_khau_moi_confirmation') ? 'true' : 'false' }}"><span><i
                                                 class="fa-regular fa-lock"></i></span> Thay đổi mật khẩu</button>
 
-                                                <button class="nav-link" id="nav-lienhe-tab" data-bs-toggle="tab"
-                                                data-bs-target="#nav-lienhe" type="button" role="tab"
-                                                aria-controls="nav-lienhe" aria-selected="false"><span><i
-                                                        class="fas fa-envelope"></i></span>Hòm thư phản hồi</button>
+                                    <button class="nav-link" id="nav-lienhe-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-lienhe" type="button" role="tab"
+                                        aria-controls="nav-lienhe" aria-selected="false"><span><i
+                                                class="fas fa-envelope"></i></span>Hòm thư phản hồi</button>
                                     <span id="marker-vertical" class="tp-tab-line d-none d-sm-inline-block"></span>
                                 </div>
                             </nav>
@@ -63,8 +66,8 @@
                     <div class="col-xxl-8 col-lg-8">
                         <div class="profile__tab-content">
                             <div class="tab-content" id="profile-tabContent">
-                                <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
-                                    aria-labelledby="nav-profile-tab">
+                                <div class="tab-pane fade @if(!$errors->has('mat_khau_cu') && !$errors->has('mat_khau_moi') && !$errors->has('mat_khau_moi_confirmation')) show active @endif"
+                                    id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">
                                     <div class="profile__main">
                                         <div class="profile__main-top pb-80">
                                             <div class="row align-items-center">
@@ -77,7 +80,8 @@
                                                                     class="rounded-circle avatar-xxl img-thumbnail float-start"
                                                                     alt="Avatar" style="object-fit: cover">
                                                             @else
-                                                                <img src="{{ isset($user) && $user->anh_dai_dien ? Storage::url($user->anh_dai_dien) : asset('assets/client/img/about/anhchuadangnhap.jpg') }}" alt="">
+                                                                <img src="{{ isset($user) && $user->anh_dai_dien ? Storage::url($user->anh_dai_dien) : asset('assets/client/img/about/anhchuadangnhap.jpg') }}"
+                                                                    alt="">
                                                             @endif
 
                                                             <div class="profile__main-thumb-edit">
@@ -87,7 +91,7 @@
                                                                         class="fa-light fa-camera"></i></label>
                                                             </div>
                                                         </div>
-                                                       <div class="profile__main-content">
+                                                        <div class="profile__main-content">
                                                             <h4 class="profile__main-title">Xin chào {{ $profile->ten }}
                                                             </h4>
                                                             <p>Bạn có <span>0</span> thông báo</p>
@@ -106,7 +110,8 @@
                                                         <a class='dropdown-item notify-item' href="#"
                                                             onclick="event.preventDefault(); document.getElementById('logout-form-client').submit();">
                                                             <i class="mdi mdi-location-exit fs-16 align-middle"></i>
-                                                            <button type="submit" class="btn btn-danger">Đăng xuất</button>
+                                                            <button type="submit" class="btn btn-danger">Đăng
+                                                                xuất</button>
                                                         </a>
 
                                                     </div>
@@ -115,7 +120,7 @@
                                         </div>
                                         <div class="profile__main-info">
                                             <div class="row gx-3">
-                                                {{-- <div class="col-md-3 col-sm-6">
+                                                <div class="col-md-3 col-sm-6">
                                                     <div class="profile__main-info-item">
                                                         <div class="profile__main-info-icon">
                                                             <span>
@@ -129,7 +134,7 @@
                                                         </div>
                                                         <h4 class="profile__main-info-title">Downlaods</h4>
                                                     </div>
-                                                </div> --}}
+                                                </div>
                                                 <div class="col-md-3 col-sm-6">
                                                     <div class="profile__main-info-item">
                                                         <div class="profile__main-info-icon">
@@ -162,7 +167,7 @@
                                                             </span>
                                                         </div>
                                                         {{-- <a href="{{ route('customer.donhang') }}"> --}}
-                                                            <h4 class="profile__main-info-title">Đơn hàng</h4>
+                                                        <h4 class="profile__main-info-title">Đơn hàng</h4>
                                                         </a>
 
                                                     </div>
@@ -261,7 +266,7 @@
                                                                             stroke-linejoin="round" />
                                                                     </svg>
                                                                 </span>
-                                                            </div> 
+                                                            </div>
                                                         </div>
                                                     </div>
 
@@ -292,7 +297,7 @@
                                                                 </span>
                                                             </div>
                                                         </div>
-                                                    </div> 
+                                                    </div>
                                                     <div class="col-xxl-6 col-md-6">
                                                         <div class="profile__input-box">
                                                             <div class="profile__input">
@@ -312,7 +317,7 @@
                                                                 <span><i class="fa-brands fa-twitter"></i></span>
                                                             </div>
                                                         </div>
-                                                    </div> 
+                                                    </div>
                                                     <div class="col-xxl-6 col-md-6">
                                                         <div class="profile__input-box">
                                                             <div class="profile__input">
@@ -413,8 +418,8 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="nav-password" role="tabpanel"
-                                    aria-labelledby="nav-password-tab">
+                                <div class="tab-pane fade @if($errors->has('mat_khau_cu') || $errors->has('mat_khau_moi') || $errors->has('mat_khau_moi_confirmation')) show active @endif"
+                                    id="nav-password" role="tabpanel" aria-labelledby="nav-password-tab">
                                     <div class="profile__password">
                                         <form action="{{ route('customer.changePassword') }}" method="POST">
                                             @csrf
@@ -423,30 +428,32 @@
                                                 <div class="col-xxl-12">
                                                     <div class="tp-profile-input-box">
                                                         <div class="tp-contact-input">
-                                                            <input name="mat_khau_cu" class="@error('mat_khau_cu') is-invalid
-
-                                                            @enderror" id="old_pass" type="password">
+                                                            <input name="mat_khau_cu" value="{{ old('mat_khau_cu') }}"
+                                                                class="@error('mat_khau_cu') is-invalid
+                                                            @enderror"
+                                                                id="old_pass" type="password">
                                                         </div>
                                                         <div class="tp-profile-input-title">
                                                             <label for="mat_khau_moi">Mật khẩu cũ</label>
                                                         </div>
-                                                          @error('mat_khau_cu')
-                                                        <p class="alert alert-danger">{{$message}}</p>
+                                                        @error('mat_khau_cu')
+                                                            <div class="text-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                 </div>
                                                 <div class="col-xxl-6 col-md-6">
                                                     <div class="tp-profile-input-box">
                                                         <div class="tp-profile-input">
-                                                            <input name="mat_khau_moi" id="new_pass" type="password" class="@error('mat_khau_moi')
+                                                            <input name="mat_khau_moi" id="new_pass" type="password" value="{{ old('mat_khau_moi') }}"
+                                                                class="@error('mat_khau_moi')
                                                             is-invalid
                                                             @enderror">
                                                         </div>
                                                         <div class="tp-profile-input-title">
                                                             <label for="mat_khau_moi">Mật khẩu mới</label>
                                                         </div>
-                                                         @error('mat_khau_moi')
-                                                        <p class="alert alert-danger">{{$message}}</p>
+                                                        @error('mat_khau_moi')
+                                                            <div class="text-danger">{{ $message }}</div>
                                                         @enderror
                                                     </div>
                                                 </div>
@@ -459,6 +466,9 @@
                                                         <div class="tp-profile-input-title">
                                                             <label for="con_new_pass">Xác nhận mật khẩu mới</label>
                                                         </div>
+                                                        @error('mat_khau_moi_confirmation')
+                                                            <div class="text-danger">{{ $message }}</div>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                                 <div class="col-xxl-6 col-md-6">
@@ -473,20 +483,20 @@
 
 
                                 <div class="tab-pane fade" id="nav-lienhe" role="tabpanel"
-                                aria-labelledby="nav-lienhe-tab">
-                                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                                    <table class="table table-striped table-hover text-center">
-                                        <thead>
-                                            <tr>
-                                                <th>Nội dung phản hồi</th>
-                                                <th>Ngày gửi</th>
-                                                <th>Trạng thái phản hồi</th>
-                                                <th>Thao tác</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            {{-- @foreach ($lienhes as $lienhe) --}}
-                                            {{-- <tr>
+                                    aria-labelledby="nav-lienhe-tab">
+                                    <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-striped table-hover text-center">
+                                            <thead>
+                                                <tr>
+                                                    <th>Nội dung phản hồi</th>
+                                                    <th>Ngày gửi</th>
+                                                    <th>Trạng thái phản hồi</th>
+                                                    <th>Thao tác</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {{-- @foreach ($lienhes as $lienhe) --}}
+                                                {{-- <tr>
                                                 <td>{{$lienhe->tin_nhan}}</td>
                                                 <td>{{$lienhe->created_at}}</td>
                                                 <td>
@@ -502,15 +512,15 @@
                                                     <a href="https://mail.google.com/mail/u/0/#search/Ph%E1%BA%A3n+h%E1%BB%93i+LaptopStore" target="_blank" class="btn btn-info">Kiểm tra phản hồi</a>
                                                 </td>
                                             </tr> --}}
-                                            {{-- @endforeach --}}
-                                        </tbody>
-                                    </table>
+                                                {{-- @endforeach --}}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+
+
+
                                 </div>
-                                
-
-
-
-                            </div>
                                 <div class="tab-pane fade" id="nav-address" role="tabpanel"
                                     aria-labelledby="nav-address-tab">
                                     <div class="profile__address">

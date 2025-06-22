@@ -32,7 +32,7 @@
                     <div class="tp-login-wrapper">
                         <div class="tp-login-top text-center mb-30">
                             <h3 class="tp-login-title">Quên mật khẩu</h3>
-                            <p>quay lại đăng nhập? <span><a href="{{ route('customer.login.post') }}"> Đăng nhập tài
+                            <p>Quay lại đăng nhập? <span><a href="{{ route('customer.login.post') }}"> Đăng nhập tài
                                         khoản</a></span></p>
                         </div>
                         <div class="tp-login-option">
@@ -78,9 +78,7 @@
                                                 type="email" name="email" required placeholder="Nhập email của bạn"
                                                 value="{{ old('email') }}">
                                             @error('email')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
+                                                <<div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="tp-login-input-title">
