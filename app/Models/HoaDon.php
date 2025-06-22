@@ -77,4 +77,6 @@ class HoaDon extends Model
     {
         return $this->hasMany(ChiTietHoaDon::class);
     }
+
 }
+
