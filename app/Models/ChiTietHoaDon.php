@@ -26,4 +26,6 @@ class ChiTietHoaDon extends Model
     {
         return $this->belongsTo(HoaDon::class);
     }
+
 }
+

@@ -46,7 +46,7 @@ class HoaDon extends Model
     const HUY_DON_HANG = '6';
 
     const DA_NHAN_HANG = '7';
-    
+
     const THANH_TOAN_KHI_NHAN_HANG = 'Thanh toán khi nhận hàng';
 
     const THANH_TOAN_QUA_CHUYEN_KHOAN = 'Thanh toán qua chuyển khoản ngân hàng';
@@ -77,4 +77,6 @@ class HoaDon extends Model
     {
         return $this->hasMany(ChiTietHoaDon::class);
     }
+
 }
+
