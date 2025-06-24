@@ -240,13 +240,21 @@
                                                 style="width: 15px; height: 15px; background-color: {{ $bienthesanpham->mauSac->ma_mau }}; border-radius: 50%; border-radius: 50%; border: 1px solid;">
                                             </div>
                                         </td>
-                                        <td class="text-danger">
-                                            <del
-                                                class="text-black">{{ number_format($bienthesanpham->gia_cu, 0, ',', '.') }}đ</del>
-                                            <span class="fs-5">
-                                                -{{ number_format($bienthesanpham->gia_moi, 0, ',', '.') }}đ
-                                            </span>
-                                        </td>
+                                        @if (!is_null($bienthesanpham->gia_moi) && $bienthesanpham->gia_moi > 0)
+                                            <td class="text-danger">
+                                                <del class="text-black">
+                                                    {{ number_format($bienthesanpham->gia_cu, 0, ',', '.') }}đ
+                                                </del>
+                                                <span class="fs-5">
+                                                    -{{ number_format($bienthesanpham->gia_moi, 0, ',', '.') }}đ
+                                                </span>
+                                            </td>
+                                        @else
+                                            <td class="text-primary">
+                                                {{ number_format($bienthesanpham->gia_cu, 0, ',', '.') }}đ
+                                            </td>
+                                        @endif
+
                                         <td>{{ number_format($bienthesanpham->so_luong, 0, ',', '.') }}</td>
                                         <td>
                                             @if ($bienthesanpham->deleted_at == null)
@@ -321,11 +329,13 @@
             <div class="card-body mb-4 text-center">
                 <h5>Lọc đánh giá</h5>
                 <div class="rating-filter bg-white border rounded p-3">
-                    <a href="#" class="btn filter-btn" data-url="{{ route('admin.sanphams.filterDanhGia', ['id' => $sanpham->id, 'star' => 'all']) }}">
+                    <a href="#" class="btn filter-btn"
+                        data-url="{{ route('admin.sanphams.filterDanhGia', ['id' => $sanpham->id, 'star' => 'all']) }}">
                         Tất cả<span class="star text-warning">★</span>
                     </a>
                     @foreach (range(5, 1) as $star)
-                        <a href="#" class="btn filter-btn" data-url="{{ route('admin.sanphams.filterDanhGia', ['id' => $sanpham->id, 'star' => $star]) }}">
+                        <a href="#" class="btn filter-btn"
+                            data-url="{{ route('admin.sanphams.filterDanhGia', ['id' => $sanpham->id, 'star' => $star]) }}">
                             {{ $star }} sao <span class="star text-warning">★</span>
                         </a>
                     @endforeach
@@ -350,67 +360,73 @@
                         <a class="page-link" href="{{ $danhgias->nextPageUrl() }}">Next</a>
                     </li>
                 </ul>
-            </nav>       
+            </nav>
         </div>
-         <!-- Nút "Xem đánh giá" -->
+        <!-- Nút "Xem đánh giá" -->
         <button id="scrollToReviews" class="btn btn-primary">Xem đánh giá</button>
         <button id="scrollToTop" class="btn btn-secondary d-none">Lên đầu trang</button>
-        
-        <button id="quaylai" class="btn btn-danger btn-quay-lai" onclick="window.location.href='{{ route('admin.sanphams.index') }}'">
+
+        <button id="quaylai" class="btn btn-danger btn-quay-lai"
+            onclick="window.location.href='{{ route('admin.sanphams.index') }}'">
             <i class="fas fa-arrow-left"></i>Danh sách sản phẩm
         </button>
-        
+
         <!-- JavaScript -->
         <script>
-         // Hàm thêm và gỡ lớp d-none
-function toggleVisibility(elementToShow, elementToHide) {
-    elementToShow.classList.remove('d-none');
-    elementToHide.classList.add('d-none');
-}
+            // Hàm thêm và gỡ lớp d-none
+            function toggleVisibility(elementToShow, elementToHide) {
+                elementToShow.classList.remove('d-none');
+                elementToHide.classList.add('d-none');
+            }
 
-// Xử lý scroll đến phần đánh giá
-document.getElementById('scrollToReviews').addEventListener('click', function () {
-    document.querySelector('.card.mt-4').scrollIntoView({ behavior: 'smooth' });
-    toggleVisibility(document.getElementById('scrollToTop'), this);
-});
+            // Xử lý scroll đến phần đánh giá
+            document.getElementById('scrollToReviews').addEventListener('click', function() {
+                document.querySelector('.card.mt-4').scrollIntoView({
+                    behavior: 'smooth'
+                });
+                toggleVisibility(document.getElementById('scrollToTop'), this);
+            });
 
-// Xử lý scroll lên đầu trang
-document.getElementById('scrollToTop').addEventListener('click', function () {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    toggleVisibility(document.getElementById('scrollToReviews'), this);
-});
+            // Xử lý scroll lên đầu trang
+            document.getElementById('scrollToTop').addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+                toggleVisibility(document.getElementById('scrollToReviews'), this);
+            });
 
-// Xử lý lọc đánh giá
-function handleFilterClick(filterButton) {
-    filterButton.addEventListener('click', function (e) {
-        e.preventDefault();
-        let url = this.getAttribute('data-url');
-        fetch(url)
-            .then(response => response.ok ? response.text() : Promise.reject('Network error'))
-            .then(html => {
-                const danhgiasContainer = document.getElementById('view_dgia');
-                if (danhgiasContainer) {
-                    danhgiasContainer.innerHTML = html;
-                }
-            })
-            .catch(error => console.error('Error:', error));
-    });
-}
+            // Xử lý lọc đánh giá
+            function handleFilterClick(filterButton) {
+                filterButton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    let url = this.getAttribute('data-url');
+                    fetch(url)
+                        .then(response => response.ok ? response.text() : Promise.reject('Network error'))
+                        .then(html => {
+                            const danhgiasContainer = document.getElementById('view_dgia');
+                            if (danhgiasContainer) {
+                                danhgiasContainer.innerHTML = html;
+                            }
+                        })
+                        .catch(error => console.error('Error:', error));
+                });
+            }
 
-// Áp dụng sự kiện cho tất cả nút lọc
-document.querySelectorAll('.filter-btn').forEach(handleFilterClick);
+            // Áp dụng sự kiện cho tất cả nút lọc
+            document.querySelectorAll('.filter-btn').forEach(handleFilterClick);
 
-// Đánh dấu nút lọc đang được chọn
-document.addEventListener('DOMContentLoaded', function() {
-    const filterButtons = document.querySelectorAll('.filter-btn');
-    filterButtons.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            filterButtons.forEach(button => button.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-});
+            // Đánh dấu nút lọc đang được chọn
+            document.addEventListener('DOMContentLoaded', function() {
+                const filterButtons = document.querySelectorAll('.filter-btn');
+                filterButtons.forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        filterButtons.forEach(button => button.classList.remove('active'));
+                        this.classList.add('active');
+                    });
+                });
+            });
         </script>
     </div>
 @endsection

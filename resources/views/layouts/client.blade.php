@@ -232,10 +232,10 @@
                             <div class="cartmini__top-title">
                                 <h4>Giỏ hàng</h4>
                             </div>
-                            {{-- <div class="cartmini__close">
+                            <div class="cartmini__close">
                                <button type="button" class="cartmini__close-btn cartmini-close-btn"><i
                                        class="fal fa-times"></i></button>
-                           </div> --}}
+                           </div>
                         </div>
                         <div class="cartmini__widget">
                             @foreach (Session::get('cart')->products as $idbt => $product)
@@ -297,8 +297,7 @@
                         </div>
                         <div class="cartmini__checkout-btn">
                             <a href="{{ route('cart.index') }}" class="tp-btn mb-10 w-100"> Xem giỏ hàng</a>
-                            {{-- <a href="{{ route('thanhtoan') }}" class="tp-btn tp-btn-border w-100"> Thanh toán</a> --}}
-                            <a href="" class="tp-btn tp-btn-border w-100">Thanh toán</a>
+                            <a href="{{ route('thanhtoan') }}" class="tp-btn tp-btn-border w-100"> Thanh toán</a>
                         </div>
                     </div>
                 @else
