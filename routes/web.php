@@ -231,6 +231,7 @@ Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('
 //thanh toan
 Route::get('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
 Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
+Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
 
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');

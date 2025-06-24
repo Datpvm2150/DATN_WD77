@@ -120,14 +120,14 @@
                                     </div>
 
                                     <!-- Email -->
-                                    {{-- <div class="col-md-12">
+                                    <div class="col-md-12">
                                         <div class="tp-checkout-input">
                                             <input type="text" id="email" placeholder="Email"
                                                 value="{{ Auth::user()->email ?? '' }}" required>
                                             <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ.</div>
 
                                         </div>
-                                    </div> --}}
+                                    </div>
 
                                     <!-- Địa chỉ -->
                                     <div class="tp-checkout-input">
@@ -403,7 +403,7 @@ if (addressSelect.value === '') {
         const note = document.getElementById('note')?.value || ''; // Nếu có trường ghi chú
         loading.classList.remove('d-none');
 
-        fetch('', { thiếu route
+        fetch('{{ route("placeOrder") }}', { 
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -573,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Xóa mã giảm giá
         document.getElementById('removeDiscountButton').addEventListener('click', function() {
-            fetch('', { 
+            fetch('', { // Thiếu route
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
