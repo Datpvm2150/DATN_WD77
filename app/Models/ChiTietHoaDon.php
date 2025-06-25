@@ -28,4 +28,3 @@ class ChiTietHoaDon extends Model
     }
 
 }
-
