@@ -32,7 +32,7 @@
                      <h3 class="tp-contact-title">Thông tin và tin nhắn liên hệ</h3>
                    
                      <div class="tp-contact-form">
-                        {{-- @if(auth()->check()) --}}
+                        @if(auth()->check())
                        
                         <form id="contact-form" action="#" method="POST">
                            @csrf
@@ -65,9 +65,9 @@
                      
                        
 
-                        {{-- @else --}}
-                        {{-- <p class="fs-5">Bạn cần <a class="text-decoration-underline text-danger" href="#">đăng nhập</a> để gửi form!</p> --}}
-                        {{-- @endif --}}
+                        @else
+                        <p class="fs-5">Bạn cần <a class="text-decoration-underline text-danger" href={{ route("login") }}>đăng nhập</a> để gửi form!</p>
+                        @endif
                      </div>
                   </div>
                </div>
@@ -81,7 +81,7 @@
                         </div>
                         <div class="tp-contact-info-content">
                            <p data-info="mail">
-                              <a href="mailto:your_email@example.com">izone@gmail.com</a>
+                              <a href="mailto:your_email@example.com">LaptopStore@gmail.com</a>
                            </p>
                            <p data-info="phone">
                               <a href="tel:123-456-7890">+(402) 763 282 46</a>

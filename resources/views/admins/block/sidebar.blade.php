@@ -55,7 +55,8 @@
                     <a href="#sanpham" data-bs-toggle="collapse">
                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
                             fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z">
+                            <path
+                                d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z">
                             </path>
                         </svg>
                         <span> Sản phẩm </span>
@@ -198,6 +199,24 @@
                         </ul>
                     </div>
                 </li>
+
+                {{-- Đơn hàng --}}
+                <li>
+                    <a href='#hoadons' data-bs-toggle="collapse">
+                        <i data-feather="shopping-bag"></i>
+                        <span> Đơn hàng </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="hoadons">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.hoadons.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+                
             </ul>
         </div>
         <!-- End Sidebar -->

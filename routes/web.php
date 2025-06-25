@@ -15,6 +15,7 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
+use App\Http\Controllers\Admin\HoaDonController;
 
 // Client Routes
 use App\Http\Controllers\Client\TrangChuController;
@@ -151,6 +152,20 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::post('/danh-gia/{danhGiaId}/tra-loi', [DanhGiaSanPhamController::class, 'traLoi'])->name('traLoi');
         Route::put('admin/danhgias/tra-loi/{id}', [DanhGiaSanPhamController::class, 'updateResponse'])->name('traLoi.update');
     });
+
+    // Route hóa đơn
+    Route::prefix('hoadons')->name('hoadons.')->group(function () {
+        Route::get('/', [HoaDonController::class, 'index'])->name('index');
+        Route::get('/{id}/show', [HoaDonController::class, 'show'])->name('show');
+        Route::put('/{id}/update', [HoaDonController::class, 'update'])->name('update');
+        //admin
+        Route::post('/query', [VNPayController::class, 'queryTransaction'])->name('query');
+        Route::post('/refund', [VNPayController::class, 'queryTransaction'])->name('refund');
+        Route::get('/tracuu', [VNPayController::class, 'tracuu'])->name('tracuu');
+        Route::get('/hoantien', [VNPayController::class, 'hoantien'])->name('hoantien');
+
+        Route::delete('/{id}/destroy', [HoaDonController::class, 'destroy'])->name('destroy');
+    });
 });
 
 //tai khoan admin
@@ -189,19 +204,19 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('register', [CustomerRegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('register', [CustomerRegisterController::class, 'register'])->name('register.post');
     Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
-    Route::get('profile',[TaiKhoanController::class,'profileUser'])->name('profileUser');
-    Route::put('/editProfile/{id}',[TaiKhoanController::class,'update'])->name('update.profileUser');
-    Route::get('/donhang',[TaiKhoanController::class,'index'])->name('donhang');
-    Route::put('changepassword',[TaiKhoanController::class,'changePassword'])->name('changePassword');
+    Route::get('profile', [TaiKhoanController::class, 'profileUser'])->name('profileUser');
+    Route::put('/editProfile/{id}', [TaiKhoanController::class, 'update'])->name('update.profileUser');
+    Route::get('/donhang', [TaiKhoanController::class, 'index'])->name('donhang');
+    Route::put('changepassword', [TaiKhoanController::class, 'changePassword'])->name('changePassword');
     Route::match(['get', 'post'], '/{id}/chitietdonhang', [TaiKhoanController::class, 'show'])->name('donhang.chitiet');
     Route::post('/{id}/cancel',[TaiKhoanController::class,'cancelOrder'])->name('cancelOrder'); // hủy đơn hàng
     Route::post('/{id}/getOrder',[TaiKhoanController::class,'getOrder'])->name('getOrder');
     Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('customer.orders.filter');
     // quên mk customer
-    Route::get('/show-form-forgot',[CustomerForgotPassword::class,'ShowformForgotPasswword'])->name('forgotPassword');
-    Route::post('/forgot-password',[CustomerForgotPassword::class,'SendEmailForgot'])->name('password.email');
+    Route::get('/show-form-forgot', [CustomerForgotPassword::class, 'ShowformForgotPasswword'])->name('forgotPassword');
+    Route::post('/forgot-password', [CustomerForgotPassword::class, 'SendEmailForgot'])->name('password.email');
     Route::get('reset-password/{token}', [CustomerForgotPassword::class, 'formResetPassword'])->name('password.reset');
-    Route::post('reset-pass',[CustomerForgotPassword::class, 'resetPassword'])->name('password.change');
+    Route::post('reset-pass', [CustomerForgotPassword::class, 'resetPassword'])->name('password.change');
 });
 
 // Bài viết
@@ -246,4 +261,3 @@ Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name(
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
-
