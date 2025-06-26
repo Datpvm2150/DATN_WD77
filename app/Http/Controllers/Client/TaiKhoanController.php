@@ -130,7 +130,7 @@ class TaiKhoanController extends Controller
         'html' => view('clients.taikhoan.list', compact('donHangs'))->render(),
         'counts' => $counts,
     ]);
-
+    }
     public function profileUser()
     {
         // lấy thông tin người dùng đăng đăng nhập
