@@ -12,10 +12,7 @@
 
     <div class="py-3 d-flex align-items-sm-center flex-sm-row flex-column">
         <div class="flex-grow-1">
-            <h4 class="fs-18 fw-semibold m-0">Danh sách khuyến mãi</h4>
-        </div>
-        <div>
-            <a href="{{ route('admin.khuyen_mais.create') }}" class="btn btn-success">Thêm mới</a>
+            <h4 class="fs-18 fw-semibold m-0">Thùng rác</h4>
         </div>
     </div>
 
@@ -32,9 +29,9 @@
 
 
                 <div class="card-header">
-                    <h5 class="card-title mb-0">Danh sách khuyến mãi</h5>
+                    <h5 class="card-title mb-0">Thùng rác</h5>
                 </div><!-- end card header -->
-                <form action="{{ route('admin.khuyen_mais.index') }}" method="GET" style="max-width: 1000px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; display: flex; align-items: center; gap: 10px; flex-wrap: nowrap;">
+                <form action="{{ route('admin.khuyen_mais.trash') }}" method="GET" style="max-width: 1000px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; display: flex; align-items: center; gap: 10px; flex-wrap: nowrap;">
 
                     <!-- Ngày bắt đầu -->
                     <div style="flex: 1; min-width: 170px;">
@@ -93,26 +90,15 @@
                                                 aria-expanded="false">Thao tác<i
                                                     class="mdi mdi-chevron-down"></i></button>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item"
-                                                    href="{{ route('admin.khuyen_mais.edit', $khuyenmai->id) }}">Sửa</a>
-                                                @if ($khuyenmai->trang_thai == 1)
-                                                <form action="{{ route('admin.khuyen_mais.onOffKhuyenMai', $khuyenmai->id) }}" method="post">
+                                                <form action="{{ route('admin.khuyen_mais.restore', $khuyenmai->id) }}" method="POST" >
                                                     @csrf
-                                                    @method('post')
-                                                    <button class="dropdown-item" href="#">Ngừng hoạt động</button>
+                                                    <button type="submit" class="dropdown-item">Khôi phục</button>
                                                 </form>
-                                                @else
-                                                <form action="{{ route('admin.khuyen_mais.onOffKhuyenMai', $khuyenmai->id) }}" method="post">
-                                                    @csrf
-                                                    @method('post')
-                                                    <button class="dropdown-item" href="#">Hoạt động</button>
-                                                </form>
-                                                @endif
-
-                                                <form action="{{ route('admin.khuyen_mais.destroy', $khuyenmai->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?');">
+                                            
+                                                <form action="{{ route('admin.khuyen_mais.forceDelete', $khuyenmai->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?');">
                                                     @method('DELETE')
                                                     @csrf
-                                                    <button type="submit" class="dropdown-item">Xóa</button>
+                                                    <button type="submit" class="dropdown-item">Xóa vĩnh viễn</button>
                                                 </form>
 
                                             </div>

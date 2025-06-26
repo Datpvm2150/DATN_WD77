@@ -136,12 +136,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
         Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
         Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
-        Route::get('/{id}', [KhuyenMaiController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
         Route::put('/{id}', [KhuyenMaiController::class, 'update'])->name('update');
         Route::get('/update-expired', [KhuyenMaiController::class, 'updateExpiredKhuyenMai'])->name('updateExpired');
         Route::post('/{id}/onOffKhuyenMai', [KhuyenMaiController::class, 'onOffKhuyenMai'])->name('onOffKhuyenMai');
         Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [KhuyenMaiController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [KhuyenMaiController::class, 'restore'])->name('restore');
+        Route::delete('/force-delete/{id}', [KhuyenMaiController::class, 'forceDelete'])->name('forceDelete');
+
     });
     // Đánh giá
     Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
@@ -207,8 +210,8 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/donhang', [TaiKhoanController::class, 'index'])->name('donhang');
     Route::put('changepassword', [TaiKhoanController::class, 'changePassword'])->name('changePassword');
     Route::match(['get', 'post'], '/{id}/chitietdonhang', [TaiKhoanController::class, 'show'])->name('donhang.chitiet');
-    Route::post('/{id}/cancel', [TaiKhoanController::class, 'cancelOrder'])->name('cancelOrder');
-    Route::post('/{id}/getOrder', [TaiKhoanController::class, 'getOrder'])->name('getOrder');
+    Route::post('/{id}/cancel',[TaiKhoanController::class,'cancelOrder'])->name('cancelOrder'); // hủy đơn hàng
+    Route::post('/{id}/getOrder',[TaiKhoanController::class,'getOrder'])->name('getOrder');
     Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('customer.orders.filter');
     // quên mk customer
     Route::get('/show-form-forgot', [CustomerForgotPassword::class, 'ShowformForgotPasswword'])->name('forgotPassword');
