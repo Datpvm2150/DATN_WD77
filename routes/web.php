@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
@@ -166,6 +167,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
         Route::delete('/{id}/destroy', [HoaDonController::class, 'destroy'])->name('destroy');
     });
+    //Thống kê
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/doanhthu', [DashboardController::class, 'doanhthu'])->name('doanhthu');
+Route::get('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
+Route::get('/tk-sanpham-banchay', [DashboardController::class, 'sanPhamBanChay'])->name('thongke.sanpham.banchay');
+Route::get('/tk-sanpham-kho', [DashboardController::class, 'sanPhamBanKho'])->name('thongke.sanpham.kho');
+
 });
 
 //tai khoan admin
