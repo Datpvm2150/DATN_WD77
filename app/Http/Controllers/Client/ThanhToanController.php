@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Client;;
 use App\Cart;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\VNPayController;
+use App\Mail\InvoiceCreated;
 use App\Models\BienTheSanPham;
 use App\Models\ChiTietHoaDon;
 use App\Models\HoaDon;
@@ -12,6 +13,7 @@ use App\Models\KhuyenMai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Session;
 
 class ThanhToanController extends Controller
@@ -328,5 +330,59 @@ class ThanhToanController extends Controller
             Log::error("Lỗi khi đặt hàng: " . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Đã xảy ra lỗi khi đặt hàng'], 500);
         }
+    }
+    protected function createInvoice($userId, $request, $cart, $giamGia, $tongTienSauGiam)
+    {
+        // tạo hóa đơn
+        $hoaDon = HoaDon::create([
+            'ma_hoa_don' => 'HD' . time(),
+            'user_id' => $userId,
+            'giam_gia' => $giamGia,
+            'tong_tien' => $tongTienSauGiam,
+            'dia_chi_nhan_hang' => $request->address,
+            'email' => $request->email,
+            'so_dien_thoai' => $request->phone,
+            'ten_nguoi_nhan' => $request->name,
+            'ngay_dat_hang' => now(),
+            'ghi_chu' => $request->note,
+            'phuong_thuc_thanh_toan' => $request->payment_method,
+            'trang_thai' => HoaDon::CHO_XAC_NHAN,
+            'trang_thai_thanh_toan' => HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán']
+        ]);
+        Log::info("Hóa đơn đã tạo: ", (array) $hoaDon);
+        foreach ($cart->products as $item) {
+            Log::info("Chi tiết sản phẩm: ", (array) $item);
+            //Tìm biến thể sản phẩm trong db
+            $bienThe = BienTheSanPham::find($item['bienthe']->id);
+            //Kiểm tra tồn kho trước khi giảm số lượng
+            if ($bienThe->so_luong < $item['quantity']) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Sản phẩm ' . $bienThe->sanPham->ten_san_pham . ' chỉ còn lại ' . $bienThe->so_luong . ' trong kho.',
+                ]);
+            }
+
+            //Tạo chi tiết hóa đơn
+            ChiTietHoaDon::create([
+                'hoa_don_id' => $hoaDon->id,
+                'bien_the_san_pham_id' => $item['bienthe']->id,
+                'so_luong' => $item['quantity'],
+                'don_gia' => $item['bienthe']->gia_moi,
+                'thanh_tien' => $item['quantity'] * $item['bienthe']->gia_moi,
+            ]);
+            //Giảm số lượng tồn kho
+            $bienThe->so_luong = $bienThe->so_luong - $item['quantity'];
+            $bienThe->save();
+        }
+        // Gửi email xác nhận
+        Mail::to($request->email)->send(new InvoiceCreated($hoaDon));
+
+        // Xóa session giỏ hàng và mã giảm giá
+        Session::forget('cart');
+        Session::forget('discount_code');
+        Session::forget('discount_percentage');
+        Session::forget('maxDiscount');
+
+        return response()->json(['success' => true, 'message' => 'Đặt hàng thành công']);
     }
 }

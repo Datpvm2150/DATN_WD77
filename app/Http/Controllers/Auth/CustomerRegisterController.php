@@ -29,7 +29,17 @@ class CustomerRegisterController extends Controller
             'mat_khau' => 'required|string|min:8',
             'so_dien_thoai' => 'required|string|max:20',
             'ngay_sinh' => 'required|date',
-        ]);
+        ],[
+            'ten.required' => 'Tên không được để trống.',
+            'email.required' => 'Email không được để trống.',
+            'email.email' => 'Email không hợp lệ.',
+            'email.unique' => 'Email đã được sử dụng.',
+            'mat_khau.required' => 'Mật khẩu không được để trống.',
+            'mat_khau.min' => 'Mật khẩu phải có ít nhất 8 ký tự.',
+            'so_dien_thoai.required' => 'Số điện thoại không được để trống.',
+            'ngay_sinh.required' => 'Ngày sinh không được để trống.',
+        ]
+    );
     
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();

@@ -62,7 +62,7 @@
                                     <div class="tp-login-input-box">
                                         <div class="tp-login-input">
                                             <input class="form-control" name="ten" type="text" id="name"
-                                                required="" placeholder="Nhập tên người dùng"
+                                             placeholder="Nhập tên người dùng"
                                                 value="{{ old('ten') }}">
                                             @error('ten')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -76,7 +76,7 @@
                                     <div class="tp-login-input-box">
                                         <div class="tp-login-input">
                                             <input class="form-control" type="tel" name="so_dien_thoai" id="phone"
-                                                required="" placeholder="Nhập số điện thoại"
+                                             placeholder="Nhập số điện thoại"
                                                 value="{{ old('so_dien_thoai') }}">
                                             @error('so_dien_thoai')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -90,7 +90,7 @@
                                     <div class="tp-login-input-box">
                                         <div class="tp-login-input">
                                             <input class="form-control" type="date" name="ngay_sinh" id="dob"
-                                                required="" value="{{ old('ngay_sinh') }}">
+                                             value="{{ old('ngay_sinh') }}">
                                             @error('ngay_sinh')
                                                 <div class="text-danger">{{ $message }}</div>
                                             @enderror
@@ -101,8 +101,8 @@
                                     </div>
                                     <div class="tp-login-input-box">
                                         <div class="tp-login-input">
-                                            <input class="form-control" type="email" name="email" id="email"
-                                                required="" placeholder="Nhập địa chỉ email"
+                                            <input class="form-control" type="" name="email" id="email"
+                                             placeholder="Nhập địa chỉ email"
                                                 value="{{ old('email') }}">
                                             @error('email')
                                                 <div class="text-danger">{{ $message }}</div>
@@ -118,7 +118,7 @@
                                         <div class="tp-login-input-box">
                                             <div class="tp-login-input">
 
-                                                <input id="tp_password" type="password" name="mat_khau" required=""
+                                                <input id="tp_password" type="password" name="mat_khau"
                                                     placeholder="Nhập mật khẩu">
                                                 @error('mat_khau')
                                                     <div class="text-danger">{{ $message }}</div>
