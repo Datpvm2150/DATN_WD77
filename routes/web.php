@@ -251,10 +251,17 @@ Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('
 Route::get('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
 Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
 Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
+Route::post('/clear-discount', [ThanhToanController::class, 'clearDiscount'])->name('clear.discount');
+Route::get('/payment/callback', [ThanhToanController::class, 'callback'])->name('payment.callback');
+Route::post('/payment/notify', [ThanhToanController::class, 'notify'])->name('payment.notify');
+Route::post('/zalopay/callback', [ThanhToanController::class, 'handleZaloPayCallback'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/customer/orders/retry-payment/{id}', [ThanhToanController::class, 'retryPayment'])->name('customer.retryPayment');
+Route::post('/remove-discount', [ThanhToanController::class, 'removeDiscount'])->name('removeDiscount');
 
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
 
+Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham'); 
 
 Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->name('chitietsanpham');
 Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
@@ -262,6 +269,8 @@ Route::get('/sanpham/lay-gia-bien-the', [ChiTietSanPhamController::class, 'layGi
 Route::get('/get-so-luong-bien-the', [ChiTietSanPhamController::class, 'getSoLuongBienThe'])->name('sanpham.get_so_luong_bien_the');
 Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'reply'])->name('admin.danhgia.reply');
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
+
+Route::get('/vnpay/return', [VNPayController::class, 'handleReturn'])->name('vnpay.return');
 
 Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');

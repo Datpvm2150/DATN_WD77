@@ -573,7 +573,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Xóa mã giảm giá
         document.getElementById('removeDiscountButton').addEventListener('click', function() {
-            fetch('', { // Thiếu route
+            fetch('{{ route('removeDiscount') }}', { // Thiếu route
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

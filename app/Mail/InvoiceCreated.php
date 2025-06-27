@@ -18,7 +18,7 @@ class InvoiceCreated extends Mailable
 
     public function build(){
         return $this->subject('Xác nhận đặt hàng')
-        ->view('email.invoice_created')
+        ->view('emails.invoice_created')
         ->with([
             'hoaDon'=>$this->hoaDon->load('chiTietHoaDons.bienTheSanPham.sanPham'),
         ]);
