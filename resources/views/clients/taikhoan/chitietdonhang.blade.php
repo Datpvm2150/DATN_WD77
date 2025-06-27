@@ -133,5 +133,5 @@
 </style>
 
 <!-- Modal Đánh Giá -->
-
+@include( 'clients.taikhoan.review_modal')
 @endsection
