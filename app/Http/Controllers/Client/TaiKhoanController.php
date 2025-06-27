@@ -50,7 +50,7 @@ class TaiKhoanController extends Controller
             return redirect()->back()->with('error', 'Đơn hàng không tồn tại');
         }
 
-        // Lấy chi tiết hóa đơn theo hóa đơn 
+        // Lấy chi tiết hóa đơn theo hóa đơn
         $chiTietHoaDons = ChiTietHoaDon::where('hoa_don_id', $orders->id)->get();
 
         // Cập nhật số lượng sản phẩm trong kho
@@ -240,3 +240,4 @@ class TaiKhoanController extends Controller
         return redirect()->route('customer.profileUser')->with('success', 'Cập nhật thông tin thành công');
     }
 }
+
