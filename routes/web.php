@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
@@ -166,6 +167,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
         Route::delete('/{id}/destroy', [HoaDonController::class, 'destroy'])->name('destroy');
     });
+    //Thống kê
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+Route::get('/doanhthu', [DashboardController::class, 'doanhthu'])->name('doanhthu');
+Route::get('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
+Route::get('/tk-sanpham-banchay', [DashboardController::class, 'sanPhamBanChay'])->name('thongke.sanpham.banchay');
+Route::get('/tk-sanpham-kho', [DashboardController::class, 'sanPhamBanKho'])->name('thongke.sanpham.kho');
+
 });
 
 //tai khoan admin
@@ -245,17 +253,18 @@ Route::get('/Delete-Item-List-Cart/{id}', [CartController::class, 'DeleteItemLis
 Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])->name('cart.update.item');
 Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
-
+//san pham
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
 
-
+// Chi tiết sản phẩm
 Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->name('chitietsanpham');
 Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
 Route::get('/sanpham/lay-gia-bien-the', [ChiTietSanPhamController::class, 'layGiaBienThe'])->name('sanpham.lay_gia_bien_the');
 Route::get('/get-so-luong-bien-the', [ChiTietSanPhamController::class, 'getSoLuongBienThe'])->name('sanpham.get_so_luong_bien_the');
 Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'reply'])->name('admin.danhgia.reply');
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
+//yeu thich
 
 Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');

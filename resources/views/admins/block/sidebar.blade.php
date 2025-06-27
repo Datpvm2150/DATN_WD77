@@ -216,7 +216,31 @@
                         </ul>
                     </div>
                 </li>
-                
+                {{-- Thống kê --}}
+                  <li>
+                    <a href='#dbs' data-bs-toggle="collapse">
+                        <i data-feather="home"></i>
+                        <span> Thống kê </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="dbs">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('admin.dashboard')}}" class="tp-link">Dashboard</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.doanhthu') }}">Doanh thu</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.banchay') }}">Sản phẩm bán chạy</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.kho') }}">Kho Sản phẩm </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
             </ul>
         </div>
         <!-- End Sidebar -->
