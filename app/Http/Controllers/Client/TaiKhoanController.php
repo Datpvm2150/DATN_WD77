@@ -179,7 +179,7 @@ class TaiKhoanController extends Controller
 
 
         // Cập nhật mật khẩu mới
-        $user->mat_khau = Hash::make($request->input('mat_khau_moi'));
+        $user->mat_khau = $request->input('mat_khau_moi');
         $user->save();
 
         return redirect()->back()->with('success', 'Đổi mật khẩu thành công!');

@@ -33,13 +33,13 @@
                                         data-bs-target="#nav-information" type="button" role="tab"
                                         aria-controls="nav-information" aria-selected="false"><span><i
                                                 class="fa-regular fa-circle-info"></i></span>Thông tin tài khoản</button>
-                                    {{-- <button class="nav-link" id="nav-address-tab" data-bs-toggle="tab"
+                                    <button class="nav-link" id="nav-address-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-address" type="button" role="tab"
                                         aria-controls="nav-address" aria-selected="false"><span><i
-                                                class="fa-light fa-location-dot"></i></span> Address </button> --}}
-                                    {{-- <a href="{{ route('customer.donhang') }}" class="nav-link"><span><i class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a> --}}
-                                    <a href="#" class="nav-link"><span><i
-                                                class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a>
+                                                class="fa-light fa-location-dot"></i></span> Address </button> 
+                                     <a href="{{ route('customer.donhang') }}" class="nav-link"><span><i class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a>
+                                    {{-- <a href="#" class="nav-link"><span><i
+                                                class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a> --}}
                                     {{--  <button class="nav-link" id="nav-order-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-order" type="button" role="tab" aria-controls="nav-order"
                                         aria-selected="false"><span><i class="fa-light fa-clipboard-list-check"></i></span>

@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -16,15 +15,13 @@ class ChiTietHoaDon extends Model
         'don_gia',
         'thanh_tien'
     ];
-
     public function bienTheSanPham()
     {
         return $this->belongsTo(BienTheSanPham::class);
     }
 
-    public function hoaDon()
-    {
+
+    public function hoaDon() {
         return $this->belongsTo(HoaDon::class);
     }
-
 }

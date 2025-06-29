@@ -271,13 +271,21 @@
                                                 style="width: 15px; height: 15px; background-color: {{ $bienthesanpham->mauSac->ma_mau }}; border-radius: 50%; border-radius: 50%; border: 1px solid;">
                                             </div>
                                         </td>
-                                        <td class="text-danger">
-                                            <del
-                                                class="text-black">{{ number_format($bienthesanpham->gia_cu, 0, ',', '.') }}đ</del>
-                                            <span class="fs-5">
-                                                -{{ number_format($bienthesanpham->gia_moi, 0, ',', '.') }}đ
-                                            </span>
-                                        </td>
+                                        @if (!is_null($bienthesanpham->gia_moi) && $bienthesanpham->gia_moi > 0)
+                                            <td class="text-danger">
+                                                <del class="text-black">
+                                                    {{ number_format($bienthesanpham->gia_cu, 0, ',', '.') }}đ
+                                                </del>
+                                                <span class="fs-5">
+                                                    -{{ number_format($bienthesanpham->gia_moi, 0, ',', '.') }}đ
+                                                </span>
+                                            </td>
+                                        @else
+                                            <td class="text-primary">
+                                                {{ number_format($bienthesanpham->gia_cu, 0, ',', '.') }}đ
+                                            </td>
+                                        @endif
+
                                         <td>{{ number_format($bienthesanpham->so_luong, 0, ',', '.') }}</td>
                                         <td>
                                             @if ($bienthesanpham->deleted_at == null)
