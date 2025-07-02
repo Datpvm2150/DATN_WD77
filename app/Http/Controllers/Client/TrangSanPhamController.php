@@ -14,7 +14,7 @@ class TrangSanPhamController extends Controller
     public function index(Request $request) {
         // Lấy các thuộc tính để hiển thị form lọc
         $danhMucs = DanhMuc::all();
-        $dungLuong = DungLuong::all();
+        $dungLuongs = DungLuong::all();
         $mauSacs = MauSac::all();
         $query = SanPham::with(['bienTheSanPhams', 'danhGias']); // Tải trước các quan hệ
     
