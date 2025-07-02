@@ -1,6 +1,9 @@
 @extends('layouts.admin')
-@section('title', 'Chi tiết sản phẩm')
+
+@section('title', 'Chi tiết sản phẩm ')
+
 @section('content')
+
     <style>
         #view_dgia {
             min-height: 500px;
@@ -161,6 +164,29 @@
             color: darkred;
         }
 
+        /* Thêm CSS cho album ảnh */
+        .album-image {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            cursor: pointer;
+            /* Con trỏ chuột khi hover */
+            border: 2px solid transparent;
+            /* Viền mặc định */
+            transition: border 0.3s ease;
+            /* Hiệu ứng chuyển đổi viền */
+        }
+
+        .album-image:hover {
+            border: 2px solid #007bff;
+            /* Viền màu xanh khi hover */
+        }
+
+        .album-image.active {
+            border: 2px solid #007bff;
+            /* Viền màu xanh khi được chọn */
+        }
+
         /* Thêm CSS cho nút */
         #scrollToReviews,
         #scrollToTop {
@@ -182,20 +208,24 @@
             /* Đặt nút lên trên các phần tử khác */
         }
     </style>
+
     <div class="container-xxl">
         <div class="d-flex justify-content-between py-3">
             <h4 class="fs-18 fw-semibold m-0">Chi tiết sản phẩm</h4>
         </div>
+
         <div class="row">
             <div class="col-lg-4">
                 <div class="card">
                     <div class="card-body text-center">
-                        <img src="{{ asset($sanpham->anh_san_pham) }}" class="img-fluid rounded-4 mb-3" alt="Sản phẩm">
+                        <img id="main-product-image" src="{{ asset($sanpham->anh_san_pham) }}"
+                            class="img-fluid rounded-4 mb-3" alt="Sản phẩm">
                         <label class="form-label">Album ảnh:</label>
-                        <div class="d-flex gap-2">
+                        <div class="d-flex flex-wrap gap-2">
                             @foreach ($anhsanphams as $anhsanpham)
-                                <img src="{{ asset($anhsanpham->hinh_anh) }}" class="img-thumbnail" width="50px"
-                                    alt="Ảnh sản phẩm">
+                                <img src="{{ asset($anhsanpham->hinh_anh) }}"
+                                    class="album-image img-thumbnail {{ $sanpham->anh_san_pham == $anhsanpham->hinh_anh ? 'active' : '' }}"
+                                    data-image="{{ asset($anhsanpham->hinh_anh) }}" alt="Ảnh sản phẩm">
                             @endforeach
                         </div>
                     </div>
@@ -218,6 +248,7 @@
                                 @endif
                             @endforeach
                         </p>
+
                         <h5 class="card-title">Biến thể sản phẩm:</h5>
                         <table class="table table-striped table-bordered">
                             <thead>
@@ -266,14 +297,15 @@
                                     </tr>
                                 @endforeach
                             </tbody>
-
                         </table>
-                        <h5 class="card-title">Mô tả sản phẩm</h5>
+
+                        <h5 class="card-title">Mô tả sản phẩm:</h5>
                         <div class="text-black">{!! $sanpham->mo_ta !!}</div>
                     </div>
                 </div>
             </div>
         </div>
+
         <div class="card mt-4">
             <div class="card-header">
                 <h2>Đánh giá {{ $sanpham->ten_san_pham }}</h2>
@@ -326,7 +358,8 @@
                 </div>
             </div>
 
-            <div class="card-body mb-4 text-center">
+
+            <div class="card-body  mb-4 text-center">
                 <h5>Lọc đánh giá</h5>
                 <div class="rating-filter bg-white border rounded p-3">
                     <a href="#" class="btn filter-btn"
@@ -341,6 +374,7 @@
                     @endforeach
                 </div>
             </div>
+
             <div id="view_dgia">
                 @include('admins.sanphams.danh_gia_list', ['danhgias' => $danhgias])
             </div>
@@ -362,6 +396,7 @@
                 </ul>
             </nav>
         </div>
+
         <!-- Nút "Xem đánh giá" -->
         <button id="scrollToReviews" class="btn btn-primary">Xem đánh giá</button>
         <button id="scrollToTop" class="btn btn-secondary d-none">Lên đầu trang</button>
@@ -380,7 +415,7 @@
             }
 
             // Xử lý scroll đến phần đánh giá
-            document.getElementById('scrollToReviews').addEventListener('click', function() {
+            document.getElementById('scrollToReviews').addEventListener('click', function () {
                 document.querySelector('.card.mt-4').scrollIntoView({
                     behavior: 'smooth'
                 });
@@ -388,7 +423,7 @@
             });
 
             // Xử lý scroll lên đầu trang
-            document.getElementById('scrollToTop').addEventListener('click', function() {
+            document.getElementById('scrollToTop').addEventListener('click', function () {
                 window.scrollTo({
                     top: 0,
                     behavior: 'smooth'
@@ -398,7 +433,7 @@
 
             // Xử lý lọc đánh giá
             function handleFilterClick(filterButton) {
-                filterButton.addEventListener('click', function(e) {
+                filterButton.addEventListener('click', function (e) {
                     e.preventDefault();
                     let url = this.getAttribute('data-url');
                     fetch(url)
@@ -417,16 +452,30 @@
             document.querySelectorAll('.filter-btn').forEach(handleFilterClick);
 
             // Đánh dấu nút lọc đang được chọn
-            document.addEventListener('DOMContentLoaded', function() {
+            document.addEventListener('DOMContentLoaded', function () {
                 const filterButtons = document.querySelectorAll('.filter-btn');
                 filterButtons.forEach(btn => {
-                    btn.addEventListener('click', function(e) {
+                    btn.addEventListener('click', function (e) {
                         e.preventDefault();
                         filterButtons.forEach(button => button.classList.remove('active'));
                         this.classList.add('active');
                     });
                 });
+
+                // Xử lý click vào ảnh trong album để thay đổi ảnh chính
+                const mainImage = document.getElementById('main-product-image');
+                const albumImages = document.querySelectorAll('.album-image');
+
+                albumImages.forEach(img => {
+                    img.addEventListener('click', function () {
+                        // Xóa lớp active từ tất cả ảnh album
+                        albumImages.forEach(image => image.classList.remove('active'));
+                        // Thêm lớp active cho ảnh được click
+                        this.classList.add('active');
+                        // Cập nhật src của ảnh chính
+                        mainImage.src = this.dataset.image;
+                    });
+                });
             });
         </script>
-    </div>
 @endsection
