@@ -281,7 +281,7 @@
                     </div>
 
                     <button type="button" class="tp-checkout-btn" id="submitOrder">Đặt hàng</button>
-                </div>
+                </div> 
             </div>
         </div>
     </div>
@@ -513,98 +513,100 @@ if (data.insufficient_stock) {
       });
 //them mã
 document.addEventListener('DOMContentLoaded', function() {
-        let discountCode = "{{$discountCode}}";
+    let discountCode = "{{$discountCode}}";
+    let alreadyUsed = "{{ Session::get('discount_already_used', false) }}";
 
-        // Kiểm tra mã giảm giá từ đầu, nếu có mã đã áp dụng
-        if (discountCode) {
-            document.getElementById('discountAppliedMessage').style.display = 'block';
-            document.getElementById('discountApplySection').style.display = 'none';
-        } else {
-            document.getElementById('discountApplySection').style.display = 'block';
-            document.getElementById('tpCheckoutCouponForm').style.display = 'none';
-        }
+    // Kiểm tra nếu mã đã được sử dụng
+    if (alreadyUsed === "1" || alreadyUsed === "true") {
+        document.getElementById('discountApplySection').style.display = 'none';
+        document.getElementById('tpCheckoutCouponForm').style.display = 'none';
+        document.getElementById('discountAppliedMessage').style.display = 'block';
+        document.getElementById('discountAppliedMessage').innerText = 'Mã giảm giá này đã được sử dụng.';
+    } else if (discountCode) {
+        document.getElementById('discountAppliedMessage').style.display = 'block';
+        document.getElementById('discountApplySection').style.display = 'none';
+    } else {
+        document.getElementById('discountApplySection').style.display = 'block';
+        document.getElementById('tpCheckoutCouponForm').style.display = 'none';
+    }
 
-        // Mở form nhập mã khi nhấn "Nhập mã"
-        document.getElementById('showCouponForm').addEventListener('click', function() {
-            document.getElementById('tpCheckoutCouponForm').style.display = 'block';
-            document.getElementById('discountApplySection').style.display = 'none';
-        });
+    // Mở form nhập mã khi nhấn "Nhập mã"
+    document.getElementById('showCouponForm').addEventListener('click', function() {
+        document.getElementById('tpCheckoutCouponForm').style.display = 'block';
+        document.getElementById('discountApplySection').style.display = 'none';
+    });
 
-        // Áp dụng mã giảm giá
-        document.getElementById('applyDiscountButton').addEventListener('click', function() {
-            let discountCodeInput = document.querySelector('input[name="discount_code"]').value;
+    // Áp dụng mã giảm giá
+    document.getElementById('applyDiscountButton').addEventListener('click', function() {
+        let discountCodeInput = document.querySelector('input[name="discount_code"]').value;
 
-            fetch('{{ route('applyDiscount') }}', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                },
-                body: JSON.stringify({ discount_code: discountCodeInput })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('totalPrice').innerText = new Intl.NumberFormat('vi-VN').format(data.new_total) + ' VND';
-                    document.getElementById('giamgia').innerText = new Intl.NumberFormat('vi-VN').format(-data.new_giamgia) + ' VND';
-                    document.getElementById('discountApplySection').style.display = 'none';
-                    document.getElementById('tpCheckoutCouponForm').style.display = 'none';
-                    document.getElementById('discountAppliedMessage').style.display = 'block';
-                    document.getElementById('appliedDiscountCode').innerText = discountCodeInput;
-
-        const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-        document.getElementById('toastBody').textContent =  data.message;
-        toast.show();
-                } else {
-        const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-        document.getElementById('toastBody').textContent =  data.message;
-        toast.show();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                // Thêm thông báo lỗi
-        const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-        document.getElementById('toastBody').textContent = 'Có lỗi xảy ra. Vui lòng thử lại';
-        toast.show();
-
-            });
-        });
-
-        // Xóa mã giảm giá
-        document.getElementById('removeDiscountButton').addEventListener('click', function() {
-            fetch('{{ route('removeDiscount') }}', { // Thiếu route
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                }
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    document.getElementById('totalPrice').innerText = new Intl.NumberFormat('vi-VN').format(data.new_total) + ' VND';
-                    document.getElementById('giamgia').innerText = new Intl.NumberFormat('vi-VN').format(-data.new_giamgia) + ' VND'; 
-                    document.getElementById('discountAppliedMessage').style.display = 'none';
-                    document.getElementById('discountApplySection').style.display = 'block';
-        const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-        document.getElementById('toastBody').textContent =  data.message;
-        toast.show();
-                } else {
-        const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-        document.getElementById('toastBody').textContent =  'Có lỗi khi xóa mã giảm giá.';
-        toast.show();
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-        const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-        document.getElementById('toastBody').textContent = 'Có lỗi xảy ra. Vui lòng thử lại';
-        toast.show();            });
+        fetch('{{ route('applyDiscount') }}', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ discount_code: discountCodeInput })
+        })
+        .then(response => response.json())
+        .then(data => {
+            const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
+            if (data.success) {
+                document.getElementById('totalPrice').innerText = new Intl.NumberFormat('vi-VN').format(data.new_total) + ' VND';
+                document.getElementById('giamgia').innerText = new Intl.NumberFormat('vi-VN').format(-data.new_giamgia) + ' VND';
+                document.getElementById('discountApplySection').style.display = 'none';
+                document.getElementById('tpCheckoutCouponForm').style.display = 'none';
+                document.getElementById('discountAppliedMessage').style.display = 'block';
+                document.getElementById('appliedDiscountCode').innerText = discountCodeInput;
+                document.getElementById('toastBody').textContent = data.message;
+                toast.show();
+            } else {
+                document.getElementById('toastBody').textContent = data.message;
+                toast.show();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
+            document.getElementById('toastBody').textContent = 'Có lỗi xảy ra. Vui lòng thử lại';
+            toast.show();
         });
     });
 
-  </script>
+    // Xóa mã giảm giá
+    document.getElementById('removeDiscountButton').addEventListener('click', function() {
+        fetch('{{ route('removeDiscount') }}', { 
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
+            if (data.success) {
+                document.getElementById('totalPrice').innerText = new Intl.NumberFormat('vi-VN').format(data.new_total) + ' VND';
+                document.getElementById('giamgia').innerText = new Intl.NumberFormat('vi-VN').format(-data.new_giamgia) + ' VND'; 
+                document.getElementById('discountAppliedMessage').style.display = 'none';
+                document.getElementById('discountApplySection').style.display = 'block';
+                document.getElementById('toastBody').textContent = data.message;
+                toast.show();
+            } else {
+                document.getElementById('toastBody').textContent = 'Có lỗi khi xóa mã giảm giá.';
+                toast.show();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
+            document.getElementById('toastBody').textContent = 'Có lỗi xảy ra. Vui lòng thử lại';
+            toast.show();
+        });
+    });
+});
+</script>
+
   
 
 @endsection

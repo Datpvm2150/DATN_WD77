@@ -33,6 +33,7 @@ use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\VNPayController;
+use App\Http\Middleware\CheckDisscountMiddleware;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -136,6 +137,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::prefix('khuyen_mais')->name('khuyen_mais.')->group(function () {
         Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
         Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
+        Route::get('/{id}/show', [KhuyenMaiController::class, 'show'])->name('show');
         Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
         Route::put('/{id}', [KhuyenMaiController::class, 'update'])->name('update');
@@ -258,8 +260,8 @@ Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('
 
 //thanh toan
 Route::get('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
-Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
-Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
+Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount')->middleware(CheckDisscountMiddleware::class);;
+Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder')->middleware(CheckDisscountMiddleware::class);
 Route::post('/clear-discount', [ThanhToanController::class, 'clearDiscount'])->name('clear.discount');
 Route::get('/payment/callback', [ThanhToanController::class, 'callback'])->name('payment.callback');
 Route::post('/payment/notify', [ThanhToanController::class, 'notify'])->name('payment.notify');

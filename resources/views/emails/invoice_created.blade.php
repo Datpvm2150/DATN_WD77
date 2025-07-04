@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,6 +13,7 @@
             background-color: #f9f9f9;
             color: #333;
         }
+
         .container {
             max-width: 600px;
             margin: 20px auto;
@@ -20,34 +22,43 @@
             border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
         .header {
             text-align: center;
             padding: 10px 0;
             border-bottom: 2px solid #007BFF;
         }
+
         .header img {
             max-width: 100px;
         }
+
         .content {
             margin: 20px 0;
         }
+
         .content h2 {
             color: #007BFF;
         }
+
         .table {
             width: 100%;
             border-collapse: collapse;
             margin: 20px 0;
         }
-        .table th, .table td {
+
+        .table th,
+        .table td {
             padding: 10px;
             border: 1px solid #ddd;
             text-align: left;
         }
+
         .table th {
             background: #007BFF;
             color: #fff;
         }
+
         .footer {
             text-align: center;
             margin-top: 20px;
@@ -56,7 +67,9 @@
         }
     </style>
 </head>
+
 <body>
+    @php $voucher = $voucher ?? null; @endphp
     <div class="container">
         <div class="header">
             <img src="{{ asset('assets/client/img/logo/favicon.png') }}" alt="Logo">
@@ -85,9 +98,8 @@
                 @foreach ($hoaDon->chiTietHoaDons as $chiTiet)
                     <tr>
                         <td>
-                            <img src="{{ asset('storage/' . $chiTiet->bienTheSanPham->sanPham->hinh_anh) }}" 
-                                 alt="Ảnh sản phẩm" 
-                                 style="width: 50px; height: 50px; object-fit: cover;">
+                            <img src="{{ asset('storage/' . $chiTiet->bienTheSanPham->sanPham->hinh_anh) }}"
+                                alt="Ảnh sản phẩm" style="width: 50px; height: 50px; object-fit: cover;">
                         </td>
                         <td>{{ $chiTiet->bienTheSanPham->sanPham->ten_san_pham }}</td>
                         <td>{{ $chiTiet->so_luong }}</td>
@@ -105,8 +117,17 @@
         </table>
         <div class="footer">
             <p>Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi!</p>
+            @if (isset($discount))
+                <p>Bạn được tặng mã giảm giá: <strong>{{ $discount->ma_khuyen_mai }}</strong></p>
+                <p>Giảm {{ $discount->phan_tram_khuyen_mai }}%, tối đa {{ number_format($discount->giam_toi_da) }}đ
+                </p>
+                <p>Chỉ áp dụng 1 lần, trong vòng 7 ngày.</p>
+            @endif
             <p>Mọi thắc mắc xin vui lòng liên hệ <a href="quanminh221205@gmail.com">quanminh221205@gmail.com</a>.</p>
         </div>
+
+
     </div>
 </body>
+
 </html>

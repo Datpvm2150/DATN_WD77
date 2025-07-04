@@ -131,6 +131,17 @@ class SanPhamController extends Controller
             'anh_san_pham',
             'mo_ta'
         ]);
+         $databienthesanphams = $request->only(['dung_luong_id', 'mau_sac_id', 'gia_cu', 'gia_moi', 'so_luong']);
+        foreach ($databienthesanphams['gia_cu'] as $index => $gia_cu) {
+            $gia_moi = $databienthesanphams['gia_moi'][$index];
+
+            if (!is_null($gia_moi) && $gia_cu == $gia_moi) {
+                return redirect()->back()
+                    ->withInput()
+                    ->with('error', 'Giá mới không được trùng với giá cũ ở biến thể số ' . ($index + 1));
+            }
+        }
+
         if (isset($datasanpham['ten_san_pham'])) {
             $datasanpham['ten_san_pham'] = ucfirst(mb_strtolower(trim($datasanpham['ten_san_pham'])));
         }
@@ -152,7 +163,6 @@ class SanPhamController extends Controller
         }
         // Xử lý và lưu biến thể sản phẩm
         $flag = true;
-        $databienthesanphams = $request->only(['dung_luong_id', 'mau_sac_id', 'gia_cu', 'gia_moi', 'so_luong']);
         foreach ($databienthesanphams['dung_luong_id'] as $index => $dung_luong_id) {
             $exists = BienTheSanPham::where('san_pham_id', $sanpham['id'])
                 ->where('dung_luong_id', $dung_luong_id)

@@ -16,8 +16,14 @@ class KhuyenMai extends Model
         'ngay_bat_dau',
         'giam_toi_da',
         'ngay_ket_thuc',
-        'trang_thai'
+        'trang_thai',
+        'user_id',
+        'so_luong',
+        'da_su_dung'
     ];
 
-    
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }
