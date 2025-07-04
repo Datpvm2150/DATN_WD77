@@ -11,7 +11,7 @@ use Illuminate\Support\Carbon;
 use App\Mail\InvoiceCreated;
 use Illuminate\Support\Facades\Mail;
 
-class VNPayController extends Controller
+class VnPayController extends Controller
 {
     public function createPayment($amount, $orderId, $orderInfo)
 {
