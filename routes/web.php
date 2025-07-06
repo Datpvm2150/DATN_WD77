@@ -168,10 +168,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/{id}/show', [HoaDonController::class, 'show'])->name('show');
         Route::put('/{id}/update', [HoaDonController::class, 'update'])->name('update');
         //admin
-        Route::post('/query', [VNPayController::class, 'queryTransaction'])->name('query');
-        Route::post('/refund', [VNPayController::class, 'queryTransaction'])->name('refund');
-        Route::get('/tracuu', [VNPayController::class, 'tracuu'])->name('tracuu');
-        Route::get('/hoantien', [VNPayController::class, 'hoantien'])->name('hoantien');
+        Route::post('/query', [VnpayController::class, 'queryTransaction'])->name('query');
+        Route::post('/refund', [VnpayController::class, 'queryTransaction'])->name('refund');
+        Route::get('/tracuu', [VnpayController::class, 'tracuu'])->name('tracuu');
+        Route::get('/hoantien', [VnpayController::class, 'hoantien'])->name('hoantien');
 
         Route::delete('/{id}/destroy', [HoaDonController::class, 'destroy'])->name('destroy');
     });

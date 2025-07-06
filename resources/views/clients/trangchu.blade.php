@@ -93,7 +93,8 @@
                                             </div>
                                             <div class="tp-product-category-content">
                                                 <h3 class="tp-product-category-title">
-                                                    <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $danhMuc->id]) }}">
+                                                    <a
+                                                        href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $danhMuc->id]) }}">
                                                         {{ $danhMuc->ten_danh_muc }}
                                                     </a>
                                                 </h3>
@@ -465,7 +466,7 @@
                     <div class="tp-section-title-wrapper mb-40">
                         <h3 class="tp-section-title">Sản phẩm nổi bật
 
-                            
+
                         </h3>
                     </div>
                 </div>
@@ -499,7 +500,8 @@
                                                 <!-- product content -->
                                                 <div class="tp-product-content">
                                                     <div class="tp-product-category">
-                                                        <a href="{{ isset($product->danhMuc->id) ? route('sanpham.danhmuc', $product->danhMuc->id) : '#' }}">
+                                                        <a
+                                                            href="{{ isset($product->danhMuc->id) ? route('sanpham.danhmuc', $product->danhMuc->id) : '#' }}">
                                                             {{ isset($product->danhMuc->ten_danh_muc) ? $product->danhMuc->ten_danh_muc : '...' }}</a>
                                                     </div>
                                                     <h3 class="tp-product-title"
@@ -1165,10 +1167,11 @@
                                                 </div>
                                                 <!-- product content -->
                                                 <div class="tp-product-content">
-                                                    {{-- <div class="tp-product-category">
-                                                        <a href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $randProduct->danhMuc->id]) }}">
+                                                    <div class="tp-product-category">
+                                                        <a
+                                                            href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $randProduct->danhMuc->id]) }}">
                                                             {{ isset($randProduct->danhMuc->ten_danh_muc) ? $randProduct->danhMuc->ten_danh_muc : '...' }}</a>
-                                                    </div> --}}
+                                                    </div>
                                                     <h3 class="tp-product-title"
                                                         style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 199px;">
                                                         <a href="{{ route('chitietsanpham', $randProduct->id) }}">
@@ -1298,10 +1301,14 @@
                                 <div class="tp-product-details-rating-wrapper d-flex align-items-center mb-10">
                                 </div>
                             </div>
+
                             <p
                                 style="max-height: 4.5em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 350px;">
-                                {{ $newProduct->mo_ta }}</p>
-                            <a style="color: #0989ff" href="{{ route('chitietsanpham', $newProduct->id) }}">Xem thêm</a>
+                                {{ $randProduct->mo_ta }}</p>
+
+                            <a style="color: #0989ff" href="{{ route('chitietsanpham', $randProduct->id) }}">Xem
+                                thêm</a>
+
                             <!-- variations -->
                             <div class="tp-product-details-variation">
                                 <div class="tp-product-details-variation-item">
