@@ -23,8 +23,6 @@ class TaiKhoanController extends Controller
     {
         //lấy thông tin ng dùng đang đăng nhập
         $user = Auth::user();  // Lấy người dùng hiện tại
-
-
         $danhMucs = DanhMuc::all();
         // lấy thông tin đơn hàng người dùng đã mua
         $donHangs = $user->hoaDons()->get();
@@ -117,6 +115,7 @@ class TaiKhoanController extends Controller
 
 
         $users->save();
+
         return redirect()->route('customer.profileUser')->with('success', 'cập nhật thông tin thành công');
     }
 
