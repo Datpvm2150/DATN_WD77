@@ -22,7 +22,7 @@ class ChiTietHoaDon extends Model
         return $this->belongsTo(BienTheSanPham::class);
     }
 
-    public function hoaDon()
+    public function hoaDon() 
     {
         return $this->belongsTo(HoaDon::class);
     }

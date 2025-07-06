@@ -28,6 +28,32 @@
                 <!-- Quản trị -->
                 <li class="menu-title">Quản trị</li>
 
+                {{-- Thống kê --}}
+                <li>
+                    <a href='#dbs' data-bs-toggle="collapse">
+                        <i data-feather="home"></i>
+                        <span> Thống kê </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="dbs">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('admin.dashboard')}}" class="tp-link">Dashboard</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.doanhthu') }}">Doanh thu</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.banchay') }}">Sản phẩm bán
+                                    chạy</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.kho') }}">Kho Sản phẩm </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li>
                     <a href="#sidebarTables" data-bs-toggle="collapse">
                         <i data-feather="users"></i>
@@ -55,7 +81,8 @@
                     <a href="#sanpham" data-bs-toggle="collapse">
                         <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" stroke-width="2"
                             fill="none" stroke-linecap="round" stroke-linejoin="round">
-                            <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z">
+                            <path
+                                d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3H6a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3V6a3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3h12a3 3 0 0 0 3-3 3 3 0 0 0-3-3z">
                             </path>
                         </svg>
                         <span> Sản phẩm </span>
@@ -150,6 +177,8 @@
                         <ul class="nav-second-level">
                             <li><a class='tp-link' href="{{ route('admin.khuyen_mais.index') }}">Danh sách</a></li>
                             <li><a class='tp-link' href="{{ route('admin.khuyen_mais.create') }}">Thêm mới</a></li>
+                            <li><a class='tp-link' href="{{ route('admin.khuyen_mais.trash') }}">Thùng rác <i
+                                        class="fas fa-trash-alt"></i> </a></li>
                         </ul>
                     </div>
                 </li>
@@ -187,7 +216,7 @@
                 <!-- Đánh giá -->
                 <li>
                     <a href="#danhgias" data-bs-toggle="collapse">
-                        <i data-feather="package"></i>
+                        <i class="fa-solid fa-thumbs-up"></i>
                         <span> Đánh giá </span>
                         <span class="menu-arrow"></span>
                     </a>
@@ -197,6 +226,41 @@
                         </ul>
                     </div>
                 </li>
+
+                {{-- Đơn hàng --}}
+                <li>
+                    <a href='#hoadons' data-bs-toggle="collapse">
+                        <i data-feather="shopping-bag"></i>
+                        <span> Đơn hàng </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="hoadons">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.hoadons.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                <li>
+
+                    <a href="#lienhes" data-bs-toggle="collapse">
+                        <i class="fa fa-phone"></i>
+                        <span> Liên hệ </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="lienhes">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.lienhes.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
             </ul>
         </div>
         <!-- End Sidebar -->

@@ -61,7 +61,7 @@
                             <form action="{{ route('customer.login.post') }}" method="POST" class="my-4">
                                 @csrf
                                 <!-- Hiển thị lỗi xác thực -->
-                                @if ($errors->any())
+                                {{-- @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <ul>
                                             @foreach ($errors->all() as $error)
@@ -69,17 +69,15 @@
                                             @endforeach
                                         </ul>
                                     </div>
-                                @endif
+                                @endif --}}
                                 <div class="tp-login-input-wrapper">
                                     <div class="tp-login-input-box">
                                         <div class="tp-login-input">
                                             <input id="email" class="form-control @error('email') is-invalid @enderror"
-                                                type="email" name="email" required placeholder="Nhập email của bạn"
+                                                type="" name="email" placeholder="Nhập email của bạn"
                                                 value="{{ old('email') }}">
                                             @error('email')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
+                                                <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="tp-login-input-title">
@@ -91,9 +89,7 @@
                                             <input id="tp_password @error('mat_khau') is-invalid @enderror" type="password"
                                                 name="mat_khau" placeholder="Nhập mật khẩu của bạn">
                                             @error('mat_khau')
-                                                <div class="invalid-feedback">
-                                                    {{ $message }}
-                                                </div>
+                                                <div class="text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="tp-login-input-eye" id="password-show-toggle">

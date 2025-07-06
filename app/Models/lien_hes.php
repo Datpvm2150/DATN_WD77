@@ -28,4 +28,9 @@ class lien_hes extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+
+    public function adminPhanHoi()
+    {
+        return $this->hasMany(Adminphanhoi::class, 'lien_hes_id');
+    }
 }

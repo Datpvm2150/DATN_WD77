@@ -128,7 +128,332 @@
         </div>
     </section>
     {{-- hết danh mục  --}}
-
+    {{-- <section class="tp-product-arrival-area pt-50">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="tp-product-arrival-slider fix">
+                        <div
+                            class="tp-product-arrival-active swiper-container swiper-container-initialized swiper-container-horizontal swiper-container-pointer-events">
+                            <div class="swiper-wrapper" id="swiper-wrapper-98ed3af43228b876" aria-live="polite"
+                                style="transition-duration: 0ms; transform: translate3d(-1326px, 0px, 0px);">
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next"
+                                    data-swiper-slide-index="1" role="group" aria-label="1 / 13"
+                                    style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/2">
+                                                <img src="/storage/danhmucs/1746071716_logo-asus-inkythuatso-2-01-26-09-21-11.jpg"
+                                                    alt="Laptop ASUS"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/2">
+                                                    Laptop ASUS
+                                                </a>
+                                            </h3>
+                                            <p>2 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate" data-swiper-slide-index="2"
+                                    role="group" aria-label="2 / 13" style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/3">
+                                                <img src="/storage/danhmucs/1746073199_lenovo_1280x720-800-resize.jpg"
+                                                    alt="Laptop Lenovo"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/3">
+                                                    Laptop Lenovo
+                                                </a>
+                                            </h3>
+                                            <p>0 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate" data-swiper-slide-index="3"
+                                    role="group" aria-label="3 / 13" style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/4">
+                                                <img src="/storage/danhmucs/1746073259_apple-macbook-logo-png_seeklogo-360354.png"
+                                                    alt="Laptop Macbook"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/4">
+                                                    Laptop Macbook
+                                                </a>
+                                            </h3>
+                                            <p>0 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate swiper-slide-prev"
+                                    data-swiper-slide-index="4" role="group" aria-label="4 / 13"
+                                    style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/6">
+                                                <img src="/storage/danhmucs/1748349364_1746071672_images.png"
+                                                    alt="ADS"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/6">
+                                                    ADS
+                                                </a>
+                                            </h3>
+                                            <p>0 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-active" data-swiper-slide-index="0"
+                                    role="group" aria-label="5 / 13" style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/1">
+                                                <img src="/storage/danhmucs/1746071672_images.png" alt="LapTop Dell"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/1">
+                                                    LapTop Dell
+                                                </a>
+                                            </h3>
+                                            <p>2 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-next" data-swiper-slide-index="1"
+                                    role="group" aria-label="6 / 13" style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/2">
+                                                <img src="/storage/danhmucs/1746071716_logo-asus-inkythuatso-2-01-26-09-21-11.jpg"
+                                                    alt="Laptop ASUS"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/2">
+                                                    Laptop ASUS
+                                                </a>
+                                            </h3>
+                                            <p>2 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide" data-swiper-slide-index="2" role="group"
+                                    aria-label="7 / 13" style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/3">
+                                                <img src="/storage/danhmucs/1746073199_lenovo_1280x720-800-resize.jpg"
+                                                    alt="Laptop Lenovo"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/3">
+                                                    Laptop Lenovo
+                                                </a>
+                                            </h3>
+                                            <p>0 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide" data-swiper-slide-index="3" role="group"
+                                    aria-label="8 / 13" style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/4">
+                                                <img src="/storage/danhmucs/1746073259_apple-macbook-logo-png_seeklogo-360354.png"
+                                                    alt="Laptop Macbook"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/4">
+                                                    Laptop Macbook
+                                                </a>
+                                            </h3>
+                                            <p>0 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate-prev"
+                                    data-swiper-slide-index="4" role="group" aria-label="9 / 13"
+                                    style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/6">
+                                                <img src="/storage/danhmucs/1748349364_1746071672_images.png"
+                                                    alt="ADS"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/6">
+                                                    ADS
+                                                </a>
+                                            </h3>
+                                            <p>0 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate swiper-slide-duplicate-active"
+                                    data-swiper-slide-index="0" role="group" aria-label="10 / 13"
+                                    style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/1">
+                                                <img src="/storage/danhmucs/1746071672_images.png" alt="LapTop Dell"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/1">
+                                                    LapTop Dell
+                                                </a>
+                                            </h3>
+                                            <p>2 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next"
+                                    data-swiper-slide-index="1" role="group" aria-label="11 / 13"
+                                    style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/2">
+                                                <img src="/storage/danhmucs/1746071716_logo-asus-inkythuatso-2-01-26-09-21-11.jpg"
+                                                    alt="Laptop ASUS"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/2">
+                                                    Laptop ASUS
+                                                </a>
+                                            </h3>
+                                            <p>2 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate" data-swiper-slide-index="2"
+                                    role="group" aria-label="12 / 13" style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/3">
+                                                <img src="/storage/danhmucs/1746073199_lenovo_1280x720-800-resize.jpg"
+                                                    alt="Laptop Lenovo"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/3">
+                                                    Laptop Lenovo
+                                                </a>
+                                            </h3>
+                                            <p>0 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="transition-3 swiper-slide swiper-slide-duplicate" data-swiper-slide-index="3"
+                                    role="group" aria-label="13 / 13" style="width: 301.5px; margin-right: 30px;">
+                                    <!-- Hình ảnh sản phẩm -->
+                                    <div class="tp-product-category-item text-center">
+                                        <div class="tp-product-category-thumb"
+                                            style="position: relative; width: 100%; overflow: hidden; border-radius: 50%;">
+                                            <a href="http://127.0.0.1:8000/danh-muc/4">
+                                                <img src="/storage/danhmucs/1746073259_apple-macbook-logo-png_seeklogo-360354.png"
+                                                    alt="Laptop Macbook"
+                                                    style="width: 100%; height: 100%; object-fit: contain; border-radius: 10px; transition: transform 0.3s; mix-blend-mode: darken; border-radius: 50%">
+                                            </a>
+                                        </div>
+                                        <div class="tp-product-category-content">
+                                            <h3 class="tp-product-category-title">
+                                                <a href="http://127.0.0.1:8000/danh-muc/4">
+                                                    Laptop Macbook
+                                                </a>
+                                            </h3>
+                                            <p>0 Sản phẩm</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tp-product-arrival-more-wrapper d-flex justify-content-end">
+                <div class="tp-product-arrival-arrow tp-swiper-arrow mb-40 text-end">
+                    <button type="button" class="tp-arrival-slider-button-prev" tabindex="0"
+                        aria-label="Previous slide" aria-controls="swiper-wrapper-98ed3af43228b876">
+                        <svg width="8" height="14" viewBox="0 0 8 14" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M7 13L1 7L7 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                    <button type="button" class="tp-arrival-slider-button-next" tabindex="0" aria-label="Next slide"
+                        aria-controls="swiper-wrapper-98ed3af43228b876">
+                        <svg width="8" height="14" viewBox="0 0 8 14" fill="none"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path d="M1 13L7 7L1 1" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round"></path>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section> --}}
 
 
 
@@ -140,12 +465,7 @@
                     <div class="tp-section-title-wrapper mb-40">
                         <h3 class="tp-section-title">Sản phẩm nổi bật
 
-                            <svg width="114" height="35" viewBox="0 0 114 35" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M112 23.275C1.84952 -10.6834 -7.36586 1.48086 7.50443 32.9053"
-                                    stroke="currentColor" stroke-width="4" stroke-miterlimit="3.8637"
-                                    stroke-linecap="round" />
-                            </svg>
+                            
                         </h3>
                     </div>
                 </div>
@@ -360,12 +680,6 @@
                 <div class="col-xl-4 col-md-5 col-sm-6">
                     <div class="tp-section-title-wrapper mb-40">
                         <h3 class="tp-section-title">Mã khuyến mãi
-                            <svg width="114" height="35" viewBox="0 0 114 35" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M112 23.275C1.84952 -10.6834 -7.36586 1.48086 7.50443 32.9053"
-                                    stroke="currentColor" stroke-width="4" stroke-miterlimit="3.8637"
-                                    stroke-linecap="round" />
-                            </svg>
                         </h3>
                     </div>
                 </div>
@@ -634,22 +948,22 @@
                                                     class="tp-product-price new-price">{{ number_format($newProduct->bienTheSanPhams->first()->gia_moi, 0, ',', '.') }}đ</span>
                                             </div>
                                             @php
-    $bienThe = $newProduct->bienTheSanPhams->first();
-@endphp
+                                                $bienThe = $newProduct->bienTheSanPhams->first();
+                                            @endphp
 
-@if ($bienThe)
-    <div class="tp-product-price-wrapper">
-        @if ($bienThe->gia_cu && $bienThe->gia_cu > $bienThe->gia_moi)
-            <span class="tp-product-price old-price">
-                {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
-            </span>
-        @endif
+                                            @if ($bienThe)
+                                                <div class="tp-product-price-wrapper">
+                                                    @if ($bienThe->gia_cu && $bienThe->gia_cu > $bienThe->gia_moi)
+                                                        <span class="tp-product-price old-price">
+                                                            {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
+                                                        </span>
+                                                    @endif
 
-        <span class="tp-product-price new-price">
-            {{ number_format($bienThe->gia_moi, 0, ',', '.') }}đ
-        </span>
-    </div>
-@endif
+                                                    <span class="tp-product-price new-price">
+                                                        {{ number_format($bienThe->gia_moi, 0, ',', '.') }}đ
+                                                    </span>
+                                                </div>
+                                            @endif
 
                                         </div>
                                     </div>
@@ -821,13 +1135,6 @@
                 <div class="col-xl-5 col-lg-6 col-md-5">
                     <div class="tp-section-title-wrapper mb-40">
                         <h3 class="tp-section-title">Gợi ý sản phẩm
-
-                            <svg width="114" height="35" viewBox="0 0 114 35" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M112 23.275C1.84952 -10.6834 -7.36586 1.48086 7.50443 32.9053"
-                                    stroke="currentColor" stroke-width="4" stroke-miterlimit="3.8637"
-                                    stroke-linecap="round" />
-                            </svg>
                         </h3>
                     </div>
                 </div>
@@ -1037,12 +1344,6 @@
                 <div class="col-xl-4 col-md-6">
                     <div class="tp-section-title-wrapper mb-50">
                         <h3 class="tp-section-title">Tin tức & bài viết
-                            <svg width="114" height="35" viewBox="0 0 114 35" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M112 23.275C1.84952 -10.6834 -7.36586 1.48086 7.50443 32.9053"
-                                    stroke="currentColor" stroke-width="4" stroke-miterlimit="3.8637"
-                                    stroke-linecap="round" />
-                            </svg>
                         </h3>
                     </div>
                 </div>

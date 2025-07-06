@@ -75,18 +75,18 @@ class ChiTietSanPhamController extends Controller
 
         $sanPhamMoiNhat = SanPham::latest()->take(5)->with('bienthesanphams', 'danhMuc')->get();
 
-        // $isLoved = [];
-        // $products = [];
+        $isLoved = [];
+        $products = [];
 
-        // if (Auth::user()) {
-        //     $products = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')->get();
-        //     $yeuThichs = Auth::user()->sanPhamYeuThichs()->pluck('san_pham_id')->toArray();
-        //     foreach ($products as $product) {
-        //         $isLoved[$product->id] = in_array($product->id, $yeuThichs);
-        //     }
-        // }
-$isLoved = [];
-$products = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')->get();
+        if (Auth::user()) {
+            $products = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')->get();
+            $yeuThichs = Auth::user()->sanPhamYeuThichs()->pluck('san_pham_id')->toArray();
+            foreach ($products as $product) {
+                $isLoved[$product->id] = in_array($product->id, $yeuThichs);
+            }
+        }
+// $isLoved = [];
+// $products = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')->get();
 
 // if (Auth::check()) {
 //     $yeuThichs = Auth::user()->sanPhamYeuThichs()->pluck('san_pham_id')->toArray();
@@ -99,9 +99,9 @@ $products = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')->get();
 //         $isLoved[$product->id] = false;
 //     }
 // }
-$products = SanPham::with('yeuThichs')->get();
+// $products = SanPham::with('yeuThichs')->get();
 
-$loveCount = [];
+// $loveCount = [];
 foreach ($products as $product) {
     $loveCount[$product->id] = $product->yeuThichs->count();
 }

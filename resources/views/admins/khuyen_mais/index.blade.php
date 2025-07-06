@@ -93,7 +93,6 @@
                                                 aria-expanded="false">Thao tác<i
                                                     class="mdi mdi-chevron-down"></i></button>
                                             <div class="dropdown-menu">
-                                                <a class="dropdown-item" href="#">Xem</a>
                                                 <a class="dropdown-item"
                                                     href="{{ route('admin.khuyen_mais.edit', $khuyenmai->id) }}">Sửa</a>
                                                 @if ($khuyenmai->trang_thai == 1)

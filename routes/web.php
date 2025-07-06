@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
@@ -15,6 +16,9 @@ use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
+use App\Http\Controllers\Admin\HoaDonController;
+use App\Http\Controllers\Admin\AdminLienHeController;
+use App\Http\Controllers\Admin\NotificationController;
 
 // Client Routes
 use App\Http\Controllers\Client\TrangChuController;
@@ -29,7 +33,8 @@ use App\Http\Controllers\Client\TaiKhoanController;
 use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
-
+use App\Http\Controllers\Client\ThanhToanController;
+use App\Http\Controllers\VNPayController;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -41,6 +46,12 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('forgot-password', [AdminForgotPasswordController::class, 'sendResetLinkEmail'])->name('password.email');
     Route::get('reset-password/{token}', [AdminForgotPasswordController::class, 'showResetForm'])->name('password.reset');
     Route::post('reset-password', [AdminForgotPasswordController::class, 'reset'])->name('password.update');
+});
+
+//Thông báo
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 });
 
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
@@ -134,12 +145,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
         Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
         Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
-        Route::get('/{id}', [KhuyenMaiController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
         Route::put('/{id}', [KhuyenMaiController::class, 'update'])->name('update');
         Route::get('/update-expired', [KhuyenMaiController::class, 'updateExpiredKhuyenMai'])->name('updateExpired');
         Route::post('/{id}/onOffKhuyenMai', [KhuyenMaiController::class, 'onOffKhuyenMai'])->name('onOffKhuyenMai');
         Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [KhuyenMaiController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [KhuyenMaiController::class, 'restore'])->name('restore');
+        Route::delete('/force-delete/{id}', [KhuyenMaiController::class, 'forceDelete'])->name('forceDelete');
     });
     // Đánh giá
     Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
@@ -147,6 +160,36 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/danh-gia/{danhGiaId}', [DanhGiaSanPhamController::class, 'show'])->name('show');
         Route::post('/danh-gia/{danhGiaId}/tra-loi', [DanhGiaSanPhamController::class, 'traLoi'])->name('traLoi');
         Route::put('admin/danhgias/tra-loi/{id}', [DanhGiaSanPhamController::class, 'updateResponse'])->name('traLoi.update');
+    });
+
+    // Route hóa đơn
+    Route::prefix('hoadons')->name('hoadons.')->group(function () {
+        Route::get('/', [HoaDonController::class, 'index'])->name('index');
+        Route::get('/{id}/show', [HoaDonController::class, 'show'])->name('show');
+        Route::put('/{id}/update', [HoaDonController::class, 'update'])->name('update');
+        //admin
+        Route::post('/query', [VNPayController::class, 'queryTransaction'])->name('query');
+        Route::post('/refund', [VNPayController::class, 'queryTransaction'])->name('refund');
+        Route::get('/tracuu', [VNPayController::class, 'tracuu'])->name('tracuu');
+        Route::get('/hoantien', [VNPayController::class, 'hoantien'])->name('hoantien');
+
+        Route::delete('/{id}/destroy', [HoaDonController::class, 'destroy'])->name('destroy');
+    });
+
+    //Thống kê
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/doanhthu', [DashboardController::class, 'doanhthu'])->name('doanhthu');
+    Route::get('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
+    Route::get('/tk-sanpham-banchay', [DashboardController::class, 'sanPhamBanChay'])->name('thongke.sanpham.banchay');
+    Route::get('/tk-sanpham-kho', [DashboardController::class, 'sanPhamBanKho'])->name('thongke.sanpham.kho');
+
+    //Liên hệ
+    Route::prefix('lienhes')->name('lienhes.')->group(function () {
+        Route::get('/', [AdminLienHeController::class, 'index'])->name('index');
+        Route::post('store', [AdminLienHeController::class, 'store'])->name('store');
+        Route::post('/phanhoi/reply/send/{id}', [AdminLienHeController::class, 'sendReply'])->name('phanhoi.reply.send');
+        Route::get('/form-phan-hoi/{id}', [AdminLienHeController::class, 'showReplyForm'])->name('form.reply');
+        Route::get('/phan-hoi/cap-nhat/{id}/{trang_thai_phan_hoi}', [AdminLienHeController::class, 'capNhatTrangThai'])->name('phan_hoi.cap_nhat');
     });
 });
 
@@ -186,19 +229,19 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('register', [CustomerRegisterController::class, 'showRegistrationForm'])->name('register');
     Route::post('register', [CustomerRegisterController::class, 'register'])->name('register.post');
     Route::post('logout', [CustomerLoginController::class, 'logout'])->name('logout');
-    Route::get('profile',[TaiKhoanController::class,'profileUser'])->name('profileUser');
-    Route::put('/editProfile/{id}',[TaiKhoanController::class,'update'])->name('update.profileUser');
-    Route::get('/donhang',[TaiKhoanController::class,'index'])->name('donhang');
-    Route::put('changepassword',[TaiKhoanController::class,'changePassword'])->name('changePassword');
+    Route::get('profile', [TaiKhoanController::class, 'profileUser'])->name('profileUser');
+    Route::put('/editProfile/{id}', [TaiKhoanController::class, 'update'])->name('update.profileUser');
+    Route::get('/donhang', [TaiKhoanController::class, 'index'])->name('donhang');
+    Route::put('changepassword', [TaiKhoanController::class, 'changePassword'])->name('changePassword');
     Route::match(['get', 'post'], '/{id}/chitietdonhang', [TaiKhoanController::class, 'show'])->name('donhang.chitiet');
-    Route::post('/{id}/cancel',[TaiKhoanController::class,'cancelOrder'])->name('cancelOrder');
-    Route::post('/{id}/getOrder',[TaiKhoanController::class,'getOrder'])->name('getOrder');
+    Route::post('/{id}/cancel', [TaiKhoanController::class, 'cancelOrder'])->name('cancelOrder'); // hủy đơn hàng
+    Route::post('/{id}/getOrder', [TaiKhoanController::class, 'getOrder'])->name('getOrder');
     Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('customer.orders.filter');
     // quên mk customer
-    Route::get('/show-form-forgot',[CustomerForgotPassword::class,'ShowformForgotPasswword'])->name('forgotPassword');
-    Route::post('/forgot-password',[CustomerForgotPassword::class,'SendEmailForgot'])->name('password.email');
+    Route::get('/show-form-forgot', [CustomerForgotPassword::class, 'ShowformForgotPasswword'])->name('forgotPassword');
+    Route::post('/forgot-password', [CustomerForgotPassword::class, 'SendEmailForgot'])->name('password.email');
     Route::get('reset-password/{token}', [CustomerForgotPassword::class, 'formResetPassword'])->name('password.reset');
-    Route::post('reset-pass',[CustomerForgotPassword::class, 'resetPassword'])->name('password.change');
+    Route::post('reset-pass', [CustomerForgotPassword::class, 'resetPassword'])->name('password.change');
 });
 
 // Bài viết
@@ -228,9 +271,25 @@ Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])-
 Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
 
+
+//thanh toan
+Route::get('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
+Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
+Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
+Route::post('/clear-discount', [ThanhToanController::class, 'clearDiscount'])->name('clear.discount');
+Route::get('/payment/callback', [ThanhToanController::class, 'callback'])->name('payment.callback');
+Route::post('/payment/notify', [ThanhToanController::class, 'notify'])->name('payment.notify');
+Route::post('/zalopay/callback', [ThanhToanController::class, 'handleZaloPayCallback'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+Route::post('/customer/orders/retry-payment/{id}', [ThanhToanController::class, 'retryPayment'])->name('customer.retryPayment');
+Route::post('/remove-discount', [ThanhToanController::class, 'removeDiscount'])->name('removeDiscount');
+
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
 
+Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
+
+
+// Chi tiết sản phẩm
 
 Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->name('chitietsanpham');
 Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
@@ -239,8 +298,11 @@ Route::get('/get-so-luong-bien-the', [ChiTietSanPhamController::class, 'getSoLuo
 Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'reply'])->name('admin.danhgia.reply');
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
 
+
+Route::get('/vnpay/return', [VNPayController::class, 'handleReturn'])->name('vnpay.return');
+
+//yeu thich
 Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
-

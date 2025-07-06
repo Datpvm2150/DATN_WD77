@@ -62,17 +62,16 @@
                                 <div class="col-lg-4">
                                     <div class="mb-3">
                                         <label for="ma_san_pham" class="form-label">Mã sản phẩm</label>
-                                        <input type="text" id="ma_san_pham" name="ma_san_pham"
-                                            class="form-control" placeholder="Mã sản phẩm"
-                                            value="{{ $sanpham->ma_san_pham }}" disabled>
+                                        <input type="text" id="ma_san_pham" name="ma_san_pham" class="form-control"
+                                            placeholder="Mã sản phẩm" value="{{ $sanpham->ma_san_pham }}" disabled>
                                         @error('ma_san_pham')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
                                     <div class="mb-3">
                                         <label for="ten_san_pham" class="form-label">Tên sản phẩm</label>
-                                        <input type="text" id="ten_san_pham" name="ten_san_pham"
-                                            class="form-control" placeholder="Tên sản phẩm" style="text-transform: capitalize;"
+                                        <input type="text" id="ten_san_pham" name="ten_san_pham" class="form-control"
+                                            placeholder="Tên sản phẩm" style="text-transform: capitalize;"
                                             value="{{ $sanpham->ten_san_pham }}">
                                         @error('ten_san_pham')
                                             <p class="text-danger">{{ $message }}</p>
@@ -213,8 +212,8 @@
                                                                 class="form-label">Giá mới:</label>
                                                             <input type="number" class="form-control"
                                                                 id="gia_moi-{{ $index }}" name="gia_moi[]"
-                                                                min="0" required
-                                                                value="{{ $bienthesanpham->gia_moi }}">
+                                                                
+                                                                value="{{ old('gia_moi.' . $index, $bienthesanpham->gia_moi) }}">
                                                             @error('gia_moi.' . $index)
                                                                 <p class="text-danger">{{ $message }}</p>
                                                             @enderror
@@ -379,10 +378,9 @@
             attachInputChangeListener();
         });
     </script>
-    
+
 
     <script>
-
         // album ảnh
         document.addEventListener('DOMContentLoaded', function() {
             const input = document.getElementById('hinh_anh');
@@ -391,7 +389,7 @@
             const deletedImagesInput = document.getElementById('deleted_images');
             let selectedFiles = [];
             let deletedImageIds = [];
-    
+
             // Load existing images into selectedFiles
             const existingImages = Array.from(previewContainer.querySelectorAll('.preview-item'));
             existingImages.forEach(previewItem => {
@@ -402,20 +400,20 @@
                     id: id
                 });
             });
-    
+
             function renderPreview() {
                 previewContainer.innerHTML = '';
-    
+
                 selectedFiles.forEach(file => {
                     const previewItem = document.createElement('div');
                     previewItem.className = 'preview-item';
-    
+
                     const img = document.createElement('img');
                     img.src = (file instanceof File) ? URL.createObjectURL(file) : file.src;
                     img.className = 'img-fluid';
                     img.style.maxHeight = '100px';
                     previewItem.appendChild(img);
-    
+
                     const deleteButton = document.createElement('button');
                     deleteButton.className = 'btn btn-danger btn-sm delete-button';
                     deleteButton.textContent = 'X';
@@ -429,27 +427,28 @@
                         updateDeletedImagesInput();
                     });
                     previewItem.appendChild(deleteButton);
-    
+
                     previewContainer.appendChild(previewItem);
                 });
-    
+
                 oldImagesInput.value = selectedFiles.filter(f => typeof f === 'object' && f.src).map(f => f.src)
                     .join(',');
             }
-    
+
             input.addEventListener('change', function() {
                 const newFiles = Array.from(input.files);
-    
+
                 newFiles.forEach(file => {
-                    if (!selectedFiles.some(existingFile => existingFile instanceof File && existingFile.name === file.name)) {
+                    if (!selectedFiles.some(existingFile => existingFile instanceof File &&
+                            existingFile.name === file.name)) {
                         selectedFiles.push(file);
                     }
                 });
-    
+
                 renderPreview();
                 updateFileInput();
             });
-    
+
             function updateFileInput() {
                 const dataTransfer = new DataTransfer();
                 selectedFiles.forEach(file => {
@@ -459,11 +458,11 @@
                 });
                 input.files = dataTransfer.files;
             }
-    
+
             function updateDeletedImagesInput() {
                 deletedImagesInput.value = deletedImageIds.join(',');
             }
-    
+
             renderPreview();
         });
     </script>
@@ -488,5 +487,5 @@
         document.querySelector('form').addEventListener('submit', function() {
             console.log(document.getElementById('ten_san_pham').value);
         });
-        </script>
+    </script>
 @endsection

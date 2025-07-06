@@ -31,9 +31,9 @@
                     </p>
                     <p><strong class="text-dark">Phương thức thanh toán:</strong> <span  class="text-dark">{{ $phuongThucThanhToan[$hoaDon->phuong_thuc_thanh_toan] }}</span  class="text-dark"></p>
                     <p><strong class="text-dark">Thanh toán:</strong> 
-                        <span  class="text-dark" class="badge {{ $hoaDon->trang_thai_thanh_toan == 'Đã thanh toán' ? 'bg-success' : 'bg-warning text-dark' }}">
-                            {{ $trangThaiThanhToan[$hoaDon->trang_thai_thanh_toan] }}
-                        </span  class="text-dark">
+                    <span class="badge {{ $hoaDon->trang_thai_thanh_toan == 'Đã thanh toán' ? 'bg-success text-light' : 'bg-warning text-dark' }}">
+                        {{ $trangThaiThanhToan[$hoaDon->trang_thai_thanh_toan] }}
+                    </span>
                     </p>
                     <p><strong class="text-dark">Giảm giá:</strong> 
                         <span   class="text-danger">-{{ number_format($hoaDon->giam_gia, 0, '', '.') }} đ</span  class="text-dark">
@@ -105,7 +105,7 @@
                             @if ($hoaDon->trang_thai == 7)
                                 <a href="#" class="btn btn-sm btn-warning rounded-pill" data-bs-toggle="modal" data-bs-target="#reviewModal" data-san-pham-id="{{ $chiTiet->bienTheSanPham->sanPham->id }}">Đánh giá</a>
                             @else
-                                <span  class="text-dark" class="text-muted">Không thể đánh giá</span  class="text-dark">
+                                <span class="text-muted"><i class="fas fa-ban me-1"></i>Không thể đánh giá</span>
                             @endif
                         </td>
                     </tr>
@@ -132,6 +132,5 @@
 </style>
 
 <!-- Modal Đánh Giá -->
-@include('clients.taikhoan.review_modal')
-
+@include( 'clients.taikhoan.review_modal')
 @endsection

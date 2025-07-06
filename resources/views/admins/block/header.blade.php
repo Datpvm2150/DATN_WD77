@@ -10,8 +10,10 @@
                 </li>
                 <li class="d-none d-lg-block">
                     <div class="position-relative topbar-search">
-                        <input type="text" class="form-control bg-light bg-opacity-75 border-light ps-4" placeholder="Tìm kiếm...">
-                        <i class="mdi mdi-magnify fs-16 position-absolute text-muted top-50 translate-middle-y ms-2"></i>
+                        <input type="text" class="form-control bg-light bg-opacity-75 border-light ps-4"
+                            placeholder="Tìm kiếm...">
+                        <i
+                            class="mdi mdi-magnify fs-16 position-absolute text-muted top-50 translate-middle-y ms-2"></i>
                     </div>
                 </li>
             </ul>
@@ -25,136 +27,122 @@
                 </li>
 
                 <li class="dropdown notification-list topbar-dropdown">
-                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="false" aria-expanded="false">
                         <i data-feather="bell" class="noti-icon"></i>
-                        <span class="badge bg-danger rounded-circle noti-icon-badge">9</span>
+                        <span
+                            class="badge bg-danger rounded-circle noti-icon-badge">{!! App\Models\Notification::where('is_read', false)->count() !!}</span>
                     </a>
                     <div class="dropdown-menu dropdown-menu-end dropdown-lg">
-
                         <!-- item-->
                         <div class="dropdown-item noti-title">
                             <h5 class="m-0">
                                 <span class="float-end">
-                                    <a href="#" class="text-dark">
-                                        <small>Xóa tất cả</small>
-                                    </a>
+                                    <form action="{{ route('admin.notifications.markAllAsRead') }}" method="POST"
+                                        style="display: inline;">
+                                        @csrf
+                                        <button type="submit" class="text-dark bg-transparent border-0 p-0"
+                                            style="font-size: small;">
+                                            Đánh dấu là đã đọc
+                                        </button>
+                                    </form>
                                 </span>Thông báo
                             </h5>
                         </div>
 
                         <div class="noti-scroll" data-simplebar>
+                            @php
+                                $notifications = App\Models\Notification::where('is_read', false)->latest()->take(5)->get();
+                                $notificationData = [];
 
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary active">
-                                <div class="notify-icon">
-                                    <img src="{{ asset('assets/admin/images/users/user-12.jpg') }}" class="img-fluid rounded-circle" alt="" />
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="notify-details">Carl Steadham</p>
-                                    <small class="text-muted">5 phút trước</small>
-                                </div>
-                                <p class="mb-0 user-msg">
-                                    <small class="fs-14">Hoàn thành <span class="text-reset">Cải thiện quy trình làm việc trong Figma</span></small>
-                                </p>
-                            </a>
+                                foreach ($notifications as $notification) {
+                                    $data = null;
+                                    $route = '';
+                                    $message = '';
+                                    $avatar = asset('assets/admin/images/users/default.jpg');
+                                    $name = '';
 
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{ asset('assets/admin/images/users/user-2.jpg') }}" class="img-fluid rounded-circle" alt="" />
-                                </div>
-                                <div class="notify-content">
+                                    if ($notification->type === 'user') {
+                                        $data = App\Models\User::find($notification->data_id);
+                                        if ($data && $data->vai_tro === 'user') {
+                                            $route = route('admin.taikhoans.show', $data->id);
+                                            $message = 'Người dùng mới đăng ký';
+                                            $avatar = $data->anh_dai_dien ? asset('storage/' . $data->anh_dai_dien) : $avatar;
+                                            $name = $data->ten;
+                                        }
+                                    } elseif ($notification->type === 'danh_gia') {
+                                        $data = App\Models\DanhGiaSanPham::with(['user', 'sanPham'])->find($notification->data_id);
+                                        if ($data) {
+                                            $route = route('admin.danhgias.show', $data->id);
+                                            $message = 'Đánh giá mới cho sản phẩm <span class="text-reset">' . ($data->sanPham->ten_san_pham ?? 'Sản phẩm') . '</span>';
+                                            $avatar = $data->user->anh_dai_dien ? asset('storage/' . $data->user->anh_dai_dien) : $avatar;
+                                            $name = $data->user->ten;
+                                        }
+                                    } elseif ($notification->type === 'hoa_don') {
+                                        $data = App\Models\HoaDon::with('user')->find($notification->data_id);
+                                        if ($data) {
+                                            $route = route('admin.hoadons.show', $data->id);
+                                            $message = 'Đơn hàng mới #' . $data->ma_hoa_don;
+                                            $avatar = $data->user->anh_dai_dien ? asset('storage/' . $data->user->anh_dai_dien) : $avatar;
+                                            $name = $data->user->ten;
+                                        }
+                                    } elseif ($notification->type === 'lien_he') {
+                                        $data = App\Models\lien_hes::with('user')->find($notification->data_id);
+                                        if ($data) {
+                                            $route = route('admin.lienhes.form.reply', $data->id);
+                                            $message = 'Liên hệ mới từ ' . $data->ten_nguoi_gui;
+                                            $avatar = $data->user->anh_dai_dien ? asset('storage/' . $data->user->anh_dai_dien) : $avatar;
+                                            $name = $data->ten_nguoi_gui;
+                                        }
+                                    }
+
+                                    if ($data) {
+                                        $notificationData[] = [
+                                            'route' => $route,
+                                            'message' => $message,
+                                            'avatar' => $avatar,
+                                            'name' => $name,
+                                            'created_at' => $notification->created_at,
+                                        ];
+                                    }
+                                }
+                            @endphp
+
+                            @foreach($notificationData as $notification)
+                                <a href="{{ $notification['route'] }}"
+                                    class="dropdown-item notify-item text-muted link-primary">
+                                    <div class="notify-icon">
+                                        <img src="{{ $notification['avatar'] }}" class="img-fluid rounded-circle" alt="" />
+                                    </div>
                                     <div class="d-flex align-items-center justify-content-between">
-                                        <p class="notify-details">Olivia McGuire</p>
-                                        <small class="text-muted">1 phút trước</small>
+                                        <p class="notify-details">{{ $notification['name'] }}</p>
+                                        <small class="text-muted">{{ $notification['created_at']->diffForHumans() }}</small>
                                     </div>
-                        
-                                    <div class="d-flex mt-2 align-items-center">
-                                        <div class="notify-sub-icon">
-                                            <i class="mdi mdi-download-box text-dark"></i>
-                                        </div>
-
-                                        <div>
-                                            <p class="notify-details mb-0">dark-themes.zip</p>
-                                            <small class="text-muted">2.4 MB</small>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{ asset('assets/admin/images/users/user-3.jpg') }}" class="img-fluid rounded-circle" alt="" /> 
-                                </div>
-                                <div class="notify-content">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <p class="notify-details">Travis Williams</p>
-                                        <small class="text-muted">7 phút trước</small>
-                                    </div>
-                                    <p class="noti-mentioned p-2 rounded-2 mb-0 mt-2"><span class="text-primary">@Patryk</span> Vui lòng đảm bảo rằng bạn...</p>
-                                </div>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{ asset('assets/admin/images/users/user-8.jpg') }}" class="img-fluid rounded-circle" alt="" />
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="notify-details">Violette Lasky</p>
-                                    <small class="text-muted">5 phút trước</small>
-                                </div>
-                                <p class="mb-0 user-msg">
-                                    <small class="fs-14">Hoàn thành <span class="text-reset">Tạo các thành phần mới</span></small>
-                                </p>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{ asset('assets/admin/images/users/user-5.jpg') }}" class="img-fluid rounded-circle" alt="" />
-                                </div>
-                                <div class="d-flex align-items-center justify-content-between">
-                                    <p class="notify-details">Ralph Edwards</p>
-                                    <small class="text-muted">5 phút trước</small>
-                                </div>
-                                <p class="mb-0 user-msg">
-                                    <small class="fs-14">Hoàn thành <span class="text-reset">Cải thiện quy trình làm việc trong React</span></small>
-                                </p>
-                            </a>
-
-                            <!-- item-->
-                            <a href="javascript:void(0);" class="dropdown-item notify-item text-muted link-primary">
-                                <div class="notify-icon">
-                                    <img src="{{ asset('assets/admin/images/users/user-6.jpg') }}" class="img-fluid rounded-circle" alt="" /> 
-                                </div>
-                                <div class="notify-content">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <p class="notify-details">Jocab Jones</p>
-                                        <small class="text-muted">7 phút trước</small>
-                                    </div>
-                                    <p class="noti-mentioned p-2 rounded-2 mb-0 mt-2"><span class="text-reset">@Patryk</span> Vui lòng đảm bảo rằng bạn...</p>
-                                </div>
-                            </a>
+                                    <p class="mb-0 user-msg">
+                                        <small class="fs-14">{!! $notification['message'] !!}</small>
+                                    </p>
+                                </a>
+                            @endforeach
                         </div>
 
-                        <!-- Tất cả-->
-                        <a href="javascript:void(0);" class="dropdown-item text-center text-primary notify-item notify-all">
+                        <!-- Tất cả -->
+                        <a href="{{ route('admin.notifications.index') }}"
+                            class="dropdown-item text-center text-primary notify-item notify-all">
                             Xem tất cả
                             <i class="fe-arrow-right"></i>
                         </a>
-
                     </div>
                 </li>
 
                 <li class="dropdown notification-list topbar-dropdown">
-                    <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="false" aria-expanded="false">
+                    <a class="nav-link dropdown-toggle nav-user me-0" data-bs-toggle="dropdown" href="#" role="button"
+                        aria-haspopup="false" aria-expanded="false">
                         @if (Auth::check() && Auth::user()->anh_dai_dien != '')
-                            <img src="{{ asset('storage/' . Auth::user()->anh_dai_dien) }}" alt="user-image" class="rounded-circle">
+                            <img src="{{ asset('storage/' . Auth::user()->anh_dai_dien) }}" alt="user-image"
+                                class="rounded-circle">
                         @else
-                            <img src="{{ asset('assets/admin/images/users/user-11.jpg') }}" alt="user-image" class="rounded-circle">
+                            <img src="{{ asset('assets/admin/images/users/user-11.jpg') }}" alt="user-image"
+                                class="rounded-circle">
                         @endif
                         <span class="pro-user-name ms-1">
                             @if (Auth::check())
@@ -165,7 +153,7 @@
                             <i class="mdi mdi-chevron-down"></i>
                         </span>
                     </a>
-                            
+
                     <div class="dropdown-menu dropdown-menu-end profile-dropdown">
                         <!-- item-->
                         <div class="dropdown-header noti-title">
@@ -177,20 +165,20 @@
                                 @endif
                             </h6>
                         </div>
-                    
+
                         <!-- item-->
                         @if (Auth::check())
-                            <a class="dropdown-item notify-item" href="">
+                            <a class="dropdown-item notify-item" href="{{ route('admin.profile') }}">
                                 <i class="mdi mdi-account-circle-outline fs-16 align-middle"></i>
                                 <span>Tài khoản của tôi</span>
                             </a>
                         @else
-                            <a class="dropdown-item notify-item" href="">
+                            <a class="dropdown-item notify-item" href="{{ route('/') }}">
                                 <i class="mdi mdi-login fs-16 align-middle"></i>
                                 <span>Đăng nhập</span>
                             </a>
                         @endif
-                                    
+
 
                         <!-- item-->
                         <a class='dropdown-item notify-item' href='auth-lock-screen.html'>
@@ -201,15 +189,17 @@
                         <div class="dropdown-divider"></div>
 
                         <!-- item-->
-                        <form id="logout-form" action="" method="POST" style="display: none;">
+                        <form id="logout-form" action="{{ route('admin.logout') }}" method="POST"
+                            style="display: none;">
                             @csrf
                         </form>
-                        
-                        <a class='dropdown-item notify-item' href="#" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+
+                        <a class='dropdown-item notify-item' href="#"
+                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                             <i class="mdi mdi-location-exit fs-16 align-middle"></i>
                             <span>Đăng xuất</span>
                         </a>
-                        
+
 
                     </div>
                 </li>
@@ -218,6 +208,6 @@
         </div>
 
     </div>
-   
+
 </div>
 <!-- end Topbar -->
