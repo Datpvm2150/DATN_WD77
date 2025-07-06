@@ -4,17 +4,19 @@ namespace App\Http\Controllers\Client;
 
 use App\Models\DanhMuc;
 use App\Models\lien_hes;
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 
 class LienHeController extends Controller
 {
     public function index()
     {
         $danhMucs = DanhMuc::all();
-        return view('clients.lienhe', compact('danhMucs'));
+        $lienhes = lien_hes::where('user_id', Auth::id())
+            ->with('adminPhanHoi')
+            ->get();
+        return view('clients.lienhe', compact('danhMucs', 'lienhes'));
     }
 
     public function store(Request $request)
@@ -57,7 +59,7 @@ class LienHeController extends Controller
             'trang_thai_phan_hoi' => lien_hes::STATUS_PENDING,
         ]);
 
-        // Trả về thông báo thành công
+        // Trả về thông báo thành công dưới dạng JSON
         return response()->json(['success' => 'Tin nhắn của bạn đã được gửi']);
     }
 }
