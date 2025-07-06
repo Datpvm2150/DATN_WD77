@@ -8,7 +8,6 @@
             margin-bottom: 10px;
             border-radius: 5px;
         }
-
         .list-group-item p {
             margin-bottom: 5px;
         }
@@ -45,6 +44,7 @@
                                     <li class="list-group-item">
                                         <p><strong>Phản hồi:</strong> {{ $phanHoi->reply }}</p>
                                         <p><strong>Ngày phản hồi:</strong> {{ $phanHoi->created_at->format('d/m/Y H:i') }}</p>
+                                        <p><strong>Admin:</strong> {{ $phanHoi->admin ? $phanHoi->admin->ten : 'Không xác định' }}</p>
                                     </li>
                                 @endforeach
                             </ul>

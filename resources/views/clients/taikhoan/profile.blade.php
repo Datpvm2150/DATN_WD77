@@ -25,9 +25,9 @@
                             <nav>
                                 <div class="nav nav-tabs tp-tab-menu flex-column" id="profile-tab" role="tablist">
                                     <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-profile" type="button" role="tab" aria-controls="nav-profile"
-                                        aria-selected="false"><span><i class="fa-regular fa-user-pen"></i></span>Tài
-                                        khoản</button>
+                                        data-bs-target="#nav-profile" type="button" role="tab"
+                                        aria-controls="nav-profile" aria-selected="false"><span><i
+                                                class="fa-regular fa-user-pen"></i></span>Tài khoản</button>
                                     <button class="nav-link" id="nav-information-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-information" type="button" role="tab"
                                         aria-controls="nav-information" aria-selected="false"><span><i
@@ -35,13 +35,13 @@
                                     <a href="{{ route('customer.donhang') }}" class="nav-link"><span><i
                                                 class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a>
                                     <button class="nav-link" id="nav-password-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-password" type="button" role="tab" aria-controls="nav-password"
-                                        aria-selected="false"><span><i class="fa-regular fa-lock"></i></span>Thay đổi mật
-                                        khẩu</button>
+                                        data-bs-target="#nav-password" type="button" role="tab"
+                                        aria-controls="nav-password" aria-selected="false"><span><i
+                                                class="fa-regular fa-lock"></i></span>Thay đổi mật khẩu</button>
                                     <button class="nav-link" id="nav-lienhe-tab" data-bs-toggle="tab"
-                                        data-bs-target="#nav-lienhe" type="button" role="tab" aria-controls="nav-lienhe"
-                                        aria-selected="false"><span><i class="fas fa-envelope"></i></span>Hòm thư phản
-                                        hồi</button>
+                                        data-bs-target="#nav-lienhe" type="button" role="tab"
+                                        aria-controls="nav-lienhe" aria-selected="false"><span><i
+                                                class="fas fa-envelope"></i></span>Hòm thư phản hồi</button>
                                     <span id="marker-vertical" class="tp-tab-line d-none d-sm-inline-block"></span>
                                 </div>
                             </nav>
@@ -164,13 +164,15 @@
                                                         <div class="profile__input-box">
                                                             <div class="profile__input">
                                                                 <input type="text" placeholder="Enter your username"
-                                                                    value="{{ old('ten', $profile->ten) }}" name="ten">
+                                                                    value="{{ old('ten', $profile->ten) }}"
+                                                                    name="ten">
                                                                 @error('ten')
                                                                     <p class="text-danger">{{ $message }}</p>
                                                                 @enderror
                                                                 <span>
-                                                                    <svg width="17" height="19" viewBox="0 0 17 19"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <svg width="17" height="19"
+                                                                        viewBox="0 0 17 19" fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg">
                                                                         <path
                                                                             d="M9 9C11.2091 9 13 7.20914 13 5C13 2.79086 11.2091 1 9 1C6.79086 1 5 2.79086 5 5C5 7.20914 6.79086 9 9 9Z"
                                                                             stroke="currentColor" stroke-width="1.5"
@@ -196,8 +198,9 @@
                                                                     <p class="text-danger">{{ $message }}</p>
                                                                 @enderror
                                                                 <span>
-                                                                    <svg width="18" height="16" viewBox="0 0 18 16"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <svg width="18" height="16"
+                                                                        viewBox="0 0 18 16" fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg">
                                                                         <path
                                                                             d="M13 14.6H5C2.6 14.6 1 13.4 1 10.6V5C1 2.2 2.6 1 5 1H13C15.4 1 17 2.2 17 5V10.6C17 13.4 15.4 14.6 13 14.6Z"
                                                                             stroke="currentColor" stroke-width="1.5"
@@ -223,8 +226,9 @@
                                                                     <p class="text-danger">{{ $message }}</p>
                                                                 @enderror
                                                                 <span>
-                                                                    <svg width="15" height="18" viewBox="0 0 15 18"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <svg width="15" height="18"
+                                                                        viewBox="0 0 15 18" fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg">
                                                                         <path
                                                                             d="M13.9148 5V13C13.9148 16.2 13.1076 17 9.87892 17H5.03587C1.80717 17 1 16.2 1 13V5C1 1.8 1.80717 1 5.03587 1H9.87892C13.1076 1 13.9148 1.8 13.9148 5Z"
                                                                             stroke="currentColor" stroke-width="1.5"
@@ -261,7 +265,8 @@
                                                     <div class="col-xxl-6 col-md-6">
                                                         <div class="profile__input-box">
                                                             <div class="profile__input">
-                                                                <input type="file" name="anh_dai_dien" id="anh_dai_dien">
+                                                                <input type="file" name="anh_dai_dien"
+                                                                    id="anh_dai_dien">
                                                                 <span>
                                                                     <i class="fa-regular fa-image"></i>
                                                                 </span>
@@ -271,14 +276,16 @@
                                                     <div class="col-xxl-12">
                                                         <div class="profile__input-box">
                                                             <div class="profile__input">
-                                                                <input type="text" placeholder="Nhập địa chỉ" name="dia_chi"
+                                                                <input type="text" placeholder="Nhập địa chỉ"
+                                                                    name="dia_chi"
                                                                     value="{{ old('dia_chi', $profile->dia_chi) }}">
                                                                 @error('dia_chi')
                                                                     <p class="text-danger">{{ $message }}</p>
                                                                 @enderror
                                                                 <span>
-                                                                    <svg width="16" height="18" viewBox="0 0 16 18"
-                                                                        fill="none" xmlns="http://www.w3.org/2000/svg">
+                                                                    <svg width="16" height="18"
+                                                                        viewBox="0 0 16 18" fill="none"
+                                                                        xmlns="http://www.w3.org/2000/svg">
                                                                         <path
                                                                             d="M7.99377 10.1461C9.39262 10.1461 10.5266 9.0283 10.5266 7.64946C10.5266 6.27061 9.39262 5.15283 7.99377 5.15283C6.59493 5.15283 5.46094 6.27061 5.46094 7.64946C5.46094 9.0283 6.59493 10.1461 7.99377 10.1461Z"
                                                                             stroke="currentColor" stroke-width="1.5" />
@@ -356,7 +363,8 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="nav-lienhe" role="tabpanel" aria-labelledby="nav-lienhe-tab">
+                                <div class="tab-pane fade" id="nav-lienhe" role="tabpanel"
+                                    aria-labelledby="nav-lienhe-tab">
                                     <div class="profile__feedback">
                                         <h3 class="profile__info-title">Hòm thư phản hồi</h3>
                                         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
@@ -367,7 +375,7 @@
                                                         <th>Nội dung liên hệ</th>
                                                         <th>Ngày gửi</th>
                                                         <th>Trạng thái</th>
-                                                        <th>Phản hồi admin</th>
+                                                        <th>Phản hồi</th>
                                                         <th>Thao tác</th>
                                                     </tr>
                                                 </thead>
@@ -395,8 +403,7 @@
                                                             </td>
                                                             <td>
                                                                 <button class="btn btn-info btn-sm" data-bs-toggle="modal"
-                                                                    data-bs-target="#feedbackModal{{ $lienhe->id }}">Xem chi
-                                                                    tiết</button>
+                                                                    data-bs-target="#feedbackModal{{ $lienhe->id }}">Xem chi tiết</button>
                                                             </td>
                                                         </tr>
                                                     @endforeach
@@ -405,21 +412,19 @@
                                         </div>
                                         <!-- Modal for each feedback -->
                                         @foreach ($lienhes as $lienhe)
-                                            <div class="modal fade" id="feedbackModal{{ $lienhe->id }}" tabindex="-1"
-                                                aria-labelledby="feedbackModalLabel{{ $lienhe->id }}" aria-hidden="true">
+                                            <div class="modal fade" id="feedbackModal{{ $lienhe->id }}"
+                                                tabindex="-1" aria-labelledby="feedbackModalLabel{{ $lienhe->id }}"
+                                                aria-hidden="true">
                                                 <div class="modal-dialog modal-lg">
                                                     <div class="modal-content">
                                                         <div class="modal-header">
-                                                            <h5 class="modal-title" id="feedbackModalLabel{{ $lienhe->id }}">Chi
-                                                                tiết phản hồi</h5>
-                                                            <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                                aria-label="Close"></button>
+                                                            <h5 class="modal-title" id="feedbackModalLabel{{ $lienhe->id }}">Chi tiết phản hồi</h5>
+                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                         </div>
                                                         <div class="modal-body">
                                                             <p><strong>Tên người gửi:</strong> {{ $lienhe->ten_nguoi_gui }}</p>
                                                             <p><strong>Nội dung liên hệ:</strong> {{ $lienhe->tin_nhan }}</p>
-                                                            <p><strong>Ngày gửi:</strong>
-                                                                {{ $lienhe->created_at->format('d/m/Y H:i') }}</p>
+                                                            <p><strong>Ngày gửi:</strong> {{ $lienhe->created_at->format('d/m/Y H:i') }}</p>
                                                             <p><strong>Trạng thái:</strong>
                                                                 @if ($lienhe->trang_thai_phan_hoi == 'pending')
                                                                     <span class="badge bg-warning">Đang chờ xử lý</span>
@@ -430,27 +435,23 @@
                                                                 @endif
                                                             </p>
                                                             <hr>
-                                                            <h6><strong>Danh sách phản hồi của admin:</strong></h6>
+                                                            <h6><strong>Danh sách phản hồi:</strong></h6>
                                                             @if ($lienhe->adminPhanHoi->count() > 0)
                                                                 <ul class="list-group">
                                                                     @foreach ($lienhe->adminPhanHoi as $phanHoi)
                                                                         <li class="list-group-item">
                                                                             <p><strong>Phản hồi:</strong> {{ $phanHoi->reply }}</p>
-                                                                            <p><strong>Ngày phản hồi:</strong>
-                                                                                {{ $phanHoi->created_at->format('d/m/Y H:i') }}</p>
-                                                                            
-                                                                            <p><strong>Admin CT Store</strong></p>
-                                                                            
+                                                                            <p><strong>Ngày phản hồi:</strong> {{ $phanHoi->created_at->format('d/m/Y H:i') }}</p>
+                                                                            <p><strong>Admin:</strong> {{ $phanHoi->admin ? $phanHoi->admin->ten : 'Không xác định' }}</p>
                                                                         </li>
                                                                     @endforeach
                                                                 </ul>
                                                             @else
-                                                                <p>Chưa có phản hồi từ admin.</p>
+                                                                <p>Chưa có phản hồi.</p>
                                                             @endif
                                                         </div>
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-secondary"
-                                                                data-bs-dismiss="modal">Đóng</button>
+                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
                                                         </div>
                                                     </div>
                                                 </div>

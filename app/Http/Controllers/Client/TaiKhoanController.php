@@ -132,7 +132,7 @@ class TaiKhoanController extends Controller
     {
         // lấy thông tin người dùng đăng đăng nhập
         $profile = Auth::user();
-        $lienhes = lien_hes::where('user_id', $profile->id)->with('adminPhanHoi')->get();  // Lấy tất cả các bản ghi lien_hes cho người dùng này
+        $lienhes = lien_hes::where('user_id', Auth::id())->with('adminPhanHoi.admin')->get();  // Lấy tất cả các bản ghi lien_hes cho người dùng này
         $danhMucs = DanhMuc::all();
         // lấy danh sách đơn hàng
         $donHangs = $profile->hoaDons()->orderByDesc('id')->paginate(10);

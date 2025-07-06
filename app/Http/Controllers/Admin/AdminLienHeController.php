@@ -10,6 +10,7 @@ use App\Mail\CustomerReplyMail;
 use App\Http\Controllers\Controller;
 use App\Models\Adminphanhoi;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Auth;
 
 class AdminLienHeController extends Controller
 {
@@ -87,6 +88,7 @@ class AdminLienHeController extends Controller
         // Lưu phản hồi của quản trị viên vào database
         $reply = Adminphanhoi::create([
             'lien_hes_id' => $id,
+            'user_id' => Auth::id(), // Lưu ID của admin trả lời
             'reply' => $request->reply,
         ]);
     
@@ -120,7 +122,7 @@ class AdminLienHeController extends Controller
 
     public function showReplyForm($id)
     {
-        $lienhes = lien_hes::with('adminPhanHoi')->findOrFail($id); // Tìm phản hồi theo ID và quan hệ adminPhanHoi vs lienHe 
+        $lienhes = lien_hes::with('adminPhanHoi.admin')->findOrFail($id); // Tìm phản hồi theo ID và quan hệ adminPhanHoi vs lienHe 
     
         return view('admins.lienhes.phanhoi', compact('lienhes'));
     }
