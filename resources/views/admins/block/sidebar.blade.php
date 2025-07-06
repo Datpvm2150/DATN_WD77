@@ -28,6 +28,32 @@
                 <!-- Quản trị -->
                 <li class="menu-title">Quản trị</li>
 
+                {{-- Thống kê --}}
+                <li>
+                    <a href='#dbs' data-bs-toggle="collapse">
+                        <i data-feather="home"></i>
+                        <span> Thống kê </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="dbs">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('admin.dashboard')}}" class="tp-link">Dashboard</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.doanhthu') }}">Doanh thu</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.banchay') }}">Sản phẩm bán
+                                    chạy</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.kho') }}">Kho Sản phẩm </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li>
                     <a href="#sidebarTables" data-bs-toggle="collapse">
                         <i data-feather="users"></i>
@@ -151,7 +177,8 @@
                         <ul class="nav-second-level">
                             <li><a class='tp-link' href="{{ route('admin.khuyen_mais.index') }}">Danh sách</a></li>
                             <li><a class='tp-link' href="{{ route('admin.khuyen_mais.create') }}">Thêm mới</a></li>
-                            <li><a class='tp-link' href="{{ route('admin.khuyen_mais.trash') }}">Thùng rác <i class="fas fa-trash-alt"></i>  </a></li>
+                            <li><a class='tp-link' href="{{ route('admin.khuyen_mais.trash') }}">Thùng rác <i
+                                        class="fas fa-trash-alt"></i> </a></li>
                         </ul>
                     </div>
                 </li>
@@ -189,7 +216,7 @@
                 <!-- Đánh giá -->
                 <li>
                     <a href="#danhgias" data-bs-toggle="collapse">
-                        <i data-feather="package"></i>
+                        <i class="fa-solid fa-thumbs-up"></i>
                         <span> Đánh giá </span>
                         <span class="menu-arrow"></span>
                     </a>
@@ -216,27 +243,20 @@
                         </ul>
                     </div>
                 </li>
-                {{-- Thống kê --}}
-                  <li>
-                    <a href='#dbs' data-bs-toggle="collapse">
-                        <i data-feather="home"></i>
-                        <span> Thống kê </span>
+
+                <li>
+
+                    <a href="#lienhes" data-bs-toggle="collapse">
+                        <i class="fa fa-phone"></i>
+                        <span> Liên hệ </span>
                         <span class="menu-arrow"></span>
                     </a>
-                    <div class="collapse" id="dbs">
+                    <div class="collapse" id="lienhes">
                         <ul class="nav-second-level">
                             <li>
-                                <a href="{{route('admin.dashboard')}}" class="tp-link">Dashboard</a>
+                                <a class='tp-link' href="{{ route('admin.lienhes.index') }}">Danh sách</a>
                             </li>
-                            <li>
-                                <a class='tp-link' href="{{ route('admin.doanhthu') }}">Doanh thu</a>
-                            </li>
-                            <li>
-                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.banchay') }}">Sản phẩm bán chạy</a>
-                            </li>
-                            <li>
-                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.kho') }}">Kho Sản phẩm </a>
-                            </li>
+
                         </ul>
                     </div>
                 </li>
