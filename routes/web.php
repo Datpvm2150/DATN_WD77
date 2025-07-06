@@ -18,6 +18,7 @@ use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Admin\HoaDonController;
 use App\Http\Controllers\Admin\AdminLienHeController;
+use App\Http\Controllers\Admin\NotificationController;
 
 // Client Routes
 use App\Http\Controllers\Client\TrangChuController;
@@ -47,7 +48,13 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('reset-password', [AdminForgotPasswordController::class, 'reset'])->name('password.update');
 });
 
-Route::prefix('admin')->name('admin.')->group(function () {
+//Thông báo
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
+    Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
+});
+
+Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // San phẩm
     Route::prefix('sanphams')->name('sanphams.')->group(function () {
         Route::get('/', [SanPhamController::class, 'index'])->name('index');
