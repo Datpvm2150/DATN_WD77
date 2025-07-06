@@ -161,10 +161,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
         Route::get('/{id}/show', [HoaDonController::class, 'show'])->name('show');
         Route::put('/{id}/update', [HoaDonController::class, 'update'])->name('update');
         //admin
-        Route::post('/query', [VNPayController::class, 'queryTransaction'])->name('query');
-        Route::post('/refund', [VNPayController::class, 'queryTransaction'])->name('refund');
-        Route::get('/tracuu', [VNPayController::class, 'tracuu'])->name('tracuu');
-        Route::get('/hoantien', [VNPayController::class, 'hoantien'])->name('hoantien');
+        Route::post('/query', [VnpayController::class, 'queryTransaction'])->name('query');
+        Route::post('/refund', [VnpayController::class, 'queryTransaction'])->name('refund');
+        Route::get('/tracuu', [VnpayController::class, 'tracuu'])->name('tracuu');
+        Route::get('/hoantien', [VnpayController::class, 'hoantien'])->name('hoantien');
 
         Route::delete('/{id}/destroy', [HoaDonController::class, 'destroy'])->name('destroy');
     });
@@ -270,7 +270,7 @@ Route::post('/remove-discount', [ThanhToanController::class, 'removeDiscount'])-
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
 
-Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham'); 
+Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
 
 
 // Chi tiết sản phẩm

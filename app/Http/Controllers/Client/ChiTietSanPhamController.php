@@ -85,23 +85,7 @@ class ChiTietSanPhamController extends Controller
                 $isLoved[$product->id] = in_array($product->id, $yeuThichs);
             }
         }
-// $isLoved = [];
-// $products = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')->get();
 
-// if (Auth::check()) {
-//     $yeuThichs = Auth::user()->sanPhamYeuThichs()->pluck('san_pham_id')->toArray();
-//     foreach ($products as $product) {
-//         $isLoved[$product->id] = in_array($product->id, $yeuThichs);
-//     }
-// } else {
-//     // Người dùng chưa đăng nhập, đánh dấu tất cả sản phẩm là chưa yêu thích
-//     foreach ($products as $product) {
-//         $isLoved[$product->id] = false;
-//     }
-// }
-// $products = SanPham::with('yeuThichs')->get();
-
-// $loveCount = [];
 foreach ($products as $product) {
     $loveCount[$product->id] = $product->yeuThichs->count();
 }

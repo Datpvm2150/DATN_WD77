@@ -26,7 +26,7 @@ class TrangChuController extends Controller
             ->where('ngay_ket_thuc', '>=', now())
             ->orderBy('ngay_ket_thuc', 'asc')
             ->get();
-            $hot15 = SanPham::limit(15)
+        $hot15 = SanPham::limit(15)
             ->with('bienTheSanPhams', 'hinhAnhSanPhams')
             ->where('is_hot', 1)
             ->get();
@@ -47,30 +47,29 @@ class TrangChuController extends Controller
         $newProducts = $new20->count() < 6 ? $new20 : $new20->random(6);
         $allIdNewProducts = $newProducts->pluck('id')->toArray();
         $randProducts = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')
-            ->whereNotIn('id', $allIdProducts)
-            ->whereNotIn('id', $allIdNewProducts)
             ->inRandomOrder()
             ->limit(4)
             ->get();
-        // if (Auth::user()) {
-        //     $isLoved = [];
-        //     $isLoved2 = [];
-        //     $isLoved3 = [];
-        //     $yeuThichs = Auth::user()->sanPhamYeuThichs()->pluck('san_pham_id')->toArray();
-        //     foreach ($products as $product) {
-        //         $isLoved[$product->id] = in_array($product->id, $yeuThichs);
-        //     }
-        //     foreach ($newProducts as $newProduct) {
-        //         $isLoved2[$newProduct->id] = in_array($newProduct->id, $yeuThichs);
-        //     }
-        //     foreach ($randProducts as $randProduct) {
-        //         $isLoved3[$randProduct->id] = in_array($randProduct->id, $yeuThichs);
-        //     }
-        // } else {
-        //     $isLoved = [];
-        //     $isLoved2 = [];
-        //     $isLoved3 = [];
-        // }
+
+        if (Auth::user()) {
+            $isLoved = [];
+            $isLoved2 = [];
+            $isLoved3 = [];
+            $yeuThichs = Auth::user()->sanPhamYeuThichs()->pluck('san_pham_id')->toArray();
+            foreach ($products as $product) {
+                $isLoved[$product->id] = in_array($product->id, $yeuThichs);
+            }
+            foreach ($newProducts as $newProduct) {
+                $isLoved2[$newProduct->id] = in_array($newProduct->id, $yeuThichs);
+            }
+            foreach ($randProducts as $randProduct) {
+                $isLoved3[$randProduct->id] = in_array($randProduct->id, $yeuThichs);
+            }
+        } else {
+            $isLoved = [];
+            $isLoved2 = [];
+            $isLoved3 = [];
+        }
         $baiViets = BaiViet::where('trang_thai', 1)
             ->orderBy('created_at', 'desc')
             ->get();
@@ -78,4 +77,3 @@ class TrangChuController extends Controller
         return view('clients.trangchu', compact('bannersHeas', 'bannersSides', 'bannersFoots', 'danhMucs', 'khuyenMais', 'products', 'newProducts', 'randProducts', 'baiViets'));
     }
 }
-?>
