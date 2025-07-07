@@ -11,7 +11,8 @@ use Illuminate\Support\Carbon;
 use App\Mail\InvoiceCreated;
 use Illuminate\Support\Facades\Mail;
 
-class VnPayController extends Controller
+
+class VnpayController extends Controller
 {
     public function createPayment($amount, $orderId, $orderInfo)
 {
@@ -20,7 +21,7 @@ class VnPayController extends Controller
     $vnp_HashSecret = config('vnpay.vnp_HashSecret');
     $vnp_Url = config('vnpay.vnp_Url');
     $vnp_ReturnUrl = config('vnpay.vnp_ReturnUrl');
-    
+
     // Log các giá trị cấu hình VNPay
     Log::info('VNPay Configurations:', [
         'vnp_TmnCode' => $vnp_TmnCode,
@@ -61,7 +62,7 @@ class VnPayController extends Controller
     ];
 
     // Nếu có mã ngân hàng, thêm vào
-    
+
 if (isset($vnp_BankCode) && $vnp_BankCode != "") {
     $inputData['vnp_BankCode'] = $vnp_BankCode;
 }
@@ -82,7 +83,7 @@ foreach ($inputData as $key => $value) {
 
 $vnp_Url = $vnp_Url . "?" . $query;
 if (isset($vnp_HashSecret)) {
-    $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//  
+    $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
     $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
 }
     // Trả về URL thanh toán
@@ -98,7 +99,7 @@ public function thanhToanLai($amount, $orderId, $orderInfo)
     $vnp_HashSecret = config('vnpay.vnp_HashSecret');
     $vnp_Url = config('vnpay.vnp_Url');
     $vnp_ReturnUrl = config('vnpay.vnp_ReturnUrl');
-    
+
     // Log các giá trị cấu hình VNPay
     Log::info('VNPay Configurations:', [
         'vnp_TmnCode' => $vnp_TmnCode,
@@ -139,7 +140,7 @@ public function thanhToanLai($amount, $orderId, $orderInfo)
     ];
 
     // Nếu có mã ngân hàng, thêm vào
-    
+
 if (isset($vnp_BankCode) && $vnp_BankCode != "") {
     $inputData['vnp_BankCode'] = $vnp_BankCode;
 }
@@ -160,7 +161,7 @@ foreach ($inputData as $key => $value) {
 
 $vnp_Url = $vnp_Url . "?" . $query;
 if (isset($vnp_HashSecret)) {
-    $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//  
+    $vnpSecureHash =   hash_hmac('sha512', $hashdata, $vnp_HashSecret);//
     $vnp_Url .= 'vnp_SecureHash=' . $vnpSecureHash;
 }
   // Trả về URL thanh toán
@@ -243,7 +244,7 @@ if ($secureHash === $vnp_SecureHash) {
     }
     session()->flash('js', '<script>sessionStorage.setItem("orderMessage", "Thanh toán Thất bại!");</script>');
     return redirect()->route('customer.donhang');
-    
+
 }
 
 
@@ -256,9 +257,9 @@ public function queryTransaction(Request $request)
         'txnRef' => 'required',
         'transactionDate' => 'required|date_format:YmdHis',
     ]);
-    
+
     // Generate random Request ID for this transaction
-    $vnp_RequestId = rand(1, 10000); 
+    $vnp_RequestId = rand(1, 10000);
 
     // Define the required parameters for the API call
     $vnp_Command = "querydr"; // API command for querying transaction
@@ -278,7 +279,7 @@ public function queryTransaction(Request $request)
     ]);
 
     // Load configuration parameters from the environment file
-    
+
     $vnp_TmnCode = config('vnpay.vnp_TmnCode');
     $vnp_HashSecret = config('vnpay.vnp_HashSecret');
     $apiUrl = config('vnpay.vnp_TransactionApiUrl');
@@ -359,13 +360,13 @@ private function callVNPayAPI($method, $url, $data)
 
     // Execute the request and capture the response
     $response = curl_exec($curl);
-    
+
     if (curl_errno($curl)) {
         die('Connection Error: ' . curl_error($curl));
     }
-    
+
     curl_close($curl);
-    
+
     return $response;
 }
 public function tracuu()

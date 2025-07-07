@@ -72,9 +72,9 @@ class HoaDon extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function chiTietHoaDons()
     {
         return $this->hasMany(ChiTietHoaDon::class);
     }
 }
-

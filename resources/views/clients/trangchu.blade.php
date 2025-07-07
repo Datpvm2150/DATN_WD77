@@ -1004,11 +1004,19 @@
                                 <div class="tp-product-details-rating-wrapper d-flex align-items-center mb-10">
                                 </div>
                             </div>
+
                             <p
                                 style="max-height: 4.5em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 350px;">
                                 {{ $randProduct->mo_ta }}</p>
+<<<<<<< HEAD
                             <a style="color: #0989ff" href="{{ route('chitietsanpham', $randProduct->id) }}">Xem
                                 thêm</a>
+=======
+
+                            <a style="color: #0989ff" href="{{ route('chitietsanpham', $randProduct->id) }}">Xem
+                                thêm</a>
+
+>>>>>>> 5fe3d4b2157d611a4974347a645aa045a56d16f9
                             <!-- variations -->
                             <div class="tp-product-details-variation">
                                 <div class="tp-product-details-variation-item">

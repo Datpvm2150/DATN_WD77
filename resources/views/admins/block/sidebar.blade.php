@@ -56,6 +56,32 @@
                 </li>
 
 
+                {{-- Thống kê --}}
+                <li>
+                    <a href='#dbs' data-bs-toggle="collapse">
+                        <i data-feather="home"></i>
+                        <span> Thống kê </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="dbs">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a href="{{route('admin.dashboard')}}" class="tp-link">Dashboard</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.doanhthu') }}">Doanh thu</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.banchay') }}">Sản phẩm bán
+                                    chạy</a>
+                            </li>
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.thongke.sanpham.kho') }}">Kho Sản phẩm </a>
+                            </li>
+                        </ul>
+                    </div>
+                </li>
+
                 <li>
                     <a href="#sidebarTables" data-bs-toggle="collapse">
                         <i data-feather="users"></i>
@@ -218,7 +244,7 @@
                 <!-- Đánh giá -->
                 <li>
                     <a href="#danhgias" data-bs-toggle="collapse">
-                        <i data-feather="package"></i>
+                        <i class="fa-solid fa-thumbs-up"></i>
                         <span> Đánh giá </span>
                         <span class="menu-arrow"></span>
                     </a>
@@ -245,6 +271,26 @@
                         </ul>
                     </div>
                 </li>
+<<<<<<< HEAD
+=======
+
+                <li>
+
+                    <a href="#lienhes" data-bs-toggle="collapse">
+                        <i class="fa fa-phone"></i>
+                        <span> Liên hệ </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="lienhes">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.lienhes.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+>>>>>>> 5fe3d4b2157d611a4974347a645aa045a56d16f9
 
             </ul>
         </div>

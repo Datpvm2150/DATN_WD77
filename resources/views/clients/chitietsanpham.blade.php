@@ -665,12 +665,7 @@
                                 <a href="#"><i class="fa-brands fa-linkedin-in"></i></a>
                                 <a href="#"><i class="fa-brands fa-vimeo-v"></i></a>
                             </div>
-                            <div class="tp-product-details-msg mb-15">
-                                <ul>
-                                    <li>30 ngày trả hàng dễ dàng</li>
-                                    <li>Đặt hàng trước 2:30 chiều để được giao hàng trong ngày</li>
-                                </ul>
-                            </div>
+                           
                             <div
                                 class="tp-product-details-payment d-flex align-items-center flex-wrap justify-content-between">
                                 <p>Thanh toán an toàn<br>và bảo mật</p>
@@ -1045,7 +1040,7 @@
                                                                                                                                     @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
                                                                                                                                         {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
                                                                                                                                         @if ($index < $danhgia->bienTheDaMua->count() - 1)
-                                                                                                                                            , 
+                                                                                                                                            ,
                                                                                                                                         @endif
                                                                                                                                     @endforeach
                                                                                                                                 @else
