@@ -7,6 +7,7 @@ use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\VNPayController;
 use App\Mail\InvoiceCreated;
+use App\Mail\Magiamgia;
 use App\Models\BienTheSanPham;
 use App\Models\ChiTietHoaDon;
 use App\Models\HoaDon;
@@ -278,7 +279,7 @@ class ThanhToanController extends Controller
             }
 
             $hoaDon = HoaDon::create(attributes: [
-                'ma_hoa_don' => date("ymd") . rand( 0, 1000000),
+                'ma_hoa_don' => date("ymd") . rand(0, 1000000),
                 'user_id' => $userId,
                 'giam_gia' => $discountAmount,
                 'tong_tien' => $tongTienSauGiam,
@@ -324,30 +325,7 @@ class ThanhToanController extends Controller
             Session::forget('discount_code');
             Session::forget('discount_percentage');
             Session::forget('maxDiscount');
-            // Tặng mã giảm giá nếu đơn hàng trên 1 triệu
-            $discount = null;
-            if ($originalTotal > 1000000) {
-                $code = 'KM' . strtoupper(Str::random(6));
-                $discount = new KhuyenMai();
-                $discount->ma_khuyen_mai = $code;
-                $discount->phan_tram_khuyen_mai = 10;
-                $discount->giam_toi_da = 100000;
-                $discount->user_id = $userId;
-                $discount->so_luong = 1;
-                $discount->da_su_dung = 0;
-                $discount->ngay_bat_dau = now();
-                $discount->ngay_ket_thuc = now()->addDays(7);
-                $discount->trang_thai = 1;
-                $discount->save();
-
-                // Gửi mail có kèm mã khuyến mãi
-                Mail::to($hoaDon->email)->send(new InvoiceCreated($hoaDon, $discount));
-            } else {
-                // Gửi mail bình thường
-                Mail::to($hoaDon->email)->send(new InvoiceCreated($hoaDon));
-            }
-
-
+            
             // **Xử lý theo từng phương thức thanh toán**
             switch ($request->payment_method) {
                 case 'Thanh toán qua chuyển khoản ngân hàng':

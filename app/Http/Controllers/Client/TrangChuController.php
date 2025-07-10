@@ -46,18 +46,11 @@ class TrangChuController extends Controller
             ->get();
         $newProducts = $new20->count() < 6 ? $new20 : $new20->random(6);
         $allIdNewProducts = $newProducts->pluck('id')->toArray();
-<<<<<<< HEAD
         $randProducts = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams', 'danhMuc', 'danhGias')
             ->whereNotIn('id', $allIdProducts)
             ->whereNotIn('id', $allIdNewProducts)
-=======
-        $randProducts = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')
->>>>>>> 5fe3d4b2157d611a4974347a645aa045a56d16f9
-            ->inRandomOrder()
-            ->limit(4)
             ->get();
 
-<<<<<<< HEAD
         if ($randProducts->isEmpty()) {
             // fallback: lấy ngẫu nhiên bất kỳ 4 sản phẩm khác
             $randProducts = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams', 'danhMuc', 'danhGias')
@@ -65,8 +58,6 @@ class TrangChuController extends Controller
                 ->limit(4)
                 ->get();
         }
-=======
->>>>>>> 5fe3d4b2157d611a4974347a645aa045a56d16f9
         if (Auth::user()) {
             $isLoved = [];
             $isLoved2 = [];

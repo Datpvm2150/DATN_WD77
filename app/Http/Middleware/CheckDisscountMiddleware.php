@@ -32,6 +32,14 @@ class CheckDisscountMiddleware
         // Nếu có người nhập mã thì kiểm tra
         if ($ma) {
             $discount = KhuyenMai::where('ma_khuyen_mai', $ma)->first();
+            if ($discount->user_id && $discount->user_id !== Auth::id()) {
+                return redirect()->back()->withErrors(['discount_code' => 'Mã giảm giá không hợp lệ.']);
+            }
+
+            if ($discount->da_su_dung) {
+                return redirect()->back()->withErrors(['discount_code' => 'Mã giảm giá đã được sử dụng.']);
+            }
+
 
             if (!$discount || $discount->trang_thai != 1) {
                 return response()->json(['success' => false, 'message' => 'Mã không hợp lệ']);

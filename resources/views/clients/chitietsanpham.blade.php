@@ -152,8 +152,6 @@
         @endif
     </div>
 @endif
-
-
                                 <!-- Variations -->
                                 <div class="tp-product-details-variation">
                                     <!-- Color Variation -->

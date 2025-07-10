@@ -33,6 +33,7 @@ use App\Http\Controllers\Client\TaiKhoanController;
 use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\VNPayController;
 use App\Http\Middleware\CheckDisscountMiddleware;
@@ -289,7 +290,8 @@ Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pha
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
 
 Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
-
+//danhgia
+Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
 
 // Chi tiết sản phẩm
 
