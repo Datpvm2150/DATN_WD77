@@ -291,7 +291,7 @@ Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index']
 
 Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
 //danhgia
-Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
+// Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
 
 // Chi tiết sản phẩm
 
