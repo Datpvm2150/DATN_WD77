@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Api\ChatBotController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
@@ -53,7 +55,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 });
-
+// Nhật ký ChatBot
+Route::prefix('chat-logs')->name('chatlogs.')->group(function () {
+    Route::get('/', [ChatLogController::class, 'index'])->name('index');
+});
+Route::middleware('auth')->group(function () {
+    Route::post('/chatbot/gpt', [ChatBotController::class, 'chatWithGpt'])->name('chatbot.gpt');
+    Route::get('/chatbot/history/{session_id}', [ChatBotController::class, 'getChatHistory']);
+});
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // San phẩm
     Route::prefix('sanphams')->name('sanphams.')->group(function () {
