@@ -14,12 +14,15 @@ class AdminController extends Controller
     // Hiển thị danh sách admin
     public function index()
     {
-        $admins = User::whereHas('roles', function ($query) {
-            $query->where('name', 'admin');
-        })->get();
+        $admins = User::where('vai_tro', 'admin') // <- thêm dòng này
+            ->whereHas('roles', function ($query) {
+                $query->where('name', 'admin');
+            })
+            ->get();
 
         return view('admins.admins.index', compact('admins'));
     }
+
 
     // Hiển thị form tạo admin mới
     public function create()
@@ -90,10 +93,7 @@ class AdminController extends Controller
 
         $user = User::findOrFail($id);
         if ($user->vai_tro !== 'admin') {
-            return response()->json([
-                'success' => false,
-                'message' => 'Bạn chỉ có thể sửa thông tin của người dùng có vai trò admin.'
-            ], 403);
+            return redirect()->back()->with('error', 'Bạn chỉ có thể sửa thông tin của người dùng có vai trò admin.');
         }
 
         $user->ten = $request->ten;
@@ -112,6 +112,6 @@ class AdminController extends Controller
 
         $user->save();
 
-        return response()->json(['success' => true, 'message' => 'Cập nhật admin thành công!']);
+        return redirect()->route('admin.admins')->with('success', 'Cập nhật admin thành công!');
     }
 }

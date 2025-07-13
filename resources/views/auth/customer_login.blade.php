@@ -32,7 +32,7 @@
                 <div class="col-xl-6 col-lg-8">
                     <div class="tp-login-wrapper">
                         <div class="tp-login-top text-center mb-30">
-                            <h3 class="tp-login-title">Đăng nhập Izone.</h3>
+                            <h3 class="tp-login-title">Đăng nhập CTStore.</h3>
                             <p>Bạn chưa có tài khoản? <span><a href="{{ route('customer.register.post') }}">Đăng ký tài
                                         khoản.</a></span></p>
                         </div>
