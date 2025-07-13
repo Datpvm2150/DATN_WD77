@@ -259,6 +259,8 @@ Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store')
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
 Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
+Route::get('/404', [TrangChuController::class, 'index'])->name('error404');
+Route::get('/500', [TrangChuController::class, 'index'])->name('error500');
 
 // giỏ hàng
 Route::get('/Cart-Index', [CartController::class, 'index'])->name('cart.index');
