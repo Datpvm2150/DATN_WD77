@@ -71,7 +71,6 @@
 
 @endif
 <script>
-
     document.addEventListener('DOMContentLoaded', function () {
         // Tìm tất cả các form hủy đơn tự động
         const autoCancelForms = document.querySelectorAll('.auto-cancel-form');
@@ -92,8 +91,6 @@
         });
     });
 </script>
-
-
                         @endif
                     @elseif (in_array($ord->trang_thai, [2, 3, 4]))
                         <!-- Đang giao -->

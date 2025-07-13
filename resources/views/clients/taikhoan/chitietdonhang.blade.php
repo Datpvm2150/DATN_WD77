@@ -34,7 +34,6 @@
                     <span class="badge {{ $hoaDon->trang_thai_thanh_toan == 'Đã thanh toán' ? 'bg-success text-light' : 'bg-warning text-dark' }}">
                         {{ $trangThaiThanhToan[$hoaDon->trang_thai_thanh_toan] }}
                     </span>
-
                     </p>
                     <p><strong class="text-dark">Giảm giá:</strong> 
                         <span   class="text-danger">-{{ number_format($hoaDon->giam_gia, 0, '', '.') }} đ</span  class="text-dark">
