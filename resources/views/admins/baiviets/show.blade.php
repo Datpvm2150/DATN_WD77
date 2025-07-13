@@ -76,7 +76,11 @@
                         <!-- Nội dung bài viết -->
                         <div class="article-content mt-4">
                             <h5>Nội dung:</h5>
-                            {!! nl2br(e($baiViet->noi_dung)) !!}
+                            @if ($baiViet->noi_dung)
+                                {!! $baiViet->noi_dung !!}
+                            @else
+                                <p class="text-muted">Không có nội dung</p>
+                            @endif
                         </div>
 
                         <!-- Nút quay lại danh sách -->
@@ -112,7 +116,6 @@
             </div>
         </div>
     </div> <!-- container-fluid -->
-    </div> <!-- content -->
 @endsection
 
 @section('js')
