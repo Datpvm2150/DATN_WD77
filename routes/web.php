@@ -2,7 +2,7 @@
 
 use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Api\ChatBotController;
+use App\Http\Controllers\Admin\ChatBotController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
