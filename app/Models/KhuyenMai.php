@@ -19,7 +19,8 @@ class KhuyenMai extends Model
         'trang_thai',
         'user_id',
         'so_luong',
-        'da_su_dung'
+        'da_su_dung',
+        'loai_ma'
     ];
 
     public function user()
