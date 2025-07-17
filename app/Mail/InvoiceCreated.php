@@ -10,10 +10,13 @@ class InvoiceCreated extends Mailable
 {
     use Queueable,SerializesModels;
     public $hoaDon;
+    public $discount;
 
-    public function __construct($hoaDon)
+    public function __construct($hoaDon,$discount=null)
     {
         $this->hoaDon = $hoaDon;
+         $this->discount = $discount;
+        
     }
 
     public function build(){
