@@ -6,6 +6,8 @@ use App\Models\DanhMuc;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 
 class CustomerLoginController extends Controller
 {
@@ -31,16 +33,21 @@ class CustomerLoginController extends Controller
             'mat_khau.required' => 'Mật khẩu không được để trống',
         ]);
 
-        // Thay đổi tên cột mật khẩu trong việc xác thực
-        $credentials = [
-            'email' => $request->email,
-            'password' => $request->mat_khau,
-        ];
+        // Tìm user theo email
+        $user = User::where('email', $request->email)->first();
 
-        if (Auth::attempt($credentials)) {
-            $user = Auth::user();
-            // Đăng nhập thành công (không phải admin hoặc staff)
-            return redirect()->intended('/');
+        // Kiểm tra mật khẩu
+        if ($user && Hash::check($request->mat_khau, $user->mat_khau)) {
+            // Đăng nhập người dùng
+            Auth::login($user);
+
+            // Chỉ cho phép login nếu là vai trò 'user'
+            if ($user->vai_tro === 'user') {
+                return redirect()->intended('/');
+            } else {
+                Auth::logout();
+                return redirect()->back()->withErrors(['email' => 'Tài khoản không phải khách hàng']);
+            }
         }
 
         // Đăng nhập thất bại

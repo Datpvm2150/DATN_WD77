@@ -31,7 +31,7 @@
                 <div class="col-xl-6 col-lg-8">
                     <div class="tp-login-wrapper">
                         <div class="tp-login-top text-center mb-30">
-                            <h3 class="tp-login-title">Đăng ký Izone.</h3>
+                            <h3 class="tp-login-title">Đăng ký CTStore.</h3>
                             <p>Bạn đã có tài khoản? <span><a href="{{ route('customer.login') }}">Đăng nhập.</a></span></p>
                         </div>
                         <div class="tp-login-option">
