@@ -7,7 +7,7 @@
                    <div class="tp-footer-widget-content">
                       <div class="tp-footer-logo">
                          <a href="index.html">
-                           <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo" style="width:150px; height:40px;">
+                           <img src="{{ asset('assets/admin/images/logo-ctstore.png') }}" alt="logo" style="width:160px; height:60px;">
                         </a>
                       </div>
                       <p class="tp-footer-desc">Nhóm WD-77 luôn mang lại trải nghiệm tốt cho người dùng.</p>
