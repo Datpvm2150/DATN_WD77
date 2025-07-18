@@ -148,6 +148,12 @@
                                     <button type="submit" class="tp-login-btn w-100">Đăng Nhập</button>
 
                                 </div>
+                                <br>
+                                <div class="tp-login-bottom">
+                                    <a href="{{ route('customer.auth.google') }}" class="tp-login-btn w-100">
+                                        <i class="fab fa-google"></i>  Đăng nhập bằng Google
+                                    </a>
+                                </div>
                             </form>
 
                         </div>

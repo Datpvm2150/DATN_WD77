@@ -1,40 +1,41 @@
 <?php
 
-use App\Http\Controllers\Admin\DashboardController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\VNPayController;
 
 use App\Http\Controllers\Admin\TagController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Auth\GoogleController;
+use App\Http\Controllers\Client\CartController;
 use App\Http\Controllers\Admin\BannerController;
+use App\Http\Controllers\Admin\HoaDonController;
 use App\Http\Controllers\Admin\MauSacController;
-use App\Http\Controllers\Admin\SanPhamController;
-use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\BaiVietController;
+use App\Http\Controllers\Admin\DanhMucController;
+use App\Http\Controllers\Admin\SanPhamController;
+use App\Http\Controllers\Client\LienHeController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DungLuongController;
 use App\Http\Controllers\Admin\KhuyenMaiController;
-use App\Http\Controllers\Admin\DanhGiaSanPhamController;
-use App\Http\Controllers\Admin\AdminController;
-use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Auth\AdminLoginController;
-use App\Http\Controllers\Auth\AdminForgotPasswordController;
-use App\Http\Controllers\Admin\HoaDonController;
-use App\Http\Controllers\Admin\AdminLienHeController;
-use App\Http\Controllers\Admin\NotificationController;
 
 // Client Routes
-use App\Http\Controllers\Client\TrangChuController;
-use App\Http\Controllers\Client\LienHeController;
-use App\Http\Controllers\Client\TrangSanPhamController;
-use App\Http\Controllers\Client\ChiTietSanPhamController;
-use App\Http\Controllers\Client\YeuThichController;
-use App\Http\Controllers\Client\CartController;
-use App\Http\Controllers\Client\SanPhamDanhMucController;
-use App\Http\Controllers\Client\TrangBaiVietController;
 use App\Http\Controllers\Client\TaiKhoanController;
-use App\Http\Controllers\Auth\CustomerLoginController;
-use App\Http\Controllers\Auth\CustomerForgotPassword;
-use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\Client\TrangChuController;
+use App\Http\Controllers\Client\YeuThichController;
 use App\Http\Controllers\Client\ThanhToanController;
-use App\Http\Controllers\VNPayController;
+use App\Http\Controllers\Admin\AdminLienHeController;
+use App\Http\Controllers\Auth\CustomerForgotPassword;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Auth\CustomerLoginController;
+use App\Http\Controllers\Client\TrangBaiVietController;
+use App\Http\Controllers\Client\TrangSanPhamController;
+use App\Http\Controllers\Admin\DanhGiaSanPhamController;
+use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\Client\ChiTietSanPhamController;
+use App\Http\Controllers\Client\SanPhamDanhMucController;
+use App\Http\Controllers\Auth\AdminForgotPasswordController;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -224,6 +225,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 /////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
 Route::prefix('customer')->name('customer.')->group(function () {
+    Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
+    Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+    
     Route::get('login', [CustomerLoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [CustomerLoginController::class, 'login'])->name('login.post');
     Route::get('register', [CustomerRegisterController::class, 'showRegistrationForm'])->name('register');
