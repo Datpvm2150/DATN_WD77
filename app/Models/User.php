@@ -1,5 +1,6 @@
 <?php
 namespace App\Models;
+
 use App\Models\SanPham;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -58,10 +59,17 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(lien_hes::class);
     }
+
     public function sanPhamYeuThichs()
     {
         return $this->belongsToMany(SanPham::class, 'yeu_thichs', 'user_id', 'san_pham_id');
     }
+
+    public function chatSessions()
+    {
+        return $this->hasMany(ChatSession::class);
+    }
+
     public function khuyenMais()
     {
         return $this->hasMany(KhuyenMai::class);
