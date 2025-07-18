@@ -45,7 +45,7 @@
                             $ord->phuong_thuc_thanh_toan == 'Thanh toán qua chuyển khoản ngân hàng' &&
                             $ord->trang_thai_thanh_toan == 'Chưa thanh toán' &&
                             $ord->trang_thai == 1 // Chờ xác nhận
-                        )
+                        )   
                         @php
                             $thoiGianConLai = $ord->thoi_gian_het_han ? \Carbon\Carbon::parse($ord->thoi_gian_het_han)->diffForHumans(now(), ['parts' => 2]) : null;
                         @endphp

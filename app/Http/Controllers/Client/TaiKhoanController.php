@@ -24,8 +24,8 @@ class TaiKhoanController extends Controller
         //lấy thông tin ng dùng đang đăng nhập
         $user = Auth::user();  // Lấy người dùng hiện tại
         $danhMucs = DanhMuc::all();
-        // lấy thông tin đơn hàng người dùng đã mua
-        $donHangs = $user->hoaDons()->get();
+        // lấy thông trạng thái mặc định "chờ xác nhận"
+        $donHangs = $user->hoaDons()->where('trang_thai', 1)->get();
         // lấy thuộc tính
         $trang_thai_don_hang = HoaDon::TRANG_THAI;
 
@@ -241,9 +241,9 @@ class TaiKhoanController extends Controller
         } elseif ($status == 2) {
             $donHangs = $donHangs->whereIn('trang_thai', [2, 3]); // Chờ lấy hàng
         } elseif ($status == 4) {
-            $donHangs = $donHangs->whereIn('trang_thai', [4, 5]); // Đang giao
+            $donHangs = $donHangs->where('trang_thai', 4); // Đang giao
         } elseif ($status == 5) {
-            $donHangs = $donHangs->where('trang_thai', 7); // Đã giao
+            $donHangs = $donHangs->whereIn('trang_thai', [5, 7]); // Đã giao
         } elseif ($status == 6) {
             $donHangs = $donHangs->where('trang_thai', 6); // Đã hủy
         }

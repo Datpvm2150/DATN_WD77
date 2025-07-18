@@ -130,28 +130,13 @@
                                 @endphp
 
                                 <!-- Price -->
-                                @if ($bienthesanphams->isNotEmpty())
-    @php
-        $bienThe = $bienthesanphams->first();
-        $giaCu = $bienThe->gia_cu ?? 0;
-        $giaMoi = $bienThe->gia_moi ?? 0;
-    @endphp
+                                <div class="tp-product-details-price-wrapper mb-20">
+                                    <span class="tp-product-details-price old-price" id="old-price">{{
+        number_format($bienthesanphams->first()->gia_cu, 0, ',', '.') }}₫</span>
+                                    <span class="tp-product-details-price new-price" id="new-price">{{
+        number_format($bienthesanphams->first()->gia_moi, 0, ',', '.') }}₫</span>
+                                </div>
 
-    <div class="tp-product-details-price-wrapper mb-20">
-        @if ($giaMoi > 0 && $giaMoi < $giaCu)
-            <span class="tp-product-details-price old-price" id="old-price">
-                {{ number_format($giaCu, 0, ',', '.') }}₫
-            </span>
-            <span class="tp-product-details-price new-price" id="new-price">
-                {{ number_format($giaMoi, 0, ',', '.') }}₫
-            </span>
-        @else
-            <span class="tp-product-details-price new-price" id="new-price">
-                {{ number_format($giaCu, 0, ',', '.') }}₫
-            </span>
-        @endif
-    </div>
-@endif
                                 <!-- Variations -->
                                 <div class="tp-product-details-variation">
                                     <!-- Color Variation -->
