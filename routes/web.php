@@ -34,7 +34,7 @@ use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\ThanhToanController;
-use App\Http\Controllers\VNPayController;
+use App\Http\Controllers\VnpayController;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -301,7 +301,7 @@ Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'repl
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
 
 
-Route::get('/vnpay/return', [VNPayController::class, 'handleReturn'])->name('vnpay.return');
+Route::get('/vnpay/return', [VnpayController::class, 'handleReturn'])->name('vnpay.return');
 
 //yeu thich
 Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
