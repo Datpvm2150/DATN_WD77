@@ -1034,17 +1034,16 @@
                                                                                             </div>
                                                                                             <!-- <div>
                                                                                                                                 <span>Phân loại hàng:</span>
-                                                                                                                                @if ($danhgia->bienTheDaMua->isNotEmpty())
-                                                                                                                                    @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
-                                                                                                                                        {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                                                                                                                                        @if ($index < $danhgia->bienTheDaMua->count() - 1)
-                                                                                                                                            ,
-                                                                                                                                        @endif
-                                                                                                                                    @endforeach
-                                                                                                                                @else
-                                                                                                                                    <p>Không có biến thể nào được mua từ sản phẩm này.</p>
-                                                                                                                                @endif
-                                                                                                                            </div> -->
+@if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
+    @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
+        {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
+        @if ($index < $danhgia->bienTheDaMua->count() - 1)
+            ,
+        @endif
+    @endforeach
+@else
+    <p>Không có biến thể nào được mua từ sản phẩm này.</p>
+@endif
                                                                                         </div>
                                                                                     </a>
                                                                                     <style>

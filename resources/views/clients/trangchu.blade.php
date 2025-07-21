@@ -140,7 +140,6 @@
                     <div class="tp-section-title-wrapper mb-40">
                         <h3 class="tp-section-title">Sản phẩm nổi bật
 
-
                         </h3>
                     </div>
                 </div>
@@ -582,10 +581,10 @@
                                         </div>
                                         <!-- product content -->
                                         <div class="tp-product-content">
-                                            {{-- <div class="tp-product-category">
+                                             <div class="tp-product-category">
                                                 <a
                                                     href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $newProduct->danhMuc->id]) }}">{{ isset($newProduct->danhMuc->ten_danh_muc) ? $newProduct->danhMuc->ten_danh_muc : '...' }}</a>
-                                            </div> --}}
+                                            </div> 
                                             <h3 class="tp-product-title"
                                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 199px;">
                                                 <a href="{{ route('chitietsanpham', $newProduct->id) }}">
@@ -639,7 +638,7 @@
                                                 $bienThe = $newProduct->bienTheSanPhams->first();
                                             @endphp
 
-                                            @if ($bienThe)
+                                            {{-- @if ($bienThe)
                                                 <div class="tp-product-price-wrapper">
                                                     @if ($bienThe->gia_cu && $bienThe->gia_cu > $bienThe->gia_moi)
                                                         <span class="tp-product-price old-price">
@@ -651,7 +650,7 @@
                                                         {{ number_format($bienThe->gia_moi, 0, ',', '.') }}đ
                                                     </span>
                                                 </div>
-                                            @endif
+                                            @endif --}}
 
                                         </div>
                                     </div>
