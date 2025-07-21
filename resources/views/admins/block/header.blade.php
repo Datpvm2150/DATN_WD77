@@ -73,7 +73,7 @@
                                     } elseif ($notification->type === 'danh_gia') {
                                         $data = App\Models\DanhGiaSanPham::with(['user', 'sanPham'])->find($notification->data_id);
                                         if ($data) {
-                                            $route = route('admin.danhgias.show', $data->id);
+                                            // $route = route('admin.danhgias.show', $data->id);
                                             $message = 'Đánh giá mới cho sản phẩm <span class="text-reset">' . ($data->sanPham->ten_san_pham ?? 'Sản phẩm') . '</span>';
                                             $avatar = $data->user->anh_dai_dien ? asset('storage/' . $data->user->anh_dai_dien) : $avatar;
                                             $name = $data->user->ten;
