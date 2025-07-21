@@ -17,15 +17,13 @@ class CheckDisscountMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        $discounts = KhuyenMai::get();
-        if($discounts){
-            foreach($discounts as $discount){
-                $now = Carbon::now();
-                if ($discount->ngay_ket_thuc < $now) {
-                    $discount->update(['trang_thai' => false]);
-                }
-            }
-        }
+        $now = Carbon::now();
+
+        // Chỉ cập nhật những mã đang còn hiệu lực (trang_thai = true)
+        KhuyenMai::where('trang_thai', true)
+            ->where('ngay_ket_thuc', '<', $now)
+            ->update(['trang_thai' => false]);
+
         return $next($request);
     }
 }

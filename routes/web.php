@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ChatBotController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
@@ -33,8 +35,9 @@ use App\Http\Controllers\Client\TaiKhoanController;
 use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Client\ThanhToanController;
-use App\Http\Controllers\VnpayController;
+use App\Http\Controllers\VNPayController;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -53,7 +56,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 });
-
+// Nhật ký ChatBot
+Route::prefix('chat-logs')->name('chatlogs.')->group(function () {
+    Route::get('/', [ChatLogController::class, 'index'])->name('index');
+});
+Route::middleware('auth')->group(function () {
+    Route::post('/chatbot/gpt', [ChatBotController::class, 'chatWithGpt'])->name('chatbot.gpt');
+    Route::get('/chatbot/history/{session_id}', [ChatBotController::class, 'getChatHistory']);
+});
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // San phẩm
     Route::prefix('sanphams')->name('sanphams.')->group(function () {
@@ -144,6 +154,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::prefix('khuyen_mais')->name('khuyen_mais.')->group(function () {
         Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
         Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
+        Route::get('/{id}/show', [KhuyenMaiController::class, 'show'])->name('show');
         Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
         Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
         Route::put('/{id}', [KhuyenMaiController::class, 'update'])->name('update');
@@ -276,8 +287,8 @@ Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('
 
 //thanh toan
 Route::get('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
-Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
-Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
+Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount')->middleware(CheckDisscountMiddleware::class);;
+Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder')->middleware(CheckDisscountMiddleware::class);
 Route::post('/clear-discount', [ThanhToanController::class, 'clearDiscount'])->name('clear.discount');
 Route::get('/payment/callback', [ThanhToanController::class, 'callback'])->name('payment.callback');
 Route::post('/payment/notify', [ThanhToanController::class, 'notify'])->name('payment.notify');
@@ -289,7 +300,8 @@ Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pha
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
 
 Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
-
+//danhgia
+// Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
 
 // Chi tiết sản phẩm
 

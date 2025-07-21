@@ -5,7 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-
+use App\Models\User; 
+use App\Models\ChiTietHoaDon;
 class HoaDon extends Model
 {
     use HasFactory;
@@ -65,7 +66,9 @@ class HoaDon extends Model
         'thoi_gian_het_han',
         'phuong_thuc_thanh_toan',
         'thoi_gian_giao_dich',
-        'trang_thai'
+        'trang_thai',
+        'trang_thai_thanh_toan',
+        'ma_khuyen_mai'
     ];
 
     public function user()

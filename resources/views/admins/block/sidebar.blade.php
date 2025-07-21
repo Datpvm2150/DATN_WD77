@@ -7,14 +7,17 @@
             <div class="logo-box">
                 <a href="index.html">
                     <img src="{{ asset('assets/admin/images/logo-ctstore.png') }}" alt="logo"
-                        style="width:190px; height:90px;">
+                        style="width:160px; height:70px;">
                 </a>
             </div>
             <!-- End Logo Box -->
 
             <ul id="side-menu">
+
                 <!-- Quản trị -->
+
                 <li class="menu-title">Quản trị</li>
+
 
                 {{-- Thống kê --}}
                 <li>
@@ -232,6 +235,7 @@
                     </div>
                 </li>
 
+
                 <li>
 
                     <a href="#lienhes" data-bs-toggle="collapse">
@@ -248,6 +252,7 @@
                         </ul>
                     </div>
                 </li>
+
 
             </ul>
         </div>
