@@ -185,11 +185,15 @@
                                 <h4>Sản phẩm</h4>
                                 <h4>Tổng</h4>
                             </li>
+                      
                             @foreach ($cart->products as $product)
+                            @php
+                                $gia = $product['bienthe']->gia_moi ?? $product['bienthe']->gia_cu;
+                            @endphp
                                 <li class="tp-order-info-list-desc">
                                     <p>{{ $product['productInfo']->ten_san_pham }} <span> x
                                             {{ $product['quantity'] }}</span></p>
-                                    <span>{{ number_format($product['quantity'] * $product['bienthe']->gia_moi) }}
+                                    <span>{{ number_format($product['quantity'] * $gia) }}
                                         VND</span>
                                 </li>
                             @endforeach

@@ -37,7 +37,6 @@ class ChiTietSanPhamController extends Controller
         $danhgias = DanhGiaSanPham::with('user')
             ->where('san_pham_id', $id)
             ->get();
-
         // Các dữ liệu liên quan sản phẩm
         $tagsanphams = TagSanPham::where('san_pham_id', $id)->get();
         // $bienthesanphams = BienTheSanPham::withTrashed()->where('san_pham_id', $id)->get();
@@ -45,7 +44,8 @@ class ChiTietSanPhamController extends Controller
     ->with(['dungLuong', 'mauSac'])
     ->where('san_pham_id', $id)
     ->get();
-
+        $bienThes = BienTheSanPham::where('san_pham_id', $sanpham->id)->get();
+        $tongSoLuong = $bienThes->sum('so_luong');
         $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->get();
 //  $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->orderBy('id')->get();
 
@@ -108,7 +108,8 @@ foreach ($products as $product) {
             'sanPhamMoiNhat',
             'products',
             'isLoved',
-            'hasReview'
+            'hasReview',
+            'tongSoLuong'
         ));
     }
 
@@ -124,9 +125,10 @@ foreach ($products as $product) {
             ->first();
 
         if ($bienThe && $bienThe->so_luong > 0) {
+            $gia_moi =  $bienThe->gia_moi ?? $bienThe->gia_cu;
             return response()->json([
                 'status' => 'success',
-                'gia_moi' => $bienThe->gia_moi,
+                'gia_moi' => $gia_moi,
                 'gia_cu' => $bienThe->gia_cu
             ]);
         } else {
@@ -161,4 +163,3 @@ foreach ($products as $product) {
         }
     }
 }
-

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\Client;;
 
-use App\Cart;
+use App\Services\OrderService;
+use App\Cart;   
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\VNPayController;
 use App\Mail\InvoiceCreated;
 use App\Mail\Magiamgia;
+use App\Mail\MaGiamGiaMoi;
 use App\Models\BienTheSanPham;
 use App\Models\ChiTietHoaDon;
 use App\Models\HoaDon;
@@ -30,7 +32,7 @@ class ThanhToanController extends Controller
         }
 
         // Lấy thông tin người dùng và địa chỉ đã sử dụng trước đó
-        $user = Auth::user();
+        $user = Auth::user();   
         $diaChiDaSuDung = HoaDon::where('user_id', $user->id)
             ->where('trang_thai', 7)
             ->pluck('dia_chi_nhan_hang')
@@ -84,72 +86,62 @@ class ThanhToanController extends Controller
 
     public function applyDiscount(Request $request)
     {
-        // Kiểm tra nếu có giỏ hàng trong session
         $oldCart = Session::has('cart') ? Session::get('cart') : null;
         $cart = new Cart($oldCart);
 
-        $discountCode = $request->input('discount_code'); // Lấy mã giảm giá từ form
+        $discountCode = $request->input('discount_code');
         Log::info("Received discount code: " . $discountCode);
 
-        // Kiểm tra mã giảm giá trong cơ sở dữ liệu
         $discount = KhuyenMai::where('ma_khuyen_mai', $discountCode)->first();
+        if (!$discount) {
+            return response()->json(['success' => false, 'message' => 'Mã không hợp lệ.']);
+        }
 
-        if ($discount) {
-            $nowDate = now();
-            $startDate = $discount->ngay_bat_dau;
-            $endDate = $discount->ngay_ket_thuc;
+        // Nếu là mã được tặng riêng (cá nhân)
+        if ($discount->loai_ma === 'ca_nhan') {
+            if ($discount->user_id !== Auth::id()) {
+                return response()->json(['success' => false, 'message' => 'Mã không áp dụng cho tài khoản này.']);
+            }
 
-            // Kiểm tra ngày hiệu lực của mã giảm giá
-            if ($nowDate->between($startDate, $endDate)) {
-                $discountPercentage = $discount->phan_tram_khuyen_mai;
-                $maxDiscount = $discount->giam_toi_da; // Lấy mức giảm giá tối đa từ cơ sở dữ liệu
-
-                // Tính tổng tiền trước giảm giá
-                $originalTotal = $cart->totalPrice; // Tổng giá trước giảm giá (bao gồm phí vận chuyển)
-
-                // Tính số tiền giảm giá
-                $discountAmount = $originalTotal * ($discountPercentage / 100);
-
-                // Áp dụng giới hạn giảm giá tối đa
-                if ($maxDiscount > 0 && $discountAmount > $maxDiscount) {
-                    $discountAmount = $maxDiscount;
-                }
-
-                // Tổng tiền sau giảm giá
-                $discountedTotal = $originalTotal - $discountAmount + 50000;
-
-                // Lưu mã giảm giá và phần trăm giảm giá vào session
-                $request->session()->put('discount_code', $discountCode);
-                $request->session()->put('discount_percentage', $discountPercentage);
-                $request->session()->put('discount_amount', $discountAmount); // Lưu số tiền giảm giá
-                $request->session()->put('maxDiscount', $maxDiscount); // Lưu số tiền giảm giá
-
-
-                // Trả về phản hồi JSON thành công
-                return response()->json([
-                    'success' => true,
-                    'message' => 'Mã giảm giá đã được áp dụng.',
-                    'discount_percentage' => $discountPercentage,
-                    'discount_code' => $discountCode,
-                    'discount_amount' => $discountAmount,
-                    'new_total' => $discountedTotal, // Trả về tổng tiền mới
-                    'new_giamgia' => $discountAmount
-                ]);
-            } else {
-                // Trả về phản hồi JSON cho mã hết hạn
-                return response()->json([
-                    'success' => false,
-                    'message' => 'Mã giảm giá đã hết hạn.'
-                ]);
+            if ($discount->da_su_dung >= $discount->so_luong) {
+                return response()->json(['success' => false, 'message' => 'Mã đã được sử dụng hết.']);
             }
         }
 
-        // Trả về phản hồi JSON cho mã không hợp lệ
+        // Kiểm tra hạn sử dụng (áp dụng cho mọi loại mã)
+        $now = now();
+        if (!$now->between($discount->ngay_bat_dau, $discount->ngay_ket_thuc)) {
+            return response()->json(['success' => false, 'message' => 'Mã đã hết hạn.']);
+        }
+
+        // Tính toán giảm giá
+        $discountPercentage = $discount->phan_tram_khuyen_mai;
+        $maxDiscount = $discount->giam_toi_da;
+
+        $originalTotal = $cart->totalPrice;
+        $discountAmount = $originalTotal * ($discountPercentage / 100);
+        if ($maxDiscount > 0 && $discountAmount > $maxDiscount) {
+            $discountAmount = $maxDiscount;
+        }
+
+        $discountedTotal = $originalTotal - $discountAmount + 50000;
+        Session::put('discount_code', $discount->ma_khuyen_mai);
+        $request->session()->put('discount_code', $discountCode);
+        $request->session()->put('discount_percentage', $discountPercentage);
+        $request->session()->put('discount_amount', $discountAmount);
+        $request->session()->put('maxDiscount', $maxDiscount);
+
         return response()->json([
-            'success' => false,
-            'message' => 'Mã giảm giá không hợp lệ.'
+            'success' => true,
+            'message' => 'Mã giảm giá đã được áp dụng.',
+            'discount_percentage' => $discountPercentage,
+            'discount_code' => $discountCode,
+            'discount_amount' => $discountAmount,
+            'new_total' => $discountedTotal,
+            'new_giamgia' => $discountAmount
         ]);
     }
+
 
     public function removeDiscount(Request $request)
     {
@@ -182,7 +174,7 @@ class ThanhToanController extends Controller
             'new_giamgia' => 0 // sau khi xóa thì không còn giảm nữa
         ]);
     }
-    public function placeOrder(Request $request)
+    public function placeOrder(Request $request,OrderService $orderService)
     {
         try {
             // Kiểm tra giỏ hàng trong session
@@ -233,8 +225,10 @@ class ThanhToanController extends Controller
                         'message' => 'Số lượng không đủ tồn kho.',
                     ];
                 }
+                // nếu không có giá mới thì sẽ lấy giá cũ
+                $gia = $item['bienthe']->gia_moi ?? $item['bienthe']->gia_cu;
+                $updatedTotalPrice += $availableQuantity * $gia;
 
-                $updatedTotalPrice += $availableQuantity * $item['bienthe']->gia_moi;
                 $cart->products[$key]['quantity'] = $availableQuantity;
             }
 
@@ -282,6 +276,7 @@ class ThanhToanController extends Controller
                 'ma_hoa_don' => date("ymd") . rand(0, 1000000),
                 'user_id' => $userId,
                 'giam_gia' => $discountAmount,
+                'ma_khuyen_mai' => $discountCode,
                 'tong_tien' => $tongTienSauGiam,
                 'dia_chi_nhan_hang' => $request->address,
                 'email' => $request->email,
@@ -298,23 +293,23 @@ class ThanhToanController extends Controller
 
             if ($discountCode) {
                 $discount = KhuyenMai::where('ma_khuyen_mai', $discountCode)->first();
-                if ($discount) {
-                    $discount->increment('da_su_dung');
-                }
             }
+
 
             Log::info("Hóa đơn đã tạo: ", (array) $hoaDon);
 
             foreach ($cart->products as $item) {
                 $bienThe = BienTheSanPham::find($item['bienthe']->id);
                 if (!$bienThe) continue;
-
+                // Nếu không có giá mới thì lấy giá cũ
+                $gia = $item['bienthe']->gia_moi ?? $item['bienthe']->gia_cu;
+    
                 ChiTietHoaDon::create([
                     'hoa_don_id' => $hoaDon->id,
                     'bien_the_san_pham_id' => $bienThe->id,
                     'so_luong' => $item['quantity'],
-                    'don_gia' => $item['bienthe']->gia_moi,
-                    'thanh_tien' => $item['quantity'] * $item['bienthe']->gia_moi,
+                    'don_gia' => $gia,
+                    'thanh_tien' => $item['quantity'] * $gia,
                 ]);
 
                 $bienThe->so_luong -= $item['quantity'];
@@ -325,7 +320,25 @@ class ThanhToanController extends Controller
             Session::forget('discount_code');
             Session::forget('discount_percentage');
             Session::forget('maxDiscount');
-            
+            // if ($tongTienSauGiam >= 1000000) {
+            //     $voucherCode = strtoupper(Str::random(8)); // Mã ngẫu nhiên
+            //     $voucher = KhuyenMai::create([
+            //         'ma_khuyen_mai' => $voucherCode,
+            //         'phan_tram_khuyen_mai' => 5, 
+            //         'giam_toi_da' => 50000, 
+            //         'ngay_bat_dau' => now(),
+            //         'ngay_ket_thuc' => now()->addDays(7), 
+            //         'trang_thai' => true,
+            //         'so_luong' => 1, 
+            //         'da_su_dung' => 0,
+            //         'user_id' => Auth::id(), 
+            //         'loai_ma' => 'ca_nhan', 
+            //     ]);
+
+
+            //     Mail::to(auth()->user()->email)->send(new MaGiamGiaMoi($voucherCode, $voucher));
+            // }
+
             // **Xử lý theo từng phương thức thanh toán**
             switch ($request->payment_method) {
                 case 'Thanh toán qua chuyển khoản ngân hàng':
@@ -336,6 +349,8 @@ class ThanhToanController extends Controller
                     );
 
                 case 'Thanh toán khi nhận hàng':
+                    $orderService->updatePaymentStatus($hoaDon->id);
+                    $orderService->sendVoucherAfterPaid($hoaDon);
                     $hoaDon->update(['trang_thai_thanh_toan' => HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán']]);
                     return response()->json(['success' => true, 'message' => 'Đặt hàng thành công, thanh toán khi nhận hàng.']);
 
@@ -424,10 +439,11 @@ class ThanhToanController extends Controller
         $itemsArray = [];
 
         foreach ($cart->products as $product) {
+             $gia = $product['bienthe']->gia_moi ?? $product['bienthe']->gia_cu;
             $itemsArray[] = [
                 'itemid' => (string) $product['bienthe']->id,
                 'itemname' => $product['bienthe']->ten_san_pham,
-                'itemprice' => $product['bienthe']->gia_moi,
+                'itemprice' => $gia,
                 'itemquantity' => $product['quantity'],
             ];
         }
