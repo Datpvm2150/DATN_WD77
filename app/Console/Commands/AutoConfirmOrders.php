@@ -5,7 +5,6 @@ use App\Models\HoaDon;
 use Illuminate\Console\Command;
 use Carbon\Carbon;
 
-
 class AutoConfirmOrders extends Command
 {
     /**
