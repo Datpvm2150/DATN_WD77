@@ -229,32 +229,34 @@ function bindCartEvents() {
 // giảm giá sản phẩm
 function discount() {
     const discountCode = document.getElementById('discount-code').value;
-    if (discountCode == "") {
+
+    if (discountCode === "") {
         alertify.error('Vui lòng nhập mã giảm giá.');
         return;
     }
-    console.log(discountCode);
+
     $.ajax({
         url: `/Discount-Cart/${discountCode}`,
         type: "GET",
     }).done((response) => {
         $("#list-cart").empty();
         $("#list-cart").html(response);
-        alertify.success('Đã giảm giá!');
+        alertify.success('Đã áp dụng mã giảm giá!');
         bindCartEvents();
-    }).fail((xhr, status, error) => {
-        console.error('Update failed:', error);
-        let errorMessage;
-        if (xhr.status === 404) {
-            errorMessage = 'Mã giảm giá không hợp lệ.';
-        } else if (xhr.status === 400) {
-            errorMessage = 'Mã giảm giá đã hết hạn.';
-        } else {
-            errorMessage = 'Vui lòng thử lại sau.';
+    }).fail((xhr) => {
+        console.error('Lỗi khi áp dụng mã giảm giá:', xhr);
+
+        let message = 'Vui lòng thử lại sau.';
+
+        // Nếu response có message từ server thì hiển thị ra
+        if (xhr.responseJSON && xhr.responseJSON.message) {
+            message = xhr.responseJSON.message;
         }
-        alertify.error(errorMessage);
+
+        alertify.error(message);
     });
 }
+
 // khi load lại trang gọi lại sự kiện thay đổi 
 document.addEventListener('DOMContentLoaded', bindCartEvents);
 

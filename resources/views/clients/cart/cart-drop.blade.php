@@ -67,12 +67,12 @@
                 {{ isset(Session::get('cart')->totalProduct) ? number_format(Session::get('cart')->totalProduct, 0, ',', '.') : '0' }}
             </span>
         </div>
-        <div class="cartmini__checkout-btn">
-            <a href="{{ route('cart.index') }}" class="tp-btn mb-10 w-100"> Xem giỏ hàng</a>
+        <div class="cartmini__checkout-btn" >
+            <a href="{{ route('cart.index') }}" class="tp-btn mb-10 w-100" > Xem giỏ hàng</a>
             <a href="{{ route('thanhtoan') }}" class="tp-btn tp-btn-border w-100"> Thanh toán</a>
         </div>
     </div>
-@else
+@else   
     <div class="cartmini__empty text-center">
         <img src="{{ asset('assets/client/img/product/cartmini/empty-cart.png') }}" alt="">
         <p>Giỏ hàng của bạn trống</p>

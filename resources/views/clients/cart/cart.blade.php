@@ -124,6 +124,77 @@
                                             <button type="submit" onclick="discount()" style="font-size: 15px">Áp
                                                 dụng</button>
                                         </div>
+                                        <div class="dropdown mb-3">
+                                            <button class="btn btn-secondary dropdown-toggle w-100" type="button"
+                                                data-bs-toggle="dropdown" aria-expanded="false">
+                                                Chọn mã khuyến mãi
+                                            </button>
+                                            <div class="dropdown-menu p-2"
+                                                style="width: 100%; max-height: 300px; overflow-y: auto">
+                                                @php
+                                                    use Illuminate\Support\Carbon;
+
+                                                    $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
+                                                        ->where('trang_thai', 1)
+                                                        ->get();
+
+                                                    $maGiamGiaCaNhan = auth()->check()
+                                                        ? \App\Models\KhuyenMai::where('user_id', auth()->id())
+                                                            ->where('trang_thai', 1)
+                                                            ->get()
+                                                        : collect();
+                                                @endphp
+
+                                                <div class="row">
+                                                    <div class="col-6">
+                                                        <strong class="dropdown-header">Voucher:</strong>
+                                                        @forelse($maGiamGiaCongKhai as $item)
+                                                            <button type="button" class="dropdown-item"
+                                                                onclick="applyCode('{{ $item->ma_khuyen_mai }}')">
+                                                                <span
+                                                                    style="color: #007bff; font-weight: bold;">{{ $item->ma_khuyen_mai }}</span>
+                                                                <br>
+                                                                <small>
+                                                                    Giảm: {{ $item->phan_tram_khuyen_mai }}% (Tối đa
+                                                                    {{ number_format($item->giam_toi_da) }}₫)
+                                                                    <br>
+                                                                    HSD:<span style="color: red">
+                                                                        {{ \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y') }}</span>
+                                                                </small>
+                                                            </button>
+                                                        @empty
+                                                            <span class="dropdown-item text-muted">Không có</span>
+                                                        @endforelse
+                                                    </div>
+
+                                                    <div class="col-6">
+                                                        <strong class="dropdown-header">Voucher tặng:</strong>
+                                                        @if (auth()->check())
+                                                            @forelse($maGiamGiaCaNhan as $item)
+                                                                <button type="button" class="dropdown-item"
+                                                                    onclick="applyCode('{{ $item->ma_khuyen_mai }}')">
+                                                                    <span
+                                                                        style="color: #007bff; font-weight: bold;">{{ $item->ma_khuyen_mai }}</span>
+                                                                    <br>
+                                                                    <small>
+                                                                        Giảm: {{ $item->phan_tram_khuyen_mai }}% (Tối đa
+                                                                        {{ number_format($item->giam_toi_da) }}₫)
+                                                                        <br>
+                                                                        HSD:<span style="color: red">
+                                                                            {{ \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y') }}</span>
+                                                                    </small>
+                                                                </button>
+                                                            @empty
+                                                                <span class="dropdown-item text-muted">Không có</span>
+                                                            @endforelse
+                                                        @else
+                                                            <span class="dropdown-item text-muted">Vui lòng đăng
+                                                                nhập</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                     {{-- </form> --}}
                                 </div>
@@ -131,7 +202,8 @@
                             <div class="col-xl-6 col-md-4">
                                 <div class="tp-cart-update text-md-end">
                                     {{-- <button type="button" class="tp-cart-update-btn">Update Cart</button> --}}
-                                    <a href="{{ route('trangchu') }}" type="button" class="tp-cart-update-btn">Đi đến mua
+                                    <a href="{{ route('trangchu') }}" type="button" class="tp-cart-update-btn">Đi đến
+                                        mua
                                         sắm</a>
                                 </div>
                             </div>
@@ -189,7 +261,7 @@
                                             }
                                         @endphp
                                         <span class="text-danger">
-                                            {{ number_format($discountAmount, 2, ',', '.') }} VNĐ
+                                            {{ number_format($discountAmount, 0, ',', '.') }} VNĐ
                                         </span>
                                     @else
                                         <span class="text-danger">
@@ -205,7 +277,7 @@
                                 <span>
                                     @php
                                         $total = Session::get('cart')->totalPrice - $discountAmount;
-                                        $total = $total > 0 ? number_format($total, 2, ',', '.') : 0;
+                                        $total = $total > 0 ? number_format($total, 0, ',', '.') : 0;
                                     @endphp
                                     {{ isset($total) ? $total : 0 }}
                                     VNĐ
@@ -229,5 +301,92 @@
             </div>
         </div>
     </section>
+    <style>
+        .tp-cart-coupon .dropdown {
+            width: 60%;
+        }
 
+        .tp-cart-coupon .dropdown button.btn.btn-secondary.dropdown-toggle.w-100 {
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 15px;
+            text-align: left;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tp-cart-coupon .dropdown button.btn.btn-secondary.dropdown-toggle.w-100:focus,
+        .tp-cart-coupon .dropdown button.btn.btn-secondary.dropdown-toggle.w-100:hover {
+            background-color: #5a6268;
+            outline: none;
+            box-shadow: none;
+        }
+
+        .tp-cart-coupon .dropdown .dropdown-menu {
+            width: 100%;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            background-color: white;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-header {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 10px;
+            padding: 5px 0;
+        }
+
+        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item {
+            padding: 10px 15px;
+            font-size: 14px;
+            color: #333;
+            background-color: transparent;
+            border: none;
+            text-align: left;
+            width: 100%;
+            white-space: normal;
+            word-wrap: break-word;
+        }
+
+        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item:hover,
+        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item:focus {
+            background-color: #f8f9fa;
+            color: #007bff;
+        }
+
+        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item span {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item small {
+            color: #666;
+            font-size: 11.60px;
+            display: block;
+            line-height: 1.4;
+        }
+
+        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item.text-muted {
+            color: #6c757d;
+            padding: 10px 15px;
+        }
+    </style>
+    <script>
+        function applyCode(code) {
+            const input = document.getElementById("discount-code");
+            if (input) {
+                input.value = code;
+            }
+        }
+    </script>
 @endsection
