@@ -160,5 +160,17 @@ foreach ($products as $product) {
             ]);
         }
     }
+
+public function getAllVariants(Request $request)
+{
+    $sanPhamId = $request->input('san_pham_id');
+    $variants = BienTheSanPham::where('san_pham_id', $sanPhamId)
+        ->select('mau_sac_id', 'dung_luong_id')
+        ->get();
+
+    return response()->json($variants);
+}
+
+
 }
 
