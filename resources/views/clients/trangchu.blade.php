@@ -699,37 +699,45 @@
                         <div class="tp-product-offer-slider-active swiper-container">
                             <div class="swiper-wrapper">
                                 <!-- Hiển thị danh sách khuyến mãi -->
-                                @foreach ($khuyenMais as $khuyenMai)
-                                    <div class="tp-product-offer-item tp-product-item transition-3 swiper-slide">
-                                        <div class="tp-product-content">
-                                            <h4>Mã khuyến mãi :
-                                                <div class="centered">
-                                                    <div class="highlight">
-                                                        <pre style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;"
-                                                            class="highlight javascript"><code>{{ $khuyenMai->ma_khuyen_mai }}</code></pre>
+                                @if($khuyenMais->count() > 0)
+                                    @foreach ($khuyenMais as $khuyenMai)
+                                        <div class="tp-product-offer-item tp-product-item transition-3 swiper-slide">
+                                            <div class="tp-product-content">
+                                                <h4>Mã khuyến mãi :
+                                                    <div class="centered">
+                                                        <div class="highlight">
+                                                            <pre style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;"
+                                                                class="highlight javascript"><code>{{ $khuyenMai->ma_khuyen_mai }}</code></pre>
+                                                        </div>
                                                     </div>
+                                                </h4>
+                                                <div class="tp-product-price-wrapper">
+                                                    <span class="tp-product-price new-price">Giảm giá:
+                                                        {{ $khuyenMai->phan_tram_khuyen_mai }}% </span><br>
+                                                    <span class="tp-product-price text-danger">Giảm tối đa:
+                                                        {{ number_format($khuyenMai->giam_toi_da, 0, ',', '.') }}₫ </span>
                                                 </div>
-                                            </h4>
-                                            <div class="tp-product-price-wrapper">
-                                                <span class="tp-product-price new-price">Giảm giá:
-                                                    {{ $khuyenMai->phan_tram_khuyen_mai }}% </span><br>
-                                                <span class="tp-product-price text-danger">Giảm tối đa:
-                                                    {{ number_format($khuyenMai->giam_toi_da, 0, ',', '.') }}₫ </span>
-                                            </div>
-                                            <div class="tp-product-countdown" data-countdown
-                                                data-date="{{ $khuyenMai->ngay_ket_thuc }}">
-                                                <div class="tp-product-countdown-inner">
-                                                    <ul>
-                                                        <li><span data-days></span> Ngày</li>
-                                                        <li><span data-hours></span> Giờ</li>
-                                                        <li><span data-minutes></span>Phút</li>
-                                                        <li><span data-seconds></span> Giây</li>
-                                                    </ul>
+                                                <div class="tp-product-countdown" data-countdown
+                                                    data-date="{{ $khuyenMai->ngay_ket_thuc }}">
+                                                    <div class="tp-product-countdown-inner">
+                                                        <ul>
+                                                            <li><span data-days></span> Ngày</li>
+                                                            <li><span data-hours></span> Giờ</li>
+                                                            <li><span data-minutes></span>Phút</li>
+                                                            <li><span data-seconds></span> Giây</li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    @endforeach
+                                @else
+                                    <div class="tp-product-offer-item tp-product-item transition-3 swiper-slide">
+                                        <div class="tp-product-content text-center">
+                                            <h4>Không có mã khuyến mãi nào đang diễn ra</h4>
+                                        </div>
                                     </div>
-                                @endforeach
+                                @endif
                             </div>
                             <div class="tp-deals-slider-dot tp-swiper-dot text-center mt-40"></div>
                         </div>
@@ -1305,10 +1313,15 @@
                             <p
                                 style="max-height: 4.5em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; max-width: 350px;">
                                 {{ $randProduct->mo_ta }}</p>
+<<<<<<< HEAD
+                            <a style="color: #0989ff" href="{{ route('chitietsanpham', $randProduct->id) }}">Xem
+                                thêm</a>
+=======
 
                             <a style="color: #0989ff" href="{{ route('chitietsanpham', $randProduct->id) }}">Xem
                                 thêm</a>
 
+>>>>>>> 5fe3d4b2157d611a4974347a645aa045a56d16f9
                             <!-- variations -->
                             <div class="tp-product-details-variation">
                                 <div class="tp-product-details-variation-item">
