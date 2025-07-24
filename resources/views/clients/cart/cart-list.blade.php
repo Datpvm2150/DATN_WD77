@@ -138,7 +138,7 @@
                                     </div>
 
                                     <div class="col-6">
-                                        <strong class="dropdown-header"> tặng:</strong>
+                                        <strong class="dropdown-header">Voucher tặng:</strong>
                                         @if (auth()->check())
                                             @forelse($maGiamGiaCaNhan as $item)
                                                 <button type="button" class="dropdown-item"

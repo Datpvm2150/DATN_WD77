@@ -21,7 +21,7 @@ class OrderService
         $voucher = KhuyenMai::create([
             'ma_khuyen_mai' => $ma,
             'phan_tram_khuyen_mai' => 5,
-            'giam_toi_da' => 50000,
+            'giam_toi_da' => 500000,
             'ngay_bat_dau' => now(),
             'ngay_ket_thuc' => now()->addDays(7),
             'trang_thai' => true,

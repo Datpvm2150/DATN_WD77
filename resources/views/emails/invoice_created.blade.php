@@ -69,7 +69,6 @@
 </head>
 
 <body>
-    @php $voucher = $voucher ?? null; @endphp
     <div class="container">
         <div class="header">
             <img src="{{ asset('assets/client/img/logo/favicon.png') }}" alt="Logo">
@@ -117,12 +116,6 @@
         </table>
         <div class="footer">
             <p>Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi!</p>
-            @if (isset($discount))
-                <p>Bạn được tặng mã giảm giá: <strong>{{ $discount->ma_khuyen_mai }}</strong></p>
-                <p>Giảm {{ $discount->phan_tram_khuyen_mai }}%, tối đa {{ number_format($discount->giam_toi_da) }}đ
-                </p>
-                <p>Chỉ áp dụng 1 lần, trong vòng 7 ngày.</p>
-            @endif
             <p>Mọi thắc mắc xin vui lòng liên hệ <a href="quanminh221205@gmail.com">quanminh221205@gmail.com</a>.</p>
         </div>
 

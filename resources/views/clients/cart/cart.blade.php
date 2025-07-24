@@ -371,7 +371,7 @@
 
         .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item small {
             color: #666;
-            font-size: 11.60px;
+            font-size: 12px;
             display: block;
             line-height: 1.4;
         }
