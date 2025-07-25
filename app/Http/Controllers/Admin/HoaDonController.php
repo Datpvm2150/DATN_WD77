@@ -7,13 +7,14 @@ use App\Models\HoaDon;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Log;
+use Illuminate\Support\Facades\Artisan;
 
 class HoaDonController extends Controller
 {
     public function index(Request $request)
     {
         $title = "Danh sách đơn hàng";
-
+        Artisan::call('orders:auto-confirm');
         // Lấy tham số từ request
         $ngayBatDau = $request->input('ngay_bat_dau');
         $ngayKetThuc = $request->input('ngay_ket_thuc');
