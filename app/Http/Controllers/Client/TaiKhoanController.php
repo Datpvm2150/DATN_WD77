@@ -135,10 +135,14 @@ class TaiKhoanController extends Controller
         $danhMucs = DanhMuc::all();
         // lấy danh sách đơn hàng
         $donHangs = $profile->hoaDons()->orderByDesc('id')->paginate(10);
+        // Lấy các mã khuyến mãi cá nhân của user
+        $maCaNhans = \App\Models\KhuyenMai::where('user_id', $profile->id)
+            ->orderByDesc('trang_thai') // Đẩy trang thái đang hoạt động lên đầu
+            ->orderBy('ngay_ket_thuc', 'asc') // Ưu tiên mã sắp hết hạn
+            ->get();  // Lấy tất cả các mã khuyến mãi cá nhân của người dùng này
 
-
-        // đếm
-        return view('clients.taikhoan.profile', compact('donHangs', 'danhMucs', 'profile', 'lienhes'));
+        // đến
+        return view('clients.taikhoan.profile', compact('donHangs', 'danhMucs', 'profile', 'lienhes', 'maCaNhans'));
     }
 
 
