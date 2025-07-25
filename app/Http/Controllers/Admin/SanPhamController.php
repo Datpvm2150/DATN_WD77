@@ -15,6 +15,7 @@ use App\Models\TagSanPham;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 
 class SanPhamController extends Controller
@@ -56,7 +57,8 @@ class SanPhamController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(
+        $validator = Validator::make(
+            $request->all(),
             [
                 'ma_san_pham' => ['required', 'string', 'max:255', 'unique:san_phams,ma_san_pham'],
                 'ten_san_pham' => ['required', 'string', 'max:255'],
@@ -64,11 +66,9 @@ class SanPhamController extends Controller
                 'anh_san_pham' => ['required', 'mimes:jpg,jpeg,png,gif,bmp,webp,svg', 'max:4048'],
                 'mo_ta' => ['nullable', 'string'],
 
-                // ảnh sản phẩm
                 'hinh_anh' => ['required', 'array'],
                 'hinh_anh.*' => ['file', 'mimes:jpg,jpeg,png,gif,bmp,webp,svg', 'max:4048'],
 
-                // //biến thể sản phẩm
                 'dung_luong_id.*' => ['required', 'exists:dung_luongs,id'],
                 'mau_sac_id.*' => ['required', 'exists:mau_sacs,id'],
                 'gia_cu.*' => ['required', 'numeric', 'min:1', 'max:4000000000'],
@@ -123,6 +123,23 @@ class SanPhamController extends Controller
                 'so_luong.*.min' => 'Số lượng phải lớn hơn hoặc bằng 0.',
             ]
         );
+        // Kiểm tra giá mới trùng giá cũ
+        $validator->after(function ($validator) use ($request) {
+            $gia_cus = $request->input('gia_cu', []);
+            $gia_mois = $request->input('gia_moi', []);
+
+            foreach ($gia_cus as $index => $gia_cu) {
+                if (isset($gia_mois[$index]) && $gia_cu == $gia_mois[$index]) {
+                    $validator->errors()->add("gia_moi.$index", 'Giá mới không được trùng với giá cũ .');
+                }
+            }
+        });
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
         // Sản phẩm
         $datasanpham = $request->only([
             'ma_san_pham',
@@ -131,6 +148,8 @@ class SanPhamController extends Controller
             'anh_san_pham',
             'mo_ta'
         ]);
+        $databienthesanphams = $request->only(['dung_luong_id', 'mau_sac_id', 'gia_cu', 'gia_moi', 'so_luong']);
+
         if (isset($datasanpham['ten_san_pham'])) {
             $datasanpham['ten_san_pham'] = ucfirst(mb_strtolower(trim($datasanpham['ten_san_pham'])));
         }
@@ -152,7 +171,6 @@ class SanPhamController extends Controller
         }
         // Xử lý và lưu biến thể sản phẩm
         $flag = true;
-        $databienthesanphams = $request->only(['dung_luong_id', 'mau_sac_id', 'gia_cu', 'gia_moi', 'so_luong']);
         foreach ($databienthesanphams['dung_luong_id'] as $index => $dung_luong_id) {
             $exists = BienTheSanPham::where('san_pham_id', $sanpham['id'])
                 ->where('dung_luong_id', $dung_luong_id)
@@ -283,41 +301,40 @@ class SanPhamController extends Controller
         $sanpham = SanPham::withTrashed()->find($id);
 
         $old_anh_san_pham = $sanpham->anh_san_pham;
+        // Xử lý mảng rỗng giá_moi => null
         $request->merge([
             'gia_moi' => array_map(function ($item) {
-                return $item === '' ? null : $item;
+                return ($item === '' || $item == 0) ? null : $item;
             }, $request->input('gia_moi', [])),
 
             'new_gia_moi' => array_map(function ($item) {
-                return $item === '' ? null : $item;
+                return ($item === '' || $item == 0) ? null : $item;
             }, $request->input('new_gia_moi', [])),
         ]);
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'ma_san_pham' => ['string', 'max:255', Rule::unique('san_phams', 'ma_san_pham')->ignore($id)],
             'ten_san_pham' => ['required', 'string', 'max:255'],
             'danh_muc_id' => ['required', 'integer', 'exists:danh_mucs,id'],
             'anh_san_pham' => ['mimes:jpg,jpeg,png,gif,bmp,webp,svg', 'max:4048'],
             'mo_ta' => ['nullable', 'string'],
-
-            //ảnh sản phẩm
-            'hinh_anh.*' => ['nullable', 'image', 'mimes:jpg,jpeg,png,gif,bmp,webp,svg', 'max:4048'], // Tệp phải là hình ảnh với định dạng jpeg, png, jpg, gif và kích thước tối đa 2MB
-            'deleted_images' => ['nullable', 'string'], // Các ảnh đã xóa, nếu có
+            'hinh_anh.*' => ['nullable', 'image', 'mimes:jpg,jpeg,png,gif,bmp,webp,svg', 'max:4048'],
+            'deleted_images' => ['nullable', 'string'],
             'old_images' => ['nullable', 'string'],
 
-            // // biến thể sản phẩm cũ
+            // biến thể cũ
             'dung_luong_id.*' => ['required', 'exists:dung_luongs,id'],
             'mau_sac_id.*' => ['required', 'exists:mau_sacs,id'],
             'gia_cu.*' => ['required', 'numeric', 'min:1', 'max:4000000000'],
-            'gia_moi.*' => ['nullable', 'numeric', 'min:1', 'max:4000000000'],
+            'gia_moi.*' => ['nullable', 'sometimes', 'numeric', 'min:1', 'max:4000000000'],
             'so_luong.*' => ['required', 'numeric', 'min:0', 'max:4000000000'],
             'trangthai.*' => ['nullable', 'boolean'],
 
-            // // biến thể sản phẩm mới
+            // biến thể mới
             'new_dung_luong_id.*' => ['required', 'exists:dung_luongs,id'],
             'new_mau_sac_id.*' => ['required', 'exists:mau_sacs,id'],
             'new_gia_cu.*' => ['required', 'numeric', 'min:1', 'max:4000000000'],
-            'new_gia_moi.*' => ['nullable', 'numeric', 'min:1', 'max:4000000000'],
+            'new_gia_moi.*' => ['nullable', 'sometimes', 'numeric', 'min:1', 'max:4000000000'],
             'new_so_luong.*' => ['required', 'integer', 'min:0', 'max:4000000000'],
 
         ], [
@@ -386,6 +403,32 @@ class SanPhamController extends Controller
             'new_so_luong.*.min' => 'Số lượng phải lớn hơn hoặc bằng 0.',
             'new_so_luong.*.max' => 'Số lượng phải nhỏ hơn 4 tỷ.',
         ]);
+
+        // Kiểm tra giá mới = giá cũ
+        $validator->after(function ($validator) use ($request) {
+            $gia_cus = $request->input('gia_cu', []);
+            $gia_mois = $request->input('gia_moi', []);
+            foreach ($gia_cus as $index => $gia_cu) {
+                if (isset($gia_mois[$index]) && $gia_cu == $gia_mois[$index]) {
+                    $validator->errors()->add("gia_moi.$index", 'Giá mới không được trùng với giá cũ .');
+                }
+            }
+
+            $new_gia_cus = $request->input('new_gia_cu', []);
+            $new_gia_mois = $request->input('new_gia_moi', []);
+            foreach ($new_gia_cus as $index => $gia_cu) {
+                if (isset($new_gia_mois[$index]) && $gia_cu == $new_gia_mois[$index]) {
+                    $validator->errors()->add("new_gia_moi.$index", 'Giá mới không được trùng với giá cũ .');
+                }
+            }
+        });
+
+        //  Nếu có lỗi -> trả về
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput();
+        }
 
         $datasanpham = $request->only([
             'ma_san_pham',

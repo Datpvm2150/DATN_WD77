@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rule;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
-
+use Spatie\Permission\Models\Role;
+use Illuminate\Support\Facades\Log;
 class UserController extends Controller
 {
     // Gán vai trò cho người dùng
@@ -19,13 +20,13 @@ class UserController extends Controller
         $user = User::findOrFail($user);
 
         // Đổi ID của vai trò thành tên trước khi gọi syncRoles
-        // $roleNames = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
+        $roleNames = Role::whereIn('id', $request->roles)->pluck('name')->toArray();
 
         // Log danh sách vai trò mới
-        // Log::info('Updating roles for user ID ' . $user->id, ['roles' => $roleNames]);
+        Log::info('Updating roles for user ID ' . $user->id, ['roles' => $roleNames]);
 
         // Gán các vai trò mới cho người dùng
-        // $user->syncRoles($roleNames);
+        $user->syncRoles($roleNames);
 
         // Trở lại với thông báo thành công
         return redirect()->route('admins.users.index')->with('success', 'Gán vai trò cho người dùng thành công');

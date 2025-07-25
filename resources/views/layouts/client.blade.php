@@ -7,12 +7,13 @@
 
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>LaptopStore - Hệ thống bán hàng điện thoại</title>
+    <title>CTStore - Hệ thống bán hàng máy tính</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Place favicon.ico in the root directory -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/client/img/logo/favicon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/admin/images/logo-ctstore.png') }}">
 
 
     <!-- CSS here -->
@@ -40,7 +41,8 @@
     <script src="{{ asset('assets/client/js/vendor/jquery.js') }}"></script>
 
 </head>
-
+@include('components.chatbox')
+@stack('scripts')
 <body>
     <!--[if lte IE 9]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
@@ -104,7 +106,7 @@
                 <div class="offcanvas__top mb-70 d-flex justify-content-between align-items-center">
                     <div class="offcanvas__logo logo">
                         <a href="index.html">
-                            <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo"
+                            <img src="{{ asset('assets/admin/images/logo-ctstore.png') }}" alt="logo"
                                 style="width:150px; height:40px;">
                         </a>
                     </div>
