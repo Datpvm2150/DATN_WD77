@@ -459,7 +459,7 @@
 
                                 // Hiển thị modal thông báo lỗi
                                 const notFoundModal = new bootstrap.Modal(document.getElementById(
-                                'errorModal'));
+                                    'errorModal'));
                                 document.getElementById('errorModalBody').innerHTML = message;
                                 notFoundModal.show();
 
@@ -502,13 +502,13 @@
                                 document.getElementById('confirmOrderButton').onclick = function() {
                                     stockModal.hide();
                                     document.getElementById('submitOrder')
-                                .click(); // Thực hiện đặt hàng lại
+                                        .click(); // Thực hiện đặt hàng lại
                                 };
 
                                 document.getElementById('cancelOrderButton').onclick = function() {
                                     stockModal.hide();
                                     window.location.href =
-                                    '/Cart-Index'; // Người dùng từ chối, quay lại giỏ hàng
+                                        '/Cart-Index'; // Người dùng từ chối, quay lại giỏ hàng
                                 };
 
                                 return; // Không tiếp tục xử lý thêm
@@ -578,7 +578,7 @@
                             document.getElementById('tpCheckoutCouponForm').style.display = 'none';
                             document.getElementById('discountAppliedMessage').style.display = 'block';
                             document.getElementById('appliedDiscountCode').innerText =
-                            discountCodeInput;
+                                discountCodeInput;
                             document.getElementById('toastBody').textContent = data.message;
                             toast.show();
                         } else {

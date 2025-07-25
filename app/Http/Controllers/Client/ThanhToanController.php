@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;;
 
 use App\Services\OrderService;
-use App\Cart;
+use App\Cart;   
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\VNPayController;
@@ -32,7 +32,7 @@ class ThanhToanController extends Controller
         }
 
         // Lấy thông tin người dùng và địa chỉ đã sử dụng trước đó
-        $user = Auth::user();
+        $user = Auth::user();   
         $diaChiDaSuDung = HoaDon::where('user_id', $user->id)
             ->where('trang_thai', 7)
             ->pluck('dia_chi_nhan_hang')
@@ -225,8 +225,10 @@ class ThanhToanController extends Controller
                         'message' => 'Số lượng không đủ tồn kho.',
                     ];
                 }
+                // nếu không có giá mới thì sẽ lấy giá cũ
+                $gia = $item['bienthe']->gia_moi ?? $item['bienthe']->gia_cu;
+                $updatedTotalPrice += $availableQuantity * $gia;
 
-                $updatedTotalPrice += $availableQuantity * $item['bienthe']->gia_moi;
                 $cart->products[$key]['quantity'] = $availableQuantity;
             }
 
@@ -299,13 +301,15 @@ class ThanhToanController extends Controller
             foreach ($cart->products as $item) {
                 $bienThe = BienTheSanPham::find($item['bienthe']->id);
                 if (!$bienThe) continue;
-
+                // Nếu không có giá mới thì lấy giá cũ
+                $gia = $item['bienthe']->gia_moi ?? $item['bienthe']->gia_cu;
+    
                 ChiTietHoaDon::create([
                     'hoa_don_id' => $hoaDon->id,
                     'bien_the_san_pham_id' => $bienThe->id,
                     'so_luong' => $item['quantity'],
-                    'don_gia' => $item['bienthe']->gia_moi,
-                    'thanh_tien' => $item['quantity'] * $item['bienthe']->gia_moi,
+                    'don_gia' => $gia,
+                    'thanh_tien' => $item['quantity'] * $gia,
                 ]);
 
                 $bienThe->so_luong -= $item['quantity'];
@@ -417,10 +421,11 @@ class ThanhToanController extends Controller
         $itemsArray = [];
 
         foreach ($cart->products as $product) {
+             $gia = $product['bienthe']->gia_moi ?? $product['bienthe']->gia_cu;
             $itemsArray[] = [
                 'itemid' => (string) $product['bienthe']->id,
                 'itemname' => $product['bienthe']->ten_san_pham,
-                'itemprice' => $product['bienthe']->gia_moi,
+                'itemprice' => $gia,
                 'itemquantity' => $product['quantity'],
             ];
         }

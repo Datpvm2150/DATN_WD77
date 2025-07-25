@@ -66,7 +66,7 @@
                                             <td class="tp-cart-price">
                                                 <span>{{ isset($product['bienthe']->gia_moi)
                                                     ? number_format($product['bienthe']->gia_moi, 0, ',', '.') . ' VNĐ'
-                                                    : 'Chưa có giá' }}</span>
+                                                    : number_format($product['bienthe']->gia_cu, 0, ',', '.') . ' VNĐ' }}</span>
                                             </td>
                                             <!-- quantity -->
                                             <td class="tp-cart-quantity">
@@ -390,3 +390,4 @@
         }
     </script>
 @endsection
+
