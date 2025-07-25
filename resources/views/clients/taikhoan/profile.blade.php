@@ -493,47 +493,92 @@
                                 <div class="tab-pane fade" id="nav-discount" role="tabpanel" aria-labelledby="nav-discount-tab">
                                     <div class="profile__discount">
                                         <h3 class="profile__info-title">Mã khuyến mãi cá nhân</h3>
-                                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
-                                            <table class="table table-striped table-hover text-center">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Mã khuyến mãi</th>
-                                                        <th>Giảm (%)</th>
-                                                        <th>Giảm tối đa</th>
-                                                        <th>Ngày hết hạn</th>
-                                                        <th>Trạng thái</th>
-                                                        <th>Thao tác</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody>
-                                                    @forelse ($maCaNhans as $maCaNhan)
+                                        <div class="mb-3">
+                                            <button id="btn-active-discount" type="button" class="btn btn-primary btn-sm me-2 active">Còn hiệu lực</button>
+                                            <button id="btn-expired-discount" type="button" class="btn btn-outline-secondary btn-sm">Hết hạn</button>
+                                        </div>
+                                        <!-- Danh sách mã khuyến mãi còn hiệu lực -->
+                                        <div id="discount-active-list">
+                                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-striped table-hover text-center">
+                                                    <thead>
                                                         <tr>
-                                                            <td>
-                                                                <span class="badge bg-primary" style="font-size: 1em;">{{ $maCaNhan->ma_khuyen_mai }}</span>
-                                                            </td>
-                                                            <td>{{ $maCaNhan->phan_tram_khuyen_mai }}%</td>
-                                                            <td>{{ number_format($maCaNhan->giam_toi_da, 0, ',', '.') }} VNĐ</td>
-                                                            <td>{{ $maCaNhan->ngay_ket_thuc ? $maCaNhan->ngay_ket_thuc : "Không có thời hạn" }}</td>
-                                                            <td>
-                                                                @if($maCaNhan->trang_thai)
+                                                            <th>Mã khuyến mãi</th>
+                                                            <th>Giảm (%)</th>
+                                                            <th>Giảm tối đa</th>
+                                                            <th>Ngày hết hạn</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Thao tác</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse ($maCaNhans->where('trang_thai', 1) as $maCaNhan)
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="badge bg-primary" style="font-size: 1em;">{{ $maCaNhan->ma_khuyen_mai }}</span>
+                                                                </td>
+                                                                <td>{{ $maCaNhan->phan_tram_khuyen_mai }}%</td>
+                                                                <td>{{ number_format($maCaNhan->giam_toi_da, 0, ',', '.') }} VNĐ</td>
+                                                                <td>{{ $maCaNhan->ngay_ket_thuc ? $maCaNhan->ngay_ket_thuc : "Không có thời hạn" }}</td>
+                                                                <td>
                                                                     <span class="badge bg-success">Còn hiệu lực</span>
-                                                                @else
-                                                                    <span class="badge bg-secondary">Hết hạn</span>
-                                                                @endif
-                                                            </td>
-                                                            <td>
-                                                                <button class="btn btn-sm btn-outline-primary copy-btn" data-code="{{ $maCaNhan->ma_khuyen_mai }}">
-                                                                    <i class="fas fa-copy"></i> Copy
-                                                                </button>
-                                                            </td>
-                                                        </tr>
-                                                    @empty
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-outline-primary copy-btn" data-code="{{ $maCaNhan->ma_khuyen_mai }}">
+                                                                        <i class="fas fa-copy"></i> Copy
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="6">Bạn chưa có mã khuyến mãi cá nhân nào còn hiệu lực.</td>
+                                                            </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Danh sách mã khuyến mãi đã hết hạn -->
+                                        <div id="discount-expired-list" style="display: none;">
+                                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-striped table-hover text-center">
+                                                    <thead>
                                                         <tr>
-                                                            <td colspan="5">Bạn chưa có mã khuyến mãi cá nhân nào.</td>
+                                                            <th>Mã khuyến mãi</th>
+                                                            <th>Giảm (%)</th>
+                                                            <th>Giảm tối đa</th>
+                                                            <th>Ngày hết hạn</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Thao tác</th>
                                                         </tr>
-                                                    @endforelse
-                                                </tbody>
-                                            </table>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse ($maCaNhans->where('trang_thai', 0) as $maCaNhan)
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="badge bg-secondary" style="font-size: 1em;">{{ $maCaNhan->ma_khuyen_mai }}</span>
+                                                                </td>
+                                                                <td>{{ $maCaNhan->phan_tram_khuyen_mai }}%</td>
+                                                                <td>{{ number_format($maCaNhan->giam_toi_da, 0, ',', '.') }} VNĐ</td>
+                                                                <td>{{ $maCaNhan->ngay_ket_thuc ? $maCaNhan->ngay_ket_thuc : "Không có thời hạn" }}</td>
+                                                                <td>
+                                                                    <span class="badge bg-secondary">Hết hạn</span>
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-outline-primary copy-btn" data-code="{{ $maCaNhan->ma_khuyen_mai }}">
+                                                                        <i class="fas fa-copy"></i> Copy
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="6">Bạn chưa có mã khuyến mãi cá nhân nào hết hạn.</td>
+                                                            </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -546,34 +591,51 @@
     </section>
     <script>
     document.addEventListener("DOMContentLoaded", function () {
+        // Copy mã khuyến mãi
         const copyButtons = document.querySelectorAll(".copy-btn");
-
         copyButtons.forEach(button => {
             button.addEventListener("click", function () {
                 const code = this.getAttribute("data-code");
-
-                // Tạo 1 input ảo để copy
                 const tempInput = document.createElement("input");
                 tempInput.value = code;
                 document.body.appendChild(tempInput);
                 tempInput.select();
                 document.execCommand("copy");
                 document.body.removeChild(tempInput);
-
-                // Đổi nội dung nút tạm thời khi click
                 this.innerHTML = '<i class="fas fa-check"></i> Đã copy';
                 this.classList.remove('btn-outline-primary');
                 this.classList.add('btn-success');
-
-                // Sau 1s đổi lại
                 setTimeout(() => {
                     this.innerHTML = '<i class="fas fa-copy"></i> Copy';
                     this.classList.remove('btn-success');
                     this.classList.add('btn-outline-primary');
                 }, 1000);
-                });
             });
         });
+
+        // Tab chuyển đổi giữa còn hiệu lực và hết hạn
+        const btnActive = document.getElementById('btn-active-discount');
+        const btnExpired = document.getElementById('btn-expired-discount');
+        const activeList = document.getElementById('discount-active-list');
+        const expiredList = document.getElementById('discount-expired-list');
+
+        btnActive.addEventListener('click', function () {
+            btnActive.classList.add('btn-primary', 'active');
+            btnActive.classList.remove('btn-outline-secondary');
+            btnExpired.classList.remove('btn-primary', 'active');
+            btnExpired.classList.add('btn-outline-secondary');
+            activeList.style.display = '';
+            expiredList.style.display = 'none';
+        });
+        btnExpired.addEventListener('click', function () {
+            btnExpired.classList.add('btn-primary', 'active');
+            btnExpired.classList.remove('btn-outline-secondary');
+            btnActive.classList.remove('btn-primary', 'active');
+            btnActive.classList.add('btn-outline-secondary');
+            activeList.style.display = 'none';
+            expiredList.style.display = '';
+        });
+    });
     </script>
 
 @endsection

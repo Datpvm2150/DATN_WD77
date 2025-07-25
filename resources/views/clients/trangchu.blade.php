@@ -1,7 +1,7 @@
 @extends('layouts.client')
 
 @section('content')
-    {{-- slide 1 --}}
+    {{-- slide --}}
     <section class="tp-slider-area p-relative z-index-1">
         <div class="tp-slider-active tp-slider-variation swiper-container">
             <div class="swiper-wrapper">
@@ -25,7 +25,7 @@
                                         <h3 class="tp-slider-title"
                                             style="max-height: 4.5em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
                                             {{ $bannersHea->ten_banner }}</h3>
-                                        <div class="tp-slider-btn">
+                                        {{-- <div class="tp-slider-btn">
                                             <a href="{{ $bannersHea->url_lien_ket }}"
                                                 class="tp-btn tp-btn-2 tp-btn-white">Xem ngay
                                                 <svg width="17" height="14" viewBox="0 0 17 14" fill="none"
@@ -37,12 +37,12 @@
                                                         stroke-linejoin="round" />
                                                 </svg>
                                             </a>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                                 <div class="col-xl-7 col-lg-6 col-md-6">
                                     <div class="tp-slider-thumb text-end">
-                                        <img src="{{ asset('storage/' . $bannersHea->anh_banner) }}" width="420px"
+                                        <img src="{{ asset('storage/' . $bannersHea->anh_banner) }}" width="700px"
                                             height="350px" style="object-fit: contain; border-radius: 10%;"
                                             alt="slider-img">
                                     </div>
@@ -69,7 +69,6 @@
             <div class="tp-slider-dot tp-swiper-dot"></div>
         </div>
     </section>
-    {{-- hết slide 1 --}}
 
     {{-- danh mục  --}}
     <section class="tp-product-arrival-area pt-50">
