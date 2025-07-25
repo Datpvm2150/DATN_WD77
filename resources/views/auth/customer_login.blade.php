@@ -149,11 +149,11 @@
 
                                 </div>
                                 <br>
-                                <div class="tp-login-bottom">
+                                {{-- <div class="tp-login-bottom">
                                     <a href="{{ route('customer.auth.google') }}" class="tp-login-btn w-100">
                                         <i class="fab fa-google"></i>  Đăng nhập bằng Google
                                     </a>
-                                </div>
+                                </div> --}}
                             </form>
 
                         </div>
