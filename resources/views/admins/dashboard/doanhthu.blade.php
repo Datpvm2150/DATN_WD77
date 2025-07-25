@@ -24,15 +24,7 @@
                     <option value="year" {{ request('group_by') == 'year' ? 'selected' : '' }}>Năm</option>
                 </select>
             </div>
-            <!-- <div class="col-md-3">
-                <label for="payment_status" class="form-label">Trạng thái thanh toán:</label>
-                <select id="payment_status" name="payment_status" class="form-select">
-                    <option value="">Tất cả</option>
-                    <option value="success" {{ request('payment_status') == 'success' ? 'selected' : '' }}>Thành công</option>
-                    <option value="pending" {{ request('payment_status') == 'pending' ? 'selected' : '' }}>Đang xử lý</option>
-                    <option value="failed" {{ request('payment_status') == 'failed' ? 'selected' : '' }}>Thất bại</option>
-                </select>
-            </div> -->
+
             <div class="col-md-3 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary w-100">Lọc</button>
             </div>
@@ -46,10 +38,7 @@
     </div>
 
 
-    {{-- <!-- Nút xuất dữ liệu -->
-    <!-- <div class="text-end mt-4">
-        <a href="{{ route('admin.export_revenue', request()->all()) }}" class="btn btn-success">Xuất File Excel</a>
-    </div> --> --}}
+
 
 <div class="card shadow p-4 mt-5">
         <h3 class="card-title">Biểu đồ Doanh Thu</h3>
