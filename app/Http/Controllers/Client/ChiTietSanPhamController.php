@@ -127,7 +127,8 @@ foreach ($products as $product) {
             return response()->json([
                 'status' => 'success',
                 'gia_moi' => $bienThe->gia_moi,
-                'gia_cu' => $bienThe->gia_cu
+                'gia_cu' => $bienThe->gia_cu,
+                'so_luong'  => $bienThe->so_luong
             ]);
         } else {
             return response()->json([
