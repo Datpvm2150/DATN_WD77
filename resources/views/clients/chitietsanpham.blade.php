@@ -283,6 +283,7 @@
                                         </div>
                                     </div>
                                     <style>
+                                        
                                         /* Bỏ nút tăng giảm mặc định trên input number */
                                         input[type=number]::-webkit-inner-spin-button,
                                         input[type=number]::-webkit-outer-spin-button {
@@ -441,20 +442,20 @@
                                             const max = parseInt(input.attr('data-max-quantity')) || 1;
                                             let val = parseInt(input.val()) || 1;
 
-                                            // if ($(this).hasClass('tp-cart-plus')) {
-                                            //     console.log(2);
-                                            //     if (val < max) {
-                                            //         val++;
-                                            //     } else {
-                                            //         val = max;
-                                            //     }
-                                            // } else {
-                                            //     if (val > 1) {
-                                            //         val--;
-                                            //     } else {
-                                            //         val = 1;
-                                            //     }
-                                            // }
+                                            if ($(this).hasClass('tp-cart-plus')) {
+                                                console.log(2);
+                                                if (val < max) {
+                                                    val++;
+                                                } else {
+                                                    val = max;
+                                                }
+                                            } else {
+                                                if (val > 1) {
+                                                    val--;
+                                                } else {
+                                                    val = 1;
+                                                }
+                                            }
 
                                             input.val(val);
                                         });

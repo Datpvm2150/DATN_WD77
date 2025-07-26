@@ -39,6 +39,7 @@
 
     <!-- chuyen json len dau -->
     <script src="{{ asset('assets/client/js/vendor/jquery.js') }}"></script>
+    @vite(['resources/js/app.js'])
 
 </head>
 @include('components.chatbox')
@@ -448,23 +449,11 @@
     <footer>
         @include('clients.block.footer')
     </footer>
+
+    @auth
+        @include('components.chat-box')
+    @endauth
     <!-- footer area end -->
-    <!-- <script>
-        var swiper = new Swiper('.tp-slider-active', {
-            loop: true,
-            autoplay: {
-                delay: 3000,
-            },
-            navigation: {
-                nextEl: '.tp-slider-button-next',
-                prevEl: '.tp-slider-button-prev',
-            },
-            pagination: {
-                el: '.tp-swiper-dot',
-                clickable: true,
-            },
-        });
-    </script> -->
 
 
 
@@ -502,7 +491,8 @@
     <script src="{{ asset('assets/client/js/chitietsp.js') }}"></script>
     <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
 
-
+    @stack('scripts')
+    
 </body>
 
 <!-- Mirrored from template.wphix.com/shofy-prv/shofy/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 29 Sep 2024 13:19:32 GMT -->
