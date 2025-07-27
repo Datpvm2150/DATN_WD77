@@ -223,9 +223,10 @@
 
             window.Echo.private(channelName)
                 .listen('.SendMessage', (e) => {
-                    console.log('[Chat] Tin nhắn mới:', e.message);
+                    console.log('[Chat] Tin nhắn mới:',  e.message.sender_id !== {{ auth()->id()}});
 
                     if (e.message && e.message.sender_id !== {{ auth()->id() }}) {
+
                         const messages = document.getElementById('messages');
                         const message = document.createElement('div');
                         message.textContent = `Customer: ${e.message.message}`;

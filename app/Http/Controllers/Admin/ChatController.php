@@ -11,7 +11,9 @@ class ChatController extends Controller
 {
     public function index()
     {
-        $chatRooms = ChatRoom::where('staff_id', Auth::id())->with('customer')->get();
+        $chatRooms = ChatRoom::get();
+
+        
         return view('admins.chat.index', compact('chatRooms'));
     }
 

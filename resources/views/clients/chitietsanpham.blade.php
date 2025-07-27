@@ -258,7 +258,7 @@
                                 <h3 class="tp-product-details-action-title">Chọn số lượng</h3>
                                 <div class="tp-product-details-action-item-wrapper d-flex align-items-center">
 
-                                     <div class="tp-product-details-quantity">
+                                    <div class="tp-product-details-quantity">
                                         <div class="tp-product-quantity mb-15 mr-15">
                                             <span class="tp-cart-minus">
                                                 <svg width="11" height="2" viewBox="0 0 11 2" fill="none"
@@ -268,7 +268,7 @@
                                                 </svg>
                                             </span>
                                             <input class="tp-cart-input text-center" id="so-luong-mua" type="number"
-                                                min="1"  value="1" data-max-quantity="0"
+                                                min="1" value="1" data-max-quantity="0"
                                                 style="-moz-appearance: textfield; appearance: textfield;">
 
                                             <span class="tp-cart-plus">
@@ -285,7 +285,6 @@
 
 
                                     <style>
-
                                         /* Bỏ nút tăng giảm mặc định trên input number */
                                         input[type=number]::-webkit-inner-spin-button,
                                         input[type=number]::-webkit-outer-spin-button {
@@ -299,11 +298,12 @@
                                             appearance: textfield;
                                             /* Chrome/Safari */
                                         }
-                                         .tp-cart-plus.disabled {
-    opacity: 0.5;
-    pointer-events: none;
-    cursor: not-allowed;
-}
+
+                                        .tp-cart-plus.disabled {
+                                            opacity: 0.5;
+                                            pointer-events: none;
+                                            cursor: not-allowed;
+                                        }
                                     </style>
 
 
@@ -543,296 +543,298 @@ function togglePlusButton(input, plusBtn) {
                                     </script> --}}
 
 
-<script>
-let sanPhamId = {{ $sanpham->id }};
-let selectedMauSacId = null;
-let selectedDungLuongId = null;
-let allVariants = [];
+                                    <script>
+                                        let sanPhamId = {{ $sanpham->id }};
+                                        let selectedMauSacId = null;
+                                        let selectedDungLuongId = null;
+                                        let allVariants = [];
 
-document.addEventListener("DOMContentLoaded", function () {
-    fetchAllVariants();
-    setupQuantityEvents();
-});
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            fetchAllVariants();
+                                            setupQuantityEvents();
+                                        });
 
-function fetchAllVariants() {
-    $.ajax({
-        url: "{{ route('sanpham.get_all_variants') }}",
-        method: "GET",
-        data: {
-            san_pham_id: sanPhamId
-        },
-        success: function(response) {
-            allVariants = response;
-            setupVariantEvents();
-        },
-        error: function() {
-            alert("Không thể tải danh sách biến thể.");
-        }
-    });
-}
+                                        function fetchAllVariants() {
+                                            $.ajax({
+                                                url: "{{ route('sanpham.get_all_variants') }}",
+                                                method: "GET",
+                                                data: {
+                                                    san_pham_id: sanPhamId
+                                                },
+                                                success: function(response) {
+                                                    allVariants = response;
+                                                    setupVariantEvents();
+                                                },
+                                                error: function() {
+                                                    alert("Không thể tải danh sách biến thể.");
+                                                }
+                                            });
+                                        }
 
-function setupVariantEvents() {
-    document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            if (this.classList.contains('disabled')) return;
+                                        function setupVariantEvents() {
+                                            document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
+                                                button.addEventListener('click', function() {
+                                                    if (this.classList.contains('disabled')) return;
 
-            const id = this.getAttribute('data-mau-sac-id');
+                                                    const id = this.getAttribute('data-mau-sac-id');
 
-            if (selectedMauSacId === id) {
-                selectedMauSacId = null;
-                this.classList.remove('active');
-            } else {
-                selectedMauSacId = id;
-                document.querySelectorAll('.tp-color-variation-btn').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            }
+                                                    if (selectedMauSacId === id) {
+                                                        selectedMauSacId = null;
+                                                        this.classList.remove('active');
+                                                    } else {
+                                                        selectedMauSacId = id;
+                                                        document.querySelectorAll('.tp-color-variation-btn').forEach(btn => btn.classList
+                                                            .remove('active'));
+                                                        this.classList.add('active');
+                                                    }
 
-            updateAvailableOptions();
-            fetchPrice();
-        });
-    });
+                                                    updateAvailableOptions();
+                                                    fetchPrice();
+                                                });
+                                            });
 
-    document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
-        button.addEventListener('click', function() {
-            if (this.classList.contains('disabled')) return;
+                                            document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
+                                                button.addEventListener('click', function() {
+                                                    if (this.classList.contains('disabled')) return;
 
-            const id = this.getAttribute('data-dung-luong-id');
+                                                    const id = this.getAttribute('data-dung-luong-id');
 
-            if (selectedDungLuongId === id) {
-                selectedDungLuongId = null;
-                this.classList.remove('active');
-            } else {
-                selectedDungLuongId = id;
-                document.querySelectorAll('.tp-size-variation-btn').forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            }
+                                                    if (selectedDungLuongId === id) {
+                                                        selectedDungLuongId = null;
+                                                        this.classList.remove('active');
+                                                    } else {
+                                                        selectedDungLuongId = id;
+                                                        document.querySelectorAll('.tp-size-variation-btn').forEach(btn => btn.classList
+                                                            .remove('active'));
+                                                        this.classList.add('active');
+                                                    }
 
-            updateAvailableOptions();
-            fetchPrice();
-        });
-    });
-}
+                                                    updateAvailableOptions();
+                                                    fetchPrice();
+                                                });
+                                            });
+                                        }
 
-function updateAvailableOptions() {
-    document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
-        const dungLuongId = button.getAttribute('data-dung-luong-id');
-        const exists = allVariants.some(variant =>
-            (!selectedMauSacId || variant.mau_sac_id == selectedMauSacId) &&
-            variant.dung_luong_id == dungLuongId
-        );
-        button.classList.toggle('disabled', !exists);
-    });
+                                        function updateAvailableOptions() {
+                                            document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
+                                                const dungLuongId = button.getAttribute('data-dung-luong-id');
+                                                const exists = allVariants.some(variant =>
+                                                    (!selectedMauSacId || variant.mau_sac_id == selectedMauSacId) &&
+                                                    variant.dung_luong_id == dungLuongId
+                                                );
+                                                button.classList.toggle('disabled', !exists);
+                                            });
 
-    document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
-        const mauSacId = button.getAttribute('data-mau-sac-id');
-        const exists = allVariants.some(variant =>
-            (!selectedDungLuongId || variant.dung_luong_id == selectedDungLuongId) &&
-            variant.mau_sac_id == mauSacId
-        );
-        button.classList.toggle('disabled', !exists);
-    });
-}
+                                            document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
+                                                const mauSacId = button.getAttribute('data-mau-sac-id');
+                                                const exists = allVariants.some(variant =>
+                                                    (!selectedDungLuongId || variant.dung_luong_id == selectedDungLuongId) &&
+                                                    variant.mau_sac_id == mauSacId
+                                                );
+                                                button.classList.toggle('disabled', !exists);
+                                            });
+                                        }
 
-function fetchPrice() {
-    if (selectedMauSacId && selectedDungLuongId) {
-        $.ajax({
-            url: '{{ route('sanpham.lay_gia_bien_the') }}',
-            method: 'GET',
-            data: {
-                san_pham_id: sanPhamId,
-                mau_sac_id: selectedMauSacId,
-                dung_luong_id: selectedDungLuongId
-            },
-            success: function(res) {
-                if (res.status === 'success') {
-                    const format = (num) => new Intl.NumberFormat('vi-VN', {
-                        style: 'currency',
-                        currency: 'VND'
-                    }).format(num);
+                                        function fetchPrice() {
+                                            if (selectedMauSacId && selectedDungLuongId) {
+                                                $.ajax({
+                                                    url: '{{ route('sanpham.lay_gia_bien_the') }}',
+                                                    method: 'GET',
+                                                    data: {
+                                                        san_pham_id: sanPhamId,
+                                                        mau_sac_id: selectedMauSacId,
+                                                        dung_luong_id: selectedDungLuongId
+                                                    },
+                                                    success: function(res) {
+                                                        if (res.status === 'success') {
+                                                            const format = (num) => new Intl.NumberFormat('vi-VN', {
+                                                                style: 'currency',
+                                                                currency: 'VND'
+                                                            }).format(num);
 
-                    if (res.gia_moi < res.gia_cu) {
-                        $('#new-price').text(format(res.gia_moi));
-                        $('#old-price').text(format(res.gia_cu)).show();
-                    } else {
-                        $('#new-price').text(format(res.gia_cu));
-                        $('#old-price').hide();
-                    }
+                                                            if (res.gia_moi < res.gia_cu) {
+                                                                $('#new-price').text(format(res.gia_moi));
+                                                                $('#old-price').text(format(res.gia_cu)).show();
+                                                            } else {
+                                                                $('#new-price').text(format(res.gia_cu));
+                                                                $('#old-price').hide();
+                                                            }
 
-                    if (typeof res.so_luong !== 'undefined') {
-                        $('#available-quantity').text('Số lượng còn lại: ' + res.so_luong);
-                        capNhatSoLuongTonKho(res.so_luong);
-                    } else {
-                        $('#available-quantity').text('Số lượng còn lại: Không xác định');
-                        capNhatSoLuongTonKho(1);
-                    }
-                } else {
-                    alert(res.message);
-                }
-            },
-            error: function() {
-                alert('Lỗi khi gọi API.');
-            }
-        });
-    }
-}
+                                                            if (typeof res.so_luong !== 'undefined') {
+                                                                $('#available-quantity').text('Số lượng còn lại: ' + res.so_luong);
+                                                                capNhatSoLuongTonKho(res.so_luong);
+                                                            } else {
+                                                                $('#available-quantity').text('Số lượng còn lại: Không xác định');
+                                                                capNhatSoLuongTonKho(1);
+                                                            }
+                                                        } else {
+                                                            alert(res.message);
+                                                        }
+                                                    },
+                                                    error: function() {
+                                                        alert('Lỗi khi gọi API.');
+                                                    }
+                                                });
+                                            }
+                                        }
 
-function capNhatSoLuongTonKho(so_luong) {
-    const input = document.querySelector('#so-luong-mua');
-    const plusBtn = document.querySelector('.tp-cart-plus');
-    input.value = 1;
-    input.setAttribute('data-max-quantity', so_luong);
-    togglePlusButton(input, plusBtn);
-}
+                                        function capNhatSoLuongTonKho(so_luong) {
+                                            const input = document.querySelector('#so-luong-mua');
+                                            const plusBtn = document.querySelector('.tp-cart-plus');
+                                            input.value = 1;
+                                            input.setAttribute('data-max-quantity', so_luong);
+                                            togglePlusButton(input, plusBtn);
+                                        }
 
-// function setupQuantityEvents() {
-//     const input = document.querySelector('#so-luong-mua');
-//     const plusBtn = document.querySelector('.tp-cart-plus');
-//     const minusBtn = document.querySelector('.tp-cart-minus');
+                                        // function setupQuantityEvents() {
+                                        //     const input = document.querySelector('#so-luong-mua');
+                                        //     const plusBtn = document.querySelector('.tp-cart-plus');
+                                        //     const minusBtn = document.querySelector('.tp-cart-minus');
 
-//     // ✔️ Tăng
-//     plusBtn.addEventListener("click", function (e) {
-//         e.preventDefault();
-//         let current = parseInt(input.value) || 1;
-//         let max = parseInt(input.dataset.maxQuantity) || 1;
+                                        //     // ✔️ Tăng
+                                        //     plusBtn.addEventListener("click", function (e) {
+                                        //         e.preventDefault();
+                                        //         let current = parseInt(input.value) || 1;
+                                        //         let max = parseInt(input.dataset.maxQuantity) || 1;
 
-//         if (current >= max) {
-//             alert("Đã đạt số lượng tồn kho tối đa.");
-//             return;
-//         }
+                                        //         if (current >= max) {
+                                        //             alert("Đã đạt số lượng tồn kho tối đa.");
+                                        //             return;
+                                        //         }
 
-//         input.value = current + 1;
-//         togglePlusButton(input, plusBtn);
-//     });
+                                        //         input.value = current + 1;
+                                        //         togglePlusButton(input, plusBtn);
+                                        //     });
 
-//     // ✔️ Giảm
-//     minusBtn.addEventListener("click", function (e) {
-//         e.preventDefault();
-//         let current = parseInt(input.value) || 1;
+                                        //     // ✔️ Giảm
+                                        //     minusBtn.addEventListener("click", function (e) {
+                                        //         e.preventDefault();
+                                        //         let current = parseInt(input.value) || 1;
 
-//         if (current > 1) {
-//             input.value = current - 1;
-//         }
+                                        //         if (current > 1) {
+                                        //             input.value = current - 1;
+                                        //         }
 
-//         togglePlusButton(input, plusBtn);
-//     });
+                                        //         togglePlusButton(input, plusBtn);
+                                        //     });
 
-//     // ✔️ Nhập tay
-//     input.addEventListener("input", function () {
-//         let max = parseInt(input.dataset.maxQuantity) || 1;
-//         let val = parseInt(input.value.replace(/[^\d]/g, '')) || 1;
+                                        //     // ✔️ Nhập tay
+                                        //     input.addEventListener("input", function () {
+                                        //         let max = parseInt(input.dataset.maxQuantity) || 1;
+                                        //         let val = parseInt(input.value.replace(/[^\d]/g, '')) || 1;
 
-//         if (val < 1) val = 1;
-//         if (val > max) val = max;
+                                        //         if (val < 1) val = 1;
+                                        //         if (val > max) val = max;
 
-//         input.value = val;
-//         togglePlusButton(input, plusBtn);
-//     });
+                                        //         input.value = val;
+                                        //         togglePlusButton(input, plusBtn);
+                                        //     });
 
-//     // ✔️ Rời khỏi input
-//     input.addEventListener("blur", function () {
-//         let val = parseInt(input.value) || 1;
-//         let max = parseInt(input.dataset.maxQuantity) || 1;
+                                        //     // ✔️ Rời khỏi input
+                                        //     input.addEventListener("blur", function () {
+                                        //         let val = parseInt(input.value) || 1;
+                                        //         let max = parseInt(input.dataset.maxQuantity) || 1;
 
-//         if (val < 1) val = 1;
-//         if (val > max) val = max;
+                                        //         if (val < 1) val = 1;
+                                        //         if (val > max) val = max;
 
-//         input.value = val;
-//         togglePlusButton(input, plusBtn);
-//     });
+                                        //         input.value = val;
+                                        //         togglePlusButton(input, plusBtn);
+                                        //     });
 
-//     // ✔️ Gọi ngay khi load
-//     togglePlusButton(input, plusBtn);
-// }
+                                        //     // ✔️ Gọi ngay khi load
+                                        //     togglePlusButton(input, plusBtn);
+                                        // }
 
-function setupQuantityEvents() {
-    let input = document.querySelector('#so-luong-mua');
-    let plusBtn = document.querySelector('.tp-cart-plus');
-    let minusBtn = document.querySelector('.tp-cart-minus');
+                                        function setupQuantityEvents() {
+                                            let input = document.querySelector('#so-luong-mua');
+                                            let plusBtn = document.querySelector('.tp-cart-plus');
+                                            let minusBtn = document.querySelector('.tp-cart-minus');
 
-    // 🔥 Clone node để gỡ toàn bộ sự kiện cũ (dứt điểm)
-    const newPlusBtn = plusBtn.cloneNode(true);
-    plusBtn.parentNode.replaceChild(newPlusBtn, plusBtn);
-    plusBtn = newPlusBtn;
+                                            // 🔥 Clone node để gỡ toàn bộ sự kiện cũ (dứt điểm)
+                                            const newPlusBtn = plusBtn.cloneNode(true);
+                                            plusBtn.parentNode.replaceChild(newPlusBtn, plusBtn);
+                                            plusBtn = newPlusBtn;
 
-    const newMinusBtn = minusBtn.cloneNode(true);
-    minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
-    minusBtn = newMinusBtn;
+                                            const newMinusBtn = minusBtn.cloneNode(true);
+                                            minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
+                                            minusBtn = newMinusBtn;
 
-    // ✔️ Tăng
-    plusBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        let current = parseInt(input.value) || 1;
-        let max = parseInt(input.dataset.maxQuantity) || 1;
+                                            // ✔️ Tăng
+                                            plusBtn.addEventListener("click", function(e) {
+                                                e.preventDefault();
+                                                let current = parseInt(input.value) || 1;
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
 
-        if (current >= max) {
-            alert("Đã đạt số lượng tồn kho tối đa.");
-            return;
-        }
+                                                if (current >= max) {
+                                                    alert("Đã đạt số lượng tồn kho tối đa.");
+                                                    return;
+                                                }
 
-        input.value = current + 1;
-        togglePlusButton(input, plusBtn);
-    });
+                                                input.value = current + 1;
+                                                togglePlusButton(input, plusBtn);
+                                            });
 
-    // ✔️ Giảm
-    minusBtn.addEventListener("click", function (e) {
-        e.preventDefault();
-        let current = parseInt(input.value) || 1;
+                                            // ✔️ Giảm
+                                            minusBtn.addEventListener("click", function(e) {
+                                                e.preventDefault();
+                                                let current = parseInt(input.value) || 1;
 
-        if (current > 1) {
-            input.value = current - 1;
-        }
+                                                if (current > 1) {
+                                                    input.value = current - 1;
+                                                }
 
-        togglePlusButton(input, plusBtn);
-    });
+                                                togglePlusButton(input, plusBtn);
+                                            });
 
-    input.addEventListener("input", function () {
-    let raw = input.value.replace(/[^\d]/g, ''); // chỉ giữ số
-    let max = parseInt(input.dataset.maxQuantity) || 1;
+                                            input.addEventListener("input", function() {
+                                                let raw = input.value.replace(/[^\d]/g, ''); // chỉ giữ số
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
 
-    if (raw === '') {
-        input.value = '';
-        return;
-    }
+                                                if (raw === '') {
+                                                    input.value = '';
+                                                    return;
+                                                }
 
-    let val = parseInt(raw);
-    if (val < 1) {
-        alert("Số lượng tối thiểu là 1.");
-        val = 1;
-    } else if (val > max) {
-        alert("Vượt quá số lượng tồn kho (" + max + ").");
-        val = max;
-    }
+                                                let val = parseInt(raw);
+                                                if (val < 1) {
+                                                    alert("Số lượng tối thiểu là 1.");
+                                                    val = 1;
+                                                } else if (val > max) {
+                                                    alert("Vượt quá số lượng tồn kho (" + max + ").");
+                                                    val = max;
+                                                }
 
-    input.value = val;
-    togglePlusButton(input, plusBtn); // cập nhật trạng thái nút +
-});
+                                                input.value = val;
+                                                togglePlusButton(input, plusBtn); // cập nhật trạng thái nút +
+                                            });
 
-    // ✔️ Blur
-    input.addEventListener("blur", function () {
-        let val = parseInt(input.value) || 1;
-        let max = parseInt(input.dataset.maxQuantity) || 1;
+                                            // ✔️ Blur
+                                            input.addEventListener("blur", function() {
+                                                let val = parseInt(input.value) || 1;
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
 
-        if (val < 1) val = 1;
-        if (val > max) val = max;
+                                                if (val < 1) val = 1;
+                                                if (val > max) val = max;
 
-        input.value = val;
-        togglePlusButton(input, plusBtn);
-    });
+                                                input.value = val;
+                                                togglePlusButton(input, plusBtn);
+                                            });
 
-    togglePlusButton(input, plusBtn);
-}
+                                            togglePlusButton(input, plusBtn);
+                                        }
 
-function togglePlusButton(input, plusBtn) {
-    const current = parseInt(input.value) || 1;
-    const max = parseInt(input.dataset.maxQuantity) || 1;
+                                        function togglePlusButton(input, plusBtn) {
+                                            const current = parseInt(input.value) || 1;
+                                            const max = parseInt(input.dataset.maxQuantity) || 1;
 
-    if (current >= max) {
-        plusBtn.classList.add('disabled');
-    } else {
-        plusBtn.classList.remove('disabled');
-    }
-}
-</script>
+                                            if (current >= max) {
+                                                plusBtn.classList.add('disabled');
+                                            } else {
+                                                plusBtn.classList.remove('disabled');
+                                            }
+                                        }
+                                    </script>
 
 
                                     <div class="tp-product-details-add-to-cart mb-15 w-100">
@@ -1338,18 +1340,18 @@ function togglePlusButton(input, plusBtn) {
                                                                                             @endfor
                                                                                         </div>
                                                                                         <!-- <div>
-                                                                                        <span>Phân loại hàng:</span>
-                                                                                        @if ($danhgia->bienTheDaMua->isNotEmpty())
+                                                                                            <span>Phân loại hàng:</span>
+                                                                                            @if ($danhgia->bienTheDaMua->isNotEmpty())
     @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
     {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                                                                                                @if ($index < $danhgia->bienTheDaMua->count() - 1)
+                                                                                                    @if ($index < $danhgia->bienTheDaMua->count() - 1)
     ,
     @endif
     @endforeach
 @else
     <p>Không có biến thể nào được mua từ sản phẩm này.</p>
     @endif
-                                                                                    </div> -->
+                                                                                        </div> -->
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>
