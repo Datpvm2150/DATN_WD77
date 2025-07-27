@@ -44,6 +44,7 @@
 </head>
 @include('components.chatbox')
 @stack('scripts')
+
 <body>
     <!--[if lte IE 9]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
@@ -492,7 +493,7 @@
     <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
 
     @stack('scripts')
-    
+
 </body>
 
 <!-- Mirrored from template.wphix.com/shofy-prv/shofy/index.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 29 Sep 2024 13:19:32 GMT -->
