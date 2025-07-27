@@ -252,6 +252,21 @@
                         </ul>
                     </div>
                 </li>
+                <li>
+                    <a href="#chat" data-bs-toggle="collapse">
+                        <i class="fa fa-comments"></i>
+                        <span> Tin nhắn </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="chat">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.chat.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
 
 
             </ul>
