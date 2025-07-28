@@ -118,14 +118,7 @@ class StaffDashboardController extends Controller
 
         $labelsDanhMuc = $danhMucSanPham->pluck('ten_danh_muc')->toArray();
         $dataDanhMuc = $danhMucSanPham->pluck('so_luong_san_pham')->toArray();
-        // 11. Thống kê chương trình khuyến mãi
-        $khuyenMai = KhuyenMai::all();
-
-        $so_luong_khuyen_mai_hoat_dong = $khuyenMai->where('trang_thai', 1)->count();
-        $so_luong_khuyen_mai_sap_het_han = $khuyenMai->where('ngay_ket_thuc', '<=', Carbon::now()->addDays(7))->count();
-
-        $labelsKhuyenMai = ['Đang hoạt động', 'Sắp hết hạn'];
-        $dataKhuyenMai = [$so_luong_khuyen_mai_hoat_dong, $so_luong_khuyen_mai_sap_het_han];
+       
         // Lấy danh sách sản phẩm và số lượng tồn kho từ bảng biến thể
         $products = DB::table('bien_the_san_phams')
             ->join('san_phams', 'bien_the_san_phams.san_pham_id', '=', 'san_phams.id')

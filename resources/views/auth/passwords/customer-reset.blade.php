@@ -8,9 +8,9 @@
                     <div class="breadcrumb__content p-relative z-index-1">
                         <h3 class="breadcrumb__title">Xin chào bạn !</h3>
                         {{-- <div class="breadcrumb__list">
-                   <span><a href="#">Ho</a></span>
-                   <span>My account</span>
-                </div> --}}
+                            <span><a href="#">Ho</a></span>
+                            <span>My account</span>
+                        </div> --}}
                     </div>
                 </div>
             </div>
@@ -32,27 +32,28 @@
                     <div class="tp-login-wrapper">
                         <div class="tp-login-top text-center mb-30">
                             <h3 class="tp-login-title">Quên mật khẩu</h3>
-                            <p>Quay lại đăng nhập? <span><a href="{{ route('customer.login.post') }}"> Đăng nhập tài
+                            <p>quay lại đăng nhập? <span><a href="{{ route('customer.login.post') }}"> Đăng nhập tài
                                         khoản</a></span></p>
                         </div>
                         <div class="tp-login-option">
                             <div class="tp-login-social mb-10 d-flex flex-wrap align-items-center justify-content-center">
                                 {{-- <div class="tp-login-option-item has-google">
-                         <a href="#">
-                            <img src="{{ asset('assets/client/img/icon/login/google.svg') }}" alt="">
-                            Sign in with google
-                         </a>
-                      </div>
-                      <div class="tp-login-option-item">
-                         <a href="#">
-                            <img src="{{ asset('assets/client/img/icon/login/facebook.svg') }}" alt="">
-                         </a>
-                      </div>
-                      <div class="tp-login-option-item">
-                         <a href="#">
-                            <img class="apple" src="{{ asset('assets/client/img/icon/login/apple.svg') }}" alt="">
-                         </a>
-                      </div> --}}
+                                    <a href="#">
+                                        <img src="{{ asset('assets/client/img/icon/login/google.svg') }}" alt="">
+                                        Sign in with google
+                                    </a>
+                                </div>
+                                <div class="tp-login-option-item">
+                                    <a href="#">
+                                        <img src="{{ asset('assets/client/img/icon/login/facebook.svg') }}" alt="">
+                                    </a>
+                                </div>
+                                <div class="tp-login-option-item">
+                                    <a href="#">
+                                        <img class="apple" src="{{ asset('assets/client/img/icon/login/apple.svg') }}"
+                                            alt="">
+                                    </a>
+                                </div> --}}
                             </div>
                             <div class="tp-login-mail text-center mb-40">
                                 <p>Quên mật khẩu <a href="#"></a></p>
@@ -78,7 +79,9 @@
                                                 type="email" name="email" required placeholder="Nhập email của bạn"
                                                 value="{{ old('email') }}">
                                             @error('email')
-                                                <<div class="text-danger">{{ $message }}</div>
+                                                <div class="invalid-feedback">
+                                                    {{ $message }}
+                                                </div>
                                             @enderror
                                         </div>
                                         <div class="tp-login-input-title">
@@ -143,15 +146,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div class="tp-login-suggetions d-sm-flex align-items-center justify-content-between mb-20">
-                      <div class="tp-login-remeber">
-                         <input id="remeber" type="checkbox">
-                         <label for="remeber">Nhớ tài khoản</label>
-                      </div>
-                      <div class="tp-login-forgot">
-                         <a href="{{route('customer.forgotPassword')}}">Quên mật khẩu</a>
-                      </div>
-                   </div> --}}
+                                {{-- <div
+                                    class="tp-login-suggetions d-sm-flex align-items-center justify-content-between mb-20">
+                                    <div class="tp-login-remeber">
+                                        <input id="remeber" type="checkbox">
+                                        <label for="remeber">Nhớ tài khoản</label>
+                                    </div>
+                                    <div class="tp-login-forgot">
+                                        <a href="{{route('customer.forgotPassword')}}">Quên mật khẩu</a>
+                                    </div>
+                                </div> --}}
                                 <div class="tp-login-bottom">
                                     <button type="submit" class="tp-login-btn w-100">Thay đổi mật khẩu</button>
 

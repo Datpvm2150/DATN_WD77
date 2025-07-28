@@ -1,5 +1,5 @@
-<h2>Chào {{ auth()->user()->ten ?? 'bạn' }},</h2>
-<p>Bạn đã nhận được mã giảm giá vì đơn hàng > 1 triệu:</p>
-<p><strong>Mã:</strong> {{ $voucher->ma_khuyen_mai }}</p>
-<p><strong>Giảm:</strong> {{ $voucher->gia_tri }}%</p>
-<p><strong>Hết hạn:</strong> {{ \Carbon\Carbon::parse($voucher->ngay_ket_thuc)->format('d/m/Y') }}</p>
+<p>Chúc mừng bạn đã nhận được mã giảm giá từ hệ thống:</p>
+<p><strong>Mã giảm giá: {{ $voucherCode }}</strong></p>
+<p>Giảm {{ $phanTram }}%, tối đa {{ number_format($giamToiDa) }}đ.</p>
+<p>Có hiệu lực đến ngày {{ $ngayHetHan }}</p>
+<p>Chúc bạn mua sắm vui vẻ!</p>

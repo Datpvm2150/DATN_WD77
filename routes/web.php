@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ChatBotController;
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\Admin\TagController;
@@ -53,7 +55,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 });
-
+// Nhật ký ChatBot
+// Route::prefix('chat-logs')->name('chatlogs.')->group(function () {
+//     Route::get('/', [ChatLogController::class, 'index'])->name('index');
+// });
+// Route::middleware('auth')->group(function () {
+//     Route::post('/chatbot/gpt', [ChatBotController::class, 'chatWithGpt'])->name('chatbot.gpt');
+//     Route::get('/chatbot/history/{session_id}', [ChatBotController::class, 'getChatHistory']);
+// });
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // San phẩm
     Route::prefix('sanphams')->name('sanphams.')->group(function () {
@@ -192,6 +201,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/form-phan-hoi/{id}', [AdminLienHeController::class, 'showReplyForm'])->name('form.reply');
         Route::get('/phan-hoi/cap-nhat/{id}/{trang_thai_phan_hoi}', [AdminLienHeController::class, 'capNhatTrangThai'])->name('phan_hoi.cap_nhat');
     });
+    // Chat
+    Route::prefix('chat')->name('chat.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('index');
+        Route::get('/{id}/messages', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
+        Route::post('/{id}/send', [App\Http\Controllers\Admin\ChatController::class, 'send'])->name('send');
+    });
 });
 
 //tai khoan admin
@@ -260,6 +275,8 @@ Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store')
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
 Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
+Route::get('/404', [TrangChuController::class, 'index'])->name('error404');
+Route::get('/500', [TrangChuController::class, 'index'])->name('error500');
 
 // giỏ hàng
 Route::get('/Cart-Index', [CartController::class, 'index'])->name('cart.index');
@@ -296,6 +313,7 @@ Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->n
 Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
 Route::get('/sanpham/lay-gia-bien-the', [ChiTietSanPhamController::class, 'layGiaBienThe'])->name('sanpham.lay_gia_bien_the');
 Route::get('/get-so-luong-bien-the', [ChiTietSanPhamController::class, 'getSoLuongBienThe'])->name('sanpham.get_so_luong_bien_the');
+Route::get('/sanpham/get-all-variants', [ChiTietSanPhamController::class, 'getAllVariants'])->name('sanpham.get_all_variants');
 Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'reply'])->name('admin.danhgia.reply');
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
 
@@ -307,3 +325,7 @@ Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name(
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
+
+// chat
+
+Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');

@@ -1,15 +1,17 @@
 <?php
 namespace App\Models;
+
 use App\Models\SanPham;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable implements MustVerifyEmail
 {
-    use HasFactory, Notifiable, SoftDeletes;
+    use HasFactory, Notifiable, SoftDeletes, HasRoles;
 
     protected $fillable = [
         'ten',
@@ -57,10 +59,14 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(lien_hes::class);
     }
+
     public function sanPhamYeuThichs()
     {
         return $this->belongsToMany(SanPham::class, 'yeu_thichs', 'user_id', 'san_pham_id');
     }
+
+ 
+
     public function khuyenMais()
     {
         return $this->hasMany(KhuyenMai::class);

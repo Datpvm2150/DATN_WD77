@@ -7,12 +7,13 @@
 
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>LaptopStore - Hệ thống bán hàng điện thoại</title>
+    <title>CTStore - Hệ thống bán hàng máy tính</title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
 
     <!-- Place favicon.ico in the root directory -->
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/client/img/logo/favicon.png') }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ asset('assets/admin/images/logo-ctstore.png') }}">
 
 
     <!-- CSS here -->
@@ -38,8 +39,11 @@
 
     <!-- chuyen json len dau -->
     <script src="{{ asset('assets/client/js/vendor/jquery.js') }}"></script>
+    @vite(['resources/js/app.js'])
 
 </head>
+@include('components.chatbox')
+@stack('scripts')
 
 <body>
     <!--[if lte IE 9]>
@@ -104,7 +108,7 @@
                 <div class="offcanvas__top mb-70 d-flex justify-content-between align-items-center">
                     <div class="offcanvas__logo logo">
                         <a href="index.html">
-                            <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo"
+                            <img src="{{ asset('assets/admin/images/logo-ctstore.png') }}" alt="logo"
                                 style="width:150px; height:40px;">
                         </a>
                     </div>
@@ -446,23 +450,11 @@
     <footer>
         @include('clients.block.footer')
     </footer>
+
+    @auth
+        @include('components.chat-box')
+    @endauth
     <!-- footer area end -->
-    <!-- <script>
-        var swiper = new Swiper('.tp-slider-active', {
-            loop: true,
-            autoplay: {
-                delay: 3000,
-            },
-            navigation: {
-                nextEl: '.tp-slider-button-next',
-                prevEl: '.tp-slider-button-prev',
-            },
-            pagination: {
-                el: '.tp-swiper-dot',
-                clickable: true,
-            },
-        });
-    </script> -->
 
 
 
@@ -500,6 +492,7 @@
     <script src="{{ asset('assets/client/js/chitietsp.js') }}"></script>
     <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
 
+    @stack('scripts')
 
 </body>
 

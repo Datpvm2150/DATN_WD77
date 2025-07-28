@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;;
 
 use App\Services\OrderService;
-use App\Cart;   
+use App\Cart;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\VNPayController;

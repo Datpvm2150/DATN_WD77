@@ -5,21 +5,9 @@
         <div id="sidebar-menu">
             <!-- Logo Box -->
             <div class="logo-box">
-                <a class='logo logo-light' href='index.html'>
-                    <span class="logo-sm">
-                        <img src="{{ asset('assets/admin/images/logo-sm.png') }}" alt="" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="{{ asset('assets/admin/images/logo-light.png') }}" alt="" height="24">
-                    </span>
-                </a>
-                <a class='logo logo-dark' href='index.html'>
-                    <span class="logo-sm">
-                        <img src="{{ asset('assets/admin/images/logo-sm.png') }}" alt="" height="22">
-                    </span>
-                    <span class="logo-lg">
-                        <img src="{{ asset('assets/admin/images/logo-dark.png') }}" alt="" height="24">
-                    </span>
+                <a href="index.html">
+                    <img src="{{ asset('assets/admin/images/logo-ctstore.png') }}" alt="logo"
+                        style="width:160px; height:70px;">
                 </a>
             </div>
             <!-- End Logo Box -->
@@ -259,6 +247,21 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link' href="{{ route('admin.lienhes.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <a href="#chat" data-bs-toggle="collapse">
+                        <i class="fa fa-comments"></i>
+                        <span> Tin nhắn </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="chat">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.chat.index') }}">Danh sách</a>
                             </li>
 
                         </ul>

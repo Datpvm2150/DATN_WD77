@@ -42,7 +42,21 @@
                                         data-bs-target="#nav-lienhe" type="button" role="tab"
                                         aria-controls="nav-lienhe" aria-selected="false"><span><i
                                                 class="fas fa-envelope"></i></span>Hòm thư phản hồi</button>
+                                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-discount" type="button" role="tab"
+                                        aria-controls="nav-discount" aria-selected="false"><span><i
+                                                class="fa fa-ticket"></i></span>Mã khuyến mãi cá nhân</button>
                                     <span id="marker-vertical" class="tp-tab-line d-none d-sm-inline-block"></span>
+
+                                    {{-- Nút quay lại trang Admin --}}
+                                    @auth
+                                        @if(Auth::user() && Auth::user()->vai_tro === 'admin')
+                                            <a href="{{ route('admin.dashboard') }}" class="nav-link">
+                                                <span><i class="fa-solid fa-user-gear"></i></span>Về trang Admin
+                                            </a>
+                                            <span id="marker-vertical" class="tp-tab-line d-none d-sm-inline-block"></span>
+                                        @endif
+                                    @endauth
                                 </div>
                             </nav>
                         </div>
@@ -91,6 +105,21 @@
                                         </div>
                                         <div class="profile__main-info">
                                             <div class="row gx-3">
+                                                {{-- <div class="col-md-3 col-sm-6">
+                                                    <div class="profile__main-info-item">
+                                                        <div class="profile__main-info-icon">
+                                                            <span>
+                                                                <span class="profile-icon-count profile-download">2</span>
+                                                                <svg enable-background="new 0 0 512 512"
+                                                                    viewBox="0 0 512 512">
+                                                                    <path
+                                                                        d="m334.52 286.41c3.21 3.21 3.21 8.42 0 11.63l-71.73 71.73c-1.48 2.16-3.97 3.59-6.79 3.59-.03 0-.07 0-.1 0s-.07 0-.1 0c-2.11 0-4.21-.8-5.82-2.41l-72.5-72.5c-3.21-3.21-3.21-8.42 0-11.63s8.42-3.21 11.63 0l58.66 58.66v-198.62c0-4.54 3.68-8.23 8.23-8.23 4.54 0 8.23 3.68 8.23 8.23v198.21l58.66-58.66c3.21-3.21 8.42-3.21 11.63 0zm117.29-226.22c39.34 38.21 58.47 100.39 60.19 195.66v.3c-1.72 95.28-20.85 157.46-60.19 195.66-38.21 39.34-100.39 58.47-195.66 60.19-.05 0-.1 0-.15 0s-.1 0-.15 0c-95.28-1.72-157.46-20.85-195.66-60.19-39.34-38.21-58.47-100.38-60.19-195.66 0-.1 0-.2 0-.3 1.72-95.28 20.85-157.46 60.19-195.66 38.21-39.34 100.39-58.47 195.66-60.19h.3c95.27 1.72 157.45 20.85 195.66 60.19zm43.73 195.81c-1.65-90.63-19.22-149.13-55.28-184.09-.06-.06-.12-.12-.18-.18-34.95-36.06-93.45-53.62-184.08-55.27-90.63 1.65-149.13 19.22-184.09 55.28-.06.06-.12.12-.18.18-36.06 34.95-53.62 93.44-55.27 184.08 1.65 90.63 19.22 149.13 55.28 184.09l.18.18c34.95 36.06 93.45 53.62 184.09 55.28 90.63-1.65 149.13-19.22 184.09-55.28l.18-.18c36.04-34.96 53.61-93.45 55.26-184.09z" />
+                                                                </svg>
+                                                            </span>
+                                                        </div>
+                                                        <h4 class="profile__main-info-title">Downlaods</h4>
+                                                    </div>
+                                                </div> --}}
                                                 <div class="col-md-3 col-sm-6">
                                                     <div class="profile__main-info-item">
                                                         <div class="profile__main-info-icon">
@@ -136,7 +165,7 @@
                                                                         {{ Auth::user()->sanPhamYeuThichs()->count() }}
                                                                     @endif
                                                                 </span>
-                                                                <svg viewBox="0 -20 480 480"
+                                                                <svg viewBox="0 0 480 480"
                                                                     xmlns="http://www.w3.org/2000/svg">
                                                                     <path
                                                                         d="m348 0c-43 .0664062-83.28125 21.039062-108 56.222656-24.71875-35.183594-65-56.1562498-108-56.222656-70.320312 0-132 65.425781-132 140 0 72.679688 41.039062 147.535156 118.6875 216.480469 35.976562 31.882812 75.441406 59.597656 117.640625 82.625 2.304687 1.1875 5.039063 1.1875 7.34375 0 42.183594-23.027344 81.636719-50.746094 117.601563-82.625 77.6875-68.945313 118.726562-143.800781 118.726562-216.480469 0-74.574219-61.679688-140-132-140zm-108 422.902344c-29.382812-16.214844-224-129.496094-224-282.902344 0-66.054688 54.199219-124 116-124 41.867188.074219 80.460938 22.660156 101.03125 59.128906 1.539062 2.351563 4.160156 3.765625 6.96875 3.765625s5.429688-1.414062 6.96875-3.765625c20.570312-36.46875 59.164062-59.054687 101.03125-59.128906 61.800781 0 116 57.945312 116 124 0 153.40625-194.617188 266.6875-224 282.902344zm0 0" />
@@ -459,6 +488,100 @@
                                         @endforeach
                                     </div>
                                 </div>
+                                
+                                <!-- Mã khuyến mãi cá nhân -->
+                                <div class="tab-pane fade" id="nav-discount" role="tabpanel" aria-labelledby="nav-discount-tab">
+                                    <div class="profile__discount">
+                                        <h3 class="profile__info-title">Mã khuyến mãi cá nhân</h3>
+                                        <div class="mb-3">
+                                            <button id="btn-active-discount" type="button" class="btn btn-primary btn-sm me-2 active">Còn hiệu lực</button>
+                                            <button id="btn-expired-discount" type="button" class="btn btn-outline-secondary btn-sm">Hết hạn</button>
+                                        </div>
+                                        <!-- Danh sách mã khuyến mãi còn hiệu lực -->
+                                        <div id="discount-active-list">
+                                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-striped table-hover text-center">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Mã khuyến mãi</th>
+                                                            <th>Giảm (%)</th>
+                                                            <th>Giảm tối đa</th>
+                                                            <th>Ngày hết hạn</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Thao tác</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse ($maCaNhans->where('trang_thai', 1) as $maCaNhan)
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="badge bg-primary" style="font-size: 1em;">{{ $maCaNhan->ma_khuyen_mai }}</span>
+                                                                </td>
+                                                                <td>{{ $maCaNhan->phan_tram_khuyen_mai }}%</td>
+                                                                <td>{{ number_format($maCaNhan->giam_toi_da, 0, ',', '.') }} VNĐ</td>
+                                                                <td>{{ $maCaNhan->ngay_ket_thuc ? $maCaNhan->ngay_ket_thuc : "Không có thời hạn" }}</td>
+                                                                <td>
+                                                                    <span class="badge bg-success">Còn hiệu lực</span>
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-outline-primary copy-btn" data-code="{{ $maCaNhan->ma_khuyen_mai }}">
+                                                                        <i class="fas fa-copy"></i> Copy
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="6">Bạn chưa có mã khuyến mãi cá nhân nào còn hiệu lực.</td>
+                                                            </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Danh sách mã khuyến mãi đã hết hạn -->
+                                        <div id="discount-expired-list" style="display: none;">
+                                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                                <table class="table table-striped table-hover text-center">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>Mã khuyến mãi</th>
+                                                            <th>Giảm (%)</th>
+                                                            <th>Giảm tối đa</th>
+                                                            <th>Ngày hết hạn</th>
+                                                            <th>Trạng thái</th>
+                                                            <th>Thao tác</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        @forelse ($maCaNhans->where('trang_thai', 0) as $maCaNhan)
+                                                            <tr>
+                                                                <td>
+                                                                    <span class="badge bg-secondary" style="font-size: 1em;">{{ $maCaNhan->ma_khuyen_mai }}</span>
+                                                                </td>
+                                                                <td>{{ $maCaNhan->phan_tram_khuyen_mai }}%</td>
+                                                                <td>{{ number_format($maCaNhan->giam_toi_da, 0, ',', '.') }} VNĐ</td>
+                                                                <td>{{ $maCaNhan->ngay_ket_thuc ? $maCaNhan->ngay_ket_thuc : "Không có thời hạn" }}</td>
+                                                                <td>
+                                                                    <span class="badge bg-secondary">Hết hạn</span>
+                                                                </td>
+                                                                <td>
+                                                                    <button class="btn btn-sm btn-outline-primary copy-btn" data-code="{{ $maCaNhan->ma_khuyen_mai }}">
+                                                                        <i class="fas fa-copy"></i> Copy
+                                                                    </button>
+                                                                </td>
+                                                            </tr>
+                                                        @empty
+                                                            <tr>
+                                                                <td colspan="6">Bạn chưa có mã khuyến mãi cá nhân nào hết hạn.</td>
+                                                            </tr>
+                                                        @endforelse
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -466,4 +589,53 @@
             </div>
         </div>
     </section>
+    <script>
+    document.addEventListener("DOMContentLoaded", function () {
+        // Copy mã khuyến mãi
+        const copyButtons = document.querySelectorAll(".copy-btn");
+        copyButtons.forEach(button => {
+            button.addEventListener("click", function () {
+                const code = this.getAttribute("data-code");
+                const tempInput = document.createElement("input");
+                tempInput.value = code;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+                this.innerHTML = '<i class="fas fa-check"></i> Đã copy';
+                this.classList.remove('btn-outline-primary');
+                this.classList.add('btn-success');
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-copy"></i> Copy';
+                    this.classList.remove('btn-success');
+                    this.classList.add('btn-outline-primary');
+                }, 1000);
+            });
+        });
+
+        // Tab chuyển đổi giữa còn hiệu lực và hết hạn
+        const btnActive = document.getElementById('btn-active-discount');
+        const btnExpired = document.getElementById('btn-expired-discount');
+        const activeList = document.getElementById('discount-active-list');
+        const expiredList = document.getElementById('discount-expired-list');
+
+        btnActive.addEventListener('click', function () {
+            btnActive.classList.add('btn-primary', 'active');
+            btnActive.classList.remove('btn-outline-secondary');
+            btnExpired.classList.remove('btn-primary', 'active');
+            btnExpired.classList.add('btn-outline-secondary');
+            activeList.style.display = '';
+            expiredList.style.display = 'none';
+        });
+        btnExpired.addEventListener('click', function () {
+            btnExpired.classList.add('btn-primary', 'active');
+            btnExpired.classList.remove('btn-outline-secondary');
+            btnActive.classList.remove('btn-primary', 'active');
+            btnActive.classList.add('btn-outline-secondary');
+            activeList.style.display = 'none';
+            expiredList.style.display = '';
+        });
+    });
+    </script>
+
 @endsection
