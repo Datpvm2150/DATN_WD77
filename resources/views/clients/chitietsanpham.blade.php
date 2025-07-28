@@ -271,7 +271,7 @@
                                                 </svg>
                                             </span>
                                             <input class="tp-cart-input text-center" id="so-luong-mua" type="number"
-                                                min="1" max="0" value="1" data-max-quantity="0"
+                                                min="1" value="1" data-max-quantity="0"
                                                 style="-moz-appearance: textfield; appearance: textfield;">
 
                                             <span class="tp-cart-plus">
@@ -285,6 +285,8 @@
                                             </span>
                                         </div>
                                     </div>
+
+
                                     <style>
                                         /* Bỏ nút tăng giảm mặc định trên input number */
                                         input[type=number]::-webkit-inner-spin-button,
@@ -299,7 +301,14 @@
                                             appearance: textfield;
                                             /* Chrome/Safari */
                                         }
+
+                                        .tp-cart-plus.disabled {
+                                            opacity: 0.5;
+                                            pointer-events: none;
+                                            cursor: not-allowed;
+                                        }
                                     </style>
+
                                     <script>
                                         let sanPhamId = {{ $sanpham->id }};
                                         let selectedMauSacId = null;
@@ -308,6 +317,7 @@
 
                                         document.addEventListener("DOMContentLoaded", function() {
                                             fetchAllVariants();
+                                            setupQuantityEvents();
                                         });
 
                                         function fetchAllVariants() {
@@ -344,7 +354,7 @@
                                                         this.classList.add('active');
                                                     }
 
-                                                    updateAvailableOptions(); // 💥
+                                                    updateAvailableOptions();
                                                     fetchPrice();
                                                 });
                                             });
@@ -365,15 +375,13 @@
                                                         this.classList.add('active');
                                                     }
 
-                                                    updateAvailableOptions(); // 💥
+                                                    updateAvailableOptions();
                                                     fetchPrice();
                                                 });
                                             });
                                         }
 
-
                                         function updateAvailableOptions() {
-                                            // 🎯 Lọc Dung lượng theo Màu đã chọn
                                             document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
                                                 const dungLuongId = button.getAttribute('data-dung-luong-id');
                                                 const exists = allVariants.some(variant =>
@@ -383,7 +391,6 @@
                                                 button.classList.toggle('disabled', !exists);
                                             });
 
-                                            // 🎯 Lọc Màu theo Dung lượng đã chọn
                                             document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
                                                 const mauSacId = button.getAttribute('data-mau-sac-id');
                                                 const exists = allVariants.some(variant =>
@@ -393,10 +400,9 @@
                                                 button.classList.toggle('disabled', !exists);
                                             });
                                         }
-                                        // Lấy giá sản phẩm
+
                                         function fetchPrice() {
-                                            if (typeof selectedMauSacId !== 'undefined' && typeof selectedDungLuongId !== 'undefined' && selectedMauSacId &&
-                                                selectedDungLuongId) {
+                                            if (selectedMauSacId && selectedDungLuongId) {
                                                 $.ajax({
                                                     url: '{{ route('sanpham.lay_gia_bien_the') }}',
                                                     method: 'GET',
@@ -406,13 +412,11 @@
                                                         dung_luong_id: selectedDungLuongId
                                                     },
                                                     success: function(res) {
-                                                        console.log('API response:', res);
                                                         if (res.status === 'success') {
-                                                            const format = (num) =>
-                                                                new Intl.NumberFormat('vi-VN', {
-                                                                    style: 'currency',
-                                                                    currency: 'VND'
-                                                                }).format(num);
+                                                            const format = (num) => new Intl.NumberFormat('vi-VN', {
+                                                                style: 'currency',
+                                                                currency: 'VND'
+                                                            }).format(num);
 
                                                             if (res.gia_moi < res.gia_cu) {
                                                                 $('#new-price').text(format(res.gia_moi));
@@ -424,10 +428,10 @@
 
                                                             if (typeof res.so_luong !== 'undefined') {
                                                                 $('#available-quantity').text('Số lượng còn lại: ' + res.so_luong);
-                                                                $('#so-luong-mua').val(1).attr('data-max-quantity', res.so_luong);
+                                                                capNhatSoLuongTonKho(res.so_luong);
                                                             } else {
                                                                 $('#available-quantity').text('Số lượng còn lại: Không xác định');
-                                                                $('#so-luong-mua').val(1).attr('data-max-quantity', 1);
+                                                                capNhatSoLuongTonKho(1);
                                                             }
                                                         } else {
                                                             alert(res.message);
@@ -439,56 +443,102 @@
                                                 });
                                             }
                                         }
-                                        // Khi nhấn dấu cộng/trừ
-                                        $(document).on('click', '.tp-cart-plus, .tp-cart-minus', function() {
-                                            const input = $(this).closest('.tp-product-quantity').find('#so-luong-mua');
-                                            const max = parseInt(input.attr('data-max-quantity')) || 1;
-                                            let val = parseInt(input.val()) || 1;
 
-                                            // if ($(this).hasClass('tp-cart-plus')) {
-                                            //     console.log(2);
-                                            //     if (val < max) {
-                                            //         val++;
-                                            //     } else {
-                                            //         val = max;
-                                            //     }
-                                            // } else {
-                                            //     if (val > 1) {
-                                            //         val--;
-                                            //     } else {
-                                            //         val = 1;
-                                            //     }
-                                            // }
+                                        function capNhatSoLuongTonKho(so_luong) {
+                                            const input = document.querySelector('#so-luong-mua');
+                                            const plusBtn = document.querySelector('.tp-cart-plus');
+                                            input.value = 1;
+                                            input.setAttribute('data-max-quantity', so_luong);
+                                            togglePlusButton(input, plusBtn);
+                                        }
+                                        function setupQuantityEvents() {
+                                            let input = document.querySelector('#so-luong-mua');
+                                            let plusBtn = document.querySelector('.tp-cart-plus');
+                                            let minusBtn = document.querySelector('.tp-cart-minus');
 
-                                            input.val(val);
-                                        });
+                                            // 🔥 Clone node để gỡ toàn bộ sự kiện cũ (dứt điểm)
+                                            const newPlusBtn = plusBtn.cloneNode(true);
+                                            plusBtn.parentNode.replaceChild(newPlusBtn, plusBtn);
+                                            plusBtn = newPlusBtn;
 
-                                        // Khi nhập trực tiếp số
-                                        $(document).on('input', '#so-luong-mua', function() {
-                                            const input = $(this);
-                                            const max = parseInt(input.attr('data-max-quantity')) || 1;
-                                            let raw = input.val().replace(/[^\d]/g, '');
+                                            const newMinusBtn = minusBtn.cloneNode(true);
+                                            minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
+                                            minusBtn = newMinusBtn;
 
-                                            if (raw === '') return;
+                                            // ✔️ Tăng
+                                            plusBtn.addEventListener("click", function(e) {
+                                                e.preventDefault();
+                                                let current = parseInt(input.value) || 1;
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
 
-                                            let val = parseInt(raw);
-                                            if (isNaN(val) || val < 1) val = 1;
-                                            if (val > max) val = max;
+                                                if (current >= max) {
+                                                    alert("Đã đạt số lượng tồn kho tối đa.");
+                                                    return;
+                                                }
 
-                                            input.val(val);
-                                        });
+                                                input.value = current + 1;
+                                                togglePlusButton(input, plusBtn);
+                                            });
 
-                                        // Khi rời khỏi input
-                                        $(document).on('blur', '#so-luong-mua', function() {
-                                            const input = $(this);
-                                            const max = parseInt(input.attr('data-max-quantity')) || 1;
-                                            let val = parseInt(input.val());
+                                            // ✔️ Giảm
+                                            minusBtn.addEventListener("click", function(e) {
+                                                e.preventDefault();
+                                                let current = parseInt(input.value) || 1;
 
-                                            if (isNaN(val) || val < 1) val = 1;
-                                            if (val > max) val = max;
+                                                if (current > 1) {
+                                                    input.value = current - 1;
+                                                }
 
-                                            input.val(val);
-                                        });
+                                                togglePlusButton(input, plusBtn);
+                                            });
+
+                                            input.addEventListener("input", function() {
+                                                let raw = input.value.replace(/[^\d]/g, ''); // chỉ giữ số
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
+
+                                                if (raw === '') {
+                                                    input.value = '';
+                                                    return;
+                                                }
+
+                                                let val = parseInt(raw);
+                                                if (val < 1) {
+                                                    alert("Số lượng tối thiểu là 1.");
+                                                    val = 1;
+                                                } else if (val > max) {
+                                                    alert("Vượt quá số lượng tồn kho (" + max + ").");
+                                                    val = max;
+                                                }
+
+                                                input.value = val;
+                                                togglePlusButton(input, plusBtn); // cập nhật trạng thái nút +
+                                            });
+
+                                            // ✔️ Blur
+                                            input.addEventListener("blur", function() {
+                                                let val = parseInt(input.value) || 1;
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
+
+                                                if (val < 1) val = 1;
+                                                if (val > max) val = max;
+
+                                                input.value = val;
+                                                togglePlusButton(input, plusBtn);
+                                            });
+
+                                            togglePlusButton(input, plusBtn);
+                                        }
+
+                                        function togglePlusButton(input, plusBtn) {
+                                            const current = parseInt(input.value) || 1;
+                                            const max = parseInt(input.dataset.maxQuantity) || 1;
+
+                                            if (current >= max) {
+                                                plusBtn.classList.add('disabled');
+                                            } else {
+                                                plusBtn.classList.remove('disabled');
+                                            }
+                                        }
                                     </script>
 
 
@@ -994,7 +1044,8 @@
                                                                                                     class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
                                                                                             @endfor
                                                                                         </div>
-                                                                                        <!-- <div>
+                                                                                       <div>
+
                                                                                         <span>Phân loại hàng:</span>
                                                                                      @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
     @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
@@ -1006,8 +1057,9 @@
 @else
     <p>Không có biến thể nào được mua từ sản phẩm này.</p>
 @endif
+                                                                                    </div> 
 
-                                                                                    </div> -->
+
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>

@@ -1,3 +1,33 @@
+<style>
+    .message {
+        max-width: 70%;
+        padding: 10px 14px;
+        margin: 8px;
+        border-radius: 18px;
+        font-size: 14px;
+        line-height: 1.4;
+        display: inline-block;
+        clear: both;
+    }
+
+    .message-sent {
+        background-color: #0084ff;
+        color: white;
+        float: right;
+        border-bottom-right-radius: 4px;
+    }
+
+    .message-received {
+        background-color: #f1f0f0;
+        color: black;
+        float: left;
+        border-bottom-left-radius: 4px;
+    }
+    #ct-messages{
+        background-color: #70c3ac;
+    }
+</style>
+
 <div id="ct-chatbox" class="position-fixed bottom-0 end-0 m-3" style="width: 320px; z-index: 1050; display: none;">
     <div class="card shadow-sm">
         <div class="card-header bg-primary text-white p-2 d-flex justify-content-between align-items-center">
@@ -5,7 +35,7 @@
             <button class="pe-2" id="ct-close-chat">X</button>
         </div>
         <div id="ct-messages" class="card-body" style="max-height: 300px; overflow-y: auto; font-size: 0.9rem;">
-            <div class="mb-1"><strong>Bot:</strong> Chào bạn! Tôi là CT-Bot, có thể giúp gì cho bạn hôm nay?</div>
+            <div class="message message-received"><strong>Bot:</strong> Chào bạn! Tôi là CT-Bot, có thể giúp gì cho bạn hôm nay?</div>
         </div>
         <div class="card-footer p-2">
             <form id="ct-form" class="d-flex gap-1">
@@ -19,6 +49,7 @@
 
 <button id="ct-chat-toggle" class="btn btn-circle btn-primary position-fixed bottom-0 end-0 m-3"
     style="width: 60px; height: 60px; border-radius: 50%; padding: 0;">
+    
     <img src="{{ asset('assets/client/img/icon/chat-bot-icon-virtual-smart-600nw-2478937555.webp') }}" alt="Robot Icon"
         style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">
 </button>
@@ -145,7 +176,7 @@ Bạn là CT-Bot, trợ lý ảo của LaptopStore. Nhiệm vụ của bạn là
                 }]
             });
             document.getElementById('ct-messages').insertAdjacentHTML('beforeend',
-                `<div class="mb-1"><strong>Bạn:</strong> ${text}</div>`);
+                `<div class="message message-sent"><strong>Bạn:</strong> ${text}</div>`);
             input.value = '';
 
             // const loadingId = 'bot-typing-' + Date.now();
@@ -186,7 +217,7 @@ Bạn là CT-Bot, trợ lý ảo của LaptopStore. Nhiệm vụ của bạn là
                     }]
                 });
                 document.getElementById('ct-messages').insertAdjacentHTML('beforeend',
-                    `<div class="mb-1"><strong>Bot:</strong> ${json.candidates[0].content.parts[0].text}</div>`);
+                    `<div class="message message-received"><strong>Bot:</strong> ${json.candidates[0].content.parts[0].text}</div>`);
                 box.scrollTop = box.scrollHeight;
             } catch (error) {
                 console.error(error.message);

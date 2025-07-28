@@ -56,13 +56,13 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 });
 // Nhật ký ChatBot
-Route::prefix('chat-logs')->name('chatlogs.')->group(function () {
-    Route::get('/', [ChatLogController::class, 'index'])->name('index');
-});
-Route::middleware('auth')->group(function () {
-    Route::post('/chatbot/gpt', [ChatBotController::class, 'chatWithGpt'])->name('chatbot.gpt');
-    Route::get('/chatbot/history/{session_id}', [ChatBotController::class, 'getChatHistory']);
-});
+// Route::prefix('chat-logs')->name('chatlogs.')->group(function () {
+//     Route::get('/', [ChatLogController::class, 'index'])->name('index');
+// });
+// Route::middleware('auth')->group(function () {
+//     Route::post('/chatbot/gpt', [ChatBotController::class, 'chatWithGpt'])->name('chatbot.gpt');
+//     Route::get('/chatbot/history/{session_id}', [ChatBotController::class, 'getChatHistory']);
+// });
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // San phẩm
     Route::prefix('sanphams')->name('sanphams.')->group(function () {
@@ -201,6 +201,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/form-phan-hoi/{id}', [AdminLienHeController::class, 'showReplyForm'])->name('form.reply');
         Route::get('/phan-hoi/cap-nhat/{id}/{trang_thai_phan_hoi}', [AdminLienHeController::class, 'capNhatTrangThai'])->name('phan_hoi.cap_nhat');
     });
+    // Chat
+    Route::prefix('chat')->name('chat.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('index');
+        Route::get('/{id}/messages', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
+        Route::post('/{id}/send', [App\Http\Controllers\Admin\ChatController::class, 'send'])->name('send');
+    });
 });
 
 //tai khoan admin
@@ -319,3 +325,7 @@ Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name(
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
+
+// chat
+
+Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
