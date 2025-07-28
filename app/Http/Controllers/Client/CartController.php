@@ -10,6 +10,7 @@ use App\Models\SanPham;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -122,7 +123,7 @@ class CartController extends Controller
 
         // Kiểm tra mã cá nhân
         if ($discount->loai_ma === 'ca_nhan') {
-            if (!auth()->check()) {
+            if (!Auth::check()) {
                 return response()->json(['message' => 'Bạn cần đăng nhập để sử dụng mã này.'], 401);
             }
 

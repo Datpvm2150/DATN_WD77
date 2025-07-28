@@ -161,4 +161,3 @@ foreach ($products as $product) {
         }
     }
 }
-

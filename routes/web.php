@@ -38,6 +38,7 @@ use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\VNPayController;
+use App\Http\Middleware\CheckDisscountMiddleware;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -301,7 +302,7 @@ Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index']
 
 Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
 //danhgia
-// Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
+Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
 
 // Chi tiết sản phẩm
 
