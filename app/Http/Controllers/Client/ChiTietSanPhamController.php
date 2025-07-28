@@ -128,8 +128,10 @@ foreach ($products as $product) {
             $gia_moi =  $bienThe->gia_moi ?? $bienThe->gia_cu;
             return response()->json([
                 'status' => 'success',
-                'gia_moi' => $gia_moi,
-                'gia_cu' => $bienThe->gia_cu
+                'gia_moi' => $bienThe->gia_moi,
+                'gia_cu' => $bienThe->gia_cu,
+                'so_luong'  => $bienThe->so_luong
+
             ]);
         } else {
             return response()->json([
@@ -162,4 +164,18 @@ foreach ($products as $product) {
             ]);
         }
     }
+
+
+
+public function getAllVariants(Request $request)
+{
+    $sanPhamId = $request->input('san_pham_id');
+    $variants = BienTheSanPham::where('san_pham_id', $sanPhamId)
+        ->select('mau_sac_id', 'dung_luong_id')
+        ->get();
+
+    return response()->json($variants);
+}
+
+
 }

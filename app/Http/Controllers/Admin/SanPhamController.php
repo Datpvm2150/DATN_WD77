@@ -297,7 +297,7 @@ class SanPhamController extends Controller
 
     public function update(string $id, Request $request)
     {
-        // sản phẩm 
+        // sản phẩm
         $sanpham = SanPham::withTrashed()->find($id);
 
         $old_anh_san_pham = $sanpham->anh_san_pham;
@@ -507,7 +507,7 @@ class SanPhamController extends Controller
                         ->exists();
 
                     if (!$exists) {
-                        // Cập nhật biến thể 
+                        // Cập nhật biến thể
                         $bienthe->update([
                             'dung_luong_id' => $dungLuongIds[$index],
                             'mau_sac_id' => $mauSacIds[$index],
@@ -535,7 +535,7 @@ class SanPhamController extends Controller
         }
         $flag = true;
         if ($request->has('new_dung_luong_id')) {
-            // Lấy dữ liệu biế thể mới 
+            // Lấy dữ liệu biế thể mới
             $databienthesanphammois = $request->only([
                 'new_dung_luong_id',
                 'new_mau_sac_id',
@@ -573,7 +573,7 @@ class SanPhamController extends Controller
             $newTags = [];
         }
         DB::transaction(function () use ($sanpham, $newTags) {
-            // Sử dụng sync để thêm hoặc xóa tag 
+            // Sử dụng sync để thêm hoặc xóa tag
             $sanpham->tags()->sync($newTags);
         });
         $sanphamUpdates = BienTheSanPham::where('san_pham_id', $sanpham['id'])->get();
@@ -598,7 +598,7 @@ class SanPhamController extends Controller
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
-        // tắt is hot sản phẩm 
+        // tắt is hot sản phẩm
         $sanpham->is_hot = false;
         $sanpham->save();
         $sanpham->delete();
