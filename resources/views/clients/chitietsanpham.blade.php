@@ -133,24 +133,27 @@
 
                                 <!-- Price -->
                                 @if ($bienthesanphams->isNotEmpty())
-                                    @php
-                                        $bienThe = $bienthesanphams->first();
-                                        $giaCu = $bienThe->gia_cu ?? 0;
-                                        $giaMoi = $bienThe->gia_moi ?? 0;
-                                    @endphp
+    @php
+        $bienThe = $bienthesanphams->first();
+        $giaCu = $bienThe->gia_cu ?? 0;
+        $giaMoi = $bienThe->gia_moi ?? 0;
+    @endphp
 
-                                    <div class="tp-product-details-price-wrapper mb-20">
-
-                                        <span id="old-price" class="tp-product-details-price old-price"
-                                            style="{{ $giaMoi < $giaCu ? '' : 'display: none;' }}">
-                                            {{ number_format($giaCu, 0, ',', '.') }}₫
-                                        </span>
-                                        <span id="new-price" class="tp-product-details-price new-price">
-                                            {{ number_format($giaMoi < $giaCu ? $giaMoi : $giaCu, 0, ',', '.') }}₫
-                                        </span>
-
-                                    </div>
-                                @endif
+    <div class="tp-product-details-price-wrapper mb-20">
+        @if ($giaMoi > 0 && $giaMoi < $giaCu)
+            <span class="tp-product-details-price old-price" id="old-price">
+                {{ number_format($giaCu, 0, ',', '.') }}₫
+            </span>
+            <span class="tp-product-details-price new-price" id="new-price">
+                {{ number_format($giaMoi, 0, ',', '.') }}₫
+            </span>
+        @else
+            <span class="tp-product-details-price new-price" id="new-price">
+                {{ number_format($giaCu, 0, ',', '.') }}₫
+            </span>
+        @endif
+    </div>
+@endif
                                 <!-- Variations -->
                                 <div class="tp-product-details-variation">
                                     <!-- Color Variation -->
@@ -1096,47 +1099,45 @@
                                                                         <br>
                                                                         <hr style="width: 80%;">
                                                                         @if ($danhgia->user)
-                                                                            <div
-                                                                                class="tp-product-details-review-avater-thumb">
-                                                                                <a href="">
-                                                                                    <img src="{{ asset('storage/' . $danhgia->user->anh_dai_dien) }}"
-                                                                                        alt="">
-                                                                                    <div class="review-info">
-                                                                                        <div>
-                                                                                            <h3
-                                                                                                class="tp-product-details-review-avater-title">
-                                                                                                {{ $danhgia->user->ten }} -
-                                                                                            </h3>
-                                                                                            <span>{{ $danhgia->created_at ? $danhgia->created_at->format('H:i d/m/Y') : 'Chưa xác định' }}</span>
-                                                                                        </div>
-                                                                                        <div>
-                                                                                            @for ($i = 1; $i <= 5; $i++)
-                                                                                                <span
-                                                                                                    class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
-                                                                                            @endfor
-                                                                                        </div>
-                                                                                        <!-- <div>
-                                                                                                <span>Phân loại hàng:</span>
-                                                                                                @if ($danhgia->bienTheDaMua->isNotEmpty())
+                                                                                <div class="tp-product-details-review-avater-thumb">
+                                                                                    <a href="">
+                                                                                        <img src="{{ asset('storage/' . $danhgia->user->anh_dai_dien) }}"
+                                                                                            alt="">
+                                                                                        <div class="review-info">
+                                                                                            <div>
+                                                                                                <h3
+                                                                                                    class="tp-product-details-review-avater-title">
+                                                                                                    {{ $danhgia->user->ten }} -
+                                                                                                </h3>
+                                                                                                <span>{{ $danhgia->created_at ? $danhgia->created_at->format('H:i d/m/Y') : 'Chưa xác định' }}</span>
+                                                                                            </div>
+                                                                                            <div>
+                                                                                                @for ($i = 1; $i <= 5; $i++)
+                                                                                                    <span
+                                                                                                        class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
+                                                                                                @endfor
+                                                                                            </div>
+                                                                                            <!-- <div>
+                                                                                                                                <span>Phân loại hàng:</span>
+@if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
     @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
-    {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                                                                                                        @if ($index < $danhgia->bienTheDaMua->count() - 1)
-    ,
-    @endif
+        {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
+        @if ($index < $danhgia->bienTheDaMua->count() - 1)
+            ,
+        @endif
     @endforeach
 @else
     <p>Không có biến thể nào được mua từ sản phẩm này.</p>
-    @endif
-                                                                                            </div> -->
-                                                                                    </div>
-                                                                                </a>
-                                                                                <style>
-                                                                                    a {
-                                                                                        display: flex;
-                                                                                        /* Arrange img and div next to each other */
-                                                                                        align-items: flex-start;
-                                                                                        /* Align vertically at the top */
-                                                                                    }
+@endif
+                                                                                        </div>
+                                                                                    </a>
+                                                                                    <style>
+                                                                                        a {
+                                                                                            display: flex;
+                                                                                            /* Arrange img and div next to each other */
+                                                                                            align-items: flex-start;
+                                                                                            /* Align vertically at the top */
+                                                                                        }
 
                                                                                     .review-info {
                                                                                         margin-left: 10px;

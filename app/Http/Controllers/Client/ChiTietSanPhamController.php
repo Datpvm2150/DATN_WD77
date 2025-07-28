@@ -164,28 +164,5 @@ class ChiTietSanPhamController extends Controller
             ]);
         }
     }
-
-    public function getAllVariants(Request $request)
-    {
-        $sanPhamId = $request->input('san_pham_id');
-        $variants = BienTheSanPham::where('san_pham_id', $sanPhamId)
-            ->select('mau_sac_id', 'dung_luong_id')
-            ->get();
-
-        return response()->json($variants);
-    }
-
-    public function checkQuantityInCart(Request $request)
-    {
-        $variantId = $request->input('variant_id');
-        $quantityInCart = 0;
-        if (session()->has('cart') && isset(session('cart')->products[$variantId])) {
-            $quantityInCart = session('cart')->products[$variantId]['quantity'] ?? 0;
-        }
-
-        return response()->json([
-            'status' => 'success',
-            'so_luong_trong_gio' => $quantityInCart
-        ]);
-    }
 }
+

@@ -298,7 +298,8 @@ Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pha
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
 
 Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
-
+//danhgia
+// Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
 
 // Chi tiết sản phẩm
 
@@ -313,7 +314,7 @@ Route::get('/san-pham/check-so-luong', [ChiTietSanPhamController::class, 'checkQ
 
 
 
-Route::get('/vnpay/return', [VNPayController::class, 'handleReturn'])->name('vnpay.return');
+Route::get('/vnpay/return', [VnpayController::class, 'handleReturn'])->name('vnpay.return');
 
 //yeu thich
 Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
