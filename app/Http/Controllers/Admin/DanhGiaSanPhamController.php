@@ -42,7 +42,7 @@ class DanhGiaSanPhamController extends Controller
 
         $sanPhams = SanPham::all(); // Lấy tất cả sản phẩm cho việc lọc
 
-        return view('admins.danhgias.index', compact('danhGias', 'sanPhams'));
+        return view('admins.Danhgias.index', compact('danhGias', 'sanPhams'));
     }
 
     // public function show($danhGiaId)

@@ -11,11 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('chat_messages', function (Blueprint $table) {
+        Schema::create('messages', function (Blueprint $table) {
             $table->id();
-               $table->foreignId('chat_session_id')->constrained()->onDelete('cascade');
-    $table->enum('role', ['user', 'assistant']); // phân biệt người gửi
-    $table->text('content');
+            $table->foreignIdFor(\App\Models\ChatRoom::class)
+                ->constrained()
+                ->onDelete('cascade');
+            $table->foreignIdFor(\App\Models\User::class, 'sender_id')
+                ->constrained()
+                ->onDelete('cascade');
+            $table->text('message');
             $table->timestamps();
         });
     }
@@ -25,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('chat_messages');
+        Schema::dropIfExists('messages');
     }
 };

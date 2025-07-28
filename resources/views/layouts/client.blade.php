@@ -39,10 +39,12 @@
 
     <!-- chuyen json len dau -->
     <script src="{{ asset('assets/client/js/vendor/jquery.js') }}"></script>
+    @vite(['resources/js/app.js'])
 
 </head>
 @include('components.chatbox')
 @stack('scripts')
+
 <body>
     <!--[if lte IE 9]>
       <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
@@ -448,23 +450,11 @@
     <footer>
         @include('clients.block.footer')
     </footer>
+
+    @auth
+        @include('components.chat-box')
+    @endauth
     <!-- footer area end -->
-    <!-- <script>
-        var swiper = new Swiper('.tp-slider-active', {
-            loop: true,
-            autoplay: {
-                delay: 3000,
-            },
-            navigation: {
-                nextEl: '.tp-slider-button-next',
-                prevEl: '.tp-slider-button-prev',
-            },
-            pagination: {
-                el: '.tp-swiper-dot',
-                clickable: true,
-            },
-        });
-    </script> -->
 
 
 
@@ -502,6 +492,7 @@
     <script src="{{ asset('assets/client/js/chitietsp.js') }}"></script>
     <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
 
+    @stack('scripts')
 
 </body>
 

@@ -29,7 +29,7 @@ class ChiTietSanPhamController extends Controller
         if (!$sanpham) {
             return abort(404, 'Sản phẩm không tồn tại');
         }
-      $anh_chinh = $sanpham->anh_san_pham;
+        $anh_chinh = $sanpham->anh_san_pham;
         // Tăng lượt xem
         $sanpham->increment('luot_xem');
 
@@ -37,17 +37,17 @@ class ChiTietSanPhamController extends Controller
         $danhgias = DanhGiaSanPham::with('user')
             ->where('san_pham_id', $id)
             ->get();
-
         // Các dữ liệu liên quan sản phẩm
         $tagsanphams = TagSanPham::where('san_pham_id', $id)->get();
         // $bienthesanphams = BienTheSanPham::withTrashed()->where('san_pham_id', $id)->get();
         $bienthesanphams = BienTheSanPham::withTrashed()
-    ->with(['dungLuong', 'mauSac'])
-    ->where('san_pham_id', $id)
-    ->get();
-
+            ->with(['dungLuong', 'mauSac'])
+            ->where('san_pham_id', $id)
+            ->get();
+        $bienThes = BienTheSanPham::where('san_pham_id', $sanpham->id)->get();
+        $tongSoLuong = $bienThes->sum('so_luong');
         $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->get();
-//  $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->orderBy('id')->get();
+        //  $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->orderBy('id')->get();
 
         $mauSacIds = $bienthesanphams->pluck('mau_sac_id')->unique();
         $mauSacs = MauSac::whereIn('id', $mauSacIds)->where('trang_thai', 1)->get();
@@ -86,9 +86,9 @@ class ChiTietSanPhamController extends Controller
             }
         }
 
-foreach ($products as $product) {
-    $loveCount[$product->id] = $product->yeuThichs->count();
-}
+        foreach ($products as $product) {
+            $loveCount[$product->id] = $product->yeuThichs->count();
+        }
 
 
 
@@ -108,7 +108,8 @@ foreach ($products as $product) {
             'sanPhamMoiNhat',
             'products',
             'isLoved',
-            'hasReview'
+            'hasReview',
+            'tongSoLuong'
         ));
     }
 
@@ -124,10 +125,13 @@ foreach ($products as $product) {
             ->first();
 
         if ($bienThe && $bienThe->so_luong > 0) {
+            $gia_moi =  $bienThe->gia_moi ?? $bienThe->gia_cu;
             return response()->json([
                 'status' => 'success',
-                'gia_moi' => $bienThe->gia_moi,
-                'gia_cu' => $bienThe->gia_cu
+                'gia_moi' => $gia_moi,
+                'gia_cu' => $bienThe->gia_cu,
+                'so_luong'  => $bienThe->so_luong,
+                'bien_the_id' => $bienThe->id,
             ]);
         } else {
             return response()->json([
@@ -161,3 +165,4 @@ foreach ($products as $product) {
         }
     }
 }
+

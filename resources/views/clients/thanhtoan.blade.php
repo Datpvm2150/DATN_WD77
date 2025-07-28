@@ -180,26 +180,26 @@
                     <div class="tp-checkout-place white-bg">
                         <h3 class="tp-checkout-place-title">Đơn hàng của bạn</h3>
 
-                        <div class="tp-order-info-list">
-                            <ul>
-                                <li class="tp-order-info-list-header">
-                                    <h4>Sản phẩm</h4>
-                                    <h4>Tổng</h4>
+                    <div class="tp-order-info-list">
+                        <ul>
+                            <li class="tp-order-info-list-header">
+                                <h4>Sản phẩm</h4>
+                                <h4>Tổng</h4>
+                            </li>
+                            @foreach ($cart->products as $product)
+                                <li class="tp-order-info-list-desc">
+                                    <p>{{ $product['productInfo']->ten_san_pham }} <span> x
+                                            {{ $product['quantity'] }}</span></p>
+                                    <span>{{ number_format($product['quantity'] * $product['bienthe']->gia_moi) }}
+                                        VND</span>
                                 </li>
-                                @foreach ($cart->products as $product)
-                                    <li class="tp-order-info-list-desc">
-                                        <p>{{ $product['productInfo']->ten_san_pham }} <span> x
-                                                {{ $product['quantity'] }}</span></p>
-                                        <span>{{ number_format($product['quantity'] * $product['bienthe']->gia_moi) }}
-                                            VND</span>
-                                    </li>
-                                @endforeach
-                                <li class="tp-order-info-list-subtotal">
-                                    <span>Tổng phụ</span>
-                                    <span>{{ number_format($cart->totalPrice) }} VND</span>
-                                </li>
-                                <li class="tp-order-info-list-subtotal">
-                                    <span>Giảm giá</span>
+                            @endforeach
+                            <li class="tp-order-info-list-subtotal">
+                                <span>Tổng phụ</span>
+                                <span>{{ number_format($cart->totalPrice) }} VND</span>
+                            </li>
+                            <li class="tp-order-info-list-subtotal">
+                                <span>Giảm giá</span>
 
                                     <span class="text-danger" id="giamgia">
                                         -{{ number_format($discountAmount, 2, ',', '.') }} VNĐ

@@ -120,7 +120,7 @@
                                         <td>{{ $danhGia->sanPham->ten_san_pham ?? 'N/A' }}</td>
                                         <td>{{ $danhGia->diem_so }}</td>
                                         <td style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">{{ $danhGia->nhan_xet }}</td>
-                                        <td>{{ $danhGia->created_at->format('d-m-Y H:i') }}</td>
+                                        <td>{{ $danhGia->created_at ? $danhGia->created_at->format('d-m-Y H:i') : "Chưa xác định" }}</td>
                                         <td>
                                             @if ($danhGia->replies->isEmpty())
                                             <span class="badge bg-warning">Chưa trả lời</span>

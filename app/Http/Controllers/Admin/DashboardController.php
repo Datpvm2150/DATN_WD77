@@ -20,28 +20,36 @@ use App\Models\DanhGiaSanPham;
 class DashboardController extends Controller
 {
     public function index(Request $request)
-    {  $filter = $request->get('filter', 'today'); // Lấy giá trị lọc từ request, mặc định là 'today'
+    {
 
-        // Xác định khoảng thời gian lọc
-        switch ($filter) {
-            case 'week':
-                $startDate = Carbon::now()->startOfWeek();
-                $endDate = Carbon::now()->endOfWeek();
-                break;
-            case 'month':
-                $startDate = Carbon::now()->startOfMonth();
-                $endDate = Carbon::now()->endOfMonth();
-                break;
-            case 'year':
-                $startDate = Carbon::now()->startOfYear();
-                $endDate = Carbon::now()->endOfYear();
-                break;
-            default: // 'today'
-                $startDate = Carbon::today(); // Bắt đầu ngày
-                $endDate = Carbon::now()->endOfDay(); // Kết thúc ngày
-                break;
+        $filter = $request->get('filter', 'today');
+$startInput = $request->input('start_date');
+$endInput = $request->input('end_date');
 
-        }
+if ($startInput && $endInput) {
+    $startDate = Carbon::parse($startInput)->startOfSecond();
+    $endDate = Carbon::parse($endInput)->endOfSecond();
+    $filter = 'custom'; // Ghi nhớ là đang dùng thời gian tùy chỉnh
+} else {
+    switch ($filter) {
+        case 'week':
+            $startDate = Carbon::now()->startOfWeek();
+            $endDate = Carbon::now()->endOfWeek();
+            break;
+        case 'month':
+            $startDate = Carbon::now()->startOfMonth();
+            $endDate = Carbon::now()->endOfMonth();
+            break;
+        case 'year':
+            $startDate = Carbon::now()->startOfYear();
+            $endDate = Carbon::now()->endOfYear();
+            break;
+        default: // 'today'
+            $startDate = Carbon::today();
+            $endDate = Carbon::now()->endOfDay();
+            break;
+    }
+}
 
         // Lọc dữ liệu
         $tong_san_pham = ChiTietHoaDon::whereHas('hoaDon', function ($query) {
@@ -190,16 +198,7 @@ class DashboardController extends Controller
 
         $labelsDanhMuc = $danhMucSanPham->pluck('ten_danh_muc')->toArray();
         $dataDanhMuc = $danhMucSanPham->pluck('so_luong_san_pham')->toArray();
-        // Thống kê chương trình khuyến mãi
-$so_luong_khuyen_mai_hoat_dong = KhuyenMai::where('trang_thai', 1)->count();
 
-// Lấy số lượng khuyến mãi sắp hết hạn (trong vòng 7 ngày)
-$so_luong_khuyen_mai_sap_het_han = KhuyenMai::where('ngay_ket_thuc', '>=', Carbon::now())
-    ->where('ngay_ket_thuc', '<=', Carbon::now()->addDays(1))
-    ->count();
-
-$labelsKhuyenMai = ['Đang hoạt động', 'Sắp hết hạn'];
-$dataKhuyenMai = [$so_luong_khuyen_mai_hoat_dong, $so_luong_khuyen_mai_sap_het_han];
 
         // Lấy danh sách sản phẩm và số lượng tồn kho từ bảng biến thể
         $products = DB::table('bien_the_san_phams')
@@ -230,8 +229,6 @@ $dataKhuyenMai = [$so_luong_khuyen_mai_hoat_dong, $so_luong_khuyen_mai_sap_het_h
 
 
 
-        //Thống kê liên hệ
-
 
 
 
@@ -261,8 +258,6 @@ $dataKhuyenMai = [$so_luong_khuyen_mai_hoat_dong, $so_luong_khuyen_mai_sap_het_h
             'labelsDanhMuc',
             'dataDanhMuc',
             'phan_tram_doanh_thu',
-            'labelsKhuyenMai',
-            'dataKhuyenMai',
             'labelsSanPham' ,
             'dataInStock' ,
             'dataLowStock' ,
@@ -296,10 +291,7 @@ $dataKhuyenMai = [$so_luong_khuyen_mai_hoat_dong, $so_luong_khuyen_mai_sap_het_h
             ")
             ->where('trang_thai', 7);
 
-        // Nếu có trạng thái thanh toán được chọn
-        // if ($paymentStatus) {
-        //     $query->where('trang_thai_thanh_toan', $paymentStatus);
-        // }
+
 
         // Lọc theo ngày bắt đầu và kết thúc
         if ($startDate && $endDate) {
@@ -329,11 +321,6 @@ $dataKhuyenMai = [$so_luong_khuyen_mai_hoat_dong, $so_luong_khuyen_mai_sap_het_h
         ]);
     }
 
-    // public function exportRevenue(Request $request)
-    // {
-    //     // Chuyển thông tin từ request vào export
-    //     return Excel::download(new RevenueExport($request->all()), 'doanh_thu.xlsx');
-    // }
 
     public function sanPhamBanChay(Request $request)
     {

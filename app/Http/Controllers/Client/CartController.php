@@ -30,22 +30,45 @@ class CartController extends Controller
         $dungLuongId = intval($request->query('dungLuongId'));
 
         if (!$quantity || !$mauSacId || !$dungLuongId) {
-            return redirect()->back()->with('error', 'Thông tin sản phẩm không đầy đủ.');
+            return response()->json(['message' => 'Thông tin sản phẩm không đầy đủ.'], 400);
         }
+
         $product = SanPham::find($id);
         if (!$product) {
-            return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
+            return response()->json(['message' => 'Sản phẩm không tồn tại.'], 404);
         }
-        $bienthe = BienTheSanPham::where('san_pham_id', $id)->where('dung_luong_id', $dungLuongId)->where('mau_sac_id', $mauSacId)->first();
+
+        $bienthe = BienTheSanPham::where('san_pham_id', $id)
+            ->where('dung_luong_id', $dungLuongId)
+            ->where('mau_sac_id', $mauSacId)
+            ->first();
+
         if (!$bienthe) {
-            return redirect()->back()->with('error', 'Biến thể không tồn tại.');
+            return response()->json(['message' => 'Biến thể không tồn tại.'], 404);
         }
-        $oldCart = Session('cart') ? Session('cart') : [];
+
+        $oldCart = Session::has('cart') ? Session::get('cart') : [];
         $newCart = new Cart($oldCart);
+
+        $existingQty = isset($newCart->products[$bienthe->id]) ? $newCart->products[$bienthe->id]['quantity'] : 0;
+        $totalRequested = $existingQty + $quantity;
+
+        if ($totalRequested > $bienthe->so_luong) {
+            $soConLai = $bienthe->so_luong - $existingQty;
+            return response()->json([
+                'message' => 'Giỏ hàng vượt quá số lượng tồn kho. Bạn chỉ có thể thêm tối đa ' . $soConLai . ' sản phẩm nữa.'
+            ], 400);
+        }
+
         $newCart->AddCart($product, $bienthe, $quantity);
         $request->session()->put('cart', $newCart);
-        return view('clients.cart.cart-drop');
+
+        return response()->json([
+            'html' => view('clients.cart.cart-drop')->render(),
+            'soLuongConLai' => $bienthe->so_luong - ($existingQty + $quantity)
+        ]);
     }
+
 
     public function DeleteItemCart(Request $request, $idbt)
     {
@@ -171,7 +194,9 @@ class CartController extends Controller
                             unset($cart->products[$idbt]);
                             continue;
                         }
-                        $totalPrice += $cart->products[$idbt]['quantity'] * $bienThe->gia_moi;
+                        // nếu không có giá mới thì sẽ lưu giá cũ
+                        $gia = $bienThe->gia_moi ?? $bienThe->gia_cu;
+                        $totalPrice += $cart->products[$idbt]['quantity'] * $gia;
                     } else {
                         unset($cart->products[$idbt]);
                         continue;
