@@ -13,7 +13,6 @@ class HoaDonController extends Controller
     public function index(Request $request)
     {
         $title = "Danh sách đơn hàng";
-
         // Lấy tham số từ request
         $ngayBatDau = $request->input('ngay_bat_dau');
         $ngayKetThuc = $request->input('ngay_ket_thuc');

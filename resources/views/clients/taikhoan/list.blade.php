@@ -45,7 +45,7 @@
                             $ord->phuong_thuc_thanh_toan == 'Thanh toán qua chuyển khoản ngân hàng' &&
                             $ord->trang_thai_thanh_toan == 'Chưa thanh toán' &&
                             $ord->trang_thai == 1 // Chờ xác nhận
-                        )
+                        )   
                         @php
                             $thoiGianConLai = $ord->thoi_gian_het_han ? \Carbon\Carbon::parse($ord->thoi_gian_het_han)->diffForHumans(now(), ['parts' => 2]) : null;
                         @endphp
@@ -97,10 +97,9 @@
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 5)
                         <!-- Đã giao -->
-                        <form id="confirm-receive-form-{{ $ord->id }}" action="{{ route('customer.getOrder', $ord->id) }}" method="POST" class="d-inline auto-confirm-form" data-delivery-time="{{ $ord->updated_at }}">
+                        <form id="confirm-receive-form-{{ $ord->id }}" action="{{ route('customer.getOrder', $ord->id) }}" method="POST" class="d-inline auto-confirm-form" data-delivery-time="{{$ord->updated_at }}"">
                             @csrf
                             <button type="submit" class="btn btn-sm btn-success">Đã nhận hàng</button>
-                        </form>
                         </form>
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 7)
@@ -118,36 +117,25 @@
     </tbody>
 </table>
 <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    // Lấy tất cả form xác nhận tự động
-    const autoConfirmForms = document.querySelectorAll('.auto-confirm-form');
+    document.addEventListener('DOMContentLoaded', function () {
+        // Lấy tất cả form xác nhận tự động
+        const autoConfirmForms = document.querySelectorAll('.auto-confirm-form');
 
-    autoConfirmForms.forEach(form => {
-        const deliveryTime = form.getAttribute('data-delivery-time');
+        autoConfirmForms.forEach(form => {
+            const deliveryTime = form.getAttribute('data-delivery-time');
 
-        if (deliveryTime) {
-            // Chuyển đổi deliveryTime từ server sang thời gian JavaScript
-            const deliveryDate = new Date(deliveryTime);
-            const currentDate = new Date();
+            if (deliveryTime) {
+                // Chuyển đổi deliveryTime từ server sang thời gian JavaScript
+                const deliveryDate = new Date(deliveryTime);
+                const currentDate = new Date();
 
-          /*   // Thời gian 15 phút sau khi giao
-            const fifteenMinutesAfterDelivery = new Date(deliveryDate);
-            fifteenMinutesAfterDelivery.setMinutes(deliveryDate.getMinutes() + 15); */
-             // Thời gian 3 ngày sau khi giao
-             const threeDaysAfterDelivery = new Date(deliveryDate);
-            threeDaysAfterDelivery.setDate(deliveryDate.getDate() + 3);
-
-            // Kiểm tra nếu thời gian hiện tại >= thời gian 15 phút sau giao
-            if (currentDate >= fifteenMinutesAfterDelivery) {
-                // Submit form tự động
-                form.submit();
+                setTimeout(function() {
+                    form.submit()
+                }, deliveryDate.getTime() - currentDate.getTime())
             }
-        }
+        });
     });
-});
-
-</script>
-
+    </script> 
 @if (isset($message))
     <script>
         alert('Thông báo: ' + @json($message));

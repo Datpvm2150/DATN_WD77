@@ -1,7 +1,7 @@
 @extends('layouts.client')
 
 @section('content')
-    {{-- slide 1 --}}
+    {{-- slide --}}
     <section class="tp-slider-area p-relative z-index-1">
         <div class="tp-slider-active tp-slider-variation swiper-container">
             <div class="swiper-wrapper">
@@ -25,7 +25,7 @@
                                         <h3 class="tp-slider-title"
                                             style="max-height: 4.5em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
                                             {{ $bannersHea->ten_banner }}</h3>
-                                        <div class="tp-slider-btn">
+                                        {{-- <div class="tp-slider-btn">
                                             <a href="{{ $bannersHea->url_lien_ket }}"
                                                 class="tp-btn tp-btn-2 tp-btn-white">Xem ngay
                                                 <svg width="17" height="14" viewBox="0 0 17 14" fill="none"
@@ -37,12 +37,12 @@
                                                         stroke-linejoin="round" />
                                                 </svg>
                                             </a>
-                                        </div>
+                                        </div> --}}
                                     </div>
                                 </div>
                                 <div class="col-xl-7 col-lg-6 col-md-6">
                                     <div class="tp-slider-thumb text-end">
-                                        <img src="{{ asset('storage/' . $bannersHea->anh_banner) }}" width="420px"
+                                        <img src="{{ asset('storage/' . $bannersHea->anh_banner) }}" width="700px"
                                             height="350px" style="object-fit: contain; border-radius: 10%;"
                                             alt="slider-img">
                                     </div>
@@ -69,7 +69,6 @@
             <div class="tp-slider-dot tp-swiper-dot"></div>
         </div>
     </section>
-    {{-- hết slide 1 --}}
 
     {{-- danh mục  --}}
     <section class="tp-product-arrival-area pt-50">
@@ -384,37 +383,45 @@
                         <div class="tp-product-offer-slider-active swiper-container">
                             <div class="swiper-wrapper">
                                 <!-- Hiển thị danh sách khuyến mãi -->
-                                @foreach ($khuyenMais as $khuyenMai)
-                                    <div class="tp-product-offer-item tp-product-item transition-3 swiper-slide">
-                                        <div class="tp-product-content">
-                                            <h4>Mã khuyến mãi :
-                                                <div class="centered">
-                                                    <div class="highlight">
-                                                        <pre style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;"
-                                                            class="highlight javascript"><code>{{ $khuyenMai->ma_khuyen_mai }}</code></pre>
+                                @if($khuyenMais->count() > 0)
+                                    @foreach ($khuyenMais as $khuyenMai)
+                                        <div class="tp-product-offer-item tp-product-item transition-3 swiper-slide">
+                                            <div class="tp-product-content">
+                                                <h4>Mã khuyến mãi :
+                                                    <div class="centered">
+                                                        <div class="highlight">
+                                                            <pre style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;"
+                                                                class="highlight javascript"><code>{{ $khuyenMai->ma_khuyen_mai }}</code></pre>
+                                                        </div>
                                                     </div>
+                                                </h4>
+                                                <div class="tp-product-price-wrapper">
+                                                    <span class="tp-product-price new-price">Giảm giá:
+                                                        {{ $khuyenMai->phan_tram_khuyen_mai }}% </span><br>
+                                                    <span class="tp-product-price text-danger">Giảm tối đa:
+                                                        {{ number_format($khuyenMai->giam_toi_da, 0, ',', '.') }}₫ </span>
                                                 </div>
-                                            </h4>
-                                            <div class="tp-product-price-wrapper">
-                                                <span class="tp-product-price new-price">Giảm giá:
-                                                    {{ $khuyenMai->phan_tram_khuyen_mai }}% </span><br>
-                                                <span class="tp-product-price text-danger">Giảm tối đa:
-                                                    {{ number_format($khuyenMai->giam_toi_da, 0, ',', '.') }}₫ </span>
-                                            </div>
-                                            <div class="tp-product-countdown" data-countdown
-                                                data-date="{{ $khuyenMai->ngay_ket_thuc }}">
-                                                <div class="tp-product-countdown-inner">
-                                                    <ul>
-                                                        <li><span data-days></span> Ngày</li>
-                                                        <li><span data-hours></span> Giờ</li>
-                                                        <li><span data-minutes></span>Phút</li>
-                                                        <li><span data-seconds></span> Giây</li>
-                                                    </ul>
+                                                <div class="tp-product-countdown" data-countdown
+                                                    data-date="{{ $khuyenMai->ngay_ket_thuc }}">
+                                                    <div class="tp-product-countdown-inner">
+                                                        <ul>
+                                                            <li><span data-days></span> Ngày</li>
+                                                            <li><span data-hours></span> Giờ</li>
+                                                            <li><span data-minutes></span>Phút</li>
+                                                            <li><span data-seconds></span> Giây</li>
+                                                        </ul>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    @endforeach
+                                @else
+                                    <div class="tp-product-offer-item tp-product-item transition-3 swiper-slide">
+                                        <div class="tp-product-content text-center">
+                                            <h4>Không có mã khuyến mãi nào đang diễn ra</h4>
+                                        </div>
                                     </div>
-                                @endforeach
+                                @endif
                             </div>
                             <div class="tp-deals-slider-dot tp-swiper-dot text-center mt-40"></div>
                         </div>

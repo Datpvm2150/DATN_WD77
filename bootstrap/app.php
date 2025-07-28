@@ -1,11 +1,13 @@
 <?php
 
 use App\Http\Middleware\CheckDisscountMiddleware;
+use App\Http\Middleware\checkTrangThaiDonHangMiddleware;
 use App\Models\HoaDon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
+
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
@@ -21,6 +23,7 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(CheckDisscountMiddleware::class);
+        $middleware->append(checkTrangThaiDonHangMiddleware::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

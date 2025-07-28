@@ -193,7 +193,9 @@ class CartController extends Controller
                             unset($cart->products[$idbt]);
                             continue;
                         }
-                        $totalPrice += $cart->products[$idbt]['quantity'] * $bienThe->gia_moi;
+                        // nếu không có giá mới thì sẽ lưu giá cũ
+                        $gia = $bienThe->gia_moi ?? $bienThe->gia_cu;
+                        $totalPrice += $cart->products[$idbt]['quantity'] * $gia;
                     } else {
                         unset($cart->products[$idbt]);
                         continue;

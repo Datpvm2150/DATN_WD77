@@ -16,13 +16,22 @@
                     <i class="fas fa-hourglass-start"></i> Chờ xác nhận ({{ $counts[1] ?? 0 }})
                 </a>
                 <a class="nav-link filter-link" data-status="2" href="javascript:void(0)">
-                    <i class="fas fa-box"></i> Chờ lấy hàng ({{ $counts[2] ?? 0 }})
+                    <i class="fas fa-box"></i> Đã xác nhận ({{ $counts[2] ?? 0 }})
                 </a>
+                
+                <a class="nav-link filter-link" data-status="3" href="javascript:void(0)">
+                    <i class="fas fa-clipboard-list"></i> Đang chuẩn bị ({{ $counts[3] ?? 0 }})
+                </a>
+
                 <a class="nav-link filter-link" data-status="4" href="javascript:void(0)">
-                    <i class="fas fa-truck"></i> Đang giao ({{ $counts[4] ?? 0 }})
+                    <i class="fas fa-truck"></i> Đang vận chuyển ({{ $counts[4] ?? 0 }})
                 </a>
                 <a class="nav-link filter-link" data-status="5" href="javascript:void(0)">
-                    <i class="fas fa-check-circle"></i> Đã giao ({{ $counts[5] ?? 0 }})
+                    <i class="fas fa-box-open"></i> Đã giao hàng ({{ $counts[5] ?? 0 }})
+                </a>
+
+                <a class="nav-link filter-link" data-status="7" href="javascript:void(0)">
+                    <i class="fas fa-check-circle"></i> Đã nhận hàng ({{ $counts[7] ?? 0 }})
                 </a>
                 <a class="nav-link filter-link" data-status="6" href="javascript:void(0)">
                     <i class="fas fa-times-circle"></i> Đã hủy ({{ $counts[6] ?? 0 }})
