@@ -55,14 +55,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     Route::get('/notifications', [NotificationController::class, 'index'])->name('notifications.index');
     Route::post('/notifications/mark-all-as-read', [NotificationController::class, 'markAllAsRead'])->name('notifications.markAllAsRead');
 });
-// Nhật ký ChatBot
-// Route::prefix('chat-logs')->name('chatlogs.')->group(function () {
-//     Route::get('/', [ChatLogController::class, 'index'])->name('index');
-// });
-// Route::middleware('auth')->group(function () {
-//     Route::post('/chatbot/gpt', [ChatBotController::class, 'chatWithGpt'])->name('chatbot.gpt');
-//     Route::get('/chatbot/history/{session_id}', [ChatBotController::class, 'getChatHistory']);
-// });
+
 Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () {
     // San phẩm
     Route::prefix('sanphams')->name('sanphams.')->group(function () {
@@ -316,6 +309,8 @@ Route::get('/get-so-luong-bien-the', [ChiTietSanPhamController::class, 'getSoLuo
 Route::get('/sanpham/get-all-variants', [ChiTietSanPhamController::class, 'getAllVariants'])->name('sanpham.get_all_variants');
 Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'reply'])->name('admin.danhgia.reply');
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
+Route::get('/san-pham/check-so-luong', [ChiTietSanPhamController::class, 'checkQuantityInCart'])->name('sanpham.check_quantity');
+
 
 
 Route::get('/vnpay/return', [VNPayController::class, 'handleReturn'])->name('vnpay.return');

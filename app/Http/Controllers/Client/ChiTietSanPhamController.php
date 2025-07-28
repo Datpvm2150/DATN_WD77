@@ -29,7 +29,7 @@ class ChiTietSanPhamController extends Controller
         if (!$sanpham) {
             return abort(404, 'Sản phẩm không tồn tại');
         }
-      $anh_chinh = $sanpham->anh_san_pham;
+        $anh_chinh = $sanpham->anh_san_pham;
         // Tăng lượt xem
         $sanpham->increment('luot_xem');
 
@@ -41,13 +41,13 @@ class ChiTietSanPhamController extends Controller
         $tagsanphams = TagSanPham::where('san_pham_id', $id)->get();
         // $bienthesanphams = BienTheSanPham::withTrashed()->where('san_pham_id', $id)->get();
         $bienthesanphams = BienTheSanPham::withTrashed()
-    ->with(['dungLuong', 'mauSac'])
-    ->where('san_pham_id', $id)
-    ->get();
+            ->with(['dungLuong', 'mauSac'])
+            ->where('san_pham_id', $id)
+            ->get();
         $bienThes = BienTheSanPham::where('san_pham_id', $sanpham->id)->get();
         $tongSoLuong = $bienThes->sum('so_luong');
         $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->get();
-//  $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->orderBy('id')->get();
+        //  $anhsanphams = HinhAnhSanPham::where('san_pham_id', $id)->orderBy('id')->get();
 
         $mauSacIds = $bienthesanphams->pluck('mau_sac_id')->unique();
         $mauSacs = MauSac::whereIn('id', $mauSacIds)->where('trang_thai', 1)->get();
@@ -86,9 +86,9 @@ class ChiTietSanPhamController extends Controller
             }
         }
 
-foreach ($products as $product) {
-    $loveCount[$product->id] = $product->yeuThichs->count();
-}
+        foreach ($products as $product) {
+            $loveCount[$product->id] = $product->yeuThichs->count();
+        }
 
 
 
@@ -130,7 +130,8 @@ foreach ($products as $product) {
                 'status' => 'success',
                 'gia_moi' => $gia_moi,
                 'gia_cu' => $bienThe->gia_cu,
-                'so_luong'  => $bienThe->so_luong
+                'so_luong'  => $bienThe->so_luong,
+                'bien_the_id' => $bienThe->id,
             ]);
         } else {
             return response()->json([
@@ -164,15 +165,27 @@ foreach ($products as $product) {
         }
     }
 
-public function getAllVariants(Request $request)
-{
-    $sanPhamId = $request->input('san_pham_id');
-    $variants = BienTheSanPham::where('san_pham_id', $sanPhamId)
-        ->select('mau_sac_id', 'dung_luong_id')
-        ->get();
+    public function getAllVariants(Request $request)
+    {
+        $sanPhamId = $request->input('san_pham_id');
+        $variants = BienTheSanPham::where('san_pham_id', $sanPhamId)
+            ->select('mau_sac_id', 'dung_luong_id')
+            ->get();
 
-    return response()->json($variants);
-}
+        return response()->json($variants);
+    }
 
+    public function checkQuantityInCart(Request $request)
+    {
+        $variantId = $request->input('variant_id');
+        $quantityInCart = 0;
+        if (session()->has('cart') && isset(session('cart')->products[$variantId])) {
+            $quantityInCart = session('cart')->products[$variantId]['quantity'] ?? 0;
+        }
 
+        return response()->json([
+            'status' => 'success',
+            'so_luong_trong_gio' => $quantityInCart
+        ]);
+    }
 }
