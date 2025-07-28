@@ -19,7 +19,7 @@ class AutoConfirmOrders extends Command
      *
      * @var string
      */
-    protected $description = 'Tự động xác nhận đơn hàng sau 3 ngày giao';
+    protected $description = 'Tự động xác nhận đơn hàng sau 1 ngày sau';
 
     /**
      * Execute the console command.
