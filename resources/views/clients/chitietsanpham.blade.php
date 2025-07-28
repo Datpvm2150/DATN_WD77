@@ -127,6 +127,8 @@
                                     // Tìm giá thấp nhất từ danh sách biến thể sản phẩm
                                     $giaThapNhat = $bienthesanphams->max('gia_moi'); // 'gia_ban' là trường chứa giá của biến thể sản phẩm
                                     $giaGocThapNhat = $bienthesanphams->min('gia_moi'); // Nếu bạn có trường giá gốc (giá trước khi giảm)
+                               $gia_moi = $bienthesanphams->first()->gia_moi;
+                               $gia_cu = $bienthesanphams->first()->gia_cu;
                                 @endphp
 
                                 <!-- Price -->
@@ -254,7 +256,7 @@
 
                             </div>
                             <div class="tp-product-details-action-wrapper">
-                                <p id="available-quantity">Số lượng còn lại: 0</p>
+                                <p id="available-quantity">Số lượng còn lại: {{ $tongSoLuong }}</p>
                                 <h3 class="tp-product-details-action-title">Chọn số lượng</h3>
                                 <div class="tp-product-details-action-item-wrapper d-flex align-items-center">
 
@@ -635,7 +637,29 @@ function togglePlusButton(input, plusBtn) {
                                             });
                                         }
 
-                                        function fetchPrice() {
+                                         // Khóa khi chưa chọn biến thể
+                                 function updateActionButtons() {
+                                let minusButton = document.querySelector('.tp-cart-minus');
+                                let input = document.querySelector('.tp-cart-input');
+                                let plusButton = document.querySelector('.tp-cart-plus');
+
+                                if (!selectedMauSacId || !selectedDungLuongId) {
+                                    // Chưa chọn đủ → disable các nút
+                                    minusButton.setAttribute('disabled', 'disabled');
+                                    input.setAttribute('disabled', 'disabled');
+                                    plusButton.setAttribute('disabled', 'disabled');
+                                    plusButton.classList.add('disabled'); // nếu bạn dùng class cho hiệu ứng
+                                } else {
+                                    // Đã chọn đủ → enable các nút
+                                    minusButton.removeAttribute('disabled');
+                                    input.removeAttribute('disabled');
+                                    plusButton.removeAttribute('disabled');
+                                    plusButton.classList.remove('disabled');
+                                }
+                            }
+                            updateActionButtons();
+                                        // Lấy số lượng
+                                        function fetchQuantity() {
                                             if (selectedMauSacId && selectedDungLuongId) {
                                                 $.ajax({
                                                     url: '{{ route('sanpham.lay_gia_bien_the') }}',

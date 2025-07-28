@@ -24,8 +24,8 @@ class TaiKhoanController extends Controller
         //lấy thông tin ng dùng đang đăng nhập
         $user = Auth::user();  // Lấy người dùng hiện tại
         $danhMucs = DanhMuc::all();
-        // lấy thông tin đơn hàng người dùng đã mua
-        $donHangs = $user->hoaDons()->get();
+        // lấy thông trạng thái mặc định "chờ xác nhận"
+        $donHangs = $user->hoaDons()->where('trang_thai', 1)->get();
         // lấy thuộc tính
         $trang_thai_don_hang = HoaDon::TRANG_THAI;
 
@@ -55,13 +55,11 @@ class TaiKhoanController extends Controller
     {
         //
 
-
         // Lấy hóa đơn theo ID
         $hoaDon = HoaDon::query()->findOrFail($id);
 
         // Lấy thông tin chi tiết sản phẩm theo hóa đơn cùng với biến thể sản phẩm và sản phẩm
         $chiTietHoaDons = $hoaDon->chiTietHoaDons()->with(['bienTheSanPham.sanPham'])->get();
-
         // Các thuộc tính khác của hóa đơn
         $trangThaiHoaDon = HoaDon::TRANG_THAI;
         $phuongThucThanhToan = HoaDon::PHUONG_THUC_THANH_TOAN;
@@ -243,14 +241,18 @@ class TaiKhoanController extends Controller
         if ($status == 1) {
             $donHangs = $donHangs->where('trang_thai', 1); // Chờ xác nhận
         } elseif ($status == 2) {
-            $donHangs = $donHangs->whereIn('trang_thai', [2, 3]); // Chờ lấy hàng
+            $donHangs = $donHangs->where('trang_thai', 2); //Đã xác nhận
+        } elseif($status == 3) {
+            $donHangs = $donHangs->where('trang_thai', 3); // Đăng chuẩn bị
         } elseif ($status == 4) {
-            $donHangs = $donHangs->whereIn('trang_thai', [4, 5]); // Đang giao
+            $donHangs = $donHangs->where('trang_thai', 4); // Đang giao
         } elseif ($status == 5) {
-            $donHangs = $donHangs->where('trang_thai', 7); // Đã giao
+            $donHangs = $donHangs->whereIn('trang_thai', [5]); // Đã giao
         } elseif ($status == 6) {
             $donHangs = $donHangs->where('trang_thai', 6); // Đã hủy
-        }
+        }  elseif ($status == 7) {
+            $donHangs = $donHangs->where('trang_thai', 7); // Đã nhận hàng
+        } 
 
 
         $donHangs = $donHangs->get();
@@ -258,10 +260,12 @@ class TaiKhoanController extends Controller
         // Đếm số lượng theo từng trạng thái
         $counts = [
             1 => HoaDon::where('user_id', $userId)->where('trang_thai', 1)->count(), // Chờ xác nhận
-            2 => HoaDon::where('user_id', $userId)->whereIn('trang_thai', [2, 3])->count(), // Chờ lấy hàng
-            4 => HoaDon::where('user_id', $userId)->whereIn('trang_thai', [4, 5])->count(), // Đang giao
-            5 => HoaDon::where('user_id', $userId)->where('trang_thai', 7)->count(), // Đã giao
+            2 => HoaDon::where('user_id', $userId)->where('trang_thai', 2)->count(), // Đã xác nhận
+            3 => HoaDon::where('user_id', $userId)->where('trang_thai', 3)->count(), // Đang chuẩn bị
+            4 => HoaDon::where('user_id', $userId)->where('trang_thai', 4)->count(), // Đang giao
+            5 => HoaDon::where('user_id', $userId)->where('trang_thai', 5)->count(), // Đã giao
             6 => HoaDon::where('user_id', $userId)->where('trang_thai', 6)->count(), // Đã hủy
+            7 => HoaDon::where('user_id', $userId)->where('trang_thai', 7)->count(), // Đã nhận hàng
         ];
 
         // Trả về view partial cho AJAX
