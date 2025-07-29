@@ -28,12 +28,19 @@
                         </h5>
                         <div class="cartmini__price-wrapper">
                             <span class="cartmini__price">
-                                {{ isset($product['bienthe']->gia_moi) ? number_format($product['bienthe']->gia_moi, 0, ',', '.') . ' VNĐ' : 'Chưa có giá' }}
+                                @if (isset($product['bienthe']->gia_moi))
+                                    {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
+                                @elseif(isset($product['bienthe']->gia_cu))
+                                    {{ number_format($product['bienthe']->gia_cu, 0, ',', '.') }} VNĐ
+                                @else
+                                    Chưa có giá
+                                @endif
                             </span>
                             <span class="cartmini__quantity">
-                                x {{ isset($product['quantity']) ? $product['quantity'] : '...' }}
+                                x {{ $product['quantity'] ?? '...' }}
                             </span>
                         </div>
+
                         <div class="cartmini__price-wrapper">
                             <span>
                                 {{ isset($product['bienthe']->dungLuong) ? $product['bienthe']->dungLuong->ten_dung_luong : '...' }}
@@ -67,12 +74,12 @@
                 {{ isset(Session::get('cart')->totalProduct) ? number_format(Session::get('cart')->totalProduct, 0, ',', '.') : '0' }}
             </span>
         </div>
-        <div class="cartmini__checkout-btn" >
-            <a href="{{ route('cart.index') }}" class="tp-btn mb-10 w-100" > Xem giỏ hàng</a>
+        <div class="cartmini__checkout-btn">
+            <a href="{{ route('cart.index') }}" class="tp-btn mb-10 w-100"> Xem giỏ hàng</a>
             <a href="{{ route('thanhtoan') }}" class="tp-btn tp-btn-border w-100"> Thanh toán</a>
         </div>
     </div>
-@else   
+@else
     <div class="cartmini__empty text-center">
         <img src="{{ asset('assets/client/img/product/cartmini/empty-cart.png') }}" alt="">
         <p>Giỏ hàng của bạn trống</p>

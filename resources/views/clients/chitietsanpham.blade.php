@@ -127,8 +127,8 @@
                                     // Tìm giá thấp nhất từ danh sách biến thể sản phẩm
                                     $giaThapNhat = $bienthesanphams->max('gia_moi'); // 'gia_ban' là trường chứa giá của biến thể sản phẩm
                                     $giaGocThapNhat = $bienthesanphams->min('gia_moi'); // Nếu bạn có trường giá gốc (giá trước khi giảm)
-                               $gia_moi = $bienthesanphams->first()->gia_moi;
-                               $gia_cu = $bienthesanphams->first()->gia_cu;
+                                    $gia_moi = $bienthesanphams->first()->gia_moi;
+                                    $gia_cu = $bienthesanphams->first()->gia_cu;
                                 @endphp
 
                                 <!-- Price -->
@@ -418,11 +418,15 @@
                                                                 currency: 'VND'
                                                             }).format(num);
 
-                                                            if (res.gia_moi < res.gia_cu) {
-                                                                $('#new-price').text(format(res.gia_moi));
-                                                                $('#old-price').text(format(res.gia_cu)).show();
+                                                            const giaCu = res.gia_cu;
+                                                            const giaMoi = res.gia_moi;
+
+                                                            if (giaMoi && giaMoi < giaCu) {
+                                                                $('#new-price').text(format(giaMoi));
+                                                                $('#old-price').text(format(giaCu)).show();
                                                             } else {
-                                                                $('#new-price').text(format(res.gia_cu));
+                                                                // Nếu không có giá mới hoặc giá mới không nhỏ hơn giá cũ thì hiển thị giá cũ
+                                                                $('#new-price').text(format(giaCu));
                                                                 $('#old-price').hide();
                                                             }
 
@@ -444,6 +448,7 @@
                                             }
                                         }
 
+
                                         function capNhatSoLuongTonKho(so_luong) {
                                             const input = document.querySelector('#so-luong-mua');
                                             const plusBtn = document.querySelector('.tp-cart-plus');
@@ -451,6 +456,7 @@
                                             input.setAttribute('data-max-quantity', so_luong);
                                             togglePlusButton(input, plusBtn);
                                         }
+
                                         function setupQuantityEvents() {
                                             let input = document.querySelector('#so-luong-mua');
                                             let plusBtn = document.querySelector('.tp-cart-plus');
@@ -1044,20 +1050,24 @@
                                                                                                     class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
                                                                                             @endfor
                                                                                         </div>
-                                                                                       <div>
+                                                                                        <div>
 
-                                                                                        <span>Phân loại hàng:</span>
-                                                                                     @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
-    @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
-        {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-        @if ($index < $danhgia->bienTheDaMua->count() - 1)
-            ,
-        @endif
-    @endforeach
-@else
-    <p>Không có biến thể nào được mua từ sản phẩm này.</p>
-@endif
-                                                                                    </div> 
+                                                                                            <span>Phân loại hàng:</span>
+                                                                                            @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
+                                                                                                @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
+                                                                                                    {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }}
+                                                                                                    -
+                                                                                                    {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
+                                                                                                    @if ($index < $danhgia->bienTheDaMua->count() - 1)
+                                                                                                        ,
+                                                                                                    @endif
+                                                                                                @endforeach
+                                                                                            @else
+                                                                                                <p>Không có biến thể nào
+                                                                                                    được mua từ sản phẩm
+                                                                                                    này.</p>
+                                                                                            @endif
+                                                                                        </div>
 
 
                                                                                     </div>

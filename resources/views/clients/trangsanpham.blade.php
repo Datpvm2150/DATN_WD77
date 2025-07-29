@@ -171,25 +171,32 @@
                                                     </h4>
                                                     <div class="tp-shop-widget-product-price-wrapper">
                                                         @php
-                                                            $bienThe = $product->bienTheSanPhams->first();
+                                                            $bienThe = $product->bienTheSanPhams->first(function (
+                                                                $item,
+                                                            ) {
+                                                                return !is_null($item->gia_moi) ||
+                                                                    !is_null($item->gia_cu);
+                                                            });
                                                         @endphp
-
                                                         @if ($bienThe)
-                                                            @if (!is_null($bienThe->gia_moi) && $bienThe->gia_moi < $bienThe->gia_cu)
+                                                            @if (!is_null($bienThe->gia_moi))
                                                                 <span class="tp-product-price-2 new-price">
                                                                     {{ number_format($bienThe->gia_moi, 0, ',', '.') }}đ
                                                                 </span>
                                                                 <span class="tp-product-price-2 old-price">
                                                                     {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
                                                                 </span>
-                                                            @else
+                                                            @elseif (!is_null($bienThe->gia_cu))
                                                                 <span class="tp-product-price-2 new-price">
                                                                     {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
                                                                 </span>
+                                                            @else
+                                                                <span class="tp-product-price-2">Liên hệ</span>
                                                             @endif
                                                         @else
                                                             <span class="tp-product-price-2">Liên hệ</span>
                                                         @endif
+
                                                     </div>
 
                                                 </div>
@@ -379,26 +386,36 @@
 
                                                         <div class="tp-product-price-wrapper">
                                                             @php
-                                                                $bienThe = $item->bienTheSanPhams->first();
+                                                                $bienThe = $item->bienTheSanPhams->first(function (
+                                                                    $bt,
+                                                                ) {
+                                                                    return !is_null($bt->gia_moi) ||
+                                                                        !is_null($bt->gia_cu);
+                                                                });
                                                             @endphp
 
                                                             @if ($bienThe)
-                                                                @if (!is_null($bienThe->gia_moi) && $bienThe->gia_moi > 0 && $bienThe->gia_moi < $bienThe->gia_cu)
+                                                                @if (!is_null($bienThe->gia_moi) && $bienThe->gia_moi > 0)
                                                                     <span class="tp-product-price new-price">
                                                                         {{ number_format($bienThe->gia_moi, 0, ',', '.') }}đ
                                                                     </span>
-                                                                    <span class="tp-product-price old-price">
-                                                                        {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
-                                                                    </span>
-                                                                @else
+                                                                    @if (!is_null($bienThe->gia_cu) && $bienThe->gia_cu > 0)
+                                                                        <span class="tp-product-price old-price">
+                                                                            {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
+                                                                        </span>
+                                                                    @endif
+                                                                @elseif (!is_null($bienThe->gia_cu) && $bienThe->gia_cu > 0)
                                                                     <span class="tp-product-price new-price">
                                                                         {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
                                                                     </span>
+                                                                @else
+                                                                    <span class="tp-product-price">Liên hệ</span>
                                                                 @endif
                                                             @else
                                                                 <span class="tp-product-price">Liên hệ</span>
                                                             @endif
                                                         </div>
+
 
 
                                                     </div>
@@ -442,7 +459,14 @@
                                                                     @endfor
                                                                 </div>
                                                                 @php
-                                                                    $bienThe = $item->bienTheSanPhams->first();
+                                                                    // Lấy biến thể đầu tiên có giá (mới hoặc cũ)
+                                                                    $bienThe = $item->bienTheSanPhams->first(function (
+                                                                        $bt,
+                                                                    ) {
+                                                                        return (!is_null($bt->gia_moi) &&
+                                                                            $bt->gia_moi > 0) ||
+                                                                            (!is_null($bt->gia_cu) && $bt->gia_cu > 0);
+                                                                    });
                                                                 @endphp
 
                                                                 @if ($bienThe)
@@ -453,12 +477,17 @@
                                                                         <span class="tp-product-price-2 old-price">
                                                                             {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
                                                                         </span>
-                                                                    @else
+                                                                    @elseif (!is_null($bienThe->gia_cu) && $bienThe->gia_cu > 0)
                                                                         <span class="tp-item-price-2 new-price">
                                                                             {{ number_format($bienThe->gia_cu, 0, ',', '.') }}đ
                                                                         </span>
+                                                                    @else
+                                                                        <span class="tp-item-price-2">Liên hệ</span>
                                                                     @endif
+                                                                @else
+                                                                    <span class="tp-item-price-2">Liên hệ</span>
                                                                 @endif
+
 
                                                                 <p>{{ Str::limit(strip_tags($item->mo_ta), 100) }}</p>
                                                                 <div class="tp-product-list-add-to-cart">
