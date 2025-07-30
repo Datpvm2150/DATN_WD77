@@ -45,33 +45,33 @@ class DanhGiaSanPhamController extends Controller
         return view('admins.Danhgias.index', compact('danhGias', 'sanPhams'));
     }
 
-    // public function show($danhGiaId)
-    // {
+    public function show($danhGiaId)
+    {
         
-    //     // Lấy chi tiết đánh giá và các câu trả lời
-    //     $danhGia = DanhGiaSanPham::with(['user', 'traLois.user'])
-    //         ->findOrFail($danhGiaId);
-    //         $title = 'Chi tiết đánh giá sản phẩm';
-    //     // Lấy các ID hóa đơn của người dùng có trạng thái là 'hoàn thành'
-    //     $hoaDonIds = HoaDon::where('user_id', $danhGia->user_id)
-    //         ->where('trang_thai', 7) // Trạng thái = 7 (hoàn thành)
-    //         ->pluck('id');
+        // Lấy chi tiết đánh giá và các câu trả lời
+        $danhGia = DanhGiaSanPham::with(['user', 'traLois.user'])
+            ->findOrFail($danhGiaId);
+            $title = 'Chi tiết đánh giá sản phẩm';
+        // Lấy các ID hóa đơn của người dùng có trạng thái là 'hoàn thành'
+        $hoaDonIds = HoaDon::where('user_id', $danhGia->user_id)
+            ->where('trang_thai', 7) // Trạng thái = 7 (hoàn thành)
+            ->pluck('id');
 
-    //     // Lấy các ID biến thể đã mua cho từng hóa đơn
-    //     $bienTheIds = ChiTietHoaDon::whereIn('hoa_don_id', $hoaDonIds)
-    //         ->whereHas('bienTheSanPham', function ($query) use ($danhGia) {
-    //             $query->where('san_pham_id', $danhGia->san_pham_id); // Lọc theo sản phẩm trong đánh giá
-    //         })
-    //         ->pluck('bien_the_san_pham_id');
+        // Lấy các ID biến thể đã mua cho từng hóa đơn
+        $bienTheIds = ChiTietHoaDon::whereIn('hoa_don_id', $hoaDonIds)
+            ->whereHas('bienTheSanPham', function ($query) use ($danhGia) {
+                $query->where('san_pham_id', $danhGia->san_pham_id); // Lọc theo sản phẩm trong đánh giá
+            })
+            ->pluck('bien_the_san_pham_id');
 
-    //     // Lấy các biến thể đã mua và gán vào đánh giá
-    //     $danhGia->bienTheDaMua = BienTheSanPham::whereIn('id', $bienTheIds)
-    //         ->with(['mauSac', 'dungLuong']) // Lấy thêm thông tin màu sắc và dung lượng
-    //         ->get();
+        // Lấy các biến thể đã mua và gán vào đánh giá
+        $danhGia->bienTheDaMua = BienTheSanPham::whereIn('id', $bienTheIds)
+            ->with(['mauSac', 'dungLuong']) // Lấy thêm thông tin màu sắc và dung lượng
+            ->get();
 
-    //     // Trả về view với dữ liệu chi tiết đánh giá
-    //     return view('admins.danhgias.show', compact('danhGia','title'));
-    // }
+        // Trả về view với dữ liệu chi tiết đánh giá
+        return view('admins.danhgias.show', compact('danhGia','title'));
+    }
 
     // Xử lý trả lời đánh giá
     public function traLoi(Request $request, $danhGiaId)
