@@ -40,16 +40,14 @@
                             <!-- price -->
                             {{-- Sửa giá --}}
                             <td class="tp-cart-price">
-                                @php
-                                    $giaMoi = $product['bienthe']->gia_moi ?? null;
-                                    $giaCu = $product['bienthe']->gia_cu ?? null;
-                                @endphp
+
 
                                 <span>
-                                    @if (!is_null($giaMoi))
-                                        {{ number_format($giaMoi, 0, ',', '.') }} VNĐ
-                                    @elseif (!is_null($giaCu))
-                                        {{ number_format($giaCu, 0, ',', '.') }} VNĐ
+                                    @if (isset($product['bienthe']->gia_moi) && $product['bienthe']->gia_moi > 0)
+                                        {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
+                                    @elseif (isset($product['bienthe']->gia_cu) && $product['bienthe']->gia_cu > 0)
+                                        {{ number_format($product['bienthe']->gia_cu, 0, ',', '.') }} VNĐ
+
                                     @else
                                         Chưa có giá
                                     @endif
@@ -258,4 +256,51 @@
 <input type="hidden" name="" id="total-quantity-list-cart" value="{{ $cart->totalProduct ?? 0 }}">
 
 <script src="{{ asset('assets/client/js/main.js') }}"></script>
+
 <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
+
+{{-- <script>
+    function discount() {
+        const code = document.getElementById("discount-code").value;
+
+        if (!code) {
+            showDiscountToast("Vui lòng nhập mã khuyến mãi.");
+            return;
+        }
+
+        $.ajax({
+            url: "/Discount-Cart/" + code,
+            type: "GET",
+            success: function(data) {
+                // Nếu áp mã thành công, load lại phần giỏ hàng
+                $("#cart-list-content").html(data);
+            },
+            error: function(xhr) {
+                try {
+                    const json = xhr.responseJSON;
+                    if (json && json.message) {
+                        showDiscountToast(json.message);
+                    } else {
+                        showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+                    }
+                } catch (e) {
+                    showDiscountToast("Đã xảy ra lỗi không xác định.");
+                }
+            }
+        });
+    }
+
+    function showDiscountToast(message) {
+        const toast = document.getElementById("discount-toast");
+        const msg = document.getElementById("discount-toast-message");
+
+        msg.innerText = message;
+        toast.style.display = "block";
+
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 3000);
+    }
+</script> --}}
+

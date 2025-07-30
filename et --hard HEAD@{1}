@@ -1,0 +1,33 @@
+[33m575cadd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mthanh[m[33m, [m[1;31morigin/thanh[m[33m)[m HEAD@{0}: rebase (finish): returning to refs/heads/thanh
+[33m575cadd[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mthanh[m[33m, [m[1;31morigin/thanh[m[33m)[m HEAD@{1}: commit (merge): Resolve merge conflict giữ code local
+[33m430bfa4[m HEAD@{2}: pull origin thanh --rebase (start): checkout 430bfa45be54576b93c9ef04ed4fcd0425d2bf5a
+[33m4b99dd4[m HEAD@{3}: commit: Sửa giá khi cập nhật lại
+[33md7c77f2[m HEAD@{4}: commit: Sửa khi thêm nhiều lần sản phẩm vào giỏ hàng k được vượt quá số lượng còn lại k sẽ thông báo thêm thất bại
+[33m9cd30c8[m HEAD@{5}: commit: Sửa chatcontroller
+[33m0f7fc9b[m HEAD@{6}: commit: Giao diện chat bot
+[33m27b32fd[m HEAD@{7}: commit: Sửa số lượng đạt max
+[33m2f536d4[m HEAD@{8}: commit: Chat realtime
+[33m0327e7e[m HEAD@{9}: commit: Sua bien the
+[33m5b28c49[m HEAD@{10}: commit: thêm lọc từ ngày này đến ngày này cho thống kê
+[33m2dff190[m HEAD@{11}: commit: Sửa lại biến thể trong chi tiết sản phẩm
+[33mca2f5b6[m[33m ([m[1;31morigin/master[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{12}: pull origin master: Fast-forward
+[33mc528df5[m HEAD@{13}: commit: Sua chatbox
+[33mfc13c6e[m HEAD@{14}: commit: Chat box
+[33m60c9466[m HEAD@{15}: commit: code chatbox
+[33m5fe3d4b[m HEAD@{16}: pull origin master: Fast-forward
+[33mfc48f75[m HEAD@{17}: commit: Sua gợi ý sản phẩm trang chủ và sửa lại chi tiết sản phẩm
+[33mface90f[m HEAD@{18}: pull origin master: Fast-forward
+[33m76b819f[m HEAD@{19}: commit: Sửa yêu thích
+[33m07c3a5c[m HEAD@{20}: commit: Thong ke
+[33m7a8ce8d[m HEAD@{21}: pull origin master: Fast-forward
+[33m166ae77[m HEAD@{22}: commit: Sua trang chu
+[33mfd723a4[m HEAD@{23}: commit: Cập nhật controller ChiTietSanPham và model YeuThich
+[33m090c95f[m HEAD@{24}: commit (merge): Resolved merge conflict in SanPham.php
+[33maa21e7e[m HEAD@{25}: commit: sua code model
+[33m71a3999[m HEAD@{26}: commit: Sửa lại phần ảnh chi tiết sản phầm client
+[33m8f33e8d[m HEAD@{27}: commit: Chi tiết sản phẩm
+[33mceff9d1[m HEAD@{28}: pull origin master: Fast-forward
+[33mc0fff5b[m HEAD@{29}: commit: Quản lý màu sắc
+[33m76df37f[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{30}: pull origin master: Fast-forward
+[33m44a1ec9[m HEAD@{31}: checkout: moving from master to thanh
+[33m76df37f[m[33m ([m[1;32mmaster[m[33m)[m HEAD@{32}: clone: from https://github.com/Datpvm2150/DATN_WD77.git

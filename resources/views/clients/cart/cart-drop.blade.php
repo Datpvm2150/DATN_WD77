@@ -4,10 +4,7 @@
             <div class="cartmini__top-title">
                 <h4>Giỏ hàng</h4>
             </div>
-            {{-- <div class="cartmini__close">
-                               <button type="button" class="cartmini__close-btn cartmini-close-btn"><i
-                                       class="fal fa-times"></i></button>
-                           </div> --}}
+
         </div>
         <div class="cartmini__widget">
             @foreach (Session::get('cart')->products as $idbt => $product)
@@ -29,19 +26,15 @@
                         {{-- Sửa giá --}}
                         <div class="cartmini__price-wrapper">
                             <span class="cartmini__price">
-                                @php
-                                    $giaMoi = $product['bienthe']->gia_moi ?? null;
-                                    $giaCu = $product['bienthe']->gia_cu ?? null;
-                                @endphp
-
-                                @if (!is_null($giaMoi))
-                                    {{ number_format($giaMoi, 0, ',', '.') }} VNĐ
-                                @elseif (!is_null($giaCu))
-                                    {{ number_format($giaCu, 0, ',', '.') }} VNĐ
+                                @if (!empty($product['bienthe']->gia_moi))
+                                    {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
+                                @elseif (!empty($product['bienthe']->gia_cu))
+                                    {{ number_format($product['bienthe']->gia_cu, 0, ',', '.') }} VNĐ
                                 @else
                                     Chưa có giá
                                 @endif
                             </span>
+
                             <span class="cartmini__quantity">
                                 x {{ $product['quantity'] ?? '...' }}
                             </span>
