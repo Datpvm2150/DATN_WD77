@@ -168,9 +168,9 @@
                 <div class="col">
                     <div class="tp-mobile-item text-center">
                         <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
-                                        <i class="flaticon-love"></i>
-                                        <span>Danh sách yêu thích</span>
-                                    </a>
+                            <i class="flaticon-love"></i>
+                            <span>Danh sách yêu thích</span>
+                        </a>
                     </div>
                 </div>
                 <div class="col">
@@ -237,9 +237,9 @@
                                 <h4>Giỏ hàng</h4>
                             </div>
                             <div class="cartmini__close">
-                               <button type="button" class="cartmini__close-btn cartmini-close-btn"><i
-                                       class="fal fa-times"></i></button>
-                           </div>
+                                <button type="button" class="cartmini__close-btn cartmini-close-btn"><i
+                                        class="fal fa-times"></i></button>
+                            </div>
                         </div>
                         <div class="cartmini__widget">
                             @foreach (Session::get('cart')->products as $idbt => $product)
@@ -258,12 +258,24 @@
                                                 {{ isset($product['productInfo']->ten_san_pham) ? $product['productInfo']->ten_san_pham : 'Tên sản phẩm không có' }}
                                             </a>
                                         </h5>
+                                        {{-- Sửa giá --}}
                                         <div class="cartmini__price-wrapper">
                                             <span class="cartmini__price">
-                                                {{ isset($product['bienthe']->gia_moi) ? number_format($product['bienthe']->gia_moi, 0, ',', '.') . ' VNĐ' : 'Chưa có giá' }}
+                                                @php
+                                                    $giaMoi = $product['bienthe']->gia_moi ?? null;
+                                                    $giaCu = $product['bienthe']->gia_cu ?? null;
+                                                @endphp
+
+                                                @if (!is_null($giaMoi))
+                                                    {{ number_format($giaMoi, 0, ',', '.') }} VNĐ
+                                                @elseif (!is_null($giaCu))
+                                                    {{ number_format($giaCu, 0, ',', '.') }} VNĐ
+                                                @else
+                                                    Chưa có giá
+                                                @endif
                                             </span>
                                             <span class="cartmini__quantity">
-                                                x {{ isset($product['quantity']) ? $product['quantity'] : '...' }}
+                                                x {{ $product['quantity'] ?? '...' }}
                                             </span>
                                         </div>
                                         <div class="cartmini__price-wrapper">
@@ -346,11 +358,11 @@
 
                                     </li>
                                     <li>
-                                        <a href="{{route('san-pham')}}">Sản phẩm</a>
+                                        <a href="{{ route('san-pham') }}">Sản phẩm</a>
                                     </li>
 
                                     <li>
-                                        <a href="{{route('bai-viet')}}">Tin tức</a>
+                                        <a href="{{ route('bai-viet') }}">Tin tức</a>
                                     </li>
                                     <li><a href="{{ route('lienhe') }}">Liên hệ</a></li>
                                 </ul>

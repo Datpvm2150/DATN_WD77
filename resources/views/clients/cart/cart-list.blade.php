@@ -38,10 +38,22 @@
                                 </span>
                             </td>
                             <!-- price -->
+                            {{-- Sửa giá --}}
                             <td class="tp-cart-price">
-                                <span>{{ isset($product['bienthe']->gia_moi)
-                                    ? number_format($product['bienthe']->gia_moi, 0, ',', '.') . ' VNĐ'
-                                    : 'Chưa có giá' }}</span>
+                                @php
+                                    $giaMoi = $product['bienthe']->gia_moi ?? null;
+                                    $giaCu = $product['bienthe']->gia_cu ?? null;
+                                @endphp
+
+                                <span>
+                                    @if (!is_null($giaMoi))
+                                        {{ number_format($giaMoi, 0, ',', '.') }} VNĐ
+                                    @elseif (!is_null($giaCu))
+                                        {{ number_format($giaCu, 0, ',', '.') }} VNĐ
+                                    @else
+                                        Chưa có giá
+                                    @endif
+                                </span>
                             </td>
                             <!-- quantity -->
                             <td class="tp-cart-quantity">
@@ -247,4 +259,3 @@
 
 <script src="{{ asset('assets/client/js/main.js') }}"></script>
 <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
-

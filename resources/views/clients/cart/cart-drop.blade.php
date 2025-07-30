@@ -26,12 +26,18 @@
                                 {{ isset($product['productInfo']->ten_san_pham) ? $product['productInfo']->ten_san_pham : 'Tên sản phẩm không có' }}
                             </a>
                         </h5>
+                        {{-- Sửa giá --}}
                         <div class="cartmini__price-wrapper">
                             <span class="cartmini__price">
-                                @if (isset($product['bienthe']->gia_moi))
-                                    {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
-                                @elseif(isset($product['bienthe']->gia_cu))
-                                    {{ number_format($product['bienthe']->gia_cu, 0, ',', '.') }} VNĐ
+                                @php
+                                    $giaMoi = $product['bienthe']->gia_moi ?? null;
+                                    $giaCu = $product['bienthe']->gia_cu ?? null;
+                                @endphp
+
+                                @if (!is_null($giaMoi))
+                                    {{ number_format($giaMoi, 0, ',', '.') }} VNĐ
+                                @elseif (!is_null($giaCu))
+                                    {{ number_format($giaCu, 0, ',', '.') }} VNĐ
                                 @else
                                     Chưa có giá
                                 @endif
@@ -40,7 +46,6 @@
                                 x {{ $product['quantity'] ?? '...' }}
                             </span>
                         </div>
-
                         <div class="cartmini__price-wrapper">
                             <span>
                                 {{ isset($product['bienthe']->dungLuong) ? $product['bienthe']->dungLuong->ten_dung_luong : '...' }}

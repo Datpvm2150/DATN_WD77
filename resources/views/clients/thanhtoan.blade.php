@@ -178,13 +178,19 @@
                     <div class="tp-checkout-place white-bg">
                         <h3 class="tp-checkout-place-title">Đơn hàng của bạn</h3>
 
-                    <div class="tp-order-info-list">
-                        <ul>
-                            <li class="tp-order-info-list-header">
-                                <h4>Sản phẩm</h4>
-                                <h4>Tổng</h4>
-                            </li>
+                        <div class="tp-order-info-list">
+                            <ul>
+                                <li class="tp-order-info-list-header">
+                                    <h4>Sản phẩm</h4>
+                                    <h4>Tổng</h4>
+                                </li>
+                                {{-- sửa giá --}}
                                 @foreach ($cart->products as $product)
+                                    @php
+                                        $giaMoi = $product['bienthe']->gia_moi ?? null;
+                                        $giaCu = $product['bienthe']->gia_cu ?? null;
+                                        $donGia = !is_null($giaMoi) ? $giaMoi : $giaCu ?? 0;
+                                    @endphp
                                     <li class="tp-order-info-list-desc">
                                         <p>
                                             {{ $product['productInfo']->ten_san_pham }}
@@ -195,10 +201,10 @@
                                                 Màu sắc: {{ $product['bienthe']->mauSac->ten_mau_sac ?? 'Không xác định' }}
                                             </small>
                                         </p>
-                                        <span>{{ number_format($product['quantity'] * $product['bienthe']->gia_moi) }}
-                                            VND</span>
+                                        <span>{{ number_format($product['quantity'] * $donGia, 0, ',', '.') }} VND</span>
                                     </li>
                                 @endforeach
+
                                 <li class="tp-order-info-list-subtotal">
                                     <span>Tổng phụ</span>
                                     <span>{{ number_format($cart->totalPrice) }} VND</span>
@@ -236,7 +242,8 @@
                                             @csrf
                                             <div class="tp-return-customer-input">
                                                 <label>Mã giảm giá:</label>
-                                                <input type="text" name="discount_code" placeholder="Mã giảm giá" required>
+                                                <input type="text" name="discount_code" placeholder="Mã giảm giá"
+                                                    required>
                                             </div>
                                             <button type="button" id="applyDiscountButton"
                                                 class="tp-return-customer-btn tp-checkout-btn">Áp dụng</button>
@@ -277,8 +284,8 @@
                             </div>
 
                             <div class="tp-checkout-payment-item">
-                                <input id="cash-on-delivery" type="radio" name="payment" value="Thanh toán khi nhận hàng"
-                                    required>
+                                <input id="cash-on-delivery" type="radio" name="payment"
+                                    value="Thanh toán khi nhận hàng" required>
                                 <label for="cash-on-delivery">Thanh toán khi nhận hàng</label>
                             </div>
 
@@ -286,11 +293,11 @@
                                 thức thanh toán.</div>
                         </div>
 
-                    <button type="button" class="tp-checkout-btn" id="submitOrder">Đặt hàng</button>
+                        <button type="button" class="tp-checkout-btn" id="submitOrder">Đặt hàng</button>
 
+                    </div>
                 </div>
             </div>
-        </div>
     </section>
     <!-- khu vực thanh toán kết thúc -->
     <style>
@@ -339,7 +346,7 @@
                 addressField.required = false;
             }
         }
-        document.getElementById('submitOrder').addEventListener('click', function (event) {
+        document.getElementById('submitOrder').addEventListener('click', function(event) {
             event.preventDefault();
             let isValid = true;
 
@@ -413,21 +420,21 @@
                 const note = document.getElementById('note')?.value || ''; // Nếu có trường ghi chú
                 loading.classList.remove('d-none');
 
-                fetch('{{ route("placeOrder") }}', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        name: name.value,
-                        phone: phone.value,
-                        email: email.value,
-                        address: address.value,
-                        payment_method: paymentMethod,
-                        note: note
+                fetch('{{ route('placeOrder') }}', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        body: JSON.stringify({
+                            name: name.value,
+                            phone: phone.value,
+                            email: email.value,
+                            address: address.value,
+                            payment_method: paymentMethod,
+                            note: note
+                        })
                     })
-                })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
@@ -436,7 +443,8 @@
                             } else {
                                 // Thêm thông báo đặt hàng thành công
                                 const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-                                document.getElementById('toastBody').textContent = 'Đặt hàng thành công! Bạn sẽ được chuyển hướng đến đơn hàng.';
+                                document.getElementById('toastBody').textContent =
+                                    'Đặt hàng thành công! Bạn sẽ được chuyển hướng đến đơn hàng.';
                                 toast.show();
 
                                 // Sau một khoảng thời gian, chuyển hướng
@@ -458,7 +466,8 @@
                                 message += '</ul>';
 
                                 // Hiển thị modal thông báo lỗi
-                                const notFoundModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                                const notFoundModal = new bootstrap.Modal(document.getElementById(
+                                'errorModal'));
 
                                 document.getElementById('errorModalBody').innerHTML = message;
                                 notFoundModal.show();
@@ -474,7 +483,8 @@
                                 message += '</ul>';
 
                                 // Hiển thị modal thông báo hết hàng
-                                const outOfStockModal = new bootstrap.Modal(document.getElementById('errorModal'));
+                                const outOfStockModal = new bootstrap.Modal(document.getElementById(
+                                    'errorModal'));
                                 document.getElementById('errorModalBody').innerHTML = message;
                                 outOfStockModal.show();
 
@@ -485,14 +495,16 @@
                                 // Tạo danh sách thông báo sản phẩm tồn kho không đủ
                                 let message = '<strong>Một số sản phẩm không đủ tồn kho:</strong><ul>';
                                 data.insufficient_stock.forEach(item => {
-                                    message += `<li>${item.product_name}: Còn lại ${item.available_quantity} sản phẩm.</li>`;
+                                    message +=
+                                        `<li>${item.product_name}: Còn lại ${item.available_quantity} sản phẩm.</li>`;
 
                                 });
                                 message += '</ul>';
                                 message += '<p>Bạn có muốn đặt hàng với số lượng khả dụng không?</p>';
 
                                 // Hiển thị modal cảnh báo tồn kho
-                                const stockModal = new bootstrap.Modal(document.getElementById('stockWarningModal'));
+                                const stockModal = new bootstrap.Modal(document.getElementById(
+                                    'stockWarningModal'));
                                 document.getElementById('stockWarningModalBody').innerHTML = message;
                                 stockModal.show();
 

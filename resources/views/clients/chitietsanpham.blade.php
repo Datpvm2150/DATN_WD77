@@ -134,12 +134,13 @@
                                 <!-- Price -->
 
                                 @if ($bienthesanphams->isNotEmpty())
-    @php
-        $bienThe = $bienthesanphams->first();
-        $giaCu = $bienThe->gia_cu ?? 0;
-        $giaMoi = $bienThe->gia_moi ?? 0;
-    @endphp
+                                    @php
+                                        $bienThe = $bienthesanphams->first();
+                                        $giaCu = $bienThe->gia_cu ?? 0;
+                                        $giaMoi = $bienThe->gia_moi ?? 0;
+                                    @endphp
 
+{{-- <<<<<<< HEAD
 
     <div class="tp-product-details-price-wrapper mb-20">
         @if ($giaMoi > 0 && $giaMoi < $giaCu)
@@ -157,6 +158,22 @@
     </div>
 @endif
 
+======= --}}
+                                    <div class="tp-product-details-price-wrapper mb-20">
+                                        @if ($giaMoi > 0 && $giaMoi < $giaCu)
+                                            <span class="tp-product-details-price old-price" id="old-price">
+                                                {{ number_format($giaCu, 0, ',', '.') }}₫
+                                            </span>
+                                            <span class="tp-product-details-price new-price" id="new-price">
+                                                {{ number_format($giaMoi, 0, ',', '.') }}₫
+                                            </span>
+                                        @else
+                                            <span class="tp-product-details-price new-price" id="new-price">
+                                                {{ number_format($giaCu, 0, ',', '.') }}₫
+                                            </span>
+                                        @endif
+                                    </div>
+                                @endif
                                 <!-- Variations -->
                                 <div class="tp-product-details-variation">
                                     <!-- Color Variation -->
@@ -265,7 +282,6 @@
                                 <p id="available-quantity">Số lượng còn lại: {{ $tongSoLuong }}</p>
                                 <h3 class="tp-product-details-action-title">Chọn số lượng</h3>
                                 <div class="tp-product-details-action-item-wrapper d-flex align-items-center">
-
                                     <div class="tp-product-details-quantity">
                                         <div class="tp-product-quantity mb-15 mr-15">
                                             <span class="tp-cart-minus">
@@ -276,9 +292,8 @@
                                                 </svg>
                                             </span>
                                             <input class="tp-cart-input text-center" id="so-luong-mua" type="number"
-                                                min="1" value="1" data-max-quantity="0"
+                                                min="1" value="1" data-max-quantity="0" max="0"
                                                 style="-moz-appearance: textfield; appearance: textfield;">
-
                                             <span class="tp-cart-plus">
                                                 <svg width="11" height="12" viewBox="0 0 11 12" fill="none"
                                                     xmlns="http://www.w3.org/2000/svg">
@@ -325,9 +340,7 @@
                                         <!-- ✅ Thêm hiển thị tồn kho (nếu muốn) -->
                                         <span id="so-luong-ton" class="d-block mt-1 text-muted"
                                             style="font-size: 0.9rem;"></span>
-                                    </div>
-
- --}}
+                                    </div> --}}
 
                                     <style>
                                         /* Bỏ nút tăng giảm mặc định trên input number */
@@ -355,12 +368,15 @@
                                         let selectedMauSacId = null;
                                         let selectedDungLuongId = null;
                                         let allVariants = [];
+                                        let selectedVariantId = null;
 
                                         document.addEventListener("DOMContentLoaded", function() {
                                             fetchAllVariants();
                                             setupQuantityEvents();
+                                            updateActionButtons();
                                         });
 
+                                        // Lấy tất cả biến thể
                                         function fetchAllVariants() {
                                             $.ajax({
                                                 url: "{{ route('sanpham.get_all_variants') }}",
@@ -371,53 +387,69 @@
                                                 success: function(response) {
                                                     allVariants = response;
                                                     setupVariantEvents();
+                                                    updateAvailableOptions();
                                                 },
                                                 error: function() {
-                                                    alert("Không thể tải danh sách biến thể.");
+                                                    toastr.error("Không thể tải danh sách biến thể.");
                                                 }
                                             });
                                         }
 
+                                        // Thiết lập sự kiện cho các nút màu sắc và dung lượng
                                         function setupVariantEvents() {
                                             document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
                                                 button.addEventListener('click', function() {
+                                                    const newMauSacId = this.getAttribute('data-mau-sac-id');
                                                     if (this.classList.contains('disabled')) return;
 
-                                                    const id = this.getAttribute('data-mau-sac-id');
-                                                    selectedMauSacId = (selectedMauSacId === id) ? null : id;
-
-                                                    document.querySelectorAll('.tp-color-variation-btn').forEach(btn => btn.classList
-                                                        .remove('active'));
-                                                    if (selectedMauSacId) this.classList.add('active');
+                                                    // Nếu click vào màu đã chọn, bỏ chọn
+                                                    if (selectedMauSacId === newMauSacId) {
+                                                        selectedMauSacId = null;
+                                                        this.classList.remove('active');
+                                                    } else {
+                                                        selectedMauSacId = newMauSacId;
+                                                        document.querySelectorAll('.tp-color-variation-btn').forEach(btn => btn.classList
+                                                            .remove('active'));
+                                                        this.classList.add('active');
+                                                    }
 
                                                     updateAvailableOptions();
-                                                    fetchPrice();
+                                                    fetchPriceAndQuantity();
+                                                    updateActionButtons();
                                                 });
                                             });
 
                                             document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
                                                 button.addEventListener('click', function() {
+                                                    const newDungLuongId = this.getAttribute('data-dung-luong-id');
                                                     if (this.classList.contains('disabled')) return;
 
-                                                    const id = this.getAttribute('data-dung-luong-id');
-                                                    selectedDungLuongId = (selectedDungLuongId === id) ? null : id;
-
-                                                    document.querySelectorAll('.tp-size-variation-btn').forEach(btn => btn.classList.remove(
-                                                        'active'));
-                                                    if (selectedDungLuongId) this.classList.add('active');
+                                                    // Nếu click vào dung lượng đã chọn, bỏ chọn
+                                                    if (selectedDungLuongId === newDungLuongId) {
+                                                        selectedDungLuongId = null;
+                                                        this.classList.remove('active');
+                                                    } else {
+                                                        selectedDungLuongId = newDungLuongId;
+                                                        document.querySelectorAll('.tp-size-variation-btn').forEach(btn => btn.classList
+                                                            .remove('active'));
+                                                        this.classList.add('active');
+                                                    }
 
                                                     updateAvailableOptions();
-                                                    fetchPrice();
+                                                    fetchPriceAndQuantity();
+                                                    updateActionButtons();
                                                 });
                                             });
                                         }
 
+                                        // Cập nhật các tùy chọn hợp lệ
                                         function updateAvailableOptions() {
                                             document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
                                                 const dungLuongId = button.getAttribute('data-dung-luong-id');
                                                 const exists = allVariants.some(variant =>
                                                     (!selectedMauSacId || variant.mau_sac_id == selectedMauSacId) &&
-                                                    variant.dung_luong_id == dungLuongId
+                                                    variant.dung_luong_id == dungLuongId &&
+                                                    variant.so_luong > 0
                                                 );
                                                 button.classList.toggle('disabled', !exists);
                                             });
@@ -426,35 +458,15 @@
                                                 const mauSacId = button.getAttribute('data-mau-sac-id');
                                                 const exists = allVariants.some(variant =>
                                                     (!selectedDungLuongId || variant.dung_luong_id == selectedDungLuongId) &&
-                                                    variant.mau_sac_id == mauSacId
+                                                    variant.mau_sac_id == mauSacId &&
+                                                    variant.so_luong > 0
                                                 );
                                                 button.classList.toggle('disabled', !exists);
                                             });
                                         }
 
-                                         // Khóa khi chưa chọn biến thể
-                                 function updateActionButtons() {
-                                let minusButton = document.querySelector('.tp-cart-minus');
-                                let input = document.querySelector('.tp-cart-input');
-                                let plusButton = document.querySelector('.tp-cart-plus');
-
-                                if (!selectedMauSacId || !selectedDungLuongId) {
-                                    // Chưa chọn đủ → disable các nút
-                                    minusButton.setAttribute('disabled', 'disabled');
-                                    input.setAttribute('disabled', 'disabled');
-                                    plusButton.setAttribute('disabled', 'disabled');
-                                    plusButton.classList.add('disabled'); // nếu bạn dùng class cho hiệu ứng
-                                } else {
-                                    // Đã chọn đủ → enable các nút
-                                    minusButton.removeAttribute('disabled');
-                                    input.removeAttribute('disabled');
-                                    plusButton.removeAttribute('disabled');
-                                    plusButton.classList.remove('disabled');
-                                }
-                            }
-                            updateActionButtons();
-                                        // Lấy số lượng
-                                        function fetchQuantity() {
+                                        // Lấy giá và số lượng tồn kho của biến thể
+                                        function fetchPriceAndQuantity() {
                                             if (selectedMauSacId && selectedDungLuongId) {
                                                 $.ajax({
                                                     url: '{{ route('sanpham.lay_gia_bien_the') }}',
@@ -474,46 +486,58 @@
                                                             const giaCu = res.gia_cu;
                                                             const giaMoi = res.gia_moi;
 
-                                                            if (giaMoi && giaMoi < giaCu) {
-                                                                $('#new-price').text(format(giaMoi));
-                                                                $('#old-price').text(format(giaCu)).show();
+                                                            // if (giaMoi && giaMoi < giaCu) {
+                                                            //     $('#new-price').text(format(giaMoi));
+                                                            //     $('#old-price').text(format(giaCu)).show();
+
+                                                            if (res.gia_moi < res.gia_cu) {
+                                                                $('#new-price').text(format(res.gia_moi));
+                                                                $('#old-price').text(format(res.gia_cu)).show();
                                                             } else {
                                                                 // Nếu không có giá mới hoặc giá mới không nhỏ hơn giá cũ thì hiển thị giá cũ
                                                                 $('#new-price').text(format(giaCu));
                                                                 $('#old-price').hide();
                                                             }
-
-                                                            if (typeof res.so_luong !== 'undefined') {
-                                                                $('#available-quantity').text('Số lượng còn lại: ' + res.so_luong);
-                                                                capNhatSoLuongTonKho(res.so_luong);
-                                                            } else {
-                                                                $('#available-quantity').text('Số lượng còn lại: Không xác định');
-                                                                capNhatSoLuongTonKho(1);
-                                                            }
+                                                            $('#available-quantity').text('Số lượng còn lại: ' + res.so_luong);
+                                                            selectedVariantId = res.bien_the_id;
+                                                            capNhatSoLuongTonKho(res.so_luong);
                                                         } else {
-                                                            alert(res.message);
+                                                            toastr.error(res.message);
+                                                            $('#available-quantity').text('Số lượng còn lại: 0');
+                                                            capNhatSoLuongTonKho(0);
                                                         }
                                                     },
                                                     error: function() {
-                                                        alert('Lỗi khi gọi API.');
+                                                        toastr.error('Lỗi khi gọi API.');
+                                                        $('#available-quantity').text('Số lượng còn lại: 0');
+                                                        capNhatSoLuongTonKho(0);
                                                     }
                                                 });
+                                            } else {
+                                                $('#available-quantity').text('Số lượng còn lại: {{ $tongSoLuong }}');
+                                                $('#new-price').text('');
+                                                $('#old-price').hide();
+                                                selectedVariantId = null;
+                                                capNhatSoLuongTonKho(0);
                                             }
                                         }
 
+                                        // Cập nhật số lượng tồn kho và giới hạn input
                                         function capNhatSoLuongTonKho(so_luong) {
                                             const input = document.querySelector('#so-luong-mua');
-                                            const plusBtn = document.querySelector('.tp-cart-plus');
                                             input.value = 1;
                                             input.setAttribute('data-max-quantity', so_luong);
-                                            togglePlusButton(input, plusBtn);
+                                            input.max = so_luong;
+                                            togglePlusButton(input, document.querySelector('.tp-cart-plus'));
                                         }
 
+                                        // Thiết lập sự kiện cho nút tăng/giảm số lượng
                                         function setupQuantityEvents() {
-                                            let input = document.querySelector('#so-luong-mua');
+                                            const input = document.querySelector('#so-luong-mua');
                                             let plusBtn = document.querySelector('.tp-cart-plus');
                                             let minusBtn = document.querySelector('.tp-cart-minus');
 
+                                            // Thay thế nút để tránh trùng lặp sự kiện
                                             const newPlusBtn = plusBtn.cloneNode(true);
                                             plusBtn.parentNode.replaceChild(newPlusBtn, plusBtn);
                                             plusBtn = newPlusBtn;
@@ -526,41 +550,38 @@
                                                 e.preventDefault();
                                                 let current = parseInt(input.value) || 1;
                                                 let max = parseInt(input.dataset.maxQuantity) || 1;
-
-                                                if (current >= max) {
-                                                    alert("Đã đạt số lượng tồn kho tối đa.");
-                                                    return;
+                                                if (current < max) {
+                                                    input.value = current + 1;
+                                                } else {
+                                                    toastr.warning("Đã đạt số lượng tồn kho tối đa.");
                                                 }
-
-                                                input.value = current + 1;
                                                 togglePlusButton(input, plusBtn);
                                             });
 
                                             minusBtn.addEventListener("click", function(e) {
                                                 e.preventDefault();
                                                 let current = parseInt(input.value) || 1;
-                                                if (current > 1) input.value = current - 1;
+                                                if (current > 1) {
+                                                    input.value = current - 1;
+                                                }
                                                 togglePlusButton(input, plusBtn);
                                             });
 
                                             input.addEventListener("input", function() {
                                                 let raw = input.value.replace(/[^\d]/g, '');
                                                 let max = parseInt(input.dataset.maxQuantity) || 1;
-
                                                 if (raw === '') {
-                                                    input.value = '';
+                                                    input.value = 1;
                                                     return;
                                                 }
-
                                                 let val = parseInt(raw);
                                                 if (val < 1) {
-                                                    alert("Số lượng tối thiểu là 1.");
+                                                    toastr.warning("Số lượng tối thiểu là 1.");
                                                     val = 1;
                                                 } else if (val > max) {
-                                                    alert("Vượt quá số lượng tồn kho (" + max + ").");
+                                                    toastr.warning("Vượt quá số lượng tồn kho (" + max + ").");
                                                     val = max;
                                                 }
-
                                                 input.value = val;
                                                 togglePlusButton(input, plusBtn);
                                             });
@@ -573,38 +594,49 @@
                                                 input.value = val;
                                                 togglePlusButton(input, plusBtn);
                                             });
-
-                                            togglePlusButton(input, plusBtn);
                                         }
 
+                                        // Bật/tắt nút tăng/giảm dựa trên số lượng
                                         function togglePlusButton(input, plusBtn) {
                                             const current = parseInt(input.value) || 1;
                                             const max = parseInt(input.dataset.maxQuantity) || 1;
+                                            plusBtn.classList.toggle('disabled', current >= max);
+                                            const minusBtn = document.querySelector('.tp-cart-minus');
+                                            minusBtn.classList.toggle('disabled', current <= 1);
+                                        }
 
-                                            if (current >= max) {
-                                                plusBtn.classList.add('disabled');
+                                        // Bật/tắt nút tăng/giảm và input
+                                        function updateActionButtons() {
+                                            const minusButton = document.querySelector('.tp-cart-minus');
+                                            const input = document.querySelector('.tp-cart-input');
+                                            const plusButton = document.querySelector('.tp-cart-plus');
+                                            if (!selectedMauSacId || !selectedDungLuongId) {
+                                                minusButton.setAttribute('disabled', 'disabled');
+                                                input.setAttribute('disabled', 'disabled');
+                                                plusButton.setAttribute('disabled', 'disabled');
+                                                plusButton.classList.add('disabled');
+                                                minusButton.classList.add('disabled');
                                             } else {
-                                                plusBtn.classList.remove('disabled');
+                                                minusButton.removeAttribute('disabled');
+                                                input.removeAttribute('disabled');
+                                                plusButton.removeAttribute('disabled');
+                                                togglePlusButton(input, plusButton);
                                             }
                                         }
 
+                                        // Thêm vào giỏ hàng
                                         function addToCart(sanPhamId) {
-                                            const mauSacId = selectedMauSacId;
-                                            const dungLuongId = selectedDungLuongId;
-                                            const quantity = parseInt(document.getElementById('quantityInput').value);
-
-                                            if (!mauSacId || !dungLuongId || !quantity) {
+                                            const quantity = parseInt(document.querySelector('#so-luong-mua').value);
+                                            if (!selectedMauSacId || !selectedDungLuongId || !quantity || !selectedVariantId) {
                                                 toastr.warning('Vui lòng chọn đầy đủ thuộc tính và số lượng.');
                                                 return;
                                             }
-
                                             $.ajax({
                                                 url: `/add-cart/${sanPhamId}`,
                                                 method: 'GET',
                                                 data: {
                                                     quantity: quantity,
-                                                    mauSacId: mauSacId,
-                                                    dungLuongId: dungLuongId
+                                                    bien_the_id: selectedVariantId
                                                 },
                                                 success: function(response) {
                                                     $('#cart-container').html(response);
@@ -614,10 +646,18 @@
                                                     if (xhr.responseJSON && xhr.responseJSON.message) {
                                                         toastr.error(xhr.responseJSON.message);
                                                     } else {
-                                                        toastr.error('Lỗi không xác định khi thêm vào giỏ.');
+                                                        toastr.error('Lỗi khi thêm vào giỏ hàng.');
                                                     }
                                                 }
                                             });
+                                        }
+
+                                        // Thêm vào giỏ và chuyển hướng
+                                        function addToCartAndRedirect(sanPhamId, redirectUrl) {
+                                            addToCart(sanPhamId);
+                                            setTimeout(() => {
+                                                window.location.href = redirectUrl;
+                                            }, 500);
                                         }
                                     </script>
 
@@ -626,7 +666,6 @@
                                             onclick="addToCart({{ $sanpham->id }})">Thêm vào giỏ hàng</button>
                                     </div>
                                 </div>
-
                                 <button class="tp-product-details-buy-now-btn w-100"
                                     onclick="addToCartAndRedirect({{ $sanpham->id }}, '{{ route('cart.index') }}')">Mua
                                     ngay</button>
@@ -664,7 +703,7 @@
                                             @endif
                                         </span>
 
-                                        Thêm danh sách mong muốn
+                                        Thêm danh sách sản phẩm yêu thích
 
                                     </button>
                                 @else
@@ -719,15 +758,6 @@
                                 </div>
                                 <div class="tp-product-details-query-item d-flex align-items-center">
                                     <span>Tag: </span>
-                                    <p>
-
-                                    <p>
-                                        @foreach ($tagsanphams as $tag)
-                                            @if ($tag->tag->trang_thai == 1)
-                                                <span class="badge bg-primary">#{{ $tag->tag->ten_tag }}</span>
-                                            @endif
-                                        @endforeach
-                                    </p>
                                     <p>
                                         @foreach ($tagsanphams as $tag)
                                             @if ($tag->tag->trang_thai == 1)
@@ -1058,22 +1088,25 @@
 
 
                                                                                 <div class="star_warning">
-
                                                                                     <p class="fs-2">
                                                                                         @for ($i = 1; $i <= 5; $i++)
                                                                                             @if ($i <= floor($diemtrungbinh))
                                                                                                 <span
                                                                                                     class="star text-warning">★</span>
-                                                                                            @elseif($i == ceil($diemtrungbinh) && $diemtrungbinh - floor($diemtrungbinh) >= 0.3)
-                                                                                                <span
-                                                                                                    class="star text-warning">☆</span>
+                                                                                            @elseif($i == ceil($diemtrungbinh))
+                                                                                                @if ($diemtrungbinh - floor($diemtrungbinh) >= 0.3)
+                                                                                                    <span
+                                                                                                        class="star text-warning">☆</span>
+                                                                                                @else
+                                                                                                    <span
+                                                                                                        class="star text-warning">☆</span>
+                                                                                                @endif
                                                                                             @else
                                                                                                 <span
                                                                                                     class="star text-warning">☆</span>
                                                                                             @endif
                                                                                         @endfor
                                                                                     </p>
-
                                                                                 </div>
 
                                                                                 <p class="ms-auto">({{ $soluotdanhgia }}
@@ -1104,45 +1137,47 @@
                                                                         <br>
                                                                         <hr style="width: 80%;">
                                                                         @if ($danhgia->user)
-                                                                                <div class="tp-product-details-review-avater-thumb">
-                                                                                    <a href="">
-                                                                                        <img src="{{ asset('storage/' . $danhgia->user->anh_dai_dien) }}"
-                                                                                            alt="">
-                                                                                        <div class="review-info">
-                                                                                            <div>
-                                                                                                <h3
-                                                                                                    class="tp-product-details-review-avater-title">
-                                                                                                    {{ $danhgia->user->ten }} -
-                                                                                                </h3>
-                                                                                                <span>{{ $danhgia->created_at ? $danhgia->created_at->format('H:i d/m/Y') : 'Chưa xác định' }}</span>
-                                                                                            </div>
-                                                                                            <div>
-                                                                                                @for ($i = 1; $i <= 5; $i++)
-                                                                                                    <span
-                                                                                                        class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
-                                                                                                @endfor
-                                                                                            </div>
-                                                                                            <!-- <div>
-                                                                                                                                <span>Phân loại hàng:</span>
-@if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
+                                                                            <div
+                                                                                class="tp-product-details-review-avater-thumb">
+                                                                                <a href="">
+                                                                                    <img src="{{ asset('storage/' . $danhgia->user->anh_dai_dien) }}"
+                                                                                        alt="">
+                                                                                    <div class="review-info">
+                                                                                        <div>
+                                                                                            <h3
+                                                                                                class="tp-product-details-review-avater-title">
+                                                                                                {{ $danhgia->user->ten }} -
+                                                                                            </h3>
+                                                                                            <span>{{ $danhgia->created_at ? $danhgia->created_at->format('H:i d/m/Y') : 'Chưa xác định' }}</span>
+                                                                                        </div>
+                                                                                        <div>
+                                                                                            @for ($i = 1; $i <= 5; $i++)
+                                                                                                <span
+                                                                                                    class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
+                                                                                            @endfor
+                                                                                        </div>
+                                                                                        <!-- <div>
+                                                                                                                                                    <span>Phân loại hàng:</span>
+                                                                                                                                                    @if ($danhgia->bienTheDaMua->isNotEmpty())
     @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
-        {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-        @if ($index < $danhgia->bienTheDaMua->count() - 1)
-            ,
-        @endif
+    {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
+                                                                                                                                                            @if ($index < $danhgia->bienTheDaMua->count() - 1)
+    ,
+    @endif
     @endforeach
 @else
     <p>Không có biến thể nào được mua từ sản phẩm này.</p>
-@endif
-                                                                                        </div>
-                                                                                    </a>
-                                                                                    <style>
-                                                                                        a {
-                                                                                            display: flex;
-                                                                                            /* Arrange img and div next to each other */
-                                                                                            align-items: flex-start;
-                                                                                            /* Align vertically at the top */
-                                                                                        }
+    @endif
+                                                                                                                                                </div> -->
+                                                                                    </div>
+                                                                                </a>
+                                                                                <style>
+                                                                                    a {
+                                                                                        display: flex;
+                                                                                        /* Arrange img and div next to each other */
+                                                                                        align-items: flex-start;
+                                                                                        /* Align vertically at the top */
+                                                                                    }
 
                                                                                     .review-info {
                                                                                         margin-left: 10px;
@@ -1161,123 +1196,148 @@
                                                                                         margin-bottom: 5px;
                                                                                         /* Add spacing between each section (name, stars, etc.) */
                                                                                     }
+
+                                                                                    .tp-product-details-review-avater-title {
+                                                                                        font-size: 20px;
+                                                                                        font-weight: 600;
+                                                                                        color: #333;
+                                                                                        margin-bottom: 10px;
+                                                                                    }
+
+                                                                                    .tp-product-details-review-reply {
+                                                                                        margin-left: 40px;
+                                                                                        background-color: #ededed;
+                                                                                        padding: 15px;
+                                                                                        border-radius: 6px;
+                                                                                        margin-top: 10px;
+                                                                                    }
+
+                                                                                    .reply-meta-title {
+                                                                                        font-weight: bold;
+                                                                                        color: #555;
+                                                                                        margin-bottom: 5px;
+                                                                                    }
+
+                                                                                    .reply-content {
+                                                                                        color: #444;
+                                                                                        line-height: 1.5;
+                                                                                    }
                                                                                 </style>
                                                                             </div>
                                                                             <div
                                                                                 class="tp-product-details-review-avater-content">
-                                                                                <h3 class="tp-product-details-review-avater-title"
-                                                                                    style=" font-size: 20px; margin-left: 20px; ">
-                                                                                    {{ $danhgia->nhan_xet }}</h3>
+                                                                                <h3
+                                                                                    class="tp-product-details-review-avater-title">
+                                                                                    {{ $danhgia->nhan_xet }}
+                                                                                </h3>
+
                                                                                 {{-- Hiển thị câu trả lời nếu có --}}
                                                                                 @foreach ($danhgia->traLois as $traLoi)
-                                                                                    <div class="tp-product-details-review-reply ml-4"
-                                                                                        style="background-color: 	#ededed;">
-
-                                                                                        <span class="text-muted">
-                                                                                            <p style="font-weight: bold;">
-                                                                                                Phản hồi của Người Bán _
+                                                                                    <div
+                                                                                        class="tp-product-details-review-reply">
+                                                                                        <span class="reply-meta">
+                                                                                            <p class="reply-meta-title">
+                                                                                                Phản hồi của Shop _
                                                                                                 {{ $traLoi->created_at ? $traLoi->created_at->format('d/m/Y') : 'Chưa xác định' }}
                                                                                             </p>
                                                                                         </span>
-                                                                                        <p>{{ $traLoi->noi_dung }}</p>
-
+                                                                                        <p class="reply-content">
+                                                                                            {{ $traLoi->noi_dung }}
+                                                                                        </p>
                                                                                     </div>
                                                                                 @endforeach
-
                                                                             </div>
                                                                 </div>
                                                                 @endif
                                                                 @endforeach
-
                                                             </div>
+                                                        </div>
 
-
-
-                                                            <script>
-                                                                document.addEventListener('DOMContentLoaded', function() {
-                                                                    // Nút sửa câu trả lời
-                                                                    const editReplyButtons = document.querySelectorAll('.btn-edit-reply');
-                                                                    editReplyButtons.forEach(button => {
-                                                                        button.addEventListener('click', function() {
-                                                                            const replyId = this.dataset.replyId;
-                                                                            const form = this.nextElementSibling; // Form sửa
-                                                                            if (form) {
-                                                                                form.classList.remove('d-none'); // Hiển thị form sửa
-                                                                                this.style.display = 'none'; // Ẩn nút sửa
-                                                                            }
-                                                                        });
-                                                                    });
-
-                                                                    // Nút hủy sửa câu trả lời
-                                                                    const cancelEditButtons = document.querySelectorAll('.btn-cancel-edit');
-                                                                    cancelEditButtons.forEach(button => {
-                                                                        button.addEventListener('click', function() {
-                                                                            const form = this.closest('.edit-reply-form');
-                                                                            const editButton = form.previousElementSibling;
-                                                                            if (form && editButton) {
-                                                                                form.classList.add('d-none'); // Ẩn form sửa
-                                                                                editButton.style.display = ''; // Hiển thị lại nút sửa
-                                                                            }
-                                                                        });
-                                                                    });
-
-                                                                    // Nút trả lời
-                                                                    const replyButtons = document.querySelectorAll('.btn-reply');
-                                                                    replyButtons.forEach(button => {
-                                                                        button.addEventListener('click', function() {
-                                                                            const reviewId = this.dataset.reviewId;
-                                                                            const form = this.nextElementSibling;
-                                                                            if (form) {
-                                                                                form.classList.remove('d-none'); // Hiển thị form
-                                                                                this.style.display = 'none'; // Ẩn nút trả lời
-                                                                            }
-                                                                        });
-                                                                    });
-
-                                                                    // Nút hủy trả lời
-                                                                    const cancelButtons = document.querySelectorAll('.btn-cancel');
-                                                                    cancelButtons.forEach(button => {
-                                                                        button.addEventListener('click', function() {
-                                                                            const form = this.closest('.reply-form');
-                                                                            const replyButton = form.previousElementSibling;
-                                                                            if (form && replyButton) {
-                                                                                form.classList.add('d-none'); // Ẩn form
-                                                                                replyButton.style.display = ''; // Hiển thị lại nút trả lời
-                                                                            }
-                                                                        });
+                                                        <script>
+                                                            document.addEventListener('DOMContentLoaded', function() {
+                                                                // Nút sửa câu trả lời
+                                                                const editReplyButtons = document.querySelectorAll('.btn-edit-reply');
+                                                                editReplyButtons.forEach(button => {
+                                                                    button.addEventListener('click', function() {
+                                                                        const replyId = this.dataset.replyId;
+                                                                        const form = this.nextElementSibling; // Form sửa
+                                                                        if (form) {
+                                                                            form.classList.remove('d-none'); // Hiển thị form sửa
+                                                                            this.style.display = 'none'; // Ẩn nút sửa
+                                                                        }
                                                                     });
                                                                 });
-                                                            </script>
 
-                                                            <style>
-                                                                .tp-product-details-review-reply {
-                                                                    margin-left: 20px;
-                                                                    /* Thụt vào một chút */
-                                                                    border-left: 2px solid #ddd;
-                                                                    /* Thêm đường kẻ trái để làm nổi bật */
-                                                                    padding-left: 10px;
-                                                                    /* Thêm khoảng cách giữa đường kẻ và nội dung */
-                                                                }
+                                                                // Nút hủy sửa câu trả lời
+                                                                const cancelEditButtons = document.querySelectorAll('.btn-cancel-edit');
+                                                                cancelEditButtons.forEach(button => {
+                                                                    button.addEventListener('click', function() {
+                                                                        const form = this.closest('.edit-reply-form');
+                                                                        const editButton = form.previousElementSibling;
+                                                                        if (form && editButton) {
+                                                                            form.classList.add('d-none'); // Ẩn form sửa
+                                                                            editButton.style.display = ''; // Hiển thị lại nút sửa
+                                                                        }
+                                                                    });
+                                                                });
 
-                                                                /* Thêm một chút style cho form sửa */
-                                                                .edit-reply-form {
-                                                                    margin-top: 10px;
-                                                                }
-                                                            </style>
+                                                                // Nút trả lời
+                                                                const replyButtons = document.querySelectorAll('.btn-reply');
+                                                                replyButtons.forEach(button => {
+                                                                    button.addEventListener('click', function() {
+                                                                        const reviewId = this.dataset.reviewId;
+                                                                        const form = this.nextElementSibling;
+                                                                        if (form) {
+                                                                            form.classList.remove('d-none'); // Hiển thị form
+                                                                            this.style.display = 'none'; // Ẩn nút trả lời
+                                                                        }
+                                                                    });
+                                                                });
 
-                                                            {{-- form đánh giá và nhận xét --}}
+                                                                // Nút hủy trả lời
+                                                                const cancelButtons = document.querySelectorAll('.btn-cancel');
+                                                                cancelButtons.forEach(button => {
+                                                                    button.addEventListener('click', function() {
+                                                                        const form = this.closest('.reply-form');
+                                                                        const replyButton = form.previousElementSibling;
+                                                                        if (form && replyButton) {
+                                                                            form.classList.add('d-none'); // Ẩn form
+                                                                            replyButton.style.display = ''; // Hiển thị lại nút trả lời
+                                                                        }
+                                                                    });
+                                                                });
+                                                            });
+                                                        </script>
+
+                                                        <style>
+                                                            .tp-product-details-review-reply {
+                                                                margin-left: 20px;
+                                                                /* Thụt vào một chút */
+                                                                border-left: 2px solid #ddd;
+                                                                /* Thêm đường kẻ trái để làm nổi bật */
+                                                                padding-left: 10px;
+                                                                /* Thêm khoảng cách giữa đường kẻ và nội dung */
+                                                            }
+
+                                                            /* Thêm một chút style cho form sửa */
+                                                            .edit-reply-form {
+                                                                margin-top: 10px;
+                                                            }
+                                                        </style>
+
+                                                        {{-- form đánh giá và nhận xét --}}
 
 
 
-                                                        </div>
                                                     </div>
-
                                                 </div>
+
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                        </div>
 
 
 
