@@ -39,9 +39,17 @@
                             </td>
                             <!-- price -->
                             <td class="tp-cart-price">
-                                <span>{{ isset($product['bienthe']->gia_moi)
-                                    ? number_format($product['bienthe']->gia_moi, 0, ',', '.') . ' VNĐ'
-                                    : 'Chưa có giá' }}</span>
+
+                                <span>
+                                    @if (isset($product['bienthe']->gia_moi) && $product['bienthe']->gia_moi > 0)
+                                        {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
+                                    @elseif (isset($product['bienthe']->gia_cu) && $product['bienthe']->gia_cu > 0)
+                                        {{ number_format($product['bienthe']->gia_cu, 0, ',', '.') }} VNĐ
+                                    @else
+                                        Chưa có giá
+                                    @endif
+                                </span>
+
                             </td>
                             <!-- quantity -->
                             <td class="tp-cart-quantity">
@@ -106,7 +114,7 @@
     </div>
     <!-- Toast thông báo mã giảm giá -->
     <div id="discount-toast" class="alert alert-danger" role="alert"
-         style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: none; min-width: 250px; background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; text-align: center; font-weight: bold;">
+        style="position: fixed; bottom: 20px; right: 20px; z-index: 9999; display: none; min-width: 250px; background-color: #f8d7da; color: #721c24; padding: 10px; border-radius: 4px; text-align: center; font-weight: bold;">
         <span id="discount-toast-message"></span>
     </div>
 </div>
@@ -190,11 +198,11 @@
         $.ajax({
             url: "/Discount-Cart/" + code,
             type: "GET",
-            success: function (data) {
+            success: function(data) {
                 // Nếu áp mã thành công, load lại phần giỏ hàng
                 $("#cart-list-content").html(data);
             },
-            error: function (xhr) {
+            error: function(xhr) {
                 try {
                     const json = xhr.responseJSON;
                     if (json && json.message) {

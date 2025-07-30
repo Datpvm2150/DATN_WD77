@@ -168,9 +168,9 @@
                 <div class="col">
                     <div class="tp-mobile-item text-center">
                         <a href="{{ route('yeuthich') }}" class="tp-mobile-item-btn">
-                                        <i class="flaticon-love"></i>
-                                        <span>Danh sách yêu thích</span>
-                                    </a>
+                            <i class="flaticon-love"></i>
+                            <span>Danh sách yêu thích</span>
+                        </a>
                     </div>
                 </div>
                 <div class="col">
@@ -226,96 +226,16 @@
     <!-- search area end -->
 
     <!-- cart mini area start -->
+
     <div class="cartmini__area tp-all-font-roboto">
         <div class="cartmini__wrapper d-flex justify-content-between flex-column">
-
             <div class="change-item-cart" id="change-item-cart">
-                @if (Session::has('cart') != null)
-                    <div class="cartmini__top-wrapper">
-                        <div class="cartmini__top p-relative">
-                            <div class="cartmini__top-title">
-                                <h4>Giỏ hàng</h4>
-                            </div>
-                            <div class="cartmini__close">
-                               <button type="button" class="cartmini__close-btn cartmini-close-btn"><i
-                                       class="fal fa-times"></i></button>
-                           </div>
-                        </div>
-                        <div class="cartmini__widget">
-                            @foreach (Session::get('cart')->products as $idbt => $product)
-                                <div class="cartmini__widget-item">
-                                    <div class="cartmini__thumb">
-                                        <a href="#">
-                                            <img src="{{ asset($product['productInfo']->anh_san_pham) }}"
-                                                alt="{{ $product['productInfo']->ten_san_pham ?? 'Product Image' }}">
-                                        </a>
-                                    </div>
-                                    <div class="cartmini__content">
-                                        <h5 class="cartmini__title"
-                                            style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
-                                            <a href="#"
-                                                style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 150px;">
-                                                {{ isset($product['productInfo']->ten_san_pham) ? $product['productInfo']->ten_san_pham : 'Tên sản phẩm không có' }}
-                                            </a>
-                                        </h5>
-                                        <div class="cartmini__price-wrapper">
-                                            <span class="cartmini__price">
-                                                {{ isset($product['bienthe']->gia_moi) ? number_format($product['bienthe']->gia_moi, 0, ',', '.') . ' VNĐ' : 'Chưa có giá' }}
-                                            </span>
-                                            <span class="cartmini__quantity">
-                                                x {{ isset($product['quantity']) ? $product['quantity'] : '...' }}
-                                            </span>
-                                        </div>
-                                        <div class="cartmini__price-wrapper">
-                                            <span>
-                                                {{ isset($product['bienthe']->dungLuong) ? $product['bienthe']->dungLuong->ten_dung_luong : '...' }}
-                                            </span>
-
-                                            <span class="cartmini__quantity">
-                                                x
-                                                {{ isset($product['bienthe']->mauSac) ? $product['bienthe']->mauSac->ten_mau_sac : '...' }}
-                                            </span>
-                                        </div>
-                                    </div>
-                                    <button class="cartmini__del"><i class="fa-regular fa-xmark"
-                                            data-idbt="{{ $idbt }}"></i></button>
-                                </div>
-                            @endforeach
-                        </div>
-                    </div>
-                    <div class="cartmini__checkout">
-                        <div class="cartmini__checkout-title mb-30">
-                            <h4>Tổng giá:</h4>
-                            <span>
-                                {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 0, ',', '.') : '0' }}
-                                VNĐ
-                            </span>
-                            <input type="number" hidden name="" id="total-quantity-cart"
-                                value="{{ isset(Session::get('cart')->totalProduct) ? Session::get('cart')->totalProduct : 0 }}">
-                        </div>
-                        <div class="cartmini__checkout-title mb-30">
-                            <h4>Tổng sản phẩm:</h4>
-                            <span>
-                                {{ isset(Session::get('cart')->totalProduct) ? number_format(Session::get('cart')->totalProduct, 0, ',', '.') : '0' }}
-                            </span>
-                        </div>
-                        <div class="cartmini__checkout-btn">
-                            <a href="{{ route('cart.index') }}" class="tp-btn mb-10 w-100"> Xem giỏ hàng</a>
-                            <a href="{{ route('thanhtoan') }}" class="tp-btn tp-btn-border w-100"> Thanh toán</a>
-                        </div>
-                    </div>
-                @else
-                    <div class="cartmini__empty text-center">
-                        <img src="{{ asset('assets/client/img/product/cartmini/empty-cart.png') }}" alt="">
-                        <p>Giỏ hàng của bạn trống</p>
-                        <a href="{{ route('trangchu') }}" class="tp-btn">Đi tới cửa hàng</a>
-                        <input type="number" hidden name="" id="total-quantity-cart"
-                            value="{{ isset(Session::get('cart')->totalProduct) ? Session::get('cart')->totalProduct : 0 }}">
-                    </div>
-                @endif
+                @include('clients.cart.cart-drop')
             </div>
         </div>
     </div>
+
+
     <!-- cart mini area end -->
 
     <!-- header area start -->
@@ -346,11 +266,11 @@
 
                                     </li>
                                     <li>
-                                        <a href="{{route('san-pham')}}">Sản phẩm</a>
+                                        <a href="{{ route('san-pham') }}">Sản phẩm</a>
                                     </li>
 
                                     <li>
-                                        <a href="{{route('bai-viet')}}">Tin tức</a>
+                                        <a href="{{ route('bai-viet') }}">Tin tức</a>
                                     </li>
                                     <li><a href="{{ route('lienhe') }}">Liên hệ</a></li>
                                 </ul>

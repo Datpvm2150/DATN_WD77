@@ -24,9 +24,6 @@
                             </a>
                         </h5>
                         <div class="cartmini__price-wrapper">
-                            {{-- <span class="cartmini__price">
-                                {{ isset($product['bienthe']->gia_moi) ? number_format($product['bienthe']->gia_moi, 0, ',', '.') . ' VNĐ' : 'Chưa có giá' }}
-                            </span> --}}
                             <span class="cartmini__price">
                                 @if (!empty($product['bienthe']->gia_moi))
                                     {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ

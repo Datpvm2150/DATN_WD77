@@ -391,7 +391,7 @@
                                         }
 
 
-                                        
+
                                         function fetchPrice() {
                                             if (selectedMauSacId && selectedDungLuongId) {
                                                 $.ajax({

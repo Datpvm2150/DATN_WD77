@@ -327,3 +327,4 @@ Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.
 // chat
 
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
+
