@@ -140,25 +140,8 @@
                                         $giaMoi = $bienThe->gia_moi ?? 0;
                                     @endphp
 
-{{-- <<<<<<< HEAD
 
-    <div class="tp-product-details-price-wrapper mb-20">
-        @if ($giaMoi > 0 && $giaMoi < $giaCu)
-            <span class="tp-product-details-price old-price" id="old-price">
-                {{ number_format($giaCu, 0, ',', '.') }}₫
-            </span>
-            <span class="tp-product-details-price new-price" id="new-price">
-                {{ number_format($giaMoi, 0, ',', '.') }}₫
-            </span>
-        @else
-            <span class="tp-product-details-price new-price" id="new-price">
-                {{ number_format($giaCu, 0, ',', '.') }}₫
-            </span>
-        @endif
-    </div>
-@endif
 
-======= --}}
                                     <div class="tp-product-details-price-wrapper mb-20">
                                         @if ($giaMoi > 0 && $giaMoi < $giaCu)
                                             <span class="tp-product-details-price old-price" id="old-price">
@@ -174,6 +157,23 @@
                                         @endif
                                     </div>
                                 @endif
+
+
+                                {{-- <div class="tp-product-details-price-wrapper mb-20">
+                                        @if ($giaMoi > 0 && $giaMoi < $giaCu)
+                                            <span class="tp-product-details-price old-price" id="old-price">
+                                                {{ number_format($giaCu, 0, ',', '.') }}₫
+                                            </span>
+                                            <span class="tp-product-details-price new-price" id="new-price">
+                                                {{ number_format($giaMoi, 0, ',', '.') }}₫
+                                            </span>
+                                        @else
+                                            <span class="tp-product-details-price new-price" id="new-price">
+                                                {{ number_format($giaCu, 0, ',', '.') }}₫
+                                            </span>
+                                        @endif
+                                    </div> --}}
+                                
                                 <!-- Variations -->
                                 <div class="tp-product-details-variation">
                                     <!-- Color Variation -->
@@ -1157,18 +1157,18 @@
                                                                                             @endfor
                                                                                         </div>
                                                                                         <!-- <div>
-                                                                                                                                                    <span>Phân loại hàng:</span>
-                                                                                                                                                    @if ($danhgia->bienTheDaMua->isNotEmpty())
+                                                                                                                                                        <span>Phân loại hàng:</span>
+                                                                                                                                                        @if ($danhgia->bienTheDaMua->isNotEmpty())
     @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
     {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                                                                                                                                                            @if ($index < $danhgia->bienTheDaMua->count() - 1)
+                                                                                                                                                                @if ($index < $danhgia->bienTheDaMua->count() - 1)
     ,
     @endif
     @endforeach
 @else
     <p>Không có biến thể nào được mua từ sản phẩm này.</p>
     @endif
-                                                                                                                                                </div> -->
+                                                                                                                                                    </div> -->
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>
