@@ -10,6 +10,7 @@ use App\Models\SanPham;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -29,22 +30,45 @@ class CartController extends Controller
         $dungLuongId = intval($request->query('dungLuongId'));
 
         if (!$quantity || !$mauSacId || !$dungLuongId) {
-            return redirect()->back()->with('error', 'Thông tin sản phẩm không đầy đủ.');
+            return response()->json(['message' => 'Thông tin sản phẩm không đầy đủ.'], 400);
         }
+
         $product = SanPham::find($id);
         if (!$product) {
-            return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
+            return response()->json(['message' => 'Sản phẩm không tồn tại.'], 404);
         }
-        $bienthe = BienTheSanPham::where('san_pham_id', $id)->where('dung_luong_id', $dungLuongId)->where('mau_sac_id', $mauSacId)->first();
+
+        $bienthe = BienTheSanPham::where('san_pham_id', $id)
+            ->where('dung_luong_id', $dungLuongId)
+            ->where('mau_sac_id', $mauSacId)
+            ->first();
+
         if (!$bienthe) {
-            return redirect()->back()->with('error', 'Biến thể không tồn tại.');
+            return response()->json(['message' => 'Biến thể không tồn tại.'], 404);
         }
-        $oldCart = Session('cart') ? Session('cart') : [];
+
+        $oldCart = Session::has('cart') ? Session::get('cart') : [];
         $newCart = new Cart($oldCart);
+
+        $existingQty = isset($newCart->products[$bienthe->id]) ? $newCart->products[$bienthe->id]['quantity'] : 0;
+        $totalRequested = $existingQty + $quantity;
+
+        if ($totalRequested > $bienthe->so_luong) {
+            $soConLai = $bienthe->so_luong - $existingQty;
+            return response()->json([
+                'message' => 'Giỏ hàng vượt quá số lượng tồn kho. Bạn chỉ có thể thêm tối đa ' . $soConLai . ' sản phẩm nữa.'
+            ], 400);
+        }
+
         $newCart->AddCart($product, $bienthe, $quantity);
         $request->session()->put('cart', $newCart);
-        return view('clients.cart.cart-drop');
+
+        return response()->json([
+            'html' => view('clients.cart.cart-drop')->render(),
+            'soLuongConLai' => $bienthe->so_luong - ($existingQty + $quantity)
+        ]);
     }
+
 
     public function DeleteItemCart(Request $request, $idbt)
     {
@@ -122,7 +146,7 @@ class CartController extends Controller
 
         // Kiểm tra mã cá nhân
         if ($discount->loai_ma === 'ca_nhan') {
-            if (!auth()->check()) {
+            if (!Auth::check()) {
                 return response()->json(['message' => 'Bạn cần đăng nhập để sử dụng mã này.'], 401);
             }
 

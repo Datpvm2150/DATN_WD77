@@ -51,7 +51,6 @@
             </div>
         </div>
     </section>
-    <!-- khu vực breadcrumb kết thúc -->
 
     <!-- khu vực thanh toán bắt đầu -->
     <section class="tp-checkout-area pb-120" data-bg-color="#EFF1F5">
@@ -179,12 +178,12 @@
                     <div class="tp-checkout-place white-bg">
                         <h3 class="tp-checkout-place-title">Đơn hàng của bạn</h3>
 
-                        <div class="tp-order-info-list">
-                            <ul>
-                                <li class="tp-order-info-list-header">
-                                    <h4>Sản phẩm</h4>
-                                    <h4>Tổng</h4>
-                                </li>
+                    <div class="tp-order-info-list">
+                        <ul>
+                            <li class="tp-order-info-list-header">
+                                <h4>Sản phẩm</h4>
+                                <h4>Tổng</h4>
+                            </li>
                                 @foreach ($cart->products as $product)
                                     <li class="tp-order-info-list-desc">
                                         <p>
@@ -217,12 +216,12 @@
                                     <span>Vận chuyển</span>
                                     <div class="tp-order-info-list-shipping-item d-flex flex-column align-items-end">
                                         <span>
-                                            {{--  <input id="flat_rate" type="radio" name="shipping"> --}}
+                                            {{-- <input id="flat_rate" type="radio" name="shipping"> --}}
                                             <label for="flat_rate">Phí vận chuyển: 50.000 VNĐ</label>
                                         </span>
                                         <span>
-                                            {{--   <input id="free_shipping" type="radio" name="shipping">
-                                   <label for="free_shipping">Miễn phí vận chuyển</label> --}}
+                                            {{-- <input id="free_shipping" type="radio" name="shipping">
+                                            <label for="free_shipping">Miễn phí vận chuyển</label> --}}
                                         </span>
                                     </div>
                                 </li>
@@ -237,8 +236,7 @@
                                             @csrf
                                             <div class="tp-return-customer-input">
                                                 <label>Mã giảm giá:</label>
-                                                <input type="text" name="discount_code" placeholder="Mã giảm giá"
-                                                    required>
+                                                <input type="text" name="discount_code" placeholder="Mã giảm giá" required>
                                             </div>
                                             <button type="button" id="applyDiscountButton"
                                                 class="tp-return-customer-btn tp-checkout-btn">Áp dụng</button>
@@ -256,6 +254,7 @@
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
                                             <line x1="6" y1="6" x2="18" y2="18"
                                                 stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+
                                         </svg>
                                     </button>
                                 </li>
@@ -278,8 +277,8 @@
                             </div>
 
                             <div class="tp-checkout-payment-item">
-                                <input id="cash-on-delivery" type="radio" name="payment"
-                                    value="Thanh toán khi nhận hàng" required>
+                                <input id="cash-on-delivery" type="radio" name="payment" value="Thanh toán khi nhận hàng"
+                                    required>
                                 <label for="cash-on-delivery">Thanh toán khi nhận hàng</label>
                             </div>
 
@@ -287,8 +286,8 @@
                                 thức thanh toán.</div>
                         </div>
 
-                        <button type="button" class="tp-checkout-btn" id="submitOrder">Đặt hàng</button>
-                    </div>
+                    <button type="button" class="tp-checkout-btn" id="submitOrder">Đặt hàng</button>
+
                 </div>
             </div>
         </div>
@@ -304,6 +303,7 @@
             transition: color 0.2s ease;
         }
 
+
         .btn-remove-discount:hover {
             color: #ff4d4d;
         }
@@ -316,6 +316,7 @@
             z-index: 1050;
             /* Đảm bảo nó nằm trên các phần tử khác */
         }
+
 
         .d-none {
             display: none;
@@ -338,7 +339,7 @@
                 addressField.required = false;
             }
         }
-        document.getElementById('submitOrder').addEventListener('click', function(event) {
+        document.getElementById('submitOrder').addEventListener('click', function (event) {
             event.preventDefault();
             let isValid = true;
 
@@ -412,21 +413,21 @@
                 const note = document.getElementById('note')?.value || ''; // Nếu có trường ghi chú
                 loading.classList.remove('d-none');
 
-                fetch('{{ route('placeOrder') }}', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                        },
-                        body: JSON.stringify({
-                            name: name.value,
-                            phone: phone.value,
-                            email: email.value,
-                            address: address.value,
-                            payment_method: paymentMethod,
-                            note: note
-                        })
+                fetch('{{ route("placeOrder") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                    },
+                    body: JSON.stringify({
+                        name: name.value,
+                        phone: phone.value,
+                        email: email.value,
+                        address: address.value,
+                        payment_method: paymentMethod,
+                        note: note
                     })
+                })
                     .then(response => response.json())
                     .then(data => {
                         if (data.success) {
@@ -435,8 +436,7 @@
                             } else {
                                 // Thêm thông báo đặt hàng thành công
                                 const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-                                document.getElementById('toastBody').textContent =
-                                    'Đặt hàng thành công! Bạn sẽ được chuyển hướng đến đơn hàng.';
+                                document.getElementById('toastBody').textContent = 'Đặt hàng thành công! Bạn sẽ được chuyển hướng đến đơn hàng.';
                                 toast.show();
 
                                 // Sau một khoảng thời gian, chuyển hướng
@@ -458,8 +458,8 @@
                                 message += '</ul>';
 
                                 // Hiển thị modal thông báo lỗi
-                                const notFoundModal = new bootstrap.Modal(document.getElementById(
-                                    'errorModal'));
+                                const notFoundModal = new bootstrap.Modal(document.getElementById('errorModal'));
+
                                 document.getElementById('errorModalBody').innerHTML = message;
                                 notFoundModal.show();
 
@@ -474,8 +474,7 @@
                                 message += '</ul>';
 
                                 // Hiển thị modal thông báo hết hàng
-                                const outOfStockModal = new bootstrap.Modal(document.getElementById(
-                                    'errorModal'));
+                                const outOfStockModal = new bootstrap.Modal(document.getElementById('errorModal'));
                                 document.getElementById('errorModalBody').innerHTML = message;
                                 outOfStockModal.show();
 
@@ -486,15 +485,14 @@
                                 // Tạo danh sách thông báo sản phẩm tồn kho không đủ
                                 let message = '<strong>Một số sản phẩm không đủ tồn kho:</strong><ul>';
                                 data.insufficient_stock.forEach(item => {
-                                    message +=
-                                        `<li>${item.product_name}: Còn lại ${item.available_quantity} sản phẩm.</li>`;
+                                    message += `<li>${item.product_name}: Còn lại ${item.available_quantity} sản phẩm.</li>`;
+
                                 });
                                 message += '</ul>';
                                 message += '<p>Bạn có muốn đặt hàng với số lượng khả dụng không?</p>';
 
                                 // Hiển thị modal cảnh báo tồn kho
-                                const stockModal = new bootstrap.Modal(document.getElementById(
-                                    'stockWarningModal'));
+                                const stockModal = new bootstrap.Modal(document.getElementById('stockWarningModal'));
                                 document.getElementById('stockWarningModalBody').innerHTML = message;
                                 stockModal.show();
 
@@ -520,7 +518,6 @@
                             document.getElementById('toastBody').textContent = 'Có lỗi xảy ra: ' + data.message;
                             toast.show();
                         }
-
                     })
                     .catch(error => {
                         console.error('Error:', error);
@@ -632,6 +629,7 @@
             });
         });
     </script>
+
 
 
 
