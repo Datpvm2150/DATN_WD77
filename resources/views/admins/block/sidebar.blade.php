@@ -252,10 +252,28 @@
                         </ul>
                     </div>
                 </li>
-                <li>
+                {{-- <li>
                     <a href="#chat" data-bs-toggle="collapse">
                         <i class="fa fa-comments"></i>
                         <span> Tin nhắn </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="chat">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.chat.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li> --}}
+ <li>
+                    <a href="#chat" data-bs-toggle="collapse">
+                        <i class="fa fa-comments"></i>
+                        <span> Tin nhắn </span>
+                        <div id="total-unread-badge"
+                            style="display: none; background: red; color: white; padding: 3px 6px; border-radius: 50%; font-size: 12px;">
+                        </div>
                         <span class="menu-arrow"></span>
                     </a>
                     <div class="collapse" id="chat">

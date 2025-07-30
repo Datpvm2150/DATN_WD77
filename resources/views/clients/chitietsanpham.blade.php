@@ -533,8 +533,9 @@
                                                 plusBtn.classList.remove('disabled');
                                             }
                                         }
-
+//  console.log($('#cart-container'));
                                         function addToCart(sanPhamId) {
+
                                             const mauSacId = selectedMauSacId;
                                             const dungLuongId = selectedDungLuongId;
                                             const quantity = parseInt(document.getElementById('quantityInput').value);
@@ -553,7 +554,9 @@
                                                     dungLuongId: dungLuongId
                                                 },
                                                 success: function(response) {
-                                                    $('#cart-container').html(response);
+
+
+                                                    // $('#cart-container').html(response);
                                                     toastr.success('Đã thêm vào giỏ hàng!');
                                                 },
                                                 error: function(xhr) {

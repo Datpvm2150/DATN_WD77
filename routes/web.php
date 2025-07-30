@@ -38,6 +38,9 @@ use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\VNPayController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -200,6 +203,32 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('index');
         Route::get('/{id}/messages', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
         Route::post('/{id}/send', [App\Http\Controllers\Admin\ChatController::class, 'send'])->name('send');
+    });
+    Route::post('/chat-rooms/{room}/mark-read', [App\Http\Controllers\Admin\ChatController::class, 'markMessagesAsRead']);
+
+    Route::post('/set-admin-online', function (Request $request) {
+        $user = User::where('id', $request->user_id)->first();
+        if ($user && !$user->is_online) {
+            $user->update([
+                'is_online' => true,
+                'last_ping_at' => now()
+            ]);
+        }
+    });
+    Route::post('/set-admin-offline', function (Request $request) {
+        User::where('id', $request->user_id)->update(['is_online' => false]);
+    });
+
+    Route::post('/ping-online', function () {
+        $user = User::find(Auth::id());
+
+        if ($user) {
+            $user->last_ping_at = now();
+            if (!$user->is_online) {
+                $user->is_online = true;
+            }
+            $user->save();
+        }
     });
 });
 
