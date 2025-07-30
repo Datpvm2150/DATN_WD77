@@ -35,6 +35,7 @@ use App\Http\Controllers\Client\TaiKhoanController;
 use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\VNPayController;
 
