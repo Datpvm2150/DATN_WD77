@@ -21,7 +21,7 @@ class OrderService
         $voucher = KhuyenMai::create([
             'ma_khuyen_mai' => $ma,
             'phan_tram_khuyen_mai' => 5,
-            'giam_toi_da' => 50000,
+            'giam_toi_da' => 500000,
             'ngay_bat_dau' => now(),
             'ngay_ket_thuc' => now()->addDays(7),
             'trang_thai' => true,
@@ -35,45 +35,53 @@ class OrderService
     }
 
     public function updatePaymentStatus($orderId)
-{
-    $hoaDon = HoaDon::findOrFail($orderId);
+    {
+        $hoaDon = HoaDon::findOrFail($orderId);
 
-    if ($hoaDon->trang_thai_thanh_toan !== HoaDon::TRANG_THAI_THANH_TOAN['Đã thanh toán']) {
-        $hoaDon->trang_thai_thanh_toan = HoaDon::TRANG_THAI_THANH_TOAN['Đã thanh toán'];
-        $hoaDon->thoi_gian_giao_dich = now();
-        $hoaDon->save();
+        if ($hoaDon->trang_thai_thanh_toan !== HoaDon::TRANG_THAI_THANH_TOAN['Đã thanh toán']) {
+            $hoaDon->trang_thai_thanh_toan = HoaDon::TRANG_THAI_THANH_TOAN['Đã thanh toán'];
+            $hoaDon->thoi_gian_giao_dich = now();
+            $hoaDon->save();
 
-        // Nếu có mã khuyến mãi, xử lý tăng số lần sử dụng nếu là mã cá nhân
-        if ($hoaDon->ma_khuyen_mai) {
-            $discount = KhuyenMai::where('ma_khuyen_mai', $hoaDon->ma_khuyen_mai)->first();
-            if ($discount && $discount->loai_ma === 'ca_nhan') {
-                $discount->increment('da_su_dung');
+            // Nếu có mã khuyến mãi, xử lý tăng số lần sử dụng nếu là mã cá nhân
+            if ($hoaDon->ma_khuyen_mai) {
+                $discount = KhuyenMai::where('ma_khuyen_mai', $hoaDon->ma_khuyen_mai)->first();
+
+                if ($discount) {
+                    // Tăng số lần đã sử dụng cho cả mã cá nhân và công khai
+                    $discount->increment('da_su_dung');
+
+                    // Nếu có giới hạn số lượng và đã sử dụng >= số lượng, thì vô hiệu hóa
+                    if (!is_null($discount->so_luong) && $discount->da_su_dung >= $discount->so_luong) {
+                        $discount->trang_thai = false;
+                    }
+
+                    $discount->save();
+                }
             }
-        }
 
-        // Gửi mã giảm giá nếu đủ điều kiện
-        if ($hoaDon->tong_tien >= 1000000) {
-            if ($hoaDon->phuong_thuc_thanh_toan === 'vnpay') {
-                $this->sendVoucherAfterPaid($hoaDon);
-            } elseif (
-                $hoaDon->phuong_thuc_thanh_toan === 'cod' &&
-                $hoaDon->trang_thai === HoaDon::TRANG_THAI['Đã giao']
-            ) {
-                $this->sendVoucherAfterPaid($hoaDon);
+            // Gửi mã giảm giá nếu đủ điều kiện
+            if ($hoaDon->tong_tien >= 1000000) {
+                if ($hoaDon->phuong_thuc_thanh_toan === 'vnpay') {
+                    $this->sendVoucherAfterPaid($hoaDon);
+                } elseif (
+                    $hoaDon->phuong_thuc_thanh_toan === 'cod' &&
+                    $hoaDon->trang_thai === HoaDon::TRANG_THAI['Đã giao']
+                ) {
+                    $this->sendVoucherAfterPaid($hoaDon);
+                }
             }
+
+            // Gửi email xác nhận thanh toán thành công
+            try {
+                Mail::to($hoaDon->email)->send(new InvoiceCreated($hoaDon));
+            } catch (\Exception $e) {
+                Log::error("Không thể gửi email: " . $e->getMessage());
+            }
+
+            return back()->with('success', 'Cập nhật trạng thái thanh toán thành công.');
         }
 
-        // Gửi email xác nhận thanh toán thành công
-        try {
-            Mail::to($hoaDon->email)->send(new InvoiceCreated($hoaDon));
-        } catch (\Exception $e) {
-            Log::error("Không thể gửi email: " . $e->getMessage());
-        }
-
-        return back()->with('success', 'Cập nhật trạng thái thanh toán thành công.');
+        return back()->with('info', 'Đơn hàng đã được thanh toán trước đó.');
     }
-
-    return back()->with('info', 'Đơn hàng đã được thanh toán trước đó.');
-}
-
 }

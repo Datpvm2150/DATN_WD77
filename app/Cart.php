@@ -69,5 +69,5 @@ class Cart
             $this->totalProduct = count($this->products);
         }
     }
-    
+
 }

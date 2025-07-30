@@ -232,7 +232,7 @@ class VnpayController extends Controller
 
                         // $hoaDon->trang_thai_thanh_toan = HoaDon::TRANG_THAI_THANH_TOAN['Đã thanh toán'];
                         // $hoaDon->thoi_gian_giao_dich = $formattedPayDate;
-                        $hoaDon->save();
+                        // $hoaDon->save();
                         // Tăng số lần sử dụng mã cá nhân nếu có
                         // if ($hoaDon->ma_khuyen_mai) {
                         //     $discount = KhuyenMai::where('ma_khuyen_mai', $hoaDon->ma_khuyen_mai)->first();

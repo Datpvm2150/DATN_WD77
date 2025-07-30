@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;;
 
 use App\Services\OrderService;
-use App\Cart;
+use App\Cart;   
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\VNPayController;
@@ -320,24 +320,6 @@ class ThanhToanController extends Controller
             Session::forget('discount_code');
             Session::forget('discount_percentage');
             Session::forget('maxDiscount');
-            // if ($tongTienSauGiam >= 1000000) {
-            //     $voucherCode = strtoupper(Str::random(8)); // Mã ngẫu nhiên
-            //     $voucher = KhuyenMai::create([
-            //         'ma_khuyen_mai' => $voucherCode,
-            //         'phan_tram_khuyen_mai' => 5, 
-            //         'giam_toi_da' => 50000, 
-            //         'ngay_bat_dau' => now(),
-            //         'ngay_ket_thuc' => now()->addDays(7), 
-            //         'trang_thai' => true,
-            //         'so_luong' => 1, 
-            //         'da_su_dung' => 0,
-            //         'user_id' => Auth::id(), 
-            //         'loai_ma' => 'ca_nhan', 
-            //     ]);
-
-
-            //     Mail::to(auth()->user()->email)->send(new MaGiamGiaMoi($voucherCode, $voucher));
-            // }
 
             // **Xử lý theo từng phương thức thanh toán**
             switch ($request->payment_method) {

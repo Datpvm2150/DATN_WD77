@@ -69,6 +69,8 @@ class KhuyenMaiController extends Controller
             'phan_tram_khuyen_mai' => $request->phan_tram_khuyen_mai,
             'giam_toi_da' => $request->giam_toi_da,
             'ngay_bat_dau' => $request->ngay_bat_dau,
+            'so_luong'=>$request->so_luong,
+            // 'da_su_dung'=>$request->da_su_dung,
             'ngay_ket_thuc' => $request->ngay_ket_thuc,
             'trang_thai' => 1,
         ];
@@ -129,7 +131,10 @@ class KhuyenMaiController extends Controller
             'phan_tram_khuyen_mai' => $request->phan_tram_khuyen_mai,
             'giam_toi_da' => $request->giam_toi_da,
             'ngay_bat_dau' => $request->ngay_bat_dau,
+            'so_luong'=>$request->so_luong,
+            // 'da_su_dung'=>$request->da_su_dung,
             'ngay_ket_thuc' => $request->ngay_ket_thuc,
+            'trang_thai' => 1,
         ]);
 
         // Automatically update status if promotion has ended
@@ -194,6 +199,8 @@ class KhuyenMaiController extends Controller
         // Trả về thông báo hoặc view nếu cần
         return redirect()->back()->with('success', "Đã cập nhật trạng thái của $updatedCount khuyến mãi.");
     }
+   
+
 
     public function trash(Request $request)
     {

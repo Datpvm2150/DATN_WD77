@@ -180,6 +180,7 @@ class ChiTietSanPhamController extends Controller
         }
     }
 
+
     public function getAllVariants(Request $request)
     {
         $sanPhamId = $request->input('san_pham_id');
@@ -233,3 +234,4 @@ class ChiTietSanPhamController extends Controller
         return redirect()->route('chitietsanpham', ['id' => $sanPhamId])->with('success', 'Câu trả lời đã được cập nhật!');
     }
 }
+
