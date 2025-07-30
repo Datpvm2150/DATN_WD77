@@ -22,10 +22,11 @@ class TrangChuController extends Controller
         $bannersFoots = Banner::where('vi_tri', 'footer')->where('trang_thai', 1)->get(); // w 420 h 350
         $danhMucs = DanhMuc::withCount('sanPhams')->get();
         $khuyenMais = KhuyenMai::where('trang_thai', 1)
-            ->where('ngay_bat_dau', '<=', now())
-            ->where('ngay_ket_thuc', '>=', now())
+            ->where('loai_ma', 'cong_khai')
+            ->where('ngay_bat_dau', '<=', Carbon::now())
+            ->where('ngay_ket_thuc', '>=', Carbon::now())
             ->orderBy('ngay_ket_thuc', 'asc')
-            ->get();
+            ->limit(10)->get();
         $hot15 = SanPham::limit(15)
             ->with('bienTheSanPhams', 'hinhAnhSanPhams')
             ->where('is_hot', 1)
@@ -46,11 +47,18 @@ class TrangChuController extends Controller
             ->get();
         $newProducts = $new20->count() < 6 ? $new20 : $new20->random(6);
         $allIdNewProducts = $newProducts->pluck('id')->toArray();
-        $randProducts = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams')
-            ->inRandomOrder()
-            ->limit(4)
+        $randProducts = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams', 'danhMuc', 'danhGias')
+            ->whereNotIn('id', $allIdProducts)
+            ->whereNotIn('id', $allIdNewProducts)
             ->get();
 
+        if ($randProducts->isEmpty()) {
+            // fallback: lấy ngẫu nhiên bất kỳ 4 sản phẩm khác
+            $randProducts = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams', 'danhMuc', 'danhGias')
+                ->inRandomOrder()
+                ->limit(4)
+                ->get();
+        }
         if (Auth::user()) {
             $isLoved = [];
             $isLoved2 = [];
@@ -73,6 +81,25 @@ class TrangChuController extends Controller
         $baiViets = BaiViet::where('trang_thai', 1)
             ->orderBy('created_at', 'desc')
             ->get();
+
+        // Lấy 8 sản phẩm nổi bật theo đánh giá trung bình, nếu không đủ thì lấy theo lượt xem
+        $products = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams', 'danhMuc', 'danhGias')
+            ->whereHas('danhGias') // Chỉ lấy sản phẩm có đánh giá
+            ->withAvg('danhGias', 'diem_so')
+            ->orderByDesc('danh_gias_avg_diem_so')
+            ->take(8)
+            ->get();
+
+        $countRated = $products->count();
+        if ($countRated < 8) {
+            // Lấy thêm sản phẩm theo lượt xem (không trùng id)
+            $moreProducts = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams', 'danhMuc', 'danhGias')
+                ->whereNotIn('id', $products->pluck('id'))
+                ->orderByDesc('luot_xem')
+                ->take(8 - $countRated)
+                ->get();
+            $products = $products->concat($moreProducts);
+        }
 
         return view('clients.trangchu', compact('bannersHeas', 'bannersSides', 'bannersFoots', 'danhMucs', 'khuyenMais', 'products', 'newProducts', 'randProducts', 'baiViets'));
     }

@@ -38,10 +38,20 @@
                                 </span>
                             </td>
                             <!-- price -->
+                            {{-- Sửa giá --}}
                             <td class="tp-cart-price">
-                                <span>{{ isset($product['bienthe']->gia_moi)
-                                    ? number_format($product['bienthe']->gia_moi, 0, ',', '.') . ' VNĐ'
-                                    : 'Chưa có giá' }}</span>
+
+
+                                <span>
+                                    @if (isset($product['bienthe']->gia_moi) && $product['bienthe']->gia_moi > 0)
+                                        {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
+                                    @elseif (isset($product['bienthe']->gia_cu) && $product['bienthe']->gia_cu > 0)
+                                        {{ number_format($product['bienthe']->gia_cu, 0, ',', '.') }} VNĐ
+
+                                    @else
+                                        Chưa có giá
+                                    @endif
+                                </span>
                             </td>
                             <!-- quantity -->
                             <td class="tp-cart-quantity">
@@ -53,8 +63,6 @@
                                                 stroke-linecap="round" stroke-linejoin="round" />
                                         </svg>
                                     </span>
-                                    {{-- <input class="tp-cart-input" type="text"
-                                        value="{{ isset($product['quantity']) ? $product['quantity'] : 0 }}"> --}}
                                     <input class="tp-cart-input cart-quantity" type="text"
                                         value="{{ isset($product['quantity']) ? $product['quantity'] : 0 }}"
                                         data-max-quantity="{{ $product['bienthe']->so_luong }}">
@@ -90,20 +98,90 @@
         <div class="row align-items-end">
             <div class="col-xl-6 col-md-8">
                 <div class="tp-cart-coupon">
-                    {{-- <form action="#"> --}}
                     <div class="tp-cart-coupon-input-box">
                         <label>Mã khuyễn mãi:</label>
                         <div class="tp-cart-coupon-input d-flex align-items-center">
                             <input type="text" id="discount-code" placeholder="Nhập mã khuyến mãi">
-                            <button onclick="discount()" style="font-size: 15px">Áp dụng</button>
+                            <button onclick="discount()" style="font-size: 15px">Áp dụng mã</button>
+
+                        </div>
+                        <div class="dropdown mb-3">
+                            <button class="btn btn-secondary dropdown-toggle w-100" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                Chọn mã khuyến mãi
+                            </button>
+                            <div class="dropdown-menu p-2" style="width: 100%; max-height: 300px; overflow-y: auto">
+                                @php
+                                    use Illuminate\Support\Carbon;
+
+                                    $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
+                                        ->where('trang_thai', 1)
+                                        ->get();
+
+                                    $maGiamGiaCaNhan = auth()->check()
+                                        ? \App\Models\KhuyenMai::where('user_id', auth()->id())
+                                            ->where('trang_thai', 1)
+                                            ->get()
+                                        : collect();
+                                @endphp
+
+                                <div class="row">
+                                    <div class="col-6">
+                                        <strong class="dropdown-header">Voucher:</strong>
+                                        @forelse($maGiamGiaCongKhai as $item)
+                                            <button type="button" class="dropdown-item"
+                                                onclick="applyCode('{{ $item->ma_khuyen_mai }}')">
+                                                <span
+                                                    style="color: #007bff; font-weight: bold;">{{ $item->ma_khuyen_mai }}</span>
+                                                <br>
+                                                <small>
+                                                    Giảm: {{ $item->phan_tram_khuyen_mai }}% (Tối đa
+                                                    {{ number_format($item->giam_toi_da) }}₫)
+                                                    <br>
+                                                    HSD:<span style="color: red">
+                                                        {{ \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y') }}</span>
+                                                </small>
+                                            </button>
+                                        @empty
+                                            <span class="dropdown-item text-muted">Không có</span>
+                                        @endforelse
+                                    </div>
+
+                                    <div class="col-6">
+                                        <strong class="dropdown-header">Voucher tặng:</strong>
+                                        @if (auth()->check())
+                                            @forelse($maGiamGiaCaNhan as $item)
+                                                <button type="button" class="dropdown-item"
+                                                    onclick="applyCode('{{ $item->ma_khuyen_mai }}')">
+                                                    <span
+                                                        style="color: #007bff; font-weight: bold;">{{ $item->ma_khuyen_mai }}</span>
+                                                    <br>
+                                                    <small>
+                                                        Giảm: {{ $item->phan_tram_khuyen_mai }}% (Tối đa
+                                                        {{ number_format($item->giam_toi_da) }}₫)
+                                                        <br>
+                                                        HSD:<span style="color: red">
+                                                            {{ \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y') }}</span>
+                                                    </small>
+                                                </button>
+                                            @empty
+                                                <span class="dropdown-item text-muted">Không có</span>
+                                            @endforelse
+                                        @else
+                                            <span class="dropdown-item text-muted">Vui lòng đăng
+                                                nhập</span>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    {{-- </form> --}}
+
+
                 </div>
             </div>
             <div class="col-xl-6 col-md-4">
                 <div class="tp-cart-update text-md-end">
-                    {{-- <button type="button" class="tp-cart-update-btn">Update Cart</button> --}}
                     <a href="{{ route('trangchu') }}" type="button" class="tp-cart-update-btn">Đi đến mua sắm</a>
                 </div>
             </div>
@@ -112,75 +190,117 @@
 </div>
 <div class="col-xl-3 col-lg-4 col-md-6">
     <div class="tp-cart-checkout-wrapper">
+        @php
+            $cart = Session::get('cart');
+            $totalPrice = $cart->totalPrice ?? 0;
+
+            $discountCode = Session::get('discount_code');
+            $discount = Session::get('discount_percentage') ?? 0;
+            $maxDiscount = Session::get('maxDiscount') ?? 0;
+
+            $discountAmount = 0;
+
+            if ($discountCode && $totalPrice > 0) {
+                $discountAmount = $totalPrice * ($discount / 100);
+                if ($maxDiscount > 0 && $discountAmount > $maxDiscount) {
+                    $discountAmount = $maxDiscount;
+                }
+            }
+
+            $finalTotal = max(0, $totalPrice - $discountAmount);
+        @endphp
+
+        <!-- Tổng phụ -->
         <div class="tp-cart-checkout-top d-flex align-items-center justify-content-between">
             <span class="tp-cart-checkout-top-title">Tổng phụ</span>
             <span class="tp-cart-checkout-top-price" style="font-size: 16px">
-                {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 0, ',', '.') : '0' }}
-                VNĐ
+                {{ number_format($totalPrice, 0, ',', '.') }} VNĐ
             </span>
         </div>
-        <div class="tp-cart-checkout-shipping">
-            {{-- <h4 class="tp-cart-checkout-shipping-title">Shipping</h4> --}}
 
+        <!-- Giảm giá -->
+        <div class="tp-cart-checkout-shipping">
             <div class="tp-cart-checkout-shipping-option-wrapper">
                 <div class="tp-cart-checkout-shipping-option text-black">
                     Mã giảm giá:
-                    @if (Session::get('discount_code'))
-                        <span class="text-dark">
-                            {{ Session::get('discount_code') }}
-                        </span>
+                    @if ($discountCode)
+                        <span class="text-dark">{{ $discountCode }}</span>
                         <button onclick="DeleteDiscount()">x</button>
                     @endif
                 </div>
+
                 <div class="tp-cart-checkout-shipping-option text-black">
                     Giảm giá:
-                    @if (Session::get('discount_code'))
-                        @php
-                            $discountCode = Session::get('discount_code');
-                            $discount = Session::get('discount_percentage');
-                            $maxDiscount = Session::get('maxDiscount');
-                            $discountAmount = Session::get('cart')->totalPrice * ($discount / 100);
-                            if ($maxDiscount > 0 && $maxDiscount != null && $maxDiscount <= $discountAmount) {
-                                $discountAmount = $maxDiscount;
-                            } elseif ($maxDiscount <= 0) {
-                                $discountAmount = 0;
-                            }
-                        @endphp
-                        <span class="text-danger">
-                            {{ number_format($discountAmount, 2, ',', '.') }} VNĐ
-                        </span>
-                    @else
-                        <span class="text-danger">
-                            0 đ
-                        </span>
-                    @endif
+                    <span class="text-danger">
+                        {{ number_format($discountAmount, 0, ',', '.') }} VNĐ
+                    </span>
                 </div>
             </div>
         </div>
+
+        <!-- Tổng còn lại -->
         <div class="tp-cart-checkout-total d-flex align-items-center justify-content-between">
             <span>Còn lại</span>
-            @if (isset($discount))
-                <span>
-                    @php
-                        $total = Session::get('cart')->totalPrice - $discountAmount;
-                        $total = $total > 0 ? number_format($total, 2, ',', '.') : 0;
-                    @endphp
-                    {{ isset($total) ? $total : 0 }}
-                    VNĐ
-                </span>
-            @else
-                <span>
-                    {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 2, ',', '.') : 0 }}
-                    VNĐ
-                </span>
-            @endif
-
+            <span>
+                {{ number_format($finalTotal, 0, ',', '.') }} VNĐ
+            </span>
         </div>
+
+        <!-- Nút thanh toán -->
         <div class="tp-cart-checkout-proceed">
             <a href="{{ route('thanhtoan') }}" class="tp-cart-checkout-btn w-100">Tiến hành thanh toán</a>
         </div>
     </div>
 </div>
-<input type="hidden" name="" id="total-quantity-list-cart"
-    value="{{ isset(Session::get('cart')->totalProduct) ? Session::get('cart')->totalProduct : 0 }}">
+
+<input type="hidden" name="" id="total-quantity-list-cart" value="{{ $cart->totalProduct ?? 0 }}">
+
 <script src="{{ asset('assets/client/js/main.js') }}"></script>
+
+<script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
+
+{{-- <script>
+    function discount() {
+        const code = document.getElementById("discount-code").value;
+
+        if (!code) {
+            showDiscountToast("Vui lòng nhập mã khuyến mãi.");
+            return;
+        }
+
+        $.ajax({
+            url: "/Discount-Cart/" + code,
+            type: "GET",
+            success: function(data) {
+                // Nếu áp mã thành công, load lại phần giỏ hàng
+                $("#cart-list-content").html(data);
+            },
+            error: function(xhr) {
+                try {
+                    const json = xhr.responseJSON;
+                    if (json && json.message) {
+                        showDiscountToast(json.message);
+                    } else {
+                        showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+                    }
+                } catch (e) {
+                    showDiscountToast("Đã xảy ra lỗi không xác định.");
+                }
+            }
+        });
+    }
+
+    function showDiscountToast(message) {
+        const toast = document.getElementById("discount-toast");
+        const msg = document.getElementById("discount-toast-message");
+
+        msg.innerText = message;
+        toast.style.display = "block";
+
+        // Tự động ẩn sau 3 giây
+        setTimeout(() => {
+            toast.style.display = "none";
+        }, 3000);
+    }
+</script> --}}
+

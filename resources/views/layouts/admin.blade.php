@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 
-    
+
 <!-- Mirrored from zoyothemes.com/tapeli/html/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Jul 2024 08:33:02 GMT -->
 <!-- Added by HTTrack --><meta http-equiv="content-type" content="text/html;charset=UTF-8" /><!-- /Added by HTTrack -->
 <head>
@@ -23,6 +23,8 @@
         <!-- Icons -->
         <link href="{{ asset('assets/admin/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        @vite(['resources/js/app.js'])
+
         @yield('css')
     </head>
 
@@ -44,7 +46,7 @@
                 @yield('content')
 
                 @include('admins.block.footer')
-                
+
             </div>
             <!-- ============================================================== -->
             <!-- End Page content -->
@@ -72,7 +74,7 @@
 
         <!-- App js-->
         <script src="{{ asset('assets/admin/js/app.js') }}"></script>
-        
+
     </body>
 
 <!-- Mirrored from zoyothemes.com/tapeli/html/ by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 16 Jul 2024 08:34:03 GMT -->

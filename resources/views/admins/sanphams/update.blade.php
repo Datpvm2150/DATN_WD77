@@ -212,7 +212,7 @@
                                                                 class="form-label">Giá mới:</label>
                                                             <input type="number" class="form-control"
                                                                 id="gia_moi-{{ $index }}" name="gia_moi[]"
-                                                                
+
                                                                 value="{{ old('gia_moi.' . $index, $bienthesanpham->gia_moi) }}">
                                                             @error('gia_moi.' . $index)
                                                                 <p class="text-danger">{{ $message }}</p>

@@ -1,5 +1,11 @@
 <?php
 
+<<<<<<< HEAD
+=======
+use App\Http\Controllers\Admin\ChatLogController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\ChatBotController;
+>>>>>>> bb8d0279ba687f0980a781abcc8e0ac657f25540
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VNPayController;
 
@@ -22,8 +28,15 @@ use App\Http\Controllers\Auth\AdminLoginController;
 
 // Client Routes
 use App\Http\Controllers\Client\TaiKhoanController;
+<<<<<<< HEAD
 use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\YeuThichController;
+=======
+use App\Http\Controllers\Auth\CustomerLoginController;
+use App\Http\Controllers\Auth\CustomerForgotPassword;
+use App\Http\Controllers\Auth\CustomerRegisterController;
+use App\Http\Controllers\Client\DanhgiaController;
+>>>>>>> bb8d0279ba687f0980a781abcc8e0ac657f25540
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Admin\AdminLienHeController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
@@ -146,6 +159,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/', [KhuyenMaiController::class, 'index'])->name('index');
         Route::get('create', [KhuyenMaiController::class, 'create'])->name('create');
         Route::post('store', [KhuyenMaiController::class, 'store'])->name('store');
+        Route::get('/{id}/show', [KhuyenMaiController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [KhuyenMaiController::class, 'edit'])->name('edit');
         Route::put('/{id}', [KhuyenMaiController::class, 'update'])->name('update');
         Route::get('/update-expired', [KhuyenMaiController::class, 'updateExpiredKhuyenMai'])->name('updateExpired');
@@ -191,6 +205,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::post('/phanhoi/reply/send/{id}', [AdminLienHeController::class, 'sendReply'])->name('phanhoi.reply.send');
         Route::get('/form-phan-hoi/{id}', [AdminLienHeController::class, 'showReplyForm'])->name('form.reply');
         Route::get('/phan-hoi/cap-nhat/{id}/{trang_thai_phan_hoi}', [AdminLienHeController::class, 'capNhatTrangThai'])->name('phan_hoi.cap_nhat');
+    });
+    // Chat
+    Route::prefix('chat')->name('chat.')->group(function () {
+        Route::get('/', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('index');
+        Route::get('/{id}/messages', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
+        Route::post('/{id}/send', [App\Http\Controllers\Admin\ChatController::class, 'send'])->name('send');
     });
 });
 
@@ -293,7 +313,8 @@ Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pha
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
 
 Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
-
+//danhgia
+// Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
 
 // Chi tiết sản phẩm
 
@@ -301,14 +322,22 @@ Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->n
 Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
 Route::get('/sanpham/lay-gia-bien-the', [ChiTietSanPhamController::class, 'layGiaBienThe'])->name('sanpham.lay_gia_bien_the');
 Route::get('/get-so-luong-bien-the', [ChiTietSanPhamController::class, 'getSoLuongBienThe'])->name('sanpham.get_so_luong_bien_the');
+Route::get('/sanpham/get-all-variants', [ChiTietSanPhamController::class, 'getAllVariants'])->name('sanpham.get_all_variants');
 Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'reply'])->name('admin.danhgia.reply');
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
+Route::get('/san-pham/check-so-luong', [ChiTietSanPhamController::class, 'checkQuantityInCart'])->name('sanpham.check_quantity');
 
 
-Route::get('/vnpay/return', [VNPayController::class, 'handleReturn'])->name('vnpay.return');
+
+Route::get('/vnpay/return', [VnpayController::class, 'handleReturn'])->name('vnpay.return');
 
 //yeu thich
 Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
+
+// chat
+
+Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
+

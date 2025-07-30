@@ -10,6 +10,7 @@ use App\Models\SanPham;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
@@ -29,22 +30,52 @@ class CartController extends Controller
         $dungLuongId = intval($request->query('dungLuongId'));
 
         if (!$quantity || !$mauSacId || !$dungLuongId) {
-            return redirect()->back()->with('error', 'Thông tin sản phẩm không đầy đủ.');
+            return response()->json(['message' => 'Thông tin sản phẩm không đầy đủ.'], 400);
         }
+
         $product = SanPham::find($id);
         if (!$product) {
-            return redirect()->back()->with('error', 'Sản phẩm không tồn tại.');
+            return response()->json(['message' => 'Sản phẩm không tồn tại.'], 404);
         }
-        $bienthe = BienTheSanPham::where('san_pham_id', $id)->where('dung_luong_id', $dungLuongId)->where('mau_sac_id', $mauSacId)->first();
+
+        $bienthe = BienTheSanPham::where('san_pham_id', $id)
+            ->where('dung_luong_id', $dungLuongId)
+            ->where('mau_sac_id', $mauSacId)
+            ->first();
+
         if (!$bienthe) {
-            return redirect()->back()->with('error', 'Biến thể không tồn tại.');
+            return response()->json(['message' => 'Biến thể không tồn tại.'], 404);
         }
-        $oldCart = Session('cart') ? Session('cart') : [];
+
+        $oldCart = Session::has('cart') ? Session::get('cart') : [];
         $newCart = new Cart($oldCart);
+
+        $existingQty = isset($newCart->products[$bienthe->id]) ? $newCart->products[$bienthe->id]['quantity'] : 0;
+        $totalRequested = $existingQty + $quantity;
+
+        if ($totalRequested > $bienthe->so_luong) {
+            $soConLai = $bienthe->so_luong - $existingQty;
+            return response()->json([
+                'message' => 'Giỏ hàng vượt quá số lượng tồn kho. Bạn chỉ có thể thêm tối đa ' . $soConLai . ' sản phẩm nữa.'
+            ], 400);
+        }
+
+
+        $giaBan = $bienthe->gia_moi !== null ? $bienthe->gia_moi : $bienthe->gia_cu;
+        if (!$giaBan) {
+            return response()->json(['message' => 'Sản phẩm chưa có giá.'], 400);
+        }
+        $bienthe->gia_ban = $giaBan; // Gán giá tạm để truyền qua Cart
+
         $newCart->AddCart($product, $bienthe, $quantity);
         $request->session()->put('cart', $newCart);
-        return view('clients.cart.cart-drop');
+
+        return response()->json([
+            'html' => view('clients.cart.cart-drop')->render(),
+            'soLuongConLai' => $bienthe->so_luong - ($existingQty + $quantity)
+        ]);
     }
+
 
     public function DeleteItemCart(Request $request, $idbt)
     {
@@ -111,30 +142,49 @@ class CartController extends Controller
     {
         $this->UpdateCart();
         Log::info("Received discount code: " . $discountCode);
+
         $discount = KhuyenMai::where('ma_khuyen_mai', $discountCode)->first();
 
-        if ($discount) {
-            $nowDate = now();
-            $startDate = $discount->ngay_bat_dau;
-            $endDate = $discount->ngay_ket_thuc;
+        if (!$discount) {
+            return response()->json(['message' => 'Mã giảm giá không hợp lệ.'], 404);
+        }
 
-            if ($nowDate->between($startDate, $endDate) && $discount->trang_thai != 0) {
-                $discountPercentage = $discount->phan_tram_khuyen_mai;
+        $now = now();
 
-                // Lưu mã giảm giá và phần trăm giảm giá vào session
-                $request->session()->put('discount_code', $discountCode);
-                $request->session()->put('discount_percentage', $discountPercentage);
-                $request->session()->put('maxDiscount', $discount->giam_toi_da);
+        // Kiểm tra mã cá nhân
+        if ($discount->loai_ma === 'ca_nhan') {
+            if (!Auth::check()) {
+                return response()->json(['message' => 'Bạn cần đăng nhập để sử dụng mã này.'], 401);
+            }
 
-                return view('clients.cart.cart-list', ['discount' => $discountPercentage, 'maxDiscount' => $discount->giam_toi_da]);
-            } else {
-                return response()->json(['message' => 'Mã giảm giá đã hết hạn.'], 400);
+            // Nếu user hiện tại không phải là người nhận mã
+            if ($discount->user_id != auth()->id()) {
+                return response()->json(['message' => 'Mã này không áp dụng cho tài khoản của bạn.'], 403);
+            }
+
+            if ($discount->da_su_dung >= $discount->so_luong) {
+                return response()->json(['message' => 'Mã giảm giá đã được sử dụng hết.'], 400);
             }
         }
-        return response()->json(['message' => 'Mã giảm giá không hợp lệ.'], 404);
+
+        // Kiểm tra thời hạn áp dụng cho mọi loại mã
+        if (!$now->between($discount->ngay_bat_dau, $discount->ngay_ket_thuc)) {
+            return response()->json(['message' => 'Mã giảm giá đã hết hạn.'], 400);
+        }
+
+        // Lưu vào session nếu hợp lệ
+        $request->session()->put('discount_code', $discount->ma_khuyen_mai);
+        $request->session()->put('discount_percentage', $discount->phan_tram_khuyen_mai);
+        $request->session()->put('maxDiscount', $discount->giam_toi_da);
+
+        return view('clients.cart.cart-list', [
+            'discount' => $discount->phan_tram_khuyen_mai,
+            'maxDiscount' => $discount->giam_toi_da
+        ]);
     }
 
-    public function  UpdateCart(){
+    public function  UpdateCart()
+    {
         if (Session::has('cart')) {
             $cart = Session::get('cart');
             $totalPrice = 0;
@@ -151,7 +201,10 @@ class CartController extends Controller
                             unset($cart->products[$idbt]);
                             continue;
                         }
-                        $totalPrice += $cart->products[$idbt]['quantity'] * $bienThe->gia_moi;
+
+                        $giaBan = $bienThe->gia_moi !== null ? $bienThe->gia_moi : $bienThe->gia_cu;
+                        $totalPrice += $cart->products[$idbt]['quantity'] * $giaBan;
+
                     } else {
                         unset($cart->products[$idbt]);
                         continue;
@@ -170,8 +223,9 @@ class CartController extends Controller
             }
         }
     }
-    
-    public function  DeleteDiscount(){
+
+    public function  DeleteDiscount()
+    {
         Session::forget('discount_code');
         Session::forget('discount_percentage');
         Session::forget('maxDiscount');
