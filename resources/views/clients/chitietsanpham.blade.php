@@ -123,32 +123,34 @@
 
                             <!-- Price -->
                             <div class="tp-product-details-price-wrapper mb-20">
+
                                 @php
-                                    // Tìm giá thấp nhất từ danh sách biến thể sản phẩm
-                                    $giaThapNhat = $bienthesanphams->max('gia_moi'); // 'gia_ban' là trường chứa giá của biến thể sản phẩm
-                                    $giaGocThapNhat = $bienthesanphams->min('gia_moi'); // Nếu bạn có trường giá gốc (giá trước khi giảm)
+                                    $bienThe = $bienthesanphams->first();
+                                    $giaCu = $bienThe->gia_cu ?? 0;
+                                    $giaMoi = $bienThe->gia_moi;
                                 @endphp
 
-                                <!-- Price -->
-                                @if ($bienthesanphams->isNotEmpty())
-                                    @php
-                                        $bienThe = $bienthesanphams->first();
-                                        $giaCu = $bienThe->gia_cu ?? 0;
-                                        $giaMoi = $bienThe->gia_moi ?? 0;
-                                    @endphp
+                                <div class="tp-product-details-price-wrapper mb-20">
 
-                                    <div class="tp-product-details-price-wrapper mb-20">
-
+                                    @if ($giaMoi !== null && $giaMoi > 0)
+                                        @if ($giaCu > 0 && $giaMoi < $giaCu)
+                                            <span id="old-price" class="tp-product-details-price old-price">
+                                                {{ number_format($giaCu, 0, ',', '.') }}₫
+                                            </span>
+                                        @endif
+                                        <span id="new-price" class="tp-product-details-price new-price">
+                                            {{ number_format($giaMoi, 0, ',', '.') }}₫
+                                        </span>
+                                    @else
                                         <span id="old-price" class="tp-product-details-price old-price"
-                                            style="{{ $giaMoi < $giaCu ? '' : 'display: none;' }}">
+                                            style="display:none;"></span>
+                                        <span id="new-price" class="tp-product-details-price new-price">
                                             {{ number_format($giaCu, 0, ',', '.') }}₫
                                         </span>
-                                        <span id="new-price" class="tp-product-details-price new-price">
-                                            {{ number_format($giaMoi < $giaCu ? $giaMoi : $giaCu, 0, ',', '.') }}₫
-                                        </span>
+                                    @endif
 
-                                    </div>
-                                @endif
+                                </div>
+
                                 <!-- Variations -->
                                 <div class="tp-product-details-variation">
                                     <!-- Color Variation -->
@@ -282,44 +284,6 @@
                                             </span>
                                         </div>
                                     </div>
-                                    {{-- <div class="tp-product-details-quantity">
-                                        <div class="tp-product-quantity mb-15 mr-15">
-                                            <span class="tp-cart-minus">
-                                                <svg width="11" height="2" viewBox="0 0 11 2" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M1 1H10" stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                            </span>
-
-                                            <!-- Input số lượng -->
-                                            <input class="tp-cart-input text-center" id="so-luong-mua" type="number"
-                                                min="1" value="1" data-max-quantity="0"
-                                                style="-moz-appearance: textfield; appearance: textfield;">
-
-                                            <span class="tp-cart-plus">
-                                                <svg width="11" height="12" viewBox="0 0 11 12" fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg">
-                                                    <path d="M1 6H10" stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                    <path d="M5.5 10.5V1.5" stroke="currentColor" stroke-width="1.5"
-                                                        stroke-linecap="round" stroke-linejoin="round" />
-                                                </svg>
-                                            </span>
-                                        </div>
-
-                                        <!-- ✅ Thêm input ẩn để chứa variant_id -->
-                                        <input type="hidden" name="variant_id" class="variant-id-input">
-
-                                        <!-- ✅ Thêm phần hiển thị cảnh báo -->
-                                        <small class="text-danger warning-message" style="display: none;"></small>
-
-                                        <!-- ✅ Thêm hiển thị tồn kho (nếu muốn) -->
-                                        <span id="so-luong-ton" class="d-block mt-1 text-muted"
-                                            style="font-size: 0.9rem;"></span>
-                                    </div>
-
- --}}
 
                                     <style>
                                         /* Bỏ nút tăng giảm mặc định trên input number */
@@ -426,6 +390,8 @@
                                             });
                                         }
 
+
+                                        
                                         function fetchPrice() {
                                             if (selectedMauSacId && selectedDungLuongId) {
                                                 $.ajax({
@@ -443,14 +409,26 @@
                                                                 currency: 'VND'
                                                             }).format(num);
 
-                                                            if (res.gia_moi < res.gia_cu) {
-                                                                $('#new-price').text(format(res.gia_moi));
-                                                                $('#old-price').text(format(res.gia_cu)).show();
+                                                            const giaCu = res.gia_cu;
+                                                            const giaMoi = res.gia_moi;
+
+                                                            // ✅ Ưu tiên hiển thị giá mới nếu có
+                                                            if (giaMoi !== null && giaMoi > 0) {
+                                                                $('#new-price').text(format(giaMoi));
+
+                                                                // Nếu giá mới nhỏ hơn giá cũ → hiển thị giá cũ bị gạch
+                                                                if (giaCu > 0 && giaMoi < giaCu) {
+                                                                    $('#old-price').text(format(giaCu)).show();
+                                                                } else {
+                                                                    $('#old-price').hide();
+                                                                }
                                                             } else {
-                                                                $('#new-price').text(format(res.gia_cu));
+                                                                // Không có giá mới → hiển thị giá cũ
+                                                                $('#new-price').text(format(giaCu));
                                                                 $('#old-price').hide();
                                                             }
 
+                                                            //  Hiển thị số lượng tồn kho nếu có
                                                             if (typeof res.so_luong !== 'undefined') {
                                                                 $('#available-quantity').text('Số lượng còn lại: ' + res.so_luong);
                                                                 capNhatSoLuongTonKho(res.so_luong);
@@ -1092,18 +1070,18 @@
                                                                                             @endfor
                                                                                         </div>
                                                                                         <!-- <div>
-                                                                                                <span>Phân loại hàng:</span>
-                                                                                                @if ($danhgia->bienTheDaMua->isNotEmpty())
+                                                                                                    <span>Phân loại hàng:</span>
+                                                                                                    @if ($danhgia->bienTheDaMua->isNotEmpty())
     @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
     {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                                                                                                        @if ($index < $danhgia->bienTheDaMua->count() - 1)
+                                                                                                            @if ($index < $danhgia->bienTheDaMua->count() - 1)
     ,
     @endif
     @endforeach
 @else
     <p>Không có biến thể nào được mua từ sản phẩm này.</p>
     @endif
-                                                                                            </div> -->
+                                                                                                </div> -->
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>

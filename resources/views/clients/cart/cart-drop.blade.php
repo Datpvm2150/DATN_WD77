@@ -4,10 +4,7 @@
             <div class="cartmini__top-title">
                 <h4>Giỏ hàng</h4>
             </div>
-            {{-- <div class="cartmini__close">
-                               <button type="button" class="cartmini__close-btn cartmini-close-btn"><i
-                                       class="fal fa-times"></i></button>
-                           </div> --}}
+
         </div>
         <div class="cartmini__widget">
             @foreach (Session::get('cart')->products as $idbt => $product)
@@ -81,3 +78,43 @@
             value="{{ isset(Session::get('cart')->totalProduct) ? Session::get('cart')->totalProduct : 0 }}">
     </div>
 @endif
+<script>
+    function addToCart(id) {
+        // Lấy giá trị dung lượng và màu sắc đã chọn
+        const dungLuongId = document.querySelector('input[name="dungluong"]:checked')?.value;
+        const mauSacId = document.querySelector('input[name="mausac"]:checked')?.value;
+        const quantity = document.getElementById('product-quantity')?.value || 1;
+
+        if (!dungLuongId || !mauSacId) {
+            alert('Vui lòng chọn đầy đủ màu sắc và dung lượng.');
+            return;
+        }
+
+        fetch(`/add-cart/${id}?mauSacId=${mauSacId}&dungLuongId=${dungLuongId}&quantity=${quantity}`, {
+            method: 'GET',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}',
+            },
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.html) {
+                document.getElementById('cart-mini-content').innerHTML = data.html;
+            }
+
+            if (data.message) {
+                alert(data.message); // Hoặc dùng Toast/SweetAlert đẹp hơn
+            }
+
+            // (Tùy chọn) Cập nhật số lượng giỏ hàng
+            if (data.soLuongConLai !== undefined) {
+                console.log('Còn lại trong kho:', data.soLuongConLai);
+            }
+        })
+        .catch(err => {
+            console.error('Lỗi khi thêm giỏ hàng:', err);
+            alert('Đã xảy ra lỗi. Vui lòng thử lại.');
+        });
+    }
+</script>

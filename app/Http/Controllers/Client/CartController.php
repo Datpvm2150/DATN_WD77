@@ -59,6 +59,13 @@ class CartController extends Controller
             ], 400);
         }
 
+
+        $giaBan = $bienthe->gia_moi !== null ? $bienthe->gia_moi : $bienthe->gia_cu;
+        if (!$giaBan) {
+            return response()->json(['message' => 'Sản phẩm chưa có giá.'], 400);
+        }
+        $bienthe->gia_ban = $giaBan; // Gán giá tạm để truyền qua Cart
+
         $newCart->AddCart($product, $bienthe, $quantity);
         $request->session()->put('cart', $newCart);
 
@@ -193,7 +200,9 @@ class CartController extends Controller
                             unset($cart->products[$idbt]);
                             continue;
                         }
-                        $totalPrice += $cart->products[$idbt]['quantity'] * $bienThe->gia_moi;
+                        // $totalPrice += $cart->products[$idbt]['quantity'] * $bienThe->gia_moi;
+                        $giaBan = $bienThe->gia_moi !== null ? $bienThe->gia_moi : $bienThe->gia_cu;
+                        $totalPrice += $cart->products[$idbt]['quantity'] * $giaBan;
                     } else {
                         unset($cart->products[$idbt]);
                         continue;
