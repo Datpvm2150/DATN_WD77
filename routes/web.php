@@ -37,6 +37,7 @@ use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Client\ThanhToanController;
+use App\Http\Controllers\Client\DiemDanhController;
 use App\Http\Controllers\VNPayController;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -353,6 +354,11 @@ Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])-
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
 
 // chat
-
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
+
+// Điểm danh
+Route::middleware(['auth'])->group(function () {
+    Route::post('/diem-danh', [DiemDanhController::class, 'diemDanh'])->name('diem-danh');
+});
+
 
