@@ -49,7 +49,7 @@ function addToCart(id) {
             }
         })
             .done((response) => {
-                RenderCartDrop(response);
+                RenderCartDrop(response.html);
                 alertify.success('Đã thêm vào giỏ hàng!');
                 resolve(response); // Trả về kết quả nếu thành công
             })
@@ -257,7 +257,7 @@ function discount() {
     });
 }
 
-// khi load lại trang gọi lại sự kiện thay đổi 
+// khi load lại trang gọi lại sự kiện thay đổi
 document.addEventListener('DOMContentLoaded', bindCartEvents);
 
 // yêu thích sản phẩm, xóa khỏi yêu thích trang chi tiết sản phẩm
