@@ -10,6 +10,8 @@ class Message extends Model
         'chat_room_id',
         'sender_id',
         'message',
+        'type',
+        'is_read'
     ];
 
     public function chatRoom()

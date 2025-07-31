@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="{{ asset('assets/client/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/client/css/danhgia.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/client/css/gioithieu.css') }}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+
+
     @yield('css')
 
 
