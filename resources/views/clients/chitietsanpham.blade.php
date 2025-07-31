@@ -533,41 +533,8 @@
                                                 plusBtn.classList.remove('disabled');
                                             }
                                         }
-//  console.log($('#cart-container'));
-                                        function addToCart(sanPhamId) {
-
-                                            const mauSacId = selectedMauSacId;
-                                            const dungLuongId = selectedDungLuongId;
-                                            const quantity = parseInt(document.getElementById('quantityInput').value);
-
-                                            if (!mauSacId || !dungLuongId || !quantity) {
-                                                toastr.warning('Vui lòng chọn đầy đủ thuộc tính và số lượng.');
-                                                return;
-                                            }
-
-                                            $.ajax({
-                                                url: `/add-cart/${sanPhamId}`,
-                                                method: 'GET',
-                                                data: {
-                                                    quantity: quantity,
-                                                    mauSacId: mauSacId,
-                                                    dungLuongId: dungLuongId
-                                                },
-                                                success: function(response) {
 
 
-                                                    // $('#cart-container').html(response);
-                                                    toastr.success('Đã thêm vào giỏ hàng!');
-                                                },
-                                                error: function(xhr) {
-                                                    if (xhr.responseJSON && xhr.responseJSON.message) {
-                                                        toastr.error(xhr.responseJSON.message);
-                                                    } else {
-                                                        toastr.error('Lỗi không xác định khi thêm vào giỏ.');
-                                                    }
-                                                }
-                                            });
-                                        }
                                     </script>
 
                                     <div class="tp-product-details-add-to-cart mb-15 w-100">
