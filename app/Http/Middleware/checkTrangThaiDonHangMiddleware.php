@@ -19,7 +19,7 @@ class checkTrangThaiDonHangMiddleware
     {
         $orders = HoaDon::where('trang_thai', '5')
         ->where('updated_at', '<=', Carbon::now()->subMinutes(1)) // sau 1 phút
-        ->where('updated_at', '>=', Carbon::now()->subDays(1)) // sau 1 ngày
+        // ->where('updated_at', '>=', Carbon::now()->subDays(1)) // sau 1 ngày
         ->get();
 
     foreach ($orders as $order) {

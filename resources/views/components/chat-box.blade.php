@@ -114,7 +114,7 @@
         padding: 25px 22px;
         display: flex;
         gap: 20px;
-        height: 460px;
+        height: 300px;
         margin-bottom: 82px;
         overflow-y: auto;
         scroll-behavior: smooth;

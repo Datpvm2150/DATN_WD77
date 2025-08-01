@@ -3,6 +3,7 @@
 @section('content')
     <section class="profile__area pt-120 pb-120">
         <div class="container">
+            <div id="diemdanh-alert"></div>
             @if (session('success'))
                 <div class="alert alert-success" role="alert">{{ session('success') }}</div>
             @endif
@@ -84,6 +85,9 @@
                                                         <div class="profile__main-content">
                                                             <h4 class="profile__main-title">Xin chào {{ $profile->ten }}
                                                             </h4>
+                                                        </div>
+                                                        <div>
+                                                            <button id="btn-diem-danh" type="button" class="btn btn-success btn-sm mt-2">Điểm danh nhận điểm</button>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -298,6 +302,16 @@
                                                                     id="anh_dai_dien">
                                                                 <span>
                                                                     <i class="fa-regular fa-image"></i>
+                                                                </span>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-xxl-6 col-md-6">
+                                                        <div class="profile__input-box">
+                                                            <div class="profile__input">
+                                                                <input type="text" value="{{ Auth::user()->diem_tich_luy ?? 0 }}" readonly style="background: #f5f5f5;">
+                                                                <span>
+                                                                    <i class="fa-solid fa-coins"></i>
                                                                 </span>
                                                             </div>
                                                         </div>
@@ -589,8 +603,12 @@
             </div>
         </div>
     </section>
-    <script>
+@endsection
+@section('js')
+<script>
     document.addEventListener("DOMContentLoaded", function () {
+        const btn = document.getElementById('btn-diem-danh');
+        const alertDiv = document.getElementById('diemdanh-alert');
         // Copy mã khuyến mãi
         const copyButtons = document.querySelectorAll(".copy-btn");
         copyButtons.forEach(button => {
@@ -635,7 +653,45 @@
             activeList.style.display = 'none';
             expiredList.style.display = '';
         });
-    });
-    </script>
+           if (btn && !btn.dataset.bound) {
+            btn.dataset.bound = "true"; // Đánh dấu đã gắn sự kiện
+            console.log('Sự kiện click đã được gắn');
+
+            btn.addEventListener('click', function() {
+                btn.disabled = true;
+
+                fetch('{{ route('diem-danh') }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    let html = '';
+                    if (data.success) {
+                        html = `<div class="alert alert-success" style="margin-bottom:20px;">${data.message}</div>`;
+                        const diemInput = document.querySelector('input[readonly][value][name="diem_tich_luy"], input[readonly][value][name=""], input[readonly][value]');
+                        if (diemInput && data.diem !== undefined) {
+                            diemInput.value = data.diem;
+                        }
+                    } else {
+                        html = `<div class="alert alert-danger" style="margin-bottom:20px;">${data.message}</div>`;
+                    }
+                    alertDiv.innerHTML = html;
+                    setTimeout(() => { alertDiv.innerHTML = ''; }, 3000);
+                })
+                .catch(() => {
+                    alertDiv.innerHTML = `<div class="alert alert-danger" style="margin-bottom:20px;">Có lỗi xảy ra, vui lòng thử lại.</div>`;
+                    setTimeout(() => { alertDiv.innerHTML = ''; }, 3000);
+                })
+                .finally(() => {
+                    btn.disabled = false;
+                });
+            });
+        }
+    });     
+</script>
 
 @endsection
