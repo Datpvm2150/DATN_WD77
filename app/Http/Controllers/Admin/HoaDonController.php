@@ -118,7 +118,7 @@ class HoaDonController extends Controller
             return redirect()->route('admin.hoadons.index')->with('info', 'Không thể thay đổi trạng thái đơn hàng nữa!');
         }
 
-        // Kiểm tra nếu phương thức thanh toán là "Trả tiền mặt"
+        // Kiểm tra nếu phương thức thanh toán là "Thanh toán khi nhận hàng"
         if ($hoadon->phuong_thuc_thanh_toan === 'Thanh toán khi nhận hàng') {
             if ($request->has('trang_thai_thanh_toan') && $request->input('trang_thai_thanh_toan') === 'Đã thanh toán') {
                 // Chỉ cho phép nếu trạng thái đơn hàng là "Đã giao"
@@ -129,8 +129,20 @@ class HoaDonController extends Controller
         }
 
         // Kiểm tra phương thức thanh toán là chuyển khoản và trạng thái thanh toán là "chưa thanh toán"
-        if ($hoadon->phuong_thuc_thanh_toan == 'Thanh toán qua chuyển khoản ngân hàng' && $hoadon->trang_thai_thanh_toan == 'Chưa thanh toán') {
-            return redirect()->route('admin.hoadons.index')->with('error', 'Không thể cập nhật trạng thái đơn hàng khi phương thức thanh toán là chuyển khoản và chưa thanh toán!');
+        // if ($hoadon->phuong_thuc_thanh_toan == 'Thanh toán qua chuyển khoản ngân hàng' && $hoadon->trang_thai_thanh_toan == 'Chưa thanh toán') {
+        //     return redirect()->route('admin.hoadons.index')->with('error', 'Không thể cập nhật trạng thái đơn hàng khi phương thức thanh toán là chuyển khoản và chưa thanh toán!');
+        // }
+
+        // Kiểm tra phương thức thanh toán là chuyển khoản
+        if ($hoadon->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng') {
+            // Kiểm tra nếu có yêu cầu cập nhật trạng thái đơn hàng
+            if ($request->has('trang_thai') && $hoadon->trang_thai != $request->input('trang_thai')) {
+                // Chỉ cho phép khi trạng thái thanh toán đã là "Đã thanh toán"
+                if ($hoadon->trang_thai_thanh_toan !== 'Đã thanh toán') {
+                    return redirect()->route('admin.hoadons.index')
+                        ->with('error', 'Đối với đơn hàng chuyển khoản, chỉ có thể cập nhật trạng thái đơn hàng khi đã thanh toán thành công!');
+                }
+            }
         }
 
         // Chỉ cho phép thay đổi trạng thái nếu trạng thái hiện tại chưa qua bước cuối (Đang vận chuyển, Đã giao hàng)

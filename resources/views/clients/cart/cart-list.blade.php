@@ -38,10 +38,7 @@
                                 </span>
                             </td>
                             <!-- price -->
-                            {{-- Sửa giá --}}
                             <td class="tp-cart-price">
-
-
                                 <span>
                                     @if (isset($product['bienthe']->gia_moi) && $product['bienthe']->gia_moi > 0)
                                         {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ

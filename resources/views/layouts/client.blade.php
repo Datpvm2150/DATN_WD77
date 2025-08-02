@@ -28,6 +28,9 @@
     <link rel="stylesheet" href="{{ asset('assets/client/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/client/css/danhgia.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/client/css/gioithieu.css') }}">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+
+
     @yield('css')
 
 
@@ -43,7 +46,7 @@
 
 </head>
 @include('components.chatbox')
-@stack('scripts')
+{{-- @stack('scripts') --}}
 
 <body>
     <!--[if lte IE 9]>
@@ -79,14 +82,14 @@
 
 
     <!-- back to top start -->
-    <div class="back-to-top-wrapper">
+    {{-- <div class="back-to-top-wrapper">
         <button id="back_to_top" type="button" class="back-to-top-btn">
             <svg width="12" height="7" viewBox="0 0 12 7" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M11 6L6 1L1 6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"
                     stroke-linejoin="round" />
             </svg>
         </button>
-    </div>
+    </div> --}}
     <!-- back to top end -->
 
     <!-- offcanvas area start -->

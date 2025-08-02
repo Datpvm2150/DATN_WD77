@@ -1,11 +1,8 @@
 <?php
 
-<<<<<<< HEAD
-=======
 use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ChatBotController;
->>>>>>> bb8d0279ba687f0980a781abcc8e0ac657f25540
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VNPayController;
 
@@ -28,15 +25,12 @@ use App\Http\Controllers\Auth\AdminLoginController;
 
 // Client Routes
 use App\Http\Controllers\Client\TaiKhoanController;
-<<<<<<< HEAD
 use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\YeuThichController;
-=======
 use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\DanhgiaController;
->>>>>>> bb8d0279ba687f0980a781abcc8e0ac657f25540
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Admin\AdminLienHeController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
@@ -49,6 +43,11 @@ use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
+use App\Http\Controllers\Client\DiemDanhController;
+use App\Http\Controllers\VNPayController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -212,6 +211,32 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/{id}/messages', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
         Route::post('/{id}/send', [App\Http\Controllers\Admin\ChatController::class, 'send'])->name('send');
     });
+    Route::post('/chat-rooms/{room}/mark-read', [App\Http\Controllers\Admin\ChatController::class, 'markMessagesAsRead']);
+
+    Route::post('/set-admin-online', function (Request $request) {
+        $user = User::where('id', $request->user_id)->first();
+        if ($user && !$user->is_online) {
+            $user->update([
+                'is_online' => true,
+                'last_ping_at' => now()
+            ]);
+        }
+    });
+    Route::post('/set-admin-offline', function (Request $request) {
+        User::where('id', $request->user_id)->update(['is_online' => false]);
+    });
+
+    Route::post('/ping-online', function () {
+        $user = User::find(Auth::id());
+
+        if ($user) {
+            $user->last_ping_at = now();
+            if (!$user->is_online) {
+                $user->is_online = true;
+            }
+            $user->save();
+        }
+    });
 });
 
 //tai khoan admin
@@ -338,6 +363,11 @@ Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])-
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
 
 // chat
-
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
+
+// Điểm danh
+Route::middleware(['auth'])->group(function () {
+    Route::post('/diem-danh', [DiemDanhController::class, 'diemDanh'])->name('diem-danh');
+});
+
 
