@@ -636,7 +636,9 @@
             const handleOutgoingMessage = (e) => {
                 e.preventDefault();
                 userData.message = messageInput.value.trim()
-
+                if (!userData.message.trim()) {
+                    return
+                }
 
                 messageInput.value = "";
                 messageInput.dispatchEvent(new Event("input"));
