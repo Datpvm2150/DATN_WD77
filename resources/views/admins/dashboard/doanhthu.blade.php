@@ -6,6 +6,11 @@
 
 <div class="container-xxl">
     <h1>Thống Kê Doanh Thu</h1>
+    @if (request('start_date') && request('end_date'))
+    <p class="text-muted">Từ ngày <strong>{{ date('d/m/Y', strtotime(request('start_date'))) }}</strong>
+    đến ngày <strong>{{ date('d/m/Y', strtotime(request('end_date'))) }}</strong></p>
+@endif
+
     <form method="GET" action="{{ route('admin.doanhthu') }}">
         <div class="row g-3 mb-4">
             <div class="col-md-3">
