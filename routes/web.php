@@ -357,6 +357,8 @@ Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.
 
 // chat
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
+Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::class, 'loadMessages']);
+Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 
 // Điểm danh
 Route::middleware(['auth'])->group(function () {
