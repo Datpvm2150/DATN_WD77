@@ -36,6 +36,7 @@ use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\DanhgiaController;
+use App\Http\Controllers\Client\DoiQuaController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Client\DiemDanhController;
 use App\Http\Controllers\VNPayController;
@@ -359,6 +360,12 @@ Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 's
 // Điểm danh
 Route::middleware(['auth'])->group(function () {
     Route::post('/diem-danh', [DiemDanhController::class, 'diemDanh'])->name('diem-danh');
+});
+
+// Đổi quà
+Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
 });
 
 
