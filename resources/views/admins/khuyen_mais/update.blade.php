@@ -35,6 +35,33 @@
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
                                     </div>
+                                    <div class="mb-3">
+                                        <label for="loai_ma" class="form-label">Loại mã</label>
+                                        <select class="form-control" id="loai_ma" name="loai_ma">
+                                            <option value="">-- Chọn loại mã --</option>
+                                            <option value="cong_khai"
+                                                {{ old('loai_ma', $KhuyenMai->loai_ma ?? '') == 'cong_khai' ? 'selected' : '' }}>
+                                                Công khai</option>
+                                            <option value="cong_khai"
+                                                {{ old('loai_ma', $KhuyenMai->loai_ma ?? '') == 'ca_nhan' ? 'selected' : '' }}>
+                                                Cá nhân</option>
+                                            <option value="ma_doi_qua"
+                                                {{ old('loai_ma', $KhuyenMai->loai_ma ?? '') == 'ma_doi_qua' ? 'selected' : '' }}>
+                                                Mã đổi quà</option>
+                                        </select>
+                                        @error('loai_ma')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                    </div>
+
+                                    <div class="mb-3" id="diem_can_group" style="display: none;">
+                                        <label for="diem_can" class="form-label">Điểm cần</label>
+                                        <input type="number" min="0" class="form-control" name="diem_can"
+                                            id="diem_can" value="{{ old('diem_can', $KhuyenMai->diem_can ?? '') }}">
+                                        @error('diem_can')
+                                            <p class="text-danger">{{ $message }}</p>
+                                        @enderror
+                                    </div>
 
                                     <div class="mb-3">
                                         <label for="phan_tram_khuyen_mai" class="form-label">Phần trăm khuyến mãi</label>
@@ -95,4 +122,24 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const selectLoaiMa = document.getElementById('loai_ma');
+            const diemCanGroup = document.getElementById('diem_can_group');
+
+            function toggleDiemCanField() {
+                if (selectLoaiMa.value === 'ma_doi_qua') {
+                    diemCanGroup.style.display = 'block';
+                } else {
+                    diemCanGroup.style.display = 'none';
+                }
+            }
+
+            // Gọi ngay khi load để đảm bảo giữ lại giá trị khi chỉnh sửa
+            toggleDiemCanField();
+
+            // Gọi khi có thay đổi
+            selectLoaiMa.addEventListener('change', toggleDiemCanField);
+        });
+    </script>
 @endsection

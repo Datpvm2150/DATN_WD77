@@ -73,6 +73,9 @@
                                 <tr>
                                     <th>ID</th>
                                     <th>Mã khuyến mãi</th>
+                                    <th>Loại mã</th>
+                                    <th>Người sở hữu</th>
+                                    <th>Điểm đổi</th>
                                     <th>Phần trăm</th>
                                     <th>Giảm tối đa</th>
                                     <th>Ngày bắt đầu</th>
@@ -87,6 +90,26 @@
                                     <tr>
                                         <td>{{ $khuyenmai->id }}</td>
                                         <td>{{ $khuyenmai->ma_khuyen_mai }}</td>
+                                        <td>
+                                            @switch($khuyenmai->loai_ma)
+                                                @case('cong_khai')
+                                                    Công khai
+                                                @break
+
+                                                @case('ca_nhan')
+                                                    Cá nhân
+                                                @break
+
+                                                @case('ma_doi_qua')
+                                                    Mã đổi quà
+                                                @break
+
+                                                @default
+                                            @endswitch
+                                        </td>
+                                        <td>{{ $khuyenmai->user->ten ?? '0' }}</td>
+                                        <td>{{ $khuyenmai->loai_ma == 'ma_doi_qua' && !is_null($khuyenmai->diem_can) ? $khuyenmai->diem_can : '0' }}
+                                        </td>
                                         <td>{{ $khuyenmai->phan_tram_khuyen_mai }}%</td>
                                         <td>{{ number_format($khuyenmai->giam_toi_da, 0, ',', '.') }} VND</td>
                                         <td>{{ $khuyenmai->ngay_bat_dau }}</td>
