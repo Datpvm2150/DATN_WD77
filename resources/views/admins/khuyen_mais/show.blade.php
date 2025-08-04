@@ -15,6 +15,26 @@
                 <td>{{ $khuyenMai->ma_khuyen_mai }}</td>
             </tr>
             <tr>
+                <th>Loại mã</th>
+                <td>
+                    @switch($khuyenMai->loai_ma)
+                        @case('cong_khai')
+                            Công khai
+                        @break
+
+                        @case('ca_nhan')
+                            Cá nhân
+                        @break
+
+                        @case('ma_doi_qua')
+                            Mã đổi quà
+                        @break
+
+                        @default
+                    @endswitch
+                </td>
+            </tr>
+            <tr>
                 <th>Phần trăm khuyến mãi</th>
                 <td>{{ $khuyenMai->phan_tram_khuyen_mai }}%</td>
             </tr>

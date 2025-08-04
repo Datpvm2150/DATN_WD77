@@ -32,6 +32,7 @@ use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\DanhgiaController;
+use App\Http\Controllers\Client\DoiQuaController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Admin\AdminLienHeController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
@@ -372,6 +373,12 @@ Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 // Điểm danh
 Route::middleware(['auth'])->group(function () {
     Route::post('/diem-danh', [DiemDanhController::class, 'diemDanh'])->name('diem-danh');
+});
+
+// Đổi quà
+Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
 });
 
 
