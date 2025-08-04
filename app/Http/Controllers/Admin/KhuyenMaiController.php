@@ -48,7 +48,7 @@ class KhuyenMaiController extends Controller
             'phan_tram_khuyen_mai' => 'required|integer|min:1|max:99', // Phần trăm khuyến mãi từ 1 đến 99
             'giam_toi_da' => 'required|integer|min:0|max:1000000000',
             'loai_ma' => 'required|in:cong_khai,ma_doi_qua', // Loại mã khuyến mãi phải là một trong các giá trị hợp lệ
-            'diem_can' => 'required|integer|min:1|max:1000000',
+            'diem_can' => 'required_if:loai_ma,ma_doi_qua|nullable|integer|min:1|max:1000000',
             'ngay_bat_dau' => 'required|date', // Ngày bắt đầu là bắt buộc và phải là kiểu ngày
             'ngay_ket_thuc' => 'required|date|after_or_equal:ngay_bat_dau', // Ngày kết thúc phải sau hoặc bằng ngày bắt đầu
         ], [
@@ -76,7 +76,7 @@ class KhuyenMaiController extends Controller
         $data = [
             'ma_khuyen_mai' => $request->ma_khuyen_mai,
             'loai_ma' => $request->loai_ma,
-            'diem_can' => $request->loai_ma === 'ma_doi_qua' ? $request->diem_can : null,
+            'diem_can' => $request->loai_ma === 'ma_doi_qua' ? $request->diem_can : 0,
             'phan_tram_khuyen_mai' => $request->phan_tram_khuyen_mai,
             'giam_toi_da' => $request->giam_toi_da,
             'ngay_bat_dau' => $request->ngay_bat_dau,
@@ -111,9 +111,9 @@ class KhuyenMaiController extends Controller
             return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
         }
 
-        // Check không cho sửa nếu mã đã là "ca_nhan"
+        // Không cho phép đổi loại mã nếu là "ca_nhan"
         if ($khuyenMai->loai_ma === 'ca_nhan') {
-            return redirect()->back()->with('error', 'Không thể chỉnh sửa mã khuyến mãi đã thuộc về cá nhân.');
+            return redirect()->back()->with('error', 'Không thể thay đổi loại mã khi mã khuyến mãi đã là Cá nhân.');
         }
 
         // Kiểm tra nếu đang sửa sang "ca_nhan"
@@ -136,7 +136,7 @@ class KhuyenMaiController extends Controller
         $request->validate([
             'ma_khuyen_mai' => 'required|string|unique:khuyen_mais,ma_khuyen_mai,' . $id,
             'loai_ma' => 'required|in:cong_khai,ma_doi_qua',
-            'diem_can' => $request->loai_ma === 'ma_doi_qua' ? 'required|integer|min:0' : 'nullable',
+            'diem_can' => 'required_if:loai_ma,ma_doi_qua|nullable|integer|min:1|max:1000000',
             'phan_tram_khuyen_mai' => 'required|integer|min:1|max:99',
             'giam_toi_da' => 'required|nullable|integer|numeric|min:0|max:1000000000',
             'ngay_bat_dau' => 'required|date',
@@ -173,7 +173,7 @@ class KhuyenMaiController extends Controller
         $khuyenMai->update([
             'ma_khuyen_mai' => $request->ma_khuyen_mai,
             'loai_ma' => $request->loai_ma,
-            'diem_can' => $request->loai_ma === 'ma_doi_qua' ? $diemCan : null,
+            'diem_can' => $request->loai_ma === 'ma_doi_qua' ? $diemCan : 0,
             'phan_tram_khuyen_mai' => $request->phan_tram_khuyen_mai,
             'giam_toi_da' => $request->giam_toi_da,
             'ngay_bat_dau' => $request->ngay_bat_dau,

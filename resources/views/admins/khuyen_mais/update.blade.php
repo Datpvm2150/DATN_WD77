@@ -37,18 +37,23 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="loai_ma" class="form-label">Loại mã</label>
-                                        <select class="form-control" id="loai_ma" name="loai_ma">
-                                            <option value="">-- Chọn loại mã --</option>
-                                            <option value="cong_khai"
-                                                {{ old('loai_ma', $KhuyenMai->loai_ma ?? '') == 'cong_khai' ? 'selected' : '' }}>
-                                                Công khai</option>
-                                            <option value="cong_khai"
-                                                {{ old('loai_ma', $KhuyenMai->loai_ma ?? '') == 'ca_nhan' ? 'selected' : '' }}>
-                                                Cá nhân</option>
-                                            <option value="ma_doi_qua"
-                                                {{ old('loai_ma', $KhuyenMai->loai_ma ?? '') == 'ma_doi_qua' ? 'selected' : '' }}>
-                                                Mã đổi quà</option>
-                                        </select>
+                                        @if ($KhuyenMai->loai_ma === 'ca_nhan')
+                                            <input type="text" class="form-control" value="Cá nhân" disabled>
+                                            <input type="hidden" name="loai_ma" value="ca_nhan">
+                                            <div class="alert alert-warning mt-2">
+                                                Không thể thay đổi loại mã khi mã khuyến mãi đã là <strong>Cá nhân</strong>.
+                                            </div>
+                                        @else
+                                            <select class="form-control" id="loai_ma" name="loai_ma">
+                                                <option value="">-- Chọn loại mã --</option>
+                                                <option value="cong_khai"
+                                                    {{ old('loai_ma', $KhuyenMai->loai_ma ?? '') == 'cong_khai' ? 'selected' : '' }}>
+                                                    Công khai</option>
+                                                <option value="ma_doi_qua"
+                                                    {{ old('loai_ma', $KhuyenMai->loai_ma ?? '') == 'ma_doi_qua' ? 'selected' : '' }}>
+                                                    Mã đổi quà</option>
+                                            </select>
+                                        @endif
                                         @error('loai_ma')
                                             <p class="text-danger">{{ $message }}</p>
                                         @enderror
