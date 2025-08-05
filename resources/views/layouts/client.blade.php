@@ -278,6 +278,7 @@
                                         <a href="{{ route('bai-viet') }}">Tin tức</a>
                                     </li>
                                     <li><a href="{{ route('lienhe') }}">Liên hệ</a></li>
+                                    <li><a href="{{ route('doiqua') }}">Đổi quà</a></li>
                                 </ul>
                             </nav>
 
