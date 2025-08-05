@@ -14,16 +14,35 @@ class OrderService
 {
     public function sendVoucherAfterPaid(HoaDon $hoaDon)
     {
-        if ($hoaDon->tong_tien < 1000000) return;
+        $tongTien = $hoaDon->tong_tien;
+        $phanTram = 0;
+        $giamToiDa = 0;
+        $hanSuDung = 0;
+
+        // Chỉ áp dụng từ 8 triệu trở lên
+        if ($tongTien >= 25000000) {
+            $phanTram = 15;
+            $giamToiDa = 2000000;
+            $hanSuDung = 15;
+        } elseif ($tongTien >= 15000000) {
+            $phanTram = 10;
+            $giamToiDa = 1000000;
+            $hanSuDung = 10;
+        } elseif ($tongTien >= 8000000) {
+            $phanTram = 5;
+            $giamToiDa = 500000;
+            $hanSuDung = 7;
+        } else {
+            return; // Không đủ điều kiện nhận mã
+        }
 
         $ma = Str::upper(Str::random(8));
-
         $voucher = KhuyenMai::create([
             'ma_khuyen_mai' => $ma,
-            'phan_tram_khuyen_mai' => 5,
-            'giam_toi_da' => 500000,
+            'phan_tram_khuyen_mai' => $phanTram,
+            'giam_toi_da' => $giamToiDa,
             'ngay_bat_dau' => now(),
-            'ngay_ket_thuc' => now()->addDays(7),
+            'ngay_ket_thuc' => now()->addDays($hanSuDung),
             'trang_thai' => true,
             'so_luong' => 1,
             'da_su_dung' => 0,
@@ -33,7 +52,7 @@ class OrderService
 
         Mail::to($hoaDon->email)->send(new MaGiamGiaMoi($ma, $voucher));
     }
-      // sửa đoạn này updatePaymentStatus
+    // sửa đoạn này updatePaymentStatus
     public function updatePaymentStatus($orderId)
     {
         $hoaDon = HoaDon::findOrFail($orderId);
@@ -57,7 +76,7 @@ class OrderService
         }
 
         // Kiểm tra và tặng mã giảm giá nếu đơn đủ điều kiện
-        if ($hoaDon->tong_tien >= 1000000) {
+        if ($hoaDon->tong_tien >= 8000000) {
             if (
                 $hoaDon->phuong_thuc_thanh_toan === 'vnpay' ||
                 ($hoaDon->phuong_thuc_thanh_toan === 'cod' && $hoaDon->trang_thai === HoaDon::TRANG_THAI['Đã giao'])
