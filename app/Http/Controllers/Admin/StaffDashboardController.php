@@ -7,7 +7,7 @@ use App\Models\SanPham;
 use App\Models\HoaDon;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Models\KhuyenMai;
+use Illuminate\Http\Request;
 class StaffDashboardController extends Controller
 {
     public function index()
@@ -118,7 +118,7 @@ class StaffDashboardController extends Controller
 
         $labelsDanhMuc = $danhMucSanPham->pluck('ten_danh_muc')->toArray();
         $dataDanhMuc = $danhMucSanPham->pluck('so_luong_san_pham')->toArray();
-       
+
         // Lấy danh sách sản phẩm và số lượng tồn kho từ bảng biến thể
         $products = DB::table('bien_the_san_phams')
             ->join('san_phams', 'bien_the_san_phams.san_pham_id', '=', 'san_phams.id')
@@ -181,6 +181,49 @@ class StaffDashboardController extends Controller
             'dataOutOfStock'
         ));
     }
+    public function thongKeDoanhThu(Request $request)
+{
+    $start = $request->start_date ?? Carbon::now()->startOfMonth()->toDateString();
+    $end = $request->end_date ?? Carbon::now()->endOfMonth()->toDateString();
+    $groupBy = $request->group_by ?? 'day';
+
+    $query = HoaDon::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']);
+
+    switch ($groupBy) {
+        case 'month':
+            $data = $query->selectRaw('DATE_FORMAT(created_at, "%m/%Y") as label, SUM(tong_tien) as revenue')
+                ->groupBy('label')
+                ->orderByRaw('MIN(created_at)')
+                ->get();
+            break;
+        case 'year':
+            $data = $query->selectRaw('YEAR(created_at) as label, SUM(tong_tien) as revenue')
+                ->groupBy('label')
+                ->orderBy('label')
+                ->get();
+            break;
+        case 'day':
+        default:
+            $data = $query->selectRaw('DATE(created_at) as label, SUM(tong_tien) as revenue')
+                ->groupBy('label')
+                ->orderBy('label')
+                ->get();
+            break;
+    }
+
+    $labels = $data->pluck('label')->map(function ($label) use ($groupBy) {
+        if ($groupBy === 'day') {
+            return Carbon::parse($label)->format('d/m/Y');
+        }
+        return $label;
+    })->toArray();
+
+    $revenues = $data->pluck('revenue')->toArray();
+    $doanhThu = array_sum($revenues);
+
+    return view('admins.doanhthu', compact('labels', 'revenues', 'doanhThu'));
+}
+
     public function user()
     {
         return view('admins.taikhoans.index');

@@ -451,30 +451,6 @@
 </div>
 
 @push('scripts')
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const hint = document.getElementById('chatbot-hint');
-            let visible = false;
-
-            setInterval(() => {
-                visible = !visible;
-                hint.style.display = visible ? 'block' : 'none';
-            }, 10000); // mỗi 3 giây đổi trạng thái
-        });
-
-        function togglechatbotBox() {
-            const chatbotBox = document.getElementById('chatbot-popup');
-            const hint = document.getElementById('chatbot-hint');
-            const isOpen = chatbotBox.style.display === 'flex';
-
-            chatbotBox.style.display = isOpen ? 'none' : 'flex';
-
-            if (!isOpen) {
-                // Tắt tooltip khi hộp chatbot được mở
-                hint.style.display = 'none';
-            }
-        }
-    </script> --}}
     <script>
         window.addEventListener("DOMContentLoaded", () => {
             const chatbotBody = document.querySelector(".chatbot-body");
@@ -510,7 +486,7 @@
             * **Chính sách đổi trả:**
                 * Thời gian đổi trả: Trong vòng 7 ngày kể từ ngày mua hàng.
                 * Điều kiện đổi trả: Sản phẩm còn nguyên hộp, đầy đủ phụ kiện, không trầy xước, không có lỗi do người dùng.
-                * Quy trình đổi trả: Khách hàng liên hệ hotline hoặc đến cửa hàng để được hỗ trợ kiểm tra và đổi trả.
+                * Quy trình đổi trả: Khách hàng liên hệ hotline, nhắn cskh hoặc đến cửa hàng để được hỗ trợ kiểm tra và đổi trả.
 
             * **Chính sách vận chuyển:**
                 * Thời gian giao hàng: Nội thành Hà Nội: 24-48 giờ làm việc. Các tỉnh thành khác: 3-5 ngày làm việc.
@@ -526,9 +502,11 @@
                 * Miễn phí vệ sinh máy trọn đời cho khách hàng thân thiết.
 
             * **Dịch vụ hỗ trợ khách hàng:**
+
                 * Hotline: 0398030869 (hoạt động từ 8h00 - 20h00 hàng ngày).
                 * Email hỗ trợ: quandmph50159@gmail.com.
                 * Zalo Official Account: @laptopstore
+
 
             * **Dịch vụ kỹ thuật:**
                 * Cài đặt hệ điều hành và phần mềm cơ bản miễn phí.
@@ -554,6 +532,7 @@
             * **Lịch sử:** Thành lập năm 2025, LaptopStore đã trở thành một trong những nhà cung cấp máy tính và linh kiện uy tín hàng đầu Việt Nam.
             * **Sứ mệnh:** Cung cấp các sản phẩm công nghệ chất lượng cao với giá cả cạnh tranh và dịch vụ khách hàng xuất sắc.
             * **Địa chỉ cửa hàng vật lý:**
+
                 * Showroom 1: Trịnh Văn Bô, Nam Từ Liêm, Hà Nội.
             * **Thông tin liên hệ chung:**
                 * Website: www.laptopstore.vn
@@ -659,7 +638,9 @@
             const handleOutgoingMessage = (e) => {
                 e.preventDefault();
                 userData.message = messageInput.value.trim()
-
+                if (!userData.message.trim()) {
+                    return
+                }
 
                 messageInput.value = "";
                 messageInput.dispatchEvent(new Event("input"));
