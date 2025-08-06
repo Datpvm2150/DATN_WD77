@@ -123,7 +123,7 @@
                                                 'H:i d/m/Y',
                                             );
                                         @endphp
-                                        <option value="{{ $item->ma_khuyen_mai }}" ">
+                                        <option value="{{ $item->ma_khuyen_mai }}" >
                                                             {{ $item->ma_khuyen_mai }} - Giảm
                                                             {{ $item->phan_tram_khuyen_mai }}%
                                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
@@ -139,7 +139,7 @@
                                                         )->format('H:i d/m/Y');
                                                     @endphp
                                         <option value="{{ $item->ma_khuyen_mai }}">
-                                            {{ $item->ma_khuyen_mai }} - Giảm
+                                            {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
                                             {{ $item->phan_tram_khuyen_mai }}%
                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
                                             - HSD: {{ $hsdFormatted }}
@@ -261,40 +261,3 @@
         white-space: nowrap;
     }
 </style>
-{{-- <script>
-    function chooseDiscountCode() {
-        const selectedCode = document.getElementById("select-discount-code").value;
-        if (selectedCode) {
-            document.getElementById("discount-code").value = selectedCode;
-        }
-    }
-
-    function discount() {
-        const code = document.getElementById("discount-code").value;
-
-        if (!code) {
-            showDiscountToast("Vui lòng nhập mã khuyến mãi.");
-            return;
-        }
-
-    //     $.ajax({
-    //         url: "/Discount-Cart/" + code,
-    //         type: "GET",
-    //         success: function(data) {
-    //             $("#cart-list-content").html(data);
-    //         },
-    //         error: function(xhr) {
-    //             const json = xhr.responseJSON;
-    //             if (json && json.message) {
-    //                 showDiscountToast(json.message);
-    //             } else {
-    //                 showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
-    //             }
-    //         }
-    //     });
-    }
-
-    function showDiscountToast(message) {
-        alert(message); // hoặc hiển thị toast tuỳ vào UI của bạn
-    }
-</script> --}}

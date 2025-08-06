@@ -172,7 +172,7 @@
                                                         @endphp
                                                         <option value="{{ $item->ma_khuyen_mai }}"
                                                             >
-                                                            {{ $item->ma_khuyen_mai }} - Giảm
+                                                            {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
                                                             {{ $item->phan_tram_khuyen_mai }}%
                                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
                                                             - HSD: {{ $hsdFormatted }}
@@ -290,7 +290,7 @@
                                 </span>
                             @else
                                 <span>
-                                    {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 2, ',', '.') : 0 }}
+                                    {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 0, ',', '.') : 0 }}
                                     VNĐ
                                 </span>
                             @endif
@@ -338,7 +338,7 @@
                 url: "/Discount-Cart/" + code,
                 type: "GET",
                 success: function(data) {
-                    $("#cart-list-content").html(data);
+                    $("#list-cart").html(data);
                 },
                 error: function(xhr) {
                     const json = xhr.responseJSON;
@@ -351,15 +351,6 @@
             });
         }
 
-        function showDiscountToast(message) {
-            alert(message); // hoặc hiển thị toast tuỳ vào UI của bạn
-        }
-
-        function applyCode(code) {
-            const input = document.getElementById("discount-code");
-            if (input) {
-                input.value = code;
-            }
-        }
+        
     </script>
 @endsection
