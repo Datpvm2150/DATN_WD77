@@ -132,6 +132,7 @@
 
                                             $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
                                                 ->where('trang_thai', 1)
+                                                ->where('loai_ma', '!=', 'ma_doi_qua')
                                                 ->get();
 
                                             $maGiamGiaCaNhan = auth()->check()
@@ -148,35 +149,33 @@
                                                     <option value="">-- Chọn mã giảm giá --</option>
                                                     @foreach ($maGiamGiaCongKhai as $item)
                                                         @php
-                                                           
+
                                                             $hsdFormatted = \Carbon\Carbon::parse(
                                                                 $item->ngay_ket_thuc,
                                                             )->format('H:i d/m/Y');
                                                         @endphp
-                                                        <option value="{{ $item->ma_khuyen_mai }}"
-                                                            ">
-                                                            {{ $item->ma_khuyen_mai }} - Giảm
-                                                            {{ $item->phan_tram_khuyen_mai }}%
-                                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
-                                                            - HSD: {{ $hsdFormatted }}
-                                                           
-                                                        </option>
-                                                    @endforeach
-                                                    @if (auth()->check())
-                                                         @foreach ($maGiamGiaCaNhan as $item)
-                                                        @php
-                                                            
-                                                            $hsdFormatted = \Carbon\Carbon::parse(
-                                                                $item->ngay_ket_thuc,
-                                                            )->format('H:i d/m/Y');
-                                                        @endphp
-                                                        <option value="{{ $item->ma_khuyen_mai }}"
-                                                            >
+                                                        <option value="{{ $item->ma_khuyen_mai }}" ">
+                                                                            {{ $item->ma_khuyen_mai }} - Giảm
+                                                                            {{ $item->phan_tram_khuyen_mai }}%
+                                                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
+    - HSD: {{ $hsdFormatted }}
+                                                                           
+                                                                        </option>
+     @endforeach
+                                                            @if (auth()->check())
+                                                                @foreach ($maGiamGiaCaNhan as $item)
+                                                                    @php
+
+                                                                        $hsdFormatted = \Carbon\Carbon::parse(
+                                                                            $item->ngay_ket_thuc,
+                                                                        )->format('H:i d/m/Y');
+                                                                    @endphp
+                                                        <option value="{{ $item->ma_khuyen_mai }}">
                                                             {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
                                                             {{ $item->phan_tram_khuyen_mai }}%
                                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
                                                             - HSD: {{ $hsdFormatted }}
-                                                            
+
                                                         </option>
                                                     @endforeach
                                                     @endif
@@ -350,7 +349,5 @@
                 }
             });
         }
-
-        
     </script>
 @endsection
