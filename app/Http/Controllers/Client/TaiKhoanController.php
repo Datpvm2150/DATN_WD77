@@ -138,9 +138,12 @@ class TaiKhoanController extends Controller
             ->orderByDesc('trang_thai') // Đẩy trang thái đang hoạt động lên đầu
             ->orderBy('ngay_ket_thuc', 'asc') // Ưu tiên mã sắp hết hạn
             ->get();  // Lấy tất cả các mã khuyến mãi cá nhân của người dùng này
-
+        // Lấy lịch sử đổi điểm lấy mã khuyến mại của user
+        $lichSuDoiDiem = $profile->lichSuDoiDiem()
+            ->orderByDesc('created_at')
+            ->get();
         // đến
-        return view('clients.taikhoan.profile', compact('donHangs', 'danhMucs', 'profile', 'lienhes', 'maCaNhans'));
+        return view('clients.taikhoan.profile', compact('donHangs', 'danhMucs', 'profile', 'lienhes', 'maCaNhans', 'lichSuDoiDiem'));
     }
 
 

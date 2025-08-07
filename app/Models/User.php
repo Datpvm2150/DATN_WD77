@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Models;
 
 use App\Models\SanPham;
@@ -22,7 +23,7 @@ class User extends Authenticatable implements MustVerifyEmail
         'vai_tro',
         'dia_chi',
         'ngay_sinh',
-         'is_online',
+        'is_online',
         'last_ping_at'
     ];
 
@@ -67,13 +68,18 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->belongsToMany(SanPham::class, 'yeu_thichs', 'user_id', 'san_pham_id');
     }
 
-
-
     public function khuyenMais()
     {
         return $this->hasMany(KhuyenMai::class);
     }
-     public function staffChatRooms() {
-        return $this->hasMany(ChatRoom::class, 'staff_id');
+    public function staffChatRooms()
+    {
+        return
+            $this->hasMany(ChatRoom::class, 'staff_id');
+    }
+
+    public function lichSuDoiDiem()
+    {
+        return $this->hasMany(LichSuDiem::class)->where('loai', 'doi_diem');
     }
 }
