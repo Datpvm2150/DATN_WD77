@@ -114,7 +114,7 @@
         padding: 25px 22px;
         display: flex;
         gap: 20px;
-        height: 460px;
+        height: 300px;
         margin-bottom: 82px;
         overflow-y: auto;
         scroll-behavior: smooth;
@@ -502,9 +502,11 @@
                 * Miễn phí vệ sinh máy trọn đời cho khách hàng thân thiết.
 
             * **Dịch vụ hỗ trợ khách hàng:**
-                * Hotline: 1900 1234 (hoạt động từ 8h00 - 20h00 hàng ngày).
-                * Email hỗ trợ: support@laptopstore.vn.
-                * Zalo hỗ trợ: 1234567898
+
+                * Hotline: 0398030869 (hoạt động từ 8h00 - 20h00 hàng ngày).
+                * Email hỗ trợ: quandmph50159@gmail.com.
+                * Zalo Official Account: @laptopstore
+
 
             * **Dịch vụ kỹ thuật:**
                 * Cài đặt hệ điều hành và phần mềm cơ bản miễn phí.
@@ -530,8 +532,8 @@
             * **Lịch sử:** Thành lập năm 2025, LaptopStore đã trở thành một trong những nhà cung cấp máy tính và linh kiện uy tín hàng đầu Việt Nam.
             * **Sứ mệnh:** Cung cấp các sản phẩm công nghệ chất lượng cao với giá cả cạnh tranh và dịch vụ khách hàng xuất sắc.
             * **Địa chỉ cửa hàng vật lý:**
-                * Showroom 1: 123 Đường Trịnh Văn Bô, Quận Bắc Từ Liêm, TP. Hà Nội.
-                * Showroom 2: 456 Đường XYZ, Quận Hoàn Kiếm, Hà Nội.
+
+                * Showroom 1: Trịnh Văn Bô, Nam Từ Liêm, Hà Nội.
             * **Thông tin liên hệ chung:**
                 * Website: www.laptopstore.vn
                 * Fanpage Facebook: fb.com/LaptopStore

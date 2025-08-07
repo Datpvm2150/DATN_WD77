@@ -267,7 +267,7 @@
                                 </li>
                                 <li class="tp-order-info-list-total">
                                     <span>Tổng đơn hàng</span>
-                                    <span id="totalPrice">{{ number_format($discountedTotal, 2, ',', '.') }} VND</span>
+                                    <span id="totalPrice">{{ number_format($discountedTotal, 0, ',', '.') }} VND</span>
                                 </li>
                             </ul>
                         </div>

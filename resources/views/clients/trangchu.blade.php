@@ -383,7 +383,7 @@
                         <div class="tp-product-offer-slider-active swiper-container">
                             <div class="swiper-wrapper">
                                 <!-- Hiển thị danh sách khuyến mãi -->
-                                @if($khuyenMais->count() > 0)
+                                @if ($khuyenMais->count() > 0)
                                     @foreach ($khuyenMais as $khuyenMai)
                                         <div class="tp-product-offer-item tp-product-item transition-3 swiper-slide">
                                             <div class="tp-product-content">
@@ -588,10 +588,10 @@
                                         </div>
                                         <!-- product content -->
                                         <div class="tp-product-content">
-                                             <div class="tp-product-category">
+                                            <div class="tp-product-category">
                                                 <a
                                                     href="{{ route('sanpham.danhmuc', ['danh_muc_id' => $newProduct->danhMuc->id]) }}">{{ isset($newProduct->danhMuc->ten_danh_muc) ? $newProduct->danhMuc->ten_danh_muc : '...' }}</a>
-                                            </div> 
+                                            </div>
                                             <h3 class="tp-product-title"
                                                 style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 199px;">
                                                 <a href="{{ route('chitietsanpham', $newProduct->id) }}">
@@ -850,10 +850,13 @@
                                                             alt="product-electronic">
                                                     </a>
 
-                                                    <!-- product badge -->
-                                                    <div class="tp-product-badge">
-                                                        <span class="product-hot">Hot</span>
-                                                    </div>
+                                                    
+                                                    @if ($randProduct->is_hot)
+                                                        <div class="tp-product-badge">
+                                                            <span class="product-hot">Hot</span>
+                                                        </div>
+                                                    @endif
+
 
 
                                                 </div>
