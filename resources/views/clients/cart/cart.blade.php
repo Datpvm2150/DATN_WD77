@@ -28,17 +28,28 @@
                         <table class="table">
                             <thead>
                                 <tr>
+                                     <th>
+        <div class="form-check mb-0">
+            <input class="form-check-input" type="checkbox" id="select-all-products">
+        </div>
+    </th>
                                     <th colspan="2" class="tp-cart-header-product">Sản phẩm</th>
                                     <th class="tp-cart-header-price">Loại sản phẩm</th>
                                     <th class="tp-cart-header-price">Giá</th>
                                     <th class="tp-cart-header-quantity">Số lượng</th>
                                     <th></th>
                                 </tr>
+
                             </thead>
                             <tbody>
                                 @if (Session::has('cart') != null)
                                     @foreach (Session::get('cart')->products as $idbt => $product)
-                                        <tr data-id="{{ $idbt }}">
+                                        <tr class="cart-item" data-id="{{ $idbt }}">
+                                             <td><input type="checkbox" class="product-checkbox"
+    data-price="{{ $product['bienthe']->gia_moi ?? $product['bienthe']->gia_cu }}"
+    data-quantity="{{ $product['quantity'] }}">
+
+</td>
                                             <!-- img -->
                                             <td class="tp-cart-img">
                                                 <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}">
@@ -118,6 +129,7 @@
                                     @endforeach
                                 @endif
                             </tbody>
+
                         </table>
                     </div>
                     <div class="tp-cart-bottom">
@@ -148,24 +160,24 @@
                                                     <option value="">-- Chọn mã giảm giá --</option>
                                                     @foreach ($maGiamGiaCongKhai as $item)
                                                         @php
-                                                           
+
                                                             $hsdFormatted = \Carbon\Carbon::parse(
                                                                 $item->ngay_ket_thuc,
                                                             )->format('H:i d/m/Y');
                                                         @endphp
                                                         <option value="{{ $item->ma_khuyen_mai }}"
-                                                            ">
+                                                            >
                                                             {{ $item->ma_khuyen_mai }} - Giảm
                                                             {{ $item->phan_tram_khuyen_mai }}%
                                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
                                                             - HSD: {{ $hsdFormatted }}
-                                                           
+
                                                         </option>
                                                     @endforeach
                                                     @if (auth()->check())
                                                          @foreach ($maGiamGiaCaNhan as $item)
                                                         @php
-                                                            
+
                                                             $hsdFormatted = \Carbon\Carbon::parse(
                                                                 $item->ngay_ket_thuc,
                                                             )->format('H:i d/m/Y');
@@ -176,7 +188,7 @@
                                                             {{ $item->phan_tram_khuyen_mai }}%
                                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
                                                             - HSD: {{ $hsdFormatted }}
-                                                            
+
                                                         </option>
                                                     @endforeach
                                                     @endif
@@ -220,10 +232,15 @@
                     <div class="tp-cart-checkout-wrapper">
                         <div class="tp-cart-checkout-top d-flex align-items-center justify-content-between">
                             <span class="tp-cart-checkout-top-title">Tổng phụ</span>
-                            <span class="tp-cart-checkout-top-price" style="font-size: 16px">
+                            {{-- <span class="tp-cart-checkout-top-price" style="font-size: 16px">
                                 {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 0, ',', '.') : '0' }}
                                 VNĐ
-                            </span>
+                            </span> --}}
+                         <span class="tp-cart-checkout-top-price" id="selected-total-price" style="font-size: 16px">
+    0 VNĐ
+</span>
+
+
                         </div>
                         <div class="tp-cart-checkout-shipping">
                             {{-- <h4 class="tp-cart-checkout-shipping-title">Shipping</h4> --}}
@@ -351,6 +368,106 @@
             });
         }
 
-        
+
+document.addEventListener("DOMContentLoaded", function () {
+    const productCheckboxes = document.querySelectorAll(".product-checkbox");
+    const selectAllCheckbox = document.getElementById("select-all-products");
+    const totalPriceElement = document.getElementById("selected-total-price");
+
+    function formatCurrency(value) {
+        return value.toLocaleString('vi-VN') + ' VNĐ';
+    }
+
+    function getQuantityFromCheckbox(checkbox) {
+        const row = checkbox.closest("tr");
+        const quantityInput = row.querySelector(".cart-quantity");
+        const quantity = parseInt(quantityInput?.value || 0);
+        return quantity;
+    }
+
+    function updateTotal() {
+        let total = 0;
+
+        productCheckboxes.forEach(cb => {
+            if (cb.checked) {
+                const price = parseFloat(cb.dataset.price);
+                const quantity = getQuantityFromCheckbox(cb);
+                total += price * quantity;
+            }
+        });
+
+        totalPriceElement.textContent = formatCurrency(total);
+    }
+
+    // Xử lý khi click từng checkbox
+    productCheckboxes.forEach(cb => {
+        cb.addEventListener("change", function () {
+            updateTotal();
+
+            if (!this.checked) {
+                selectAllCheckbox.checked = false;
+            } else {
+                const allChecked = Array.from(productCheckboxes).every(c => c.checked);
+                selectAllCheckbox.checked = allChecked;
+            }
+        });
+    });
+
+    // "Chọn tất cả"
+    if (selectAllCheckbox) {
+        selectAllCheckbox.addEventListener("change", function () {
+            productCheckboxes.forEach(cb => {
+                cb.checked = this.checked;
+            });
+            updateTotal();
+        });
+    }
+
+    // Khi thay đổi số lượng trực tiếp
+    document.querySelectorAll(".cart-quantity").forEach(input => {
+        input.addEventListener("input", function () {
+            // Nếu ô đang được chọn thì tính lại tổng
+            const checkbox = this.closest("tr").querySelector(".product-checkbox");
+            if (checkbox.checked) {
+                updateTotal();
+            }
+        });
+    });
+
+    // Khi nhấn nút cộng/trừ
+    document.querySelectorAll(".cart-plus, .cart-minus").forEach(btn => {
+        btn.addEventListener("click", function () {
+            // Delay nhẹ để input cập nhật xong rồi mới tính
+            setTimeout(() => {
+                const checkbox = this.closest("tr").querySelector(".product-checkbox");
+                if (checkbox.checked) {
+                    updateTotal();
+                }
+            }, 100);
+        });
+    });
+input.addEventListener("input", function () {
+    const checkbox = this.closest("tr").querySelector(".product-checkbox");
+    if (checkbox.checked) {
+        updateTotal();
+    }
+
+    // Reload lại trang
+    location.reload();
+});
+
+    // Lúc trang vừa load
+    updateTotal();
+});
+setTimeout(() => {
+    const checkbox = this.closest("tr").querySelector(".product-checkbox");
+    if (checkbox.checked) {
+        updateTotal();
+    }
+
+    // Reload lại trang
+    location.reload();
+}, 100);
+
     </script>
 @endsection

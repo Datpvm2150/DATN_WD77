@@ -3,6 +3,11 @@
         <table class="table">
             <thead>
                 <tr>
+                                                         <th>
+        <div class="form-check mb-0">
+            <input class="form-check-input" type="checkbox" id="select-all-products">
+        </div>
+    </th>
                     <th colspan="2" class="tp-cart-header-product">Sản phẩm</th>
                     <th class="tp-cart-header-price">Loại sản phẩm</th>
                     <th class="tp-cart-header-price">Giá</th>
@@ -14,6 +19,11 @@
                 @if (Session::has('cart') != null)
                     @foreach (Session::get('cart')->products as $idbt => $product)
                         <tr data-id="{{ $idbt }}">
+                        <td><input type="checkbox" class="product-checkbox"
+    data-price="{{ $product['bienthe']->gia_moi ?? $product['bienthe']->gia_cu }}"
+    data-quantity="{{ $product['quantity'] }}">
+
+</td>
                             <!-- img -->
                             <td class="tp-cart-img">
                                 <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}">
@@ -127,7 +137,7 @@
                                                             {{ $item->ma_khuyen_mai }} - Giảm
                                                             {{ $item->phan_tram_khuyen_mai }}%
                                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
-                                                             - HSD: {{ $hsdFormatted }}                                                           
+                                                             - HSD: {{ $hsdFormatted }}
                                                         </option>
                                                        @endforeach
                                             @if (auth()->check())
@@ -206,9 +216,13 @@
         <!-- Tổng phụ -->
         <div class="tp-cart-checkout-top d-flex align-items-center justify-content-between">
             <span class="tp-cart-checkout-top-title">Tổng phụ</span>
-            <span class="tp-cart-checkout-top-price" style="font-size: 16px">
+            {{-- <span class="tp-cart-checkout-top-price" style="font-size: 16px">
                 {{ number_format($totalPrice, 0, ',', '.') }} VNĐ
-            </span>
+            </span> --}}
+              <span class="tp-cart-checkout-top-price" id="selected-total-price" style="font-size: 16px">
+    0 VNĐ
+</span>
+
         </div>
 
         <!-- Giảm giá -->

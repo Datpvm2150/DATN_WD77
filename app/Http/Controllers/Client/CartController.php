@@ -259,4 +259,5 @@ class CartController extends Controller
 
         return response()->json(['valid' => true]);
     }
+    
 }
