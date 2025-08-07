@@ -253,7 +253,7 @@
                                                             </select>
                                                         @else
                                                             <!-- Nếu phương thức thanh toán không phải "Thanh toán khi nhận hàng", chỉ hiển thị trạng thái thanh toán bình thường -->
-                                                            <span
+                                                            <!-- <span
                                                                 class=" w-75 
                                                                 badge
                                                                 @if ($item->trang_thai_thanh_toan === 'Chưa thanh toán') bg-danger
@@ -262,7 +262,24 @@
                                                                 text-white p-2
                                                             ">
                                                                 {{ $item->trang_thai_thanh_toan }}
-                                                            </span>
+                                                            </span> -->
+                                                            <select name="trang_thai_thanh_toan"
+                                                                class="form-select badge w-75 text-white p-2 bg-{{ $item->trang_thai_thanh_toan === 'Chưa thanh toán' ? 'danger' : ($item->trang_thai_thanh_toan === 'Đã thanh toán' ? 'success' : 'secondary') }} text-white"
+                                                                onchange="updateSelectBackground(this)"
+                                                                id="trang_thai_thanh_toan_{{ $item->id }}">
+                                                                <option value="Chưa thanh toán"
+                                                                    {{ $item->trang_thai_thanh_toan === 'Chưa thanh toán' ? 'selected' : '' }}>
+                                                                    Chưa thanh toán
+                                                                </option>
+                                                                <option value="Đã thanh toán"
+                                                                    {{ $item->trang_thai_thanh_toan === 'Đã thanh toán' ? 'selected' : '' }}>
+                                                                    Đã thanh toán
+                                                                </option>
+                                                                <option value="Thanh toán thất bại"
+                                                                    {{ $item->trang_thai_thanh_toan === 'Thanh toán thất bại' ? 'selected' : '' }}>
+                                                                    Thanh toán thất bại
+                                                                </option>
+                                                            </select>
                                                         @endif
                                                     </form>
                                                 </td>

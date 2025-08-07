@@ -204,7 +204,6 @@ class CartController extends Controller
 
                         $giaBan = $bienThe->gia_moi !== null ? $bienThe->gia_moi : $bienThe->gia_cu;
                         $totalPrice += $cart->products[$idbt]['quantity'] * $giaBan;
-
                     } else {
                         unset($cart->products[$idbt]);
                         continue;
@@ -230,5 +229,34 @@ class CartController extends Controller
         Session::forget('discount_percentage');
         Session::forget('maxDiscount');
         return view('clients.cart.cart-list');
+    }
+    public function checkStock(Request $request)
+    {
+        $colorId = $request->color_id;
+        $storageId = $request->storage_id;
+        $productId = $request->product_id;
+        $quantityToAdd = $request->quantity;
+
+        $bienthe = BienTheSanPham::where([
+            'san_pham_id' => $productId,
+            'mau_sac_id' => $colorId,
+            'dung_luong_id' => $storageId,
+        ])->first();
+
+        if (!$bienthe) {
+            return response()->json(['valid' => false]);
+        }
+
+        $oldCart = session()->has('cart') ? session()->get('cart') : [];
+        $cart = new Cart($oldCart);
+
+        $existingQty = isset($cart->products[$bienthe->id]) ? $cart->products[$bienthe->id]['quantity'] : 0;
+        $totalRequested = $existingQty + $quantityToAdd;
+
+        if ($totalRequested > $bienthe->so_luong) {
+            return response()->json(['valid' => false]);
+        }
+
+        return response()->json(['valid' => true]);
     }
 }

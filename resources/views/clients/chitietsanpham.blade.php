@@ -256,7 +256,7 @@
 
                             </div>
                             <div class="tp-product-details-action-wrapper">
-                                <p id="available-quantity">Số lượng còn lại: 0</p>
+                                <p id="available-quantity">Số lượng còn lại: {{ $tongSoLuong }}</p>
                                 <h3 class="tp-product-details-action-title">Chọn số lượng</h3>
                                 <div class="tp-product-details-action-item-wrapper d-flex align-items-center">
 
@@ -455,6 +455,21 @@
                                             togglePlusButton(input, plusBtn);
                                         }
 
+                                        function checkQuantityLimit(colorId, storageId, productId, quantityToAdd = 1) {
+                                            return axios.post('/cart/check-stock', {
+                                                    color_id: colorId,
+                                                    storage_id: storageId,
+                                                    product_id: productId,
+                                                    quantity: quantityToAdd
+                                                })
+                                                .then(res => res.data.valid === true)
+                                                .catch(err => {
+                                                    console.error('Lỗi kiểm tra số lượng:', err);
+                                                    return false;
+                                                });
+
+                                        }
+
                                         function setupQuantityEvents() {
                                             let input = document.querySelector('#so-luong-mua');
                                             let plusBtn = document.querySelector('.tp-cart-plus');
@@ -468,19 +483,22 @@
                                             minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
                                             minusBtn = newMinusBtn;
 
-                                            plusBtn.addEventListener("click", function(e) {
+                                            plusBtn.addEventListener("click", async (e) => {
                                                 e.preventDefault();
-                                                let current = parseInt(input.value) || 1;
-                                                let max = parseInt(input.dataset.maxQuantity) || 1;
+                                                let currentQuantity = parseInt(input.value);
+                                                console.log(currentQuantity);
 
-                                                if (current >= max) {
-                                                    alert("Đã đạt số lượng tồn kho tối đa.");
-                                                    return;
+
+                                                const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId, currentQuantity + 1);
+
+                                                if (canAdd) {
+                                                    input.value = currentQuantity + 1;
+                                                } else {
+                                                    plusBtn.classList.add('disabled')
+                                                    alertify.error(`Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!`);
                                                 }
-
-                                                input.value = current + 1;
-                                                togglePlusButton(input, plusBtn);
                                             });
+
 
                                             minusBtn.addEventListener("click", function(e) {
                                                 e.preventDefault();
@@ -533,8 +551,6 @@
                                                 plusBtn.classList.remove('disabled');
                                             }
                                         }
-
-
                                     </script>
 
                                     <div class="tp-product-details-add-to-cart mb-15 w-100">
@@ -580,7 +596,7 @@
                                             @endif
                                         </span>
 
-                                        Thêm danh sách mong muốn
+                                        Thêm danh sách sản phẩm yêu thích
 
                                     </button>
                                 @else
@@ -635,15 +651,6 @@
                                 </div>
                                 <div class="tp-product-details-query-item d-flex align-items-center">
                                     <span>Tag: </span>
-                                    <p>
-
-                                    <p>
-                                        @foreach ($tagsanphams as $tag)
-                                            @if ($tag->tag->trang_thai == 1)
-                                                <span class="badge bg-primary">#{{ $tag->tag->ten_tag }}</span>
-                                            @endif
-                                        @endforeach
-                                    </p>
                                     <p>
                                         @foreach ($tagsanphams as $tag)
                                             @if ($tag->tag->trang_thai == 1)
@@ -1040,18 +1047,18 @@
                                                                                             @endfor
                                                                                         </div>
                                                                                         <!-- <div>
-                                                                                                        <span>Phân loại hàng:</span>
-                                                                                                       @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
+                                                                                                            <span>Phân loại hàng:</span>
+                                                                                                           @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
     @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
     {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-            @if ($index < $danhgia->bienTheDaMua->count() - 1)
+                @if ($index < $danhgia->bienTheDaMua->count() - 1)
     ,
     @endif
     @endforeach
 @else
     <p>Không có biến thể nào được mua từ sản phẩm này.</p>
     @endif
-                                                                                                    </div> -->
+                                                                                                        </div> -->
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>

@@ -162,6 +162,12 @@
         .image-upload-wrapper:hover .remove-image {
             display: block;
         }
+
+        .message-time {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
     </style>
 @endsection
 
@@ -253,6 +259,17 @@
             }
         }
 
+        function formatTime(datetimeStr) {
+            const d = new Date(datetimeStr);
+            const day = String(d.getDate()).padStart(2, '0');
+            const month = String(d.getMonth() + 1).padStart(2, '0'); // Tháng bắt đầu từ 0
+            const year = d.getFullYear();
+            const hours = String(d.getHours()).padStart(2, '0');
+            const minutes = String(d.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+
+
 
         function fetchMessages(roomId) {
             $.ajax({
@@ -264,54 +281,35 @@
                     localStorage.setItem('chatRoomId', chatRoomId);
 
                     const container = document.getElementById('messages');
-                    container.innerHTML = ''; // Clear previous messages
+                    container.innerHTML = '';
                     data.messages.forEach(message => {
+                        const isSender = message.sender_id === {{ auth()->id() }};
+                        const isText = message.type === 'text';
+                        const time = formatTime(message.created_at);
+
                         const div = document.createElement('div');
-                        if (message.sender_id === {{ auth()->id() }}) {
-
-                            if (message.type == 'text') {
-                                div.textContent = `Bạn: ${message.message}`;
-                                div.className = 'message message-sent';
-                                container.appendChild(div);
-                            } else {
-                                const imgDiv = document.createElement('div');
-                                imgDiv.className = 'message message-sent p-0';
-                                imgDiv.style.backgroundColor = 'transparent';
-                                const img = document.createElement('img');
-                                img.src = `/storage/${message.message}`;
-                                img.alt = '';
-                                img.style.maxWidth = '300px';
-                                img.style.maxHeight = '300px';
-                                img.style.objectFit = 'contain';
-                                img.style.borderRadius = '13px 13px 3px 13px';
-
-                                imgDiv.appendChild(img);
-                                container.appendChild(imgDiv);
-                            }
-                        } else {
-                            if (message.type == 'text') {
-                                div.textContent = `Customer: ${message.message}`;
-                                div.className = 'message message-received';
-                                container.appendChild(div);
-                            } else {
-                                const imgDiv = document.createElement('div');
-                                imgDiv.className = 'message message-received p-0';
-                                imgDiv.style.backgroundColor = 'transparent';
-                                const img = document.createElement('img');
-                                img.src = `/storage/${message.message}`;
-                                img.alt = '';
-                                img.style.maxWidth = '300px';
-                                img.style.maxHeight = '300px';
-                                img.style.objectFit = 'contain';
-                                img.style.borderRadius = '13px 13px 13px 3px';
-
-                                imgDiv.appendChild(img);
-                                container.appendChild(imgDiv);
-                            }
-
+                        div.className =
+                            `message ${isSender ? 'message-sent' : 'message-received'} ${isText ? '' : 'p-0'}`;
+                        if (!isText) {
+                            div.style.backgroundColor = 'transparent';
                         }
 
+                        let content = '';
+
+                        if (isText) {
+                            content = `<div>${isSender ? 'Bạn' : 'Customer'}: ${message.message}</div>`;
+                        } else {
+                            content = `
+                                <img src="/storage/${message.message}"
+                                    style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 13px;" />
+                            `;
+                        }
+
+                        content += `<div class="message-time">${time}</div>`;
+                        div.innerHTML = content;
+                        container.appendChild(div);
                     });
+
                     container.scrollTop = container.scrollHeight;
                 },
                 error: function() {
@@ -354,12 +352,13 @@
                         if (msg.type === 'file') {
                             div.style.backgroundColor = 'transparent';
                             div.innerHTML = `
-                <img src="/storage/${msg.message}"
-                     class="sent-image"
-                     style="max-width: 300px; max-height: 300px; object-fit: contain; margin-top: 5px; border-radius: 13px 13px 3px 13px;" />
-            `;
+                            <img src="/storage/${msg.message}"
+                                class="sent-image"
+                                style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 13px;" />
+                                    `;
                         }
 
+                        div.innerHTML += `<div class="message-time">${formatTime(msg.created_at)}</div>`;
                         container.appendChild(div);
                     });
 
@@ -432,27 +431,26 @@
 
 
 
-                        if (e.message.type == 'text') {
-                            const messages = document.getElementById('messages');
-                            const message = document.createElement('div');
-                            message.textContent = `Customer: ${e.message.message}`;
-                            message.className = 'message message-received';
-                            messages.appendChild(message);
+                        const isText = e.message.type === 'text';
+                        const div = document.createElement('div');
+                        div.className = `message message-received ${isText ? '' : 'p-0'}`;
+                        if (!isText) div.style.backgroundColor = 'transparent';
+
+                        let content = '';
+
+                        if (isText) {
+                            content = `<div>Customer: ${e.message.message}</div>`;
                         } else {
-                            const imgDiv = document.createElement('div');
-                            imgDiv.className = 'message message-received p-0';
-                            imgDiv.style.backgroundColor = 'transparent';
-                            const img = document.createElement('img');
-                            img.src = `/storage/${e.message.message}`;
-                            img.alt = '';
-                            img.style.maxWidth = '300px';
-                            img.style.maxHeight = '300px';
-                            img.style.objectFit = 'contain';
-                            img.style.borderRadius = '13px 13px 13px 3px';
-                            imgDiv.appendChild(img);
-                            const container = document.getElementById('messages');
-                            container.appendChild(imgDiv);
+                            content = `
+                                <img src="/storage/${e.message.message}"
+                                    style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 13px;" />
+                            `;
                         }
+
+                        content += `<div class="message-time">${formatTime(e.message.created_at)}</div>`;
+                        div.innerHTML = content;
+                        messages.appendChild(div);
+
                         messages.scrollTop = messages.scrollHeight;
                     }
                 });

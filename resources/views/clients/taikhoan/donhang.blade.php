@@ -70,70 +70,68 @@
     <script>
         
         $(document).ready(function () {
-            // Gửi AJAX tự động cho trạng thái mặc định (Chờ xác nhận - status = 1)
-            loadOrders(1);
-    
-            $('.filter-link').on('click', function () {
-                let status = $(this).data('status');
-    
-                // Đổi active class
-                $('.filter-link').removeClass('active');
-                $(this).addClass('active');
-    
-                // Gửi yêu cầu AJAX
-                loadOrders(status);
-            });
-    
-            // Hàm dùng chung để load dữ liệu đơn hàng
-            function loadOrders(status) {
-                $.ajax({
-                    url: '/customer/orders/filter',
-                    method: 'GET',
-                    data: { status: status },
-                    success: function (response) {
-                        // Cập nhật danh sách đơn hàng
-                        $('#order-list').html(response.html);
-    
-                        // Cập nhật số lượng trên các nút
-                        Object.keys(response.counts).forEach(function (key) {
-                            const $link = $(`.filter-link[data-status="${key}"]`);
-                            if ($link.length) {
-                                // Lấy text gốc (tránh thay đổi không mong muốn)
-                                const text = $link.text().split(' (')[0].trim();
-                                const iconHTML = $link.find('i').prop('outerHTML'); // Giữ nguyên icon
-                                $link.html(`${iconHTML} ${text} (${response.counts[key]})`);
-                            }
-                        });
-                    },
-                    error: function () {
-                        alert('Có lỗi xảy ra, vui lòng thử lại.');
+    let currentStatus = 1;
+
+    // Load lần đầu
+    loadOrders(currentStatus);
+
+    // Gửi AJAX khi click trạng thái
+    $('.filter-link').on('click', function () {
+        currentStatus = $(this).data('status');
+        $('.filter-link').removeClass('active');
+        $(this).addClass('active');
+        loadOrders(currentStatus);
+    });
+
+    // Tự động reload đơn hàng mỗi 10 giây (10000 ms)
+    setInterval(function () {
+        loadOrders(currentStatus);
+    }, 1000); // Có thể chỉnh 5s, 15s tùy bạn
+
+    function loadOrders(status) {
+        $.ajax({
+            url: '/customer/orders/filter',
+            method: 'GET',
+            data: { status: status },
+            success: function (response) {
+                $('#order-list').html(response.html);
+
+                Object.keys(response.counts).forEach(function (key) {
+                    const $link = $(`.filter-link[data-status="${key}"]`);
+                    if ($link.length) {
+                        const text = $link.text().split(' (')[0].trim();
+                        const iconHTML = $link.find('i').prop('outerHTML');
+                        $link.html(`${iconHTML} ${text} (${response.counts[key]})`);
                     }
                 });
+            },
+            error: function () {
+                console.error('Lỗi khi lấy đơn hàng.');
             }
         });
-        // Lấy message từ sessionStorage
-const message = sessionStorage.getItem('orderMessage');
-
-if (message) {
-    // Tạo thông báo bằng Bootstrap Toast hoặc Alert
-    const toastElement = document.getElementById('toastMessage');
-    const toastBody = document.getElementById('toastBody');
-
-    if (toastElement && toastBody) {
-        toastBody.textContent = message;
-        const toast = new bootstrap.Toast(toastElement);
-        toast.show();
-    } else {
-       // Thêm thông báo đặt hàng thành công
-       const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
-        document.getElementById('toastBody').textContent = 'Đặt hàng thành công! Bạn sẽ được chuyển hướng đến đơn hàng.';
-        toast.show();
-        
     }
 
-    // Xóa message khỏi sessionStorage sau khi hiển thị
-    sessionStorage.removeItem('orderMessage');
-}
+    // Toast như cũ
+    const message = sessionStorage.getItem('orderMessage');
+    if (message) {
+        const toastElement = document.getElementById('toastMessage');
+        const toastBody = document.getElementById('toastBody');
+
+        if (toastElement && toastBody) {
+            toastBody.textContent = message;
+            const toast = new bootstrap.Toast(toastElement);
+            toast.show();
+        } else {
+            const toast = new bootstrap.Toast(document.getElementById('toastMessage'));
+            document.getElementById('toastBody').textContent = 'Đặt hàng thành công! Bạn sẽ được chuyển hướng đến đơn hàng.';
+            toast.show();
+        }
+
+        sessionStorage.removeItem('orderMessage');
+    }
+});
+
+
 
     </script>
     
