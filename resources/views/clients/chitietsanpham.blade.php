@@ -256,7 +256,7 @@
 
                             </div>
                             <div class="tp-product-details-action-wrapper">
-                                <p id="available-quantity">Số lượng còn lại: 0</p>
+                                <p id="available-quantity">Số lượng còn lại: {{ $tongSoLuong }}</p>
                                 <h3 class="tp-product-details-action-title">Chọn số lượng</h3>
                                 <div class="tp-product-details-action-item-wrapper d-flex align-items-center">
 
@@ -610,7 +610,7 @@
                                             @endif
                                         </span>
 
-                                        Thêm danh sách mong muốn
+                                        Thêm danh sách sản phẩm yêu thích
 
                                     </button>
                                 @else
@@ -665,15 +665,6 @@
                                 </div>
                                 <div class="tp-product-details-query-item d-flex align-items-center">
                                     <span>Tag: </span>
-                                    <p>
-
-                                    <p>
-                                        @foreach ($tagsanphams as $tag)
-                                            @if ($tag->tag->trang_thai == 1)
-                                                <span class="badge bg-primary">#{{ $tag->tag->ten_tag }}</span>
-                                            @endif
-                                        @endforeach
-                                    </p>
                                     <p>
                                         @foreach ($tagsanphams as $tag)
                                             @if ($tag->tag->trang_thai == 1)
