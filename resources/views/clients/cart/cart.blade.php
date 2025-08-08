@@ -423,51 +423,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Khi thay đổi số lượng trực tiếp
-    document.querySelectorAll(".cart-quantity").forEach(input => {
-        input.addEventListener("input", function () {
-            // Nếu ô đang được chọn thì tính lại tổng
-            const checkbox = this.closest("tr").querySelector(".product-checkbox");
-            if (checkbox.checked) {
-                updateTotal();
-            }
-        });
-    });
 
-    // Khi nhấn nút cộng/trừ
-    document.querySelectorAll(".cart-plus, .cart-minus").forEach(btn => {
-        btn.addEventListener("click", function () {
-            // Delay nhẹ để input cập nhật xong rồi mới tính
-            setTimeout(() => {
-                const checkbox = this.closest("tr").querySelector(".product-checkbox");
-                if (checkbox.checked) {
-                    updateTotal();
-                }
-            }, 100);
-        });
-    });
-input.addEventListener("input", function () {
-    const checkbox = this.closest("tr").querySelector(".product-checkbox");
-    if (checkbox.checked) {
-        updateTotal();
-    }
-
-    // Reload lại trang
-    location.reload();
 });
 
-    // Lúc trang vừa load
-    updateTotal();
-});
-setTimeout(() => {
-    const checkbox = this.closest("tr").querySelector(".product-checkbox");
-    if (checkbox.checked) {
-        updateTotal();
-    }
-
-    // Reload lại trang
-    location.reload();
-}, 100);
 
     </script>
 @endsection
