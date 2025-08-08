@@ -127,7 +127,7 @@
                                                             {{ $item->ma_khuyen_mai }} - Giảm
                                                             {{ $item->phan_tram_khuyen_mai }}%
                                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
-                                                             - HSD: {{ $hsdFormatted }}                                                           
+                                                             - HSD: {{ $hsdFormatted }}
                                                         </option>
                                                        @endforeach
                                             @if (auth()->check())
@@ -209,6 +209,9 @@
             <span class="tp-cart-checkout-top-price" style="font-size: 16px">
                 {{ number_format($totalPrice, 0, ',', '.') }} VNĐ
             </span>
+            
+</span>
+
         </div>
 
         <!-- Giảm giá -->
