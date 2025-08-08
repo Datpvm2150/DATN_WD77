@@ -1,7 +1,6 @@
 <?php
 
 use App\Http\Controllers\Admin\ChatLogController;
-use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ChatBotController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VNPayController;
@@ -27,8 +26,6 @@ use App\Http\Controllers\Auth\AdminLoginController;
 use App\Http\Controllers\Client\TaiKhoanController;
 use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\YeuThichController;
-use App\Http\Controllers\Auth\CustomerLoginController;
-use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Client\ThanhToanController;
@@ -39,12 +36,11 @@ use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Client\TrangBaiVietController;
 use App\Http\Controllers\Client\TrangSanPhamController;
 use App\Http\Controllers\Admin\DanhGiaSanPhamController;
-use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
 use App\Http\Controllers\Client\DiemDanhController;
-use App\Http\Controllers\VNPayController;
+
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
