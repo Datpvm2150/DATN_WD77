@@ -28,4 +28,8 @@ class KhuyenMai extends Model
     {
         return $this->belongsTo(User::class, 'user_id');
     }
+    public function lichSuDiems()
+    {
+        return $this->hasMany(LichSuDiem::class, 'promotion_id');
+    }
 }

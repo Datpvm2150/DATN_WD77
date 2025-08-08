@@ -28,11 +28,6 @@
                         <table class="table">
                             <thead>
                                 <tr>
-                                     <th>
-        <div class="form-check mb-0">
-            <input class="form-check-input" type="checkbox" id="select-all-products">
-        </div>
-    </th>
                                     <th colspan="2" class="tp-cart-header-product">Sản phẩm</th>
                                     <th class="tp-cart-header-price">Loại sản phẩm</th>
                                     <th class="tp-cart-header-price">Giá</th>
@@ -44,12 +39,8 @@
                             <tbody>
                                 @if (Session::has('cart') != null)
                                     @foreach (Session::get('cart')->products as $idbt => $product)
-                                        <tr class="cart-item" data-id="{{ $idbt }}">
-                                             <td><input type="checkbox" class="product-checkbox"
-    data-price="{{ $product['bienthe']->gia_moi ?? $product['bienthe']->gia_cu }}"
-    data-quantity="{{ $product['quantity'] }}">
-
-</td>
+                                        <tr  data-id="{{ $idbt }}">
+                                             <td>
                                             <!-- img -->
                                             <td class="tp-cart-img">
                                                 <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}">
@@ -144,6 +135,7 @@
 
                                             $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
                                                 ->where('trang_thai', 1)
+                                                ->where('loai_ma', '!=', 'ma_doi_qua')
                                                 ->get();
 
                                             $maGiamGiaCaNhan = auth()->check()
@@ -165,6 +157,7 @@
                                                                 $item->ngay_ket_thuc,
                                                             )->format('H:i d/m/Y');
                                                         @endphp
+
                                                         <option value="{{ $item->ma_khuyen_mai }}"
                                                             >
                                                             {{ $item->ma_khuyen_mai }} - Giảm
@@ -184,6 +177,7 @@
                                                         @endphp
                                                         <option value="{{ $item->ma_khuyen_mai }}"
                                                             >
+
                                                             {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
                                                             {{ $item->phan_tram_khuyen_mai }}%
                                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
@@ -232,15 +226,10 @@
                     <div class="tp-cart-checkout-wrapper">
                         <div class="tp-cart-checkout-top d-flex align-items-center justify-content-between">
                             <span class="tp-cart-checkout-top-title">Tổng phụ</span>
-                            {{-- <span class="tp-cart-checkout-top-price" style="font-size: 16px">
+                            <span class="tp-cart-checkout-top-price" style="font-size: 16px">
                                 {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 0, ',', '.') : '0' }}
                                 VNĐ
-                            </span> --}}
-                         <span class="tp-cart-checkout-top-price" id="selected-total-price" style="font-size: 16px">
-    0 VNĐ
-</span>
-
-
+                            </span>
                         </div>
                         <div class="tp-cart-checkout-shipping">
                             {{-- <h4 class="tp-cart-checkout-shipping-title">Shipping</h4> --}}
@@ -367,65 +356,6 @@
                 }
             });
         }
-
-
-document.addEventListener("DOMContentLoaded", function () {
-    const productCheckboxes = document.querySelectorAll(".product-checkbox");
-    const selectAllCheckbox = document.getElementById("select-all-products");
-    const totalPriceElement = document.getElementById("selected-total-price");
-
-    function formatCurrency(value) {
-        return value.toLocaleString('vi-VN') + ' VNĐ';
-    }
-
-    function getQuantityFromCheckbox(checkbox) {
-        const row = checkbox.closest("tr");
-        const quantityInput = row.querySelector(".cart-quantity");
-        const quantity = parseInt(quantityInput?.value || 0);
-        return quantity;
-    }
-
-    function updateTotal() {
-        let total = 0;
-
-        productCheckboxes.forEach(cb => {
-            if (cb.checked) {
-                const price = parseFloat(cb.dataset.price);
-                const quantity = getQuantityFromCheckbox(cb);
-                total += price * quantity;
-            }
-        });
-
-        totalPriceElement.textContent = formatCurrency(total);
-    }
-
-    // Xử lý khi click từng checkbox
-    productCheckboxes.forEach(cb => {
-        cb.addEventListener("change", function () {
-            updateTotal();
-
-            if (!this.checked) {
-                selectAllCheckbox.checked = false;
-            } else {
-                const allChecked = Array.from(productCheckboxes).every(c => c.checked);
-                selectAllCheckbox.checked = allChecked;
-            }
-        });
-    });
-
-    // "Chọn tất cả"
-    if (selectAllCheckbox) {
-        selectAllCheckbox.addEventListener("change", function () {
-            productCheckboxes.forEach(cb => {
-                cb.checked = this.checked;
-            });
-            updateTotal();
-        });
-    }
-
-
-});
-
 
     </script>
 @endsection

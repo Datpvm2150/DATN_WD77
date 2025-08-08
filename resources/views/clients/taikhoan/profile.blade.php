@@ -48,6 +48,11 @@
                                         aria-controls="nav-discount" aria-selected="false"><span><i
                                                 class="fa fa-ticket"></i></span>Mã khuyến mãi cá nhân</button>
                                     <span id="marker-vertical" class="tp-tab-line d-none d-sm-inline-block"></span>
+                                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
+                                        data-bs-target="#nav-history" type="button" role="tab"
+                                        aria-controls="nav-history" aria-selected="false">
+                                        <span><i class="fa fa-history"></i></span> Lịch sử mã khuyến mại
+                                    </button>
 
                                     {{-- Nút quay lại trang Admin --}}
                                     @auth
@@ -593,6 +598,45 @@
                                                     </tbody>
                                                 </table>
                                             </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- lịch sử đổi điểm lấy mã khuyến mại -->
+                                <div class="tab-pane fade" id="nav-history" role="tabpanel"
+                                    aria-labelledby="nav-history-point-tab">
+                                    <div class="profile__history-point">
+                                        <h3 class="profile__info-title">Lịch sử đổi điểm lấy mã khuyến mại</h3>
+                                        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                            <table class="table table-striped table-hover text-center">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Thời gian</th>
+                                                        <th>Điểm đã đổi</th>
+                                                        <th>Mã khuyến mại</th>
+                                                        <th>Giảm (%)</th>
+                                                        <th>Giảm tối đa</th>
+                                                        <th>Ngày hết hạn</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @forelse ($lichSuDoiDiem as $item)
+                                                        <tr>
+                                                            <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
+                                                            <td>{{ $item->diem_da_doi }}</td>
+                                                            <td>
+                                                                <span class="badge bg-primary">{{ $item->promotion->ma_khuyen_mai ?? '-' }}</span>
+                                                            </td>
+                                                            <td>{{ $item->promotion->phan_tram_khuyen_mai ?? '-' }}%</td>
+                                                            <td>{{ isset($item->promotion) ? number_format($item->promotion->giam_toi_da, 0, ',', '.') . ' VNĐ' : '-' }}</td>
+                                                            <td>{{ $item->promotion->ngay_ket_thuc ?? '-' }}</td>
+                                                        </tr>
+                                                    @empty
+                                                        <tr>
+                                                            <td colspan="6">Bạn chưa có lịch sử đổi điểm lấy mã khuyến mại.</td>
+                                                        </tr>
+                                                    @endforelse
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>

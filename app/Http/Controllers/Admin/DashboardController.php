@@ -415,7 +415,4 @@ if ($startInput && $endInput) {
             'filterStatus'
         ));
     }
-
-
-
 }

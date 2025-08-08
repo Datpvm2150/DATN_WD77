@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Admin\ChatLogController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\ChatBotController;
-use App\Http\Controllers\Admin\StaffDashboardController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VNPayController;
 
+use App\Http\Controllers\Admin\StaffDashboardController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -16,19 +16,24 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\HoaDonController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\BaiVietController;
+use App\Http\Controllers\Admin\ChatBotController;
+use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\SanPhamController;
+use App\Http\Controllers\Client\DoiQuaController;
 use App\Http\Controllers\Client\LienHeController;
+
+
+// Client Routes
+use App\Http\Controllers\Client\DanhgiaController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DungLuongController;
 use App\Http\Controllers\Admin\KhuyenMaiController;
 use App\Http\Controllers\Auth\AdminLoginController;
-
-// Client Routes
+use App\Http\Controllers\Client\DiemDanhController;
 use App\Http\Controllers\Client\TaiKhoanController;
 use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\YeuThichController;
-use App\Http\Controllers\Client\DanhgiaController;
-use App\Http\Controllers\Client\DoiQuaController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Admin\AdminLienHeController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
@@ -41,10 +46,7 @@ use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
-use App\Http\Controllers\Client\DiemDanhController;
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -375,5 +377,8 @@ Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');
 Route::middleware(['auth'])->group(function () {
     Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
 });
+
+// Lich sử điểm
+
 
 

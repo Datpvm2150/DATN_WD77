@@ -26,7 +26,7 @@
                     <div class="card shadow-sm h-100 border-primary">
                         <div class="card-body">
                             <h5 class="card-title text-primary">
-                                <i class="fa fa-ticket-alt me-1"></i>{{ $voucher->ma_khuyen_mai }}
+                                <i class="fa fa-ticket-alt me-1"></i>Đổi quà ngay bây giờ
                             </h5>
 
                             <ul class="list-unstyled small mb-3">
