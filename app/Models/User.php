@@ -80,6 +80,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function lichSuDoiDiem()
     {
-        return $this->hasMany(LichSuDiem::class)->where('loai', 'doi_diem');
+        return $this->hasMany(LichSuDiem::class, 'user_id', 'id')
+                    ->where('loai', 'doi_diem');
     }
+
 }

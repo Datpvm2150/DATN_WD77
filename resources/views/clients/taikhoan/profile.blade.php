@@ -605,13 +605,13 @@
                                 <div class="tab-pane fade" id="nav-history" role="tabpanel"
                                     aria-labelledby="nav-history-point-tab">
                                     <div class="profile__history-point">
-                                        <h3 class="profile__info-title">Lịch sử đổi điểm lấy mã khuyến mại</h3>
+                                        <h3 class="profile__info-title">Lịch sử đổi điểm</h3>
                                         <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
                                             <table class="table table-striped table-hover text-center">
                                                 <thead>
                                                     <tr>
                                                         <th>Thời gian</th>
-                                                        <th>Điểm đã đổi</th>
+                                                        <th>Điểm đã trừ</th>
                                                         <th>Mã khuyến mại</th>
                                                         <th>Giảm (%)</th>
                                                         <th>Giảm tối đa</th>
@@ -620,15 +620,28 @@
                                                 </thead>
                                                 <tbody>
                                                     @forelse ($lichSuDoiDiem as $item)
+                                                        @php
+                                                            $km = $item->khuyen_mai_id ? \App\Models\KhuyenMai::find($item->khuyen_mai_id) : null;
+                                                        @endphp
                                                         <tr>
-                                                            <td>{{ $item->created_at->format('d/m/Y H:i') }}</td>
-                                                            <td>{{ $item->diem_da_doi }}</td>
+                                                            <td>{{ $item->created_at ? $item->created_at->format('d/m/Y H:i') : '' }}</td>
+                                                            <td>{{ $item->thay_doi }}</td>
                                                             <td>
-                                                                <span class="badge bg-primary">{{ $item->promotion->ma_khuyen_mai ?? '-' }}</span>
+                                                                @if ($km)
+                                                                    <span class="badge bg-primary" style="font-size: 1em;">{{ $km->ma_khuyen_mai }}</span>
+                                                                @else
+                                                                    <span class="badge bg-secondary">Không có</span>
+                                                                @endif
                                                             </td>
-                                                            <td>{{ $item->promotion->phan_tram_khuyen_mai ?? '-' }}%</td>
-                                                            <td>{{ isset($item->promotion) ? number_format($item->promotion->giam_toi_da, 0, ',', '.') . ' VNĐ' : '-' }}</td>
-                                                            <td>{{ $item->promotion->ngay_ket_thuc ?? '-' }}</td>
+                                                            <td>{{ $km ? $km->phan_tram_khuyen_mai : '' }}%</td>
+                                                            <td>
+                                                                @if ($km)
+                                                                    {{ number_format($km->giam_toi_da, 0, ',', '.') }} VNĐ
+                                                                @endif
+                                                            </td>
+                                                            <td>
+                                                                {{ $km && $km->ngay_ket_thuc ? $km->ngay_ket_thuc : "Không có thời hạn" }}
+                                                            </td>
                                                         </tr>
                                                     @empty
                                                         <tr>

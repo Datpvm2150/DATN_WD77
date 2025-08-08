@@ -88,7 +88,7 @@ class DoiQuaController extends Controller
                 'thay_doi' => -$voucher->diem_can,
                 'loai' => 'doi_diem',
                 'noi_dung' => 'Đổi quà: ' . $personalVoucher->ma_khuyen_mai,
-                'promotion_id' => $personalVoucher->id,
+                'khuyen_mai_id' => $personalVoucher->id,
             ]);
 
             DB::commit();
