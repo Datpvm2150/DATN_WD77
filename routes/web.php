@@ -376,6 +376,7 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
 });
 
+// Lich sử điểm
 
 
 
