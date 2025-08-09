@@ -18,25 +18,25 @@ class GoogleController extends Controller
 
 public function handleGoogleCallback()
 {
-    // $user = Socialite::driver('google')->user();
+    
     $user = Socialite::driver('google')->stateless()->user();
+
 
     
     // Xử lý đăng nhập hoặc tạo user
     // Ví dụ:
     $findUser = User::where('email', $user->getEmail())->first();
-
     if (!$findUser) {
         $findUser = User::create([
             'ten' => $user->getName(),
             'email' => $user->getEmail(),
             'google_id' => $user->getId(),
             'mat_khau' => bcrypt('default_password'),
-            'so_dien_thoai' => '',
-            'ngay_sinh' => null,
+           
         ]);
-    }
 
+       
+    }
     Auth::login($findUser);
 
     return redirect()->intended('/');
