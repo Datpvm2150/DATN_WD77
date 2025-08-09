@@ -9,29 +9,37 @@ use Illuminate\Support\Facades\Auth;
 class GoogleController extends Controller
 {
     public function redirectToGoogle()
-    {
-        return Socialite::driver('google')->redirect();
+{
+    // return Socialite::driver('google')->redirect();
+    return Socialite::driver('google')->stateless()->redirect();
+
+    
+}
+
+public function handleGoogleCallback()
+{
+    // $user = Socialite::driver('google')->user();
+    $user = Socialite::driver('google')->stateless()->user();
+
+    
+    // Xử lý đăng nhập hoặc tạo user
+    // Ví dụ:
+    $findUser = User::where('email', $user->getEmail())->first();
+
+    if (!$findUser) {
+        $findUser = User::create([
+            'ten' => $user->getName(),
+            'email' => $user->getEmail(),
+            'google_id' => $user->getId(),
+            'mat_khau' => bcrypt('default_password'),
+            'so_dien_thoai' => '',
+            'ngay_sinh' => null,
+        ]);
     }
 
-    public function handleGoogleCallback()
-    {
-        try {
-            $googleUser = Socialite::driver('google')->stateless()->user();
+    Auth::login($findUser);
 
-            $user = User::updateOrCreate(
-                ['email' => $googleUser->getEmail()],
-                [
-                    'name' => $googleUser->getName(),
-                    'google_id' => $googleUser->getId(),
-                    'avatar' => $googleUser->getAvatar(),
-                ]
-            );
+    return redirect()->intended('/');
+}
 
-            Auth::login($user);
-
-            return redirect()->route('trangchu');
-        } catch (\Exception $e) {
-            return redirect()->route('customer.login')->with('error', 'Đăng nhập Google thất bại!');
-        }
-    }
 }
