@@ -32,7 +32,7 @@ public function handleGoogleCallback()
             'email' => $user->getEmail(),
             'google_id' => $user->getId(),
             'mat_khau' => bcrypt('default_password'),
-           
+            'vai_tro' => 'user', 
         ]);
 
        
