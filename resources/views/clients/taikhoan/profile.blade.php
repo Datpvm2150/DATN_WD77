@@ -3,6 +3,7 @@
 @section('content')
     <section class="profile__area pt-120 pb-120">
         <div class="container">
+            @php $activeTab = session('activeTab') ?? old('active_tab') ?? request('tab') ?? 'nav-profile'; @endphp
             <div id="diemdanh-alert"></div>
             @if (session('success'))
                 <div class="alert alert-success" role="alert">{{ session('success') }}</div>
@@ -25,33 +26,33 @@
                         <div class="profile__tab mr-40">
                             <nav>
                                 <div class="nav nav-tabs tp-tab-menu flex-column" id="profile-tab" role="tablist">
-                                    <button class="nav-link active" id="nav-profile-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {{ $activeTab === 'nav-profile' ? 'active' : '' }}" id="nav-profile-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-profile" type="button" role="tab"
-                                        aria-controls="nav-profile" aria-selected="false"><span><i
+                                        aria-controls="nav-profile" aria-selected="{{ $activeTab === 'nav-profile' ? 'true' : 'false' }}"><span><i
                                                 class="fa-regular fa-user-pen"></i></span>Tài khoản</button>
-                                    <button class="nav-link" id="nav-information-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {{ $activeTab === 'nav-information' ? 'active' : '' }}" id="nav-information-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-information" type="button" role="tab"
-                                        aria-controls="nav-information" aria-selected="false"><span><i
+                                        aria-controls="nav-information" aria-selected="{{ $activeTab === 'nav-information' ? 'true' : 'false' }}"><span><i
                                                 class="fa-regular fa-circle-info"></i></span>Thông tin tài khoản</button>
                                     <a href="{{ route('customer.donhang') }}" class="nav-link"><span><i
                                                 class="fa-light fa-clipboard-list-check"></i></span>Đơn hàng</a>
-                                    <button class="nav-link" id="nav-password-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {{ $activeTab === 'nav-password' ? 'active' : '' }}" id="nav-password-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-password" type="button" role="tab"
-                                        aria-controls="nav-password" aria-selected="false"><span><i
+                                        aria-controls="nav-password" aria-selected="{{ $activeTab === 'nav-password' ? 'true' : 'false' }}"><span><i
                                                 class="fa-regular fa-lock"></i></span>Thay đổi mật khẩu</button>
-                                    <button class="nav-link" id="nav-lienhe-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {{ $activeTab === 'nav-lienhe' ? 'active' : '' }}" id="nav-lienhe-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-lienhe" type="button" role="tab"
-                                        aria-controls="nav-lienhe" aria-selected="false"><span><i
+                                        aria-controls="nav-lienhe" aria-selected="{{ $activeTab === 'nav-lienhe' ? 'true' : 'false' }}"><span><i
                                                 class="fas fa-envelope"></i></span>Hòm thư phản hồi</button>
-                                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {{ $activeTab === 'nav-discount' ? 'active' : '' }}" id="nav-discount-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-discount" type="button" role="tab"
-                                        aria-controls="nav-discount" aria-selected="false"><span><i
+                                        aria-controls="nav-discount" aria-selected="{{ $activeTab === 'nav-discount' ? 'true' : 'false' }}"><span><i
                                                 class="fa fa-ticket"></i></span>Mã khuyến mãi cá nhân</button>
                                     <span id="marker-vertical" class="tp-tab-line d-none d-sm-inline-block"></span>
-                                    <button class="nav-link" id="nav-discount-tab" data-bs-toggle="tab"
+                                    <button class="nav-link {{ $activeTab === 'nav-history' ? 'active' : '' }}" id="nav-discount-tab" data-bs-toggle="tab"
                                         data-bs-target="#nav-history" type="button" role="tab"
-                                        aria-controls="nav-history" aria-selected="false">
-                                        <span><i class="fa fa-history"></i></span> Lịch sử mã khuyến mại
+                                        aria-controls="nav-history" aria-selected="{{ $activeTab === 'nav-history' ? 'true' : 'false' }}">
+                                        <span><i class="fa fa-history"></i></span> Lịch sử đổi điểm
                                     </button>
 
                                     {{-- Nút quay lại trang Admin --}}
@@ -70,7 +71,7 @@
                     <div class="col-xxl-8 col-lg-8">
                         <div class="profile__tab-content">
                             <div class="tab-content" id="profile-tabContent">
-                                <div class="tab-pane fade show active" id="nav-profile" role="tabpanel"
+                                <div class="tab-pane fade {{ $activeTab === 'nav-profile' ? 'show active' : '' }}" id="nav-profile" role="tabpanel"
                                     aria-labelledby="nav-profile-tab">
                                     <div class="profile__main">
                                         <div class="profile__main-top pb-80">
@@ -188,7 +189,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="nav-information" role="tabpanel"
+                                <div class="tab-pane fade {{ $activeTab === 'nav-information' ? 'show active' : '' }}" id="nav-information" role="tabpanel"
                                     aria-labelledby="nav-information-tab">
                                     <div class="profile__info">
                                         <h3 class="profile__info-title">Thông tin cá nhân</h3>
@@ -356,21 +357,21 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="nav-password" role="tabpanel"
+                                <div class="tab-pane fade {{ $activeTab === 'nav-password' ? 'show active' : '' }}" id="nav-password" role="tabpanel"
                                     aria-labelledby="nav-password-tab">
                                     <div class="profile__password">
                                         <form action="{{ route('customer.changePassword') }}" method="POST">
                                             @csrf
                                             @method('PUT')
+                                            <input type="hidden" name="active_tab" value="nav-password">
                                             <div class="row">
                                                 <div class="col-xxl-12">
                                                     <div class="tp-profile-input-box">
                                                         <div class="tp-contact-input">
-                                                            <input name="mat_khau_cu" class="@error('mat_khau_cu') is-invalid
-                                                            @enderror" id="old_pass" type="password">
+                                                            <input name="mat_khau_cu" class="@error('mat_khau_cu') is-invalid @enderror" id="old_pass" type="password" autocomplete="current-password">
                                                         </div>
                                                         <div class="tp-profile-input-title">
-                                                            <label for="mat_khau_moi">Mật khẩu cũ</label>
+                                                            <label for="old_pass">Mật khẩu cũ</label>
                                                         </div>
                                                         @error('mat_khau_cu')
                                                             <p class="alert alert-danger">{{ $message }}</p>
@@ -381,7 +382,7 @@
                                                     <div class="tp-profile-input-box">
                                                         <div class="tp-profile-input">
                                                             <input name="mat_khau_moi" id="new_pass" type="password"
-                                                                class="@error('mat_khau_moi') is-invalid @enderror">
+                                                                class="@error('mat_khau_moi') is-invalid @enderror" autocomplete="new-password">
                                                         </div>
                                                         <div class="tp-profile-input-title">
                                                             <label for="mat_khau_moi">Mật khẩu mới</label>
@@ -395,11 +396,14 @@
                                                     <div class="tp-profile-input-box">
                                                         <div class="tp-profile-input">
                                                             <input name="mat_khau_moi_confirmation" id="con_new_pass"
-                                                                type="password">
+                                                                type="password" class="@error('mat_khau_moi_confirmation') is-invalid @enderror" autocomplete="new-password">
                                                         </div>
                                                         <div class="tp-profile-input-title">
                                                             <label for="con_new_pass">Xác nhận mật khẩu mới</label>
                                                         </div>
+                                                        @error('mat_khau_moi_confirmation')
+                                                            <p class="alert alert-danger">{{ $message }}</p>
+                                                        @enderror
                                                     </div>
                                                 </div>
                                                 <div class="col-xxl-6 col-md-6">
@@ -411,7 +415,7 @@
                                         </form>
                                     </div>
                                 </div>
-                                <div class="tab-pane fade" id="nav-lienhe" role="tabpanel"
+                                <div class="tab-pane fade {{ $activeTab === 'nav-lienhe' ? 'show active' : '' }}" id="nav-lienhe" role="tabpanel"
                                     aria-labelledby="nav-lienhe-tab">
                                     <div class="profile__feedback">
                                         <h3 class="profile__info-title">Hòm thư phản hồi</h3>
@@ -509,7 +513,7 @@
                                 </div>
                                 
                                 <!-- Mã khuyến mãi cá nhân -->
-                                <div class="tab-pane fade" id="nav-discount" role="tabpanel" aria-labelledby="nav-discount-tab">
+                                <div class="tab-pane fade {{ $activeTab === 'nav-discount' ? 'show active' : '' }}" id="nav-discount" role="tabpanel" aria-labelledby="nav-discount-tab">
                                     <div class="profile__discount">
                                         <h3 class="profile__info-title">Mã khuyến mãi cá nhân</h3>
                                         <div class="mb-3">
@@ -602,7 +606,7 @@
                                     </div>
                                 </div>
                                 <!-- lịch sử đổi điểm lấy mã khuyến mại -->
-                                <div class="tab-pane fade" id="nav-history" role="tabpanel"
+                                <div class="tab-pane fade {{ $activeTab === 'nav-history' ? 'show active' : '' }}" id="nav-history" role="tabpanel"
                                     aria-labelledby="nav-history-point-tab">
                                     <div class="profile__history-point">
                                         <h3 class="profile__info-title">Lịch sử đổi điểm</h3>
@@ -666,6 +670,14 @@
     document.addEventListener("DOMContentLoaded", function () {
         const btn = document.getElementById('btn-diem-danh');
         const alertDiv = document.getElementById('diemdanh-alert');
+
+        // Giữ tab "Thay đổi mật khẩu" khi có lỗi validate hoặc thông báo thành công liên quan mật khẩu
+        @if ($errors->has('mat_khau_cu') || $errors->has('mat_khau_moi') || $errors->has('mat_khau_moi_confirmation') || (session('success') && Str::contains(session('success'), 'mật khẩu')))
+            const pwdTabTrigger = document.querySelector('#nav-password-tab');
+            if (pwdTabTrigger && typeof bootstrap !== 'undefined' && bootstrap.Tab) {
+                new bootstrap.Tab(pwdTabTrigger).show();
+            }
+        @endif
         // Copy mã khuyến mãi
         const copyButtons = document.querySelectorAll(".copy-btn");
         copyButtons.forEach(button => {
