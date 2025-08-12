@@ -378,6 +378,3 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Lich sử điểm
-
-
-
