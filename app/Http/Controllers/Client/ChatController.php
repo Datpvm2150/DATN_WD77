@@ -100,4 +100,28 @@ class ChatController extends Controller
             'response' => $message,
         ]);
     }
+    public function loadMessages(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required|exists:users,id'
+        ]);
+
+        $chatRoom = ChatRoom::where('customer_id', $request->user_id)->first();
+
+        if (!$chatRoom) {
+            return response()->json([
+                'messages' => [],
+                'message' => 'Không tìm thấy phòng chat'
+            ], 404);
+        }
+
+        $messages = Message::where('chat_room_id', $chatRoom->id)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        return response()->json([
+            'chatRoom' => $chatRoom,
+            'messages' => $messages
+        ]);
+    }
 }

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Client;;
 
 use App\Services\OrderService;
-use App\Cart;   
+use App\Cart;
 use Illuminate\Support\Str;
 use App\Http\Controllers\Controller;
 use App\Http\Controllers\VNPayController;
@@ -32,7 +32,7 @@ class ThanhToanController extends Controller
         }
 
         // Lấy thông tin người dùng và địa chỉ đã sử dụng trước đó
-        $user = Auth::user();   
+        $user = Auth::user();
         $diaChiDaSuDung = HoaDon::where('user_id', $user->id)
             ->where('trang_thai', 7)
             ->pluck('dia_chi_nhan_hang')
@@ -174,7 +174,7 @@ class ThanhToanController extends Controller
             'new_giamgia' => 0 // sau khi xóa thì không còn giảm nữa
         ]);
     }
-    public function placeOrder(Request $request,OrderService $orderService)
+    public function placeOrder(Request $request, OrderService $orderService)
     {
         try {
             // Kiểm tra giỏ hàng trong session
@@ -303,7 +303,7 @@ class ThanhToanController extends Controller
                 if (!$bienThe) continue;
                 // Nếu không có giá mới thì lấy giá cũ
                 $gia = $item['bienthe']->gia_moi ?? $item['bienthe']->gia_cu;
-    
+
                 ChiTietHoaDon::create([
                     'hoa_don_id' => $hoaDon->id,
                     'bien_the_san_pham_id' => $bienThe->id,
@@ -331,10 +331,27 @@ class ThanhToanController extends Controller
                     );
 
                 case 'Thanh toán khi nhận hàng':
-                    $orderService->updatePaymentStatus($hoaDon->id);
-                    $orderService->sendVoucherAfterPaid($hoaDon);
-                    $hoaDon->update(['trang_thai_thanh_toan' => HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán']]);
-                    return response()->json(['success' => true, 'message' => 'Đặt hàng thành công, thanh toán khi nhận hàng.']);
+                    //   sửa đoạn này
+                    $hoaDon->update([
+                        'trang_thai_thanh_toan' => HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán'],
+                        'phuong_thuc_thanh_toan' => 'Thanh toán khi nhận hàng'
+                    ]);
+                    //     Cập nhật số lần sử dụng mã khuyến mãi nếu có
+                    if ($discountCode) {
+                        $discount = KhuyenMai::where('ma_khuyen_mai', $discountCode)->first();
+                        if ($discount) {
+                            $discount->increment('da_su_dung');
+                            if (!is_null($discount->so_luong) && $discount->da_su_dung >= $discount->so_luong) {
+                                $discount->trang_thai = false;
+                            }
+                            $discount->save();
+                        }
+                    }
+                    return response()->json([
+                        'success' => true,
+                        'message' => 'Đặt hàng thành công, thanh toán khi nhận hàng. Sau khi thanh toán, mã giảm giá sẽ được gửi.'
+                    ]);
+
 
                 case 'Thanh toán qua ví điện tử':
                     return app(EWalletController::class)->processPayment(
@@ -421,7 +438,7 @@ class ThanhToanController extends Controller
         $itemsArray = [];
 
         foreach ($cart->products as $product) {
-             $gia = $product['bienthe']->gia_moi ?? $product['bienthe']->gia_cu;
+            $gia = $product['bienthe']->gia_moi ?? $product['bienthe']->gia_cu;
             $itemsArray[] = [
                 'itemid' => (string) $product['bienthe']->id,
                 'itemname' => $product['bienthe']->ten_san_pham,

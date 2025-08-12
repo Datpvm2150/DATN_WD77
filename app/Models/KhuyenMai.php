@@ -19,12 +19,19 @@ class KhuyenMai extends Model
         'trang_thai',
         'user_id',
         'so_luong',
+        'diem_can',
         'da_su_dung',
         'loai_ma'
     ];
 
     public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'user_id');
     }
+    
+    public function lichSuDiems()
+    {
+        return $this->hasMany(LichSuDiem::class, 'khuyen_mai_id', 'id');
+    }
+
 }

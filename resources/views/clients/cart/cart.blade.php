@@ -34,11 +34,13 @@
                                     <th class="tp-cart-header-quantity">Số lượng</th>
                                     <th></th>
                                 </tr>
+
                             </thead>
                             <tbody>
                                 @if (Session::has('cart') != null)
                                     @foreach (Session::get('cart')->products as $idbt => $product)
-                                        <tr data-id="{{ $idbt }}">
+                                        <tr  data-id="{{ $idbt }}">
+                                             <td>
                                             <!-- img -->
                                             <td class="tp-cart-img">
                                                 <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}">
@@ -65,7 +67,7 @@
                                             <!-- price -->
                                             <td class="tp-cart-price">
 
-                                                
+
                                                 <span>
                                                     @if (isset($product['bienthe']->gia_moi) && $product['bienthe']->gia_moi > 0)
                                                         {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
@@ -118,93 +120,95 @@
                                     @endforeach
                                 @endif
                             </tbody>
+
                         </table>
                     </div>
                     <div class="tp-cart-bottom">
                         <div class="row align-items-end">
                             <div class="col-xl-6 col-md-8">
                                 <div class="tp-cart-coupon">
-                                    {{-- <form action="#"> --}}
                                     <div class="tp-cart-coupon-input-box">
-                                        <label>Mã khuyễn mãi:</label>
-                                        <div class="tp-cart-coupon-input d-flex align-items-center">
-                                            <input type="text" id="discount-code" placeholder="Nhập mã khuyến mãi">
-                                            <button type="submit" onclick="discount()" style="font-size: 15px">Áp
-                                                dụng</button>
-                                        </div>
-                                        <div class="dropdown mb-3">
-                                            <button class="btn btn-secondary dropdown-toggle w-100" type="button"
-                                                data-bs-toggle="dropdown" aria-expanded="false">
-                                                Chọn mã khuyến mãi
-                                            </button>
-                                            <div class="dropdown-menu p-2"
-                                                style="width: 100%; max-height: 300px; overflow-y: auto">
-                                                @php
-                                                    use Illuminate\Support\Carbon;
+                                        <label class="form-label fw-bold mb-2">Mã giảm giá</label>
 
-                                                    $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
-                                                        ->where('trang_thai', 1)
-                                                        ->get();
+                                        @php
+                                            use Illuminate\Support\Carbon;
 
-                                                    $maGiamGiaCaNhan = auth()->check()
-                                                        ? \App\Models\KhuyenMai::where('user_id', auth()->id())
-                                                            ->where('trang_thai', 1)
-                                                            ->get()
-                                                        : collect();
-                                                @endphp
+                                            $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
+                                                ->where('trang_thai', 1)
+                                                ->where('loai_ma', '!=', 'ma_doi_qua')
+                                                ->get();
 
-                                                <div class="row">
-                                                    <div class="col-6">
-                                                        <strong class="dropdown-header">Voucher:</strong>
-                                                        @forelse($maGiamGiaCongKhai as $item)
-                                                            <button type="button" class="dropdown-item"
-                                                                onclick="applyCode('{{ $item->ma_khuyen_mai }}')">
-                                                                <span
-                                                                    style="color: #007bff; font-weight: bold;">{{ $item->ma_khuyen_mai }}</span>
-                                                                <br>
-                                                                <small>
-                                                                    Giảm: {{ $item->phan_tram_khuyen_mai }}% (Tối đa
-                                                                    {{ number_format($item->giam_toi_da) }}₫)
-                                                                    <br>
-                                                                    HSD:<span style="color: red">
-                                                                        {{ \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y') }}</span>
-                                                                </small>
-                                                            </button>
-                                                        @empty
-                                                            <span class="dropdown-item text-muted">Không có</span>
-                                                        @endforelse
-                                                    </div>
+                                            $maGiamGiaCaNhan = auth()->check()
+                                                ? \App\Models\KhuyenMai::where('user_id', auth()->id())
+                                                    ->where('trang_thai', 1)
+                                                    ->get()
+                                                : collect();
+                                        @endphp
 
-                                                    <div class="col-6">
-                                                        <strong class="dropdown-header">Voucher tặng:</strong>
-                                                        @if (auth()->check())
-                                                            @forelse($maGiamGiaCaNhan as $item)
-                                                                <button type="button" class="dropdown-item"
-                                                                    onclick="applyCode('{{ $item->ma_khuyen_mai }}')">
-                                                                    <span
-                                                                        style="color: #007bff; font-weight: bold;">{{ $item->ma_khuyen_mai }}</span>
-                                                                    <br>
-                                                                    <small>
-                                                                        Giảm: {{ $item->phan_tram_khuyen_mai }}% (Tối đa
-                                                                        {{ number_format($item->giam_toi_da) }}₫)
-                                                                        <br>
-                                                                        HSD:<span style="color: red">
-                                                                            {{ \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y') }}</span>
-                                                                    </small>
-                                                                </button>
-                                                            @empty
-                                                                <span class="dropdown-item text-muted">Không có</span>
-                                                            @endforelse
-                                                        @else
-                                                            <span class="dropdown-item text-muted">Vui lòng đăng
-                                                                nhập</span>
-                                                        @endif
-                                                    </div>
-                                                </div>
+                                        <div class="row gx-2 gy-2 mb-2">
+                                            <!-- Dropdown chọn mã -->
+                                            <div class="col-md-10">
+                                                <select id="select-discount-code" class="form-select">
+                                                    <option value="">-- Chọn mã giảm giá --</option>
+                                                    @foreach ($maGiamGiaCongKhai as $item)
+                                                        @php
+
+                                                            $hsdFormatted = \Carbon\Carbon::parse(
+                                                                $item->ngay_ket_thuc,
+                                                            )->format('H:i d/m/Y');
+                                                        @endphp
+
+                                                        <option value="{{ $item->ma_khuyen_mai }}"
+                                                            >
+                                                            {{ $item->ma_khuyen_mai }} - Giảm
+                                                            {{ $item->phan_tram_khuyen_mai }}%
+                                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
+                                                            - HSD: {{ $hsdFormatted }}
+
+                                                        </option>
+                                                    @endforeach
+                                                    @if (auth()->check())
+                                                         @foreach ($maGiamGiaCaNhan as $item)
+                                                        @php
+
+                                                            $hsdFormatted = \Carbon\Carbon::parse(
+                                                                $item->ngay_ket_thuc,
+                                                            )->format('H:i d/m/Y');
+                                                        @endphp
+                                                        <option value="{{ $item->ma_khuyen_mai }}"
+                                                            >
+
+                                                            {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
+                                                            {{ $item->phan_tram_khuyen_mai }}%
+                                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
+                                                            - HSD: {{ $hsdFormatted }}
+
+                                                        </option>
+                                                    @endforeach
+                                                    @endif
+                                                </select>
+                                            </div>
+
+                                            <!-- Nút chọn mã -->
+                                            <div class="col-md-2">
+                                                <button class="btn btn-outline-primary w-100"
+                                                    onclick="chooseDiscountCode()">Chọn</button>
                                             </div>
                                         </div>
+
+                                        <!-- Nhập mã thủ công -->
+                                        <div class="row gx-2 gy-2 align-items-center">
+                                            <div class="col-md-10">
+                                                <input type="text" id="discount-code" class="form-control"
+                                                    placeholder="Nhập mã thủ công">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <button class="btn btn-dark apply-discount-btn" onclick="discount()">Áp
+                                                    dụng</button>
+                                            </div>
+                                        </div>
+
                                     </div>
-                                    {{-- </form> --}}
                                 </div>
                             </div>
                             <div class="col-xl-6 col-md-4">
@@ -252,31 +256,31 @@
 
                                 <div class="tp-cart-checkout-shipping-option text-black">
                                     Giảm giá:
-                                    @if (Session::get('discount_code'))
-                                        @php
+                                    @php
+                                        $discountAmount = 0;
+                                        if (Session::has('discount_code') && Session::has('cart')) {
                                             $discountCode = Session::get('discount_code');
                                             $discount = Session::get('discount_percentage');
                                             $maxDiscount = Session::get('maxDiscount');
-                                            $discountAmount = Session::get('cart')->totalPrice * ($discount / 100);
-                                            if (
-                                                $maxDiscount > 0 &&
-                                                $maxDiscount != null &&
-                                                $maxDiscount <= $discountAmount
-                                            ) {
-                                                $discountAmount = $maxDiscount;
-                                            } elseif ($maxDiscount <= 0) {
-                                                $discountAmount = 0;
+                                            $cart = Session::get('cart');
+
+                                            if ($cart && isset($cart->totalPrice)) {
+                                                $discountAmount = $cart->totalPrice * ($discount / 100);
+
+                                                if ($maxDiscount > 0 && $maxDiscount <= $discountAmount) {
+                                                    $discountAmount = $maxDiscount;
+                                                } elseif ($maxDiscount <= 0) {
+                                                    $discountAmount = 0;
+                                                }
                                             }
-                                        @endphp
-                                        <span class="text-danger">
-                                            {{ number_format($discountAmount, 0, ',', '.') }} VNĐ
-                                        </span>
-                                    @else
-                                        <span class="text-danger">
-                                            0 đ
-                                        </span>
-                                    @endif
+                                        }
+                                    @endphp
+
+                                    <span class="text-danger">
+                                        {{ number_format($discountAmount, 0, ',', '.') }} VNĐ
+                                    </span>
                                 </div>
+
                             </div>
                         </div>
                         <div class="tp-cart-checkout-total d-flex align-items-center justify-content-between">
@@ -292,7 +296,7 @@
                                 </span>
                             @else
                                 <span>
-                                    {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 2, ',', '.') : 0 }}
+                                    {{ isset(Session::get('cart')->totalPrice) ? number_format(Session::get('cart')->totalPrice, 0, ',', '.') : 0 }}
                                     VNĐ
                                 </span>
                             @endif
@@ -309,93 +313,49 @@
             </div>
         </div>
     </section>
+
     <style>
-        .tp-cart-coupon .dropdown {
-            width: 60%;
-        }
-
-        .tp-cart-coupon .dropdown button.btn.btn-secondary.dropdown-toggle.w-100 {
-            background-color: #6c757d;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 8px 12px;
-            font-size: 15px;
-            text-align: left;
+        .apply-discount-btn {
             width: 100%;
+            height: 55px;
             display: flex;
-            justify-content: space-between;
+            justify-content: center;
             align-items: center;
-        }
-
-        .tp-cart-coupon .dropdown button.btn.btn-secondary.dropdown-toggle.w-100:focus,
-        .tp-cart-coupon .dropdown button.btn.btn-secondary.dropdown-toggle.w-100:hover {
-            background-color: #5a6268;
-            outline: none;
-            box-shadow: none;
-        }
-
-        .tp-cart-coupon .dropdown .dropdown-menu {
-            width: 100%;
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 10px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            background-color: white;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-header {
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-            margin-bottom: 10px;
-            padding: 5px 0;
-        }
-
-        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item {
-            padding: 10px 15px;
-            font-size: 14px;
-            color: #333;
-            background-color: transparent;
-            border: none;
-            text-align: left;
-            width: 100%;
-            white-space: normal;
-            word-wrap: break-word;
-        }
-
-        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item:hover,
-        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item:focus {
-            background-color: #f8f9fa;
-            color: #007bff;
-        }
-
-        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item span {
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item small {
-            color: #666;
-            font-size: 12px;
-            display: block;
-            line-height: 1.4;
-        }
-
-        .tp-cart-coupon .dropdown .dropdown-menu .dropdown-item.text-muted {
-            color: #6c757d;
-            padding: 10px 15px;
+            white-space: nowrap;
         }
     </style>
     <script>
-        function applyCode(code) {
-            const input = document.getElementById("discount-code");
-            if (input) {
-                input.value = code;
+        function chooseDiscountCode() {
+            const selectedCode = document.getElementById("select-discount-code").value;
+            if (selectedCode) {
+                document.getElementById("discount-code").value = selectedCode;
             }
         }
+
+        function discount() {
+            const code = document.getElementById("discount-code").value;
+
+            if (!code) {
+                showDiscountToast("Vui lòng nhập mã khuyến mãi.");
+                return;
+            }
+
+            $.ajax({
+                url: "/Discount-Cart/" + code,
+                type: "GET",
+                success: function(data) {
+                    $("#list-cart").html(data);
+                },
+                error: function(xhr) {
+                    const json = xhr.responseJSON;
+                    if (json && json.message) {
+                        showDiscountToast(json.message);
+                    } else {
+                        showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+                    }
+                }
+            });
+        }
+
     </script>
 @endsection
-

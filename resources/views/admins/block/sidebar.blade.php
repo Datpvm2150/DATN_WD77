@@ -44,7 +44,7 @@
                         </ul>
                     </div>
                 </li>
-
+                  {{-- Quản lý tài khoản --}}
                 <li>
                     <a href="#sidebarTables" data-bs-toggle="collapse">
                         <i data-feather="users"></i>
@@ -67,6 +67,39 @@
                 <!-- Kinh doanh -->
                 <li class="menu-title">Kinh doanh</li>
 
+                 {{-- Tin nhắn --}}
+                <li>
+                    <a href="#chat" data-bs-toggle="collapse">
+                        <i class="fa fa-comments"></i>
+                        <span> Tin nhắn </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="chat">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.chat.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
+
+                 {{-- Đơn hàng --}}
+                <li>
+                    <a href='#hoadons' data-bs-toggle="collapse">
+                        <i data-feather="shopping-bag"></i>
+                        <span> Đơn hàng </span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="hoadons">
+                        <ul class="nav-second-level">
+                            <li>
+                                <a class='tp-link' href="{{ route('admin.hoadons.index') }}">Danh sách</a>
+                            </li>
+
+                        </ul>
+                    </div>
+                </li>
                 <!-- Sản phẩm -->
                 <li>
                     <a href="#sanpham" data-bs-toggle="collapse">
@@ -218,24 +251,9 @@
                     </div>
                 </li>
 
-                {{-- Đơn hàng --}}
-                <li>
-                    <a href='#hoadons' data-bs-toggle="collapse">
-                        <i data-feather="shopping-bag"></i>
-                        <span> Đơn hàng </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="hoadons">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a class='tp-link' href="{{ route('admin.hoadons.index') }}">Danh sách</a>
-                            </li>
+                
 
-                        </ul>
-                    </div>
-                </li>
-
-
+                {{-- Liên hệ --}}
                 <li>
 
                     <a href="#lienhes" data-bs-toggle="collapse">
@@ -247,39 +265,6 @@
                         <ul class="nav-second-level">
                             <li>
                                 <a class='tp-link' href="{{ route('admin.lienhes.index') }}">Danh sách</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </li>
-                {{-- <li>
-                    <a href="#chat" data-bs-toggle="collapse">
-                        <i class="fa fa-comments"></i>
-                        <span> Tin nhắn </span>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="chat">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a class='tp-link' href="{{ route('admin.chat.index') }}">Danh sách</a>
-                            </li>
-
-                        </ul>
-                    </div>
-                </li> --}}
- <li>
-                    <a href="#chat" data-bs-toggle="collapse">
-                        <i class="fa fa-comments"></i>
-                        <span> Tin nhắn </span>
-                        <div id="total-unread-badge"
-                            style="display: none; background: red; color: white; padding: 3px 6px; border-radius: 50%; font-size: 12px;">
-                        </div>
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <div class="collapse" id="chat">
-                        <ul class="nav-second-level">
-                            <li>
-                                <a class='tp-link' href="{{ route('admin.chat.index') }}">Danh sách</a>
                             </li>
 
                         </ul>

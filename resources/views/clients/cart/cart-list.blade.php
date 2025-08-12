@@ -44,7 +44,6 @@
                                         {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
                                     @elseif (isset($product['bienthe']->gia_cu) && $product['bienthe']->gia_cu > 0)
                                         {{ number_format($product['bienthe']->gia_cu, 0, ',', '.') }} VNĐ
-
                                     @else
                                         Chưa có giá
                                     @endif
@@ -96,86 +95,83 @@
             <div class="col-xl-6 col-md-8">
                 <div class="tp-cart-coupon">
                     <div class="tp-cart-coupon-input-box">
-                        <label>Mã khuyễn mãi:</label>
-                        <div class="tp-cart-coupon-input d-flex align-items-center">
-                            <input type="text" id="discount-code" placeholder="Nhập mã khuyến mãi">
-                            <button onclick="discount()" style="font-size: 15px">Áp dụng mã</button>
+                        <label class="form-label fw-bold mb-2">Mã giảm giá</label>
 
-                        </div>
-                        <div class="dropdown mb-3">
-                            <button class="btn btn-secondary dropdown-toggle w-100" type="button"
-                                data-bs-toggle="dropdown" aria-expanded="false">
-                                Chọn mã khuyến mãi
-                            </button>
-                            <div class="dropdown-menu p-2" style="width: 100%; max-height: 300px; overflow-y: auto">
-                                @php
-                                    use Illuminate\Support\Carbon;
+                        @php
+                            use Illuminate\Support\Carbon;
 
-                                    $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
-                                        ->where('trang_thai', 1)
-                                        ->get();
+                            $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
+                                ->where('trang_thai', 1)
+                                ->get();
 
-                                    $maGiamGiaCaNhan = auth()->check()
-                                        ? \App\Models\KhuyenMai::where('user_id', auth()->id())
-                                            ->where('trang_thai', 1)
-                                            ->get()
-                                        : collect();
-                                @endphp
+                            $maGiamGiaCaNhan = auth()->check()
+                                ? \App\Models\KhuyenMai::where('user_id', auth()->id())
+                                    ->where('trang_thai', 1)
+                                    ->get()
+                                : collect();
+                        @endphp
 
-                                <div class="row">
-                                    <div class="col-6">
-                                        <strong class="dropdown-header">Voucher:</strong>
-                                        @forelse($maGiamGiaCongKhai as $item)
-                                            <button type="button" class="dropdown-item"
-                                                onclick="applyCode('{{ $item->ma_khuyen_mai }}')">
-                                                <span
-                                                    style="color: #007bff; font-weight: bold;">{{ $item->ma_khuyen_mai }}</span>
-                                                <br>
-                                                <small>
-                                                    Giảm: {{ $item->phan_tram_khuyen_mai }}% (Tối đa
-                                                    {{ number_format($item->giam_toi_da) }}₫)
-                                                    <br>
-                                                    HSD:<span style="color: red">
-                                                        {{ \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y') }}</span>
-                                                </small>
-                                            </button>
-                                        @empty
-                                            <span class="dropdown-item text-muted">Không có</span>
-                                        @endforelse
-                                    </div>
+                        <div class="row gx-2 gy-2 mb-2">
+                            <!-- Dropdown chọn mã -->
+                            <div class="col-md-10">
+                                <select id="select-discount-code" class="form-select">
+                                    <option value="">-- Chọn mã giảm giá --</option>
+                                    @foreach ($maGiamGiaCongKhai as $item)
+                                        @php
 
-                                    <div class="col-6">
-                                        <strong class="dropdown-header">Voucher tặng:</strong>
-                                        @if (auth()->check())
-                                            @forelse($maGiamGiaCaNhan as $item)
-                                                <button type="button" class="dropdown-item"
-                                                    onclick="applyCode('{{ $item->ma_khuyen_mai }}')">
-                                                    <span
-                                                        style="color: #007bff; font-weight: bold;">{{ $item->ma_khuyen_mai }}</span>
-                                                    <br>
-                                                    <small>
-                                                        Giảm: {{ $item->phan_tram_khuyen_mai }}% (Tối đa
-                                                        {{ number_format($item->giam_toi_da) }}₫)
-                                                        <br>
-                                                        HSD:<span style="color: red">
-                                                            {{ \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y') }}</span>
-                                                    </small>
-                                                </button>
-                                            @empty
-                                                <span class="dropdown-item text-muted">Không có</span>
-                                            @endforelse
-                                        @else
-                                            <span class="dropdown-item text-muted">Vui lòng đăng
-                                                nhập</span>
-                                        @endif
-                                    </div>
-                                </div>
+                                            $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format(
+                                                'H:i d/m/Y',
+                                            );
+                                        @endphp
+                                        <option value="{{ $item->ma_khuyen_mai }}" >
+                                                            {{ $item->ma_khuyen_mai }} - Giảm
+                                                            {{ $item->phan_tram_khuyen_mai }}%
+                                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
+                                                             - HSD: {{ $hsdFormatted }}
+                                                        </option>
+                                                       @endforeach
+                                            @if (auth()->check())
+                                                @foreach ($maGiamGiaCaNhan as $item)
+                                                    @php
+
+                                                        $hsdFormatted = \Carbon\Carbon::parse(
+                                                            $item->ngay_ket_thuc,
+                                                        )->format('H:i d/m/Y');
+                                                    @endphp
+                                        <option value="{{ $item->ma_khuyen_mai }}">
+                                            {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
+                                            {{ $item->phan_tram_khuyen_mai }}%
+                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
+                                            - HSD: {{ $hsdFormatted }}
+
+                                        </option>
+                                    @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            <!-- Nút chọn mã -->
+                            <div class="col-md-2">
+                                <button class="btn btn-outline-primary w-100"
+                                    onclick="chooseDiscountCode()">Chọn</button>
                             </div>
                         </div>
+
+                        <!-- Nhập mã thủ công -->
+                        <div class="row gx-2 gy-2 align-items-center">
+                            <div class="col-md-10">
+                                <input type="text" id="discount-code" class="form-control"
+                                    placeholder="Nhập mã thủ công">
+                            </div>
+                            <div class="col-md-2">
+                                <button class="btn btn-dark apply-discount-btn" onclick="discount()">Áp
+                                    dụng</button>
+                            </div>
+                        </div>
+
                     </div>
-
-
                 </div>
+
             </div>
             <div class="col-xl-6 col-md-4">
                 <div class="tp-cart-update text-md-end">
@@ -213,6 +209,9 @@
             <span class="tp-cart-checkout-top-price" style="font-size: 16px">
                 {{ number_format($totalPrice, 0, ',', '.') }} VNĐ
             </span>
+            
+</span>
+
         </div>
 
         <!-- Giảm giá -->
@@ -255,49 +254,13 @@
 <script src="{{ asset('assets/client/js/main.js') }}"></script>
 
 <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
-
-{{-- <script>
-    function discount() {
-        const code = document.getElementById("discount-code").value;
-
-        if (!code) {
-            showDiscountToast("Vui lòng nhập mã khuyến mãi.");
-            return;
-        }
-
-        $.ajax({
-            url: "/Discount-Cart/" + code,
-            type: "GET",
-            success: function(data) {
-                // Nếu áp mã thành công, load lại phần giỏ hàng
-                $("#cart-list-content").html(data);
-            },
-            error: function(xhr) {
-                try {
-                    const json = xhr.responseJSON;
-                    if (json && json.message) {
-                        showDiscountToast(json.message);
-                    } else {
-                        showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
-                    }
-                } catch (e) {
-                    showDiscountToast("Đã xảy ra lỗi không xác định.");
-                }
-            }
-        });
+<style>
+    .apply-discount-btn {
+        width: 100%;
+        height: 55px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        white-space: nowrap;
     }
-
-    function showDiscountToast(message) {
-        const toast = document.getElementById("discount-toast");
-        const msg = document.getElementById("discount-toast-message");
-
-        msg.innerText = message;
-        toast.style.display = "block";
-
-        // Tự động ẩn sau 3 giây
-        setTimeout(() => {
-            toast.style.display = "none";
-        }, 3000);
-    }
-</script> --}}
-
+</style>

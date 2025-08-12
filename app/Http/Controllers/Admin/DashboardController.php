@@ -10,9 +10,6 @@ use App\Models\SanPham;
 use App\Models\HoaDon;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Models\KhuyenMai;
-use Maatwebsite\Excel\Facades\Excel;
-use App\Exports\RevenueExport;
 use App\Models\lien_hes;
 use App\Models\ChiTietHoaDon;
 use App\Models\DanhGiaSanPham;
@@ -418,7 +415,4 @@ if ($startInput && $endInput) {
             'filterStatus'
         ));
     }
-
-
-
 }

@@ -114,7 +114,7 @@
         padding: 25px 22px;
         display: flex;
         gap: 20px;
-        height: 460px;
+        height: 300px;
         margin-bottom: 82px;
         overflow-y: auto;
         scroll-behavior: smooth;
@@ -449,23 +449,6 @@
                 return div;
             };
 
-            const saveChatHistoryChat = () => {
-                localStorage.setItem("chat_history", chatBodyChat.innerHTML);
-            };
-
-            const restoreChatHistoryChat = () => {
-                const history = localStorage.getItem("chat_history");
-                if (history) {
-                    chatBodyChat.innerHTML = history;
-                    chatBodyChat.scrollTo({
-                        top: chatBodyChat.scrollHeight,
-                        behavior: "auto"
-                    });
-                }
-            };
-
-            restoreChatHistoryChat();
-
             const handleOutgoingMessageChat = (e) => {
                 e.preventDefault();
                 if (!messageInputChat.value.trim() && !userDataChat.file.file) {
@@ -542,6 +525,14 @@
                                 outgoingMessageDiv.querySelector(".message-text").textContent =
                                     userDataChat.message;
                             }
+                            const messageTime = document.createElement("div");
+                            messageTime.className = "message-time";
+                            messageTime.style.cssText =
+                                "font-size: 12px; color: #999; margin-top: 4px;";
+                            messageTime.textContent = formatTime(new Date()
+                                .toISOString());
+
+                            outgoingMessageDiv.appendChild(messageTime);
                             chatBodyChat.appendChild(outgoingMessageDiv);
                             console.log("Scroll Height:", chatBodyChat.scrollHeight);
                             chatBodyChat.scrollTo({
@@ -556,7 +547,6 @@
                                 data: '',
                                 mime_type: '',
                             };
-                            saveChatHistoryChat();
                         }
                     },
                     error: function(error) {
@@ -609,20 +599,90 @@
             document.querySelector("#file-upload").addEventListener("click", () => fileInputChat.click());
             chatTogglerChat.addEventListener("click", () => {
                 document.body.classList.toggle("show-chat");
-                document.body.classList.remove('show-chatbot')
+                document.body.classList.remove('show-chatbot');
+                axios.post('/chat/load-message', {
+                        user_id: {{ auth()->id() }}
+                    })
+                    .then(response => {
+
+                        const messages = response.data.messages;
+
+                        messages.forEach(e => {
+                            const isText = e.type === 'text';
+                            const isSender = e.sender_id ==
+                            {{ auth()->id() }}; // true nếu là tin nhắn của user
+                            const time = formatTime(e.created_at);
+                            let msgHtml = ``;
+
+                            const messageClass = isSender ? 'user-message' : 'bot-message';
+                            const avatarHtml = !isSender ?
+                                `<img src="{{ asset('assets/client/img/icon/staff-support.jpg') }}"
+                 style="border-radius: 50%; border:rgba(0, 0, 0, 0.1) solid;"
+                 width="35" height="35" alt="">` :
+                                '';
+
+                            if (isText) {
+                                msgHtml = `
+            <div class="message ${messageClass}">
+                ${avatarHtml}
+                <div class="message-text">
+                    ${e.message}
+                </div>
+                <div class="message-time" style="font-size: 12px; color: #999; margin-top: 4px;">
+                        ${time}
+                    </div>
+            </div>`;
+                            } else {
+                                msgHtml = `
+            <div class="message ${messageClass}">
+                ${avatarHtml}
+                <div>
+                    <img src="/storage/${e.message}" class="attachment"
+                         style="max-width: 300px; max-height: 300px; object-fit: contain; border-radius: 13px;">
+
+                </div>
+                <div class="message-time" style="font-size: 12px; color: #999; margin-top: 4px;">
+                        ${time}
+                    </div>
+            </div>`;
+                            }
+
+                            document.querySelector('.chat-body').insertAdjacentHTML('beforeend',
+                                msgHtml);
+                        });
+
+                    })
+                    .catch(error => {
+                        console.error('Lỗi khi load tin nhắn:', error);
+                    });
+
             });
             closechatChat.addEventListener("click", () => document.body.classList.remove("show-chat"));
 
-            // Xóa lịch sử chat chỉ khi người dùng đóng tab/trình duyệt (không phải reload/chuyển trang)
-            window.addEventListener("pagehide", (event) => {
-                if (!event.persisted) {
-                    localStorage.removeItem("chat_history");
-                }
-            });
+            function formatTime(datetimeStr) {
+                const date = new Date(datetimeStr);
+                const day = date.getDate().toString().padStart(2, '0');
+                const month = (date.getMonth() + 1).toString().padStart(2, '0');
+                const year = date.getFullYear();
+                const hours = date.getHours().toString().padStart(2, '0');
+                const minutes = date.getMinutes().toString().padStart(2, '0');
+                return `${day}/${month}/${year} ${hours}:${minutes}`;
+            }
+
         });
     </script>
     <script type="module">
         let hasStartedListening = false;
+
+        function formatTime(datetimeStr) {
+            const date = new Date(datetimeStr);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = date.getHours().toString().padStart(2, '0');
+            const minutes = date.getMinutes().toString().padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
 
         function waitForChatRoomIdAndListen() {
             const interval = setInterval(() => {
@@ -638,13 +698,22 @@
                                 if (e.message.type == 'text') {
                                     const staffMessage = `<div class="message bot-message">
                                     <img src="{{ asset('assets/client/img/icon/staff-support.jpg') }}" style="border-radius: 50%; border:rgba(0, 0, 0, 0.1) solid;" width="35" height="35" alt="">
-                                    <div class="message-text">${e.message.message}</div></div>`
+                                    <div class="message-text">${e.message.message}
+                                       </div>
+                                         <div class="message-time" style="font-size: 12px; color: #999; margin-top: 4px;">
+                                        ${formatTime(e.message.created_at)}
+                                    </div>
+                                    </div>`
                                     document.querySelector(".chat-body").insertAdjacentHTML('beforeend',
                                         staffMessage);
                                 } else {
                                     const staffMessage = `<div class="message bot-message">
                                     <img src="{{ asset('assets/client/img/icon/staff-support.jpg') }}" style="border-radius: 50%; border:rgba(0, 0, 0, 0.1) solid;" width="35" height="35" alt="">
-                                    <img src="/storage/${e.message.message}" class="attachment" ></div>`
+                                    <img src="/storage/${e.message.message}" class="attachment" >
+                                    <div class="message-time" style="font-size: 12px; color: #999; margin-top: 4px;">
+                                        ${formatTime(e.message.created_at)}
+                                    </div>
+                                    </div>`
                                     document.querySelector(".chat-body").insertAdjacentHTML('beforeend',
                                         staffMessage);
                                 }

@@ -118,8 +118,6 @@
             <p>Cảm ơn bạn đã mua sắm tại cửa hàng của chúng tôi!</p>
             <p>Mọi thắc mắc xin vui lòng liên hệ <a href="quanminh221205@gmail.com">quanminh221205@gmail.com</a>.</p>
         </div>
-
-
     </div>
 </body>
 

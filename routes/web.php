@@ -1,10 +1,11 @@
 <?php
 
-use App\Http\Controllers\Admin\ChatLogController;
-use App\Http\Controllers\Admin\ChatBotController;
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VNPayController;
-
+use App\Http\Controllers\Admin\StaffDashboardController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -14,20 +15,24 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\HoaDonController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\BaiVietController;
+use App\Http\Controllers\Admin\ChatBotController;
+use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\SanPhamController;
+use App\Http\Controllers\Client\DoiQuaController;
 use App\Http\Controllers\Client\LienHeController;
+
+
+// Client Routes
+use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DungLuongController;
 use App\Http\Controllers\Admin\KhuyenMaiController;
 use App\Http\Controllers\Auth\AdminLoginController;
-
-// Client Routes
+use App\Http\Controllers\Client\DiemDanhController;
 use App\Http\Controllers\Client\TaiKhoanController;
 use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\YeuThichController;
-use App\Http\Controllers\Auth\CustomerRegisterController;
-use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Admin\AdminLienHeController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
@@ -36,14 +41,11 @@ use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Client\TrangBaiVietController;
 use App\Http\Controllers\Client\TrangSanPhamController;
 use App\Http\Controllers\Admin\DanhGiaSanPhamController;
+use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
-use App\Http\Controllers\Client\DiemDanhController;
 
-use App\Models\User;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -189,6 +191,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     //Thống kê
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/doanhthu', [DashboardController::class, 'doanhthu'])->name('doanhthu');
+    Route::get('/admin/doanh-thu', [StaffDashboardController::class, 'thongKeDoanhThu'])->name('admin.doanhthu');
     Route::get('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
     Route::get('/tk-sanpham-banchay', [DashboardController::class, 'sanPhamBanChay'])->name('thongke.sanpham.banchay');
     Route::get('/tk-sanpham-kho', [DashboardController::class, 'sanPhamBanKho'])->name('thongke.sanpham.kho');
@@ -268,7 +271,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-    
+
     Route::get('login', [CustomerLoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [CustomerLoginController::class, 'login'])->name('login.post');
     Route::get('register', [CustomerRegisterController::class, 'showRegistrationForm'])->name('register');
@@ -360,10 +363,18 @@ Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.
 
 // chat
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
+Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::class, 'loadMessages']);
+Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 
 // Điểm danh
 Route::middleware(['auth'])->group(function () {
     Route::post('/diem-danh', [DiemDanhController::class, 'diemDanh'])->name('diem-danh');
 });
 
+// Đổi quà
+Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');
+Route::middleware(['auth'])->group(function () {
+    Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
+});
 
+// Lich sử điểm

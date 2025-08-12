@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="{{ asset('assets/client/css/main.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/client/css/danhgia.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/client/css/gioithieu.css') }}">
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded">
 
 
     @yield('css')
@@ -257,8 +257,8 @@
                     <div class="col-xl-3 col-lg-3 col-md-3 col-6">
                         <div class="logo">
                             <a href="">
-                                <img src="{{ asset('assets/client/img/logo/logo.png') }}" alt="logo"
-                                    style="width:150px; height:40px;">
+                                <img src="{{ asset('assets/admin/images/logo-ctstore.png') }}" alt="logo"
+                                    style="width:160px; height:60px;">
                             </a>
                         </div>
                     </div>
@@ -278,6 +278,7 @@
                                         <a href="{{ route('bai-viet') }}">Tin tức</a>
                                     </li>
                                     <li><a href="{{ route('lienhe') }}">Liên hệ</a></li>
+                                    <li><a href="{{ route('doiqua') }}">Đổi quà</a></li>
                                 </ul>
                             </nav>
 
