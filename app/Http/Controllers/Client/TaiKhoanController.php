@@ -88,9 +88,20 @@ class TaiKhoanController extends Controller
         $request->validate([
             'ten' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
-            'so_dien_thoai' => 'nullable|string|max:20',
+            'so_dien_thoai' => ['required', 'regex:/^(0|\+84)\d{9}$/', 'max:10'], // Số điện thoại phải có 10 số và bắt đầu bằng 0 hoặc 84
             'anh_dai_dien' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'dia_chi' => 'nullable|string',
+        ], [
+            'ten.required' => 'Tên không được để trống.',
+            'email.required' => 'Email không được để trống.',
+            'email.email' => 'Email không hợp lệ.',
+            'email.unique' => 'Email đã được sử dụng.',
+            'so_dien_thoai.required' => 'Số điện thoại không được để trống.',
+            'so_dien_thoai.regex' => 'Số điện thoại không hợp lệ.',
+            'so_dien_thoai.max' => 'Số điện thoại không được vượt quá 10 số.',
+            'anh_dai_dien.image' => 'Ảnh đại diện phải là ảnh.',
+            'anh_dai_dien.mimes' => 'Ảnh đại diện phải là ảnh.',
+            'anh_dai_dien.max' => 'Ảnh đại diện không được vượt quá 2MB.',
         ]);
 
         $users = Auth::user();
@@ -157,6 +168,11 @@ class TaiKhoanController extends Controller
         $request->validate([
             'mat_khau_cu' => 'required', // Bắt buộc phải nhập mật khẩu cũ
             'mat_khau_moi' => 'required|min:8|confirmed' // Mật khẩu mới phải ít nhất 8 ký tự và khớp với xác nhận mật khẩu
+        ], [
+            'mat_khau_cu.required' => 'Mật khẩu cũ không được để trống.',
+            'mat_khau_moi.required' => 'Mật khẩu mới không được để trống.',
+            'mat_khau_moi.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
+            'mat_khau_moi.confirmed' => 'Mật khẩu mới và xác nhận mật khẩu không khớp.',
         ]);
 
         // Kiểm tra mật khẩu cũ
