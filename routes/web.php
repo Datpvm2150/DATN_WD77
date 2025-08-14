@@ -149,6 +149,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::put('/{id}/update', [MauSacController::class, 'update'])->name('update');
         Route::post('/{id}/onOffMauSac', [MauSacController::class, 'onOffMauSac'])->name('onOffMauSac');
         Route::delete('/{id}/destroy', [MauSacController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [MauSacController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [MauSacController::class, 'restore'])->name('restore');
     });
 
     // Khuyến mãi

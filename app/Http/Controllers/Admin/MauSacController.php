@@ -90,4 +90,14 @@ class MauSacController extends Controller
 
         return redirect()->route('admin.mausacs.index')->with('success', 'Xóa màu thành công!');
     }
+
+    public function trash() {
+        $mausacs = MauSac::onlyTrashed()->get();
+        return view('admins.mausacs.trash', compact('mausacs'));
+    }
+    public function restore($id) {
+        $mausac = MauSac::onlyTrashed()->findOrFail($id);
+        $mausac->restore();
+        return redirect()->route('admin.mausacs.trash')->with('success', 'Khôi phục thành công');
+    }
 }
