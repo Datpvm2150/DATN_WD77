@@ -11,8 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('hoa_dons', function (Blueprint $table) {
-            $table->string('ma_khuyen_mai')->nullable()->after('giam_gia');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('so_dien_thoai')->nullable()->change();
         });
     }
 
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('hoa_dons', function (Blueprint $table) {
-             $table->dropColumn('ma_khuyen_mai');
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('so_dien_thoai')->nullable(false)->change();
         });
     }
 };

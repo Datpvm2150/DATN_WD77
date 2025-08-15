@@ -143,12 +143,18 @@ class TaiKhoanController extends Controller
         // Xác thực mật khẩu cũ, mật khẩu mới và xác nhận mật khẩu mới
         $request->validate([
             'mat_khau_cu' => 'required', // Bắt buộc phải nhập mật khẩu cũ
-            'mat_khau_moi' => 'required|min:8|confirmed' // Mật khẩu mới phải ít nhất 8 ký tự và khớp với xác nhận mật khẩu
+            'mat_khau_moi' => 'required|string|min:8|confirmed|different:mat_khau_cu' // Mật khẩu mới phải ít nhất 8 ký tự và khớp với xác nhận mật khẩu
+        ],[
+            'mat_khau_cu.required' => 'Mật khẩu cũ là bắt buộc.',
+            'mat_khau_moi.required' => 'Mật khẩu mới là bắt buộc.',
+            'mat_khau_moi.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
+            'mat_khau_moi.confirmed' => 'Xác nhận mật khẩu không khớp.',
+            'mat_khau_moi.different' => 'Mật khẩu mới phải khác mật khẩu cũ.'
         ]);
 
         // Kiểm tra mật khẩu cũ
         if (!Hash::check($request->input('mat_khau_cu'), $user->mat_khau)) {
-            return redirect()->back()->with('error', 'Mật khẩu cũ không đúng.');
+        return back()->withErrors(['mat_khau_cu' => 'Mật khẩu cũ không đúng.']);
         }
 
         // Cập nhật mật khẩu mới
@@ -241,7 +247,7 @@ class TaiKhoanController extends Controller
             $donHangs = $donHangs->where('trang_thai', 6); // Đã hủy
         } elseif ($status == 7) {
             $donHangs = $donHangs->where('trang_thai', 7); // Đã nhận hàng
-        } 
+        }
 
         $donHangs = $donHangs->get();
 
