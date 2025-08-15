@@ -99,6 +99,7 @@ function RenderListCart(response) {
         }
     }
     bindCartEvents();
+    rebindCartEvents();
 }
 // danh sach san pham gio hang drop sideber
 function cartIndex() {
@@ -150,6 +151,7 @@ function UpdateItemCart(idbt, quantity) {
         $("#list-cart").empty().html(response);
         alertify.success('Cập nhật thành công!');
         bindCartEvents();
+        rebindCartEvents();
     }).fail((xhr, status, error) => {
         console.error('Update failed:', error);
         alertify.error('Cập nhật thất bại. Vui lòng thử lại.');
@@ -227,35 +229,35 @@ function bindCartEvents() {
     });
 }
 // giảm giá sản phẩm
-function discount() {
-    const discountCode = document.getElementById('discount-code').value;
+// function discount() {
+//     const discountCode = document.getElementById('discount-code').value;
 
-    if (discountCode === "") {
-        alertify.error('Vui lòng nhập mã giảm giá.');
-        return;
-    }
+//     if (discountCode === "") {
+//         alertify.error('Vui lòng nhập mã giảm giá.');
+//         return;
+//     }
 
-    $.ajax({
-        url: `/Discount-Cart/${discountCode}`,
-        type: "GET",
-    }).done((response) => {
-        $("#list-cart").empty();
-        $("#list-cart").html(response);
-        alertify.success('Đã áp dụng mã giảm giá!');
-        bindCartEvents();
-    }).fail((xhr) => {
-        console.error('Lỗi khi áp dụng mã giảm giá:', xhr);
+//     $.ajax({
+//         url: `/Discount-Cart/${discountCode}`,
+//         type: "GET",
+//     }).done((response) => {
+//         $("#list-cart").empty();
+//         $("#list-cart").html(response);
+//         alertify.success('Đã áp dụng mã giảm giá!');
+//         bindCartEvents();
+//     }).fail((xhr) => {
+//         console.error('Lỗi khi áp dụng mã giảm giá:', xhr);
 
-        let message = 'Vui lòng thử lại sau.';
+//         let message = 'Vui lòng thử lại sau.';
 
-        // Nếu response có message từ server thì hiển thị ra
-        if (xhr.responseJSON && xhr.responseJSON.message) {
-            message = xhr.responseJSON.message;
-        }
+//         // Nếu response có message từ server thì hiển thị ra
+//         if (xhr.responseJSON && xhr.responseJSON.message) {
+//             message = xhr.responseJSON.message;
+//         }
 
-        alertify.error(message);
-    });
-}
+//         alertify.error(message);
+//     });
+// }
 
 // khi load lại trang gọi lại sự kiện thay đổi
 document.addEventListener('DOMContentLoaded', bindCartEvents);
@@ -267,9 +269,9 @@ function Love(productId, index) {
     // Kiểm tra xem biểu tượng hiện tại có phải là trái tim không
     if (icon.innerHTML.includes('M12 21.35')) {
         $.ajax({
-                url: "/Add-To-Love/" + productId,
-                type: "GET",
-            })
+            url: "/Add-To-Love/" + productId,
+            type: "GET",
+        })
             .done((response) => {
                 alertify.success('Xóa khỏi yêu thích!');
                 // Nếu đã là trái tim, chuyển về biểu tượng ban đầu
@@ -295,9 +297,9 @@ function Love(productId, index) {
     } else {
         console.log('yêu thích');
         $.ajax({
-                url: "/Add-To-Love/" + productId,
-                type: "GET",
-            })
+            url: "/Add-To-Love/" + productId,
+            type: "GET",
+        })
             .done((response) => {
                 // RenderCartDrop(response);
                 // $("#change-item-cart").empty();
@@ -323,9 +325,9 @@ function Love(productId, index) {
 
 function deleteLove(id) {
     $.ajax({
-            url: "/Delete-From-Love/" + id,
-            type: "GET",
-        })
+        url: "/Delete-From-Love/" + id,
+        type: "GET",
+    })
         .done((response) => {
             $("#loved-loves-list").empty().html(response);
             const itemCount = $("#loved-loves-list tr").length;
@@ -337,20 +339,154 @@ function deleteLove(id) {
         });
 }
 
-function PleaseLogin(){
+function PleaseLogin() {
     console.log('chưa đăng nhập');
     alertify.error('Vui lòng đăng nhập!');
 }
 
-function DeleteDiscount(){
+// function DeleteDiscount(){
+//     $.ajax({
+//         url: "/DeleteDiscount",
+//         type: "GET",
+//     })
+//     .done((response) => {
+//         alertify.success('Đã xóa giảm giá!');
+//         RenderListCart(response)
+//     }).fail(() => {
+//         alertify.error('Có lỗi xảy ra, vui lòng thử lại sau!');
+//     });
+// }
+
+function rebindCartEvents() {
+    console.log('rebindCartEvents chạy lại');
+    const selectAll = document.getElementById('select-all-cart');
+    const itemCheckboxes = document.querySelectorAll('.select-cart-item');
+    if (selectAll) {
+        selectAll.addEventListener('change', function () {
+            itemCheckboxes.forEach(cb => cb.checked = selectAll.checked);
+            updateCartPrices();
+        });
+    }
+    itemCheckboxes.forEach(cb => {
+        cb.addEventListener('change', function () {
+            if (!cb.checked) {
+                selectAll.checked = false;
+            } else if ([...itemCheckboxes].every(c => c.checked)) {
+                selectAll.checked = true;
+            }
+            updateCartPrices();
+        });
+    });
+
+    document.querySelectorAll('.cart-quantity').forEach(function (input) {
+        input.addEventListener('input', updateCartPrices);
+    });
+
+    const selectDiscountCode = document.getElementById('select-discount-code');
+    if (selectDiscountCode) {
+        selectDiscountCode.addEventListener('change', function () {
+            document.getElementById('discount-code').value = this.value;
+            updateCartPrices();
+        });
+    }
+
+    const discountCodeInput = document.getElementById('discount-code');
+    if (discountCodeInput) {
+        discountCodeInput.addEventListener('input', updateCartPrices);
+    }
+
+    updateCartPrices();
+}
+
+function updateCartPrices() {
+    let subtotal = 0;
+    document.querySelectorAll('.select-cart-item').forEach(function (cb, idx) {
+        if (cb.checked) {
+            const row = cb.closest('tr');
+            const price = parseInt(row.querySelector('.item-price').getAttribute('data-price')) || 0;
+            const quantity = parseInt(row.querySelector('.cart-quantity').value) || 0;
+            subtotal += price * quantity;
+        }
+    });
+
+
+    let discountCode = document.getElementById('discount-code') ? document.getElementById('discount-code').value
+        .trim() : '';
+
+
+    let discountAmount = subtotal * (discountPercent / 100);
+    if (maxDiscount > 0 && discountAmount > maxDiscount) {
+        discountAmount = maxDiscount;
+    }
+    if (discountPercent == 0) discountAmount = 0;
+
+    let total = subtotal - discountAmount;
+    if (total < 0) total = 0;
+
+    if (document.getElementById('subtotal-price'))
+        document.getElementById('subtotal-price').innerText = subtotal.toLocaleString('vi-VN') + ' VNĐ';
+    if (document.getElementById('discount-amount-show'))
+        document.getElementById('discount-amount-show').innerText = discountAmount.toLocaleString('vi-VN') + ' VNĐ';
+    if (document.getElementById('total-price-show'))
+        document.getElementById('total-price-show').innerText = total.toLocaleString('vi-VN') + ' VNĐ';
+    // if (document.getElementById('discount-code-show'))
+    //     document.getElementById('discount-code-show').innerText = discountCode;
+}
+
+function chooseDiscountCode() {
+    const selectedCode = document.getElementById("select-discount-code").value;
+    if (selectedCode) {
+        document.getElementById("discount-code").value = selectedCode;
+    }
+}
+
+function discount() {
+    const code = document.getElementById("discount-code").value;
+
+    if (!code) {
+        showDiscountToast("Vui lòng nhập mã khuyến mãi.");
+        return;
+    }
+
+    $.ajax({
+        url: "/Discount-Cart/" + code,
+        type: "GET",
+        success: function (data) {
+            $("#list-cart").html(data);
+            rebindCartEvents(); // Gắn lại event sau khi thay HTML
+        },
+        error: function (xhr) {
+            const json = xhr.responseJSON;
+            if (json && json.message) {
+                showDiscountToast(json.message);
+            } else {
+                showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+            }
+        }
+    });
+}
+
+function DeleteDiscount() {
     $.ajax({
         url: "/DeleteDiscount",
         type: "GET",
-    })
-    .done((response) => {
-        alertify.success('Đã xóa giảm giá!');
-        RenderListCart(response)
-    }).fail(() => {
-        alertify.error('Có lỗi xảy ra, vui lòng thử lại sau!');
+        success: function (data) {
+            $("#list-cart").html(data);
+            document.addEventListener('DOMContentLoaded', function () {
+    rebindCartEvents();
+});
+            // rebindCartEvents(); // Gắn lại event sau khi thay HTML
+        },
+        error: function (xhr) {
+            const json = xhr.responseJSON;
+            if (json && json.message) {
+                showDiscountToast(json.message);
+            } else {
+                showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+            }
+        }
     });
 }
+document.addEventListener('DOMContentLoaded', function () {
+    rebindCartEvents();
+});

@@ -3,6 +3,8 @@
         <table class="table">
             <thead>
                 <tr>
+                    <th><input type="checkbox" id="select-all-cart" checked /></th>
+
                     <th colspan="2" class="tp-cart-header-product">Sản phẩm</th>
                     <th class="tp-cart-header-price">Loại sản phẩm</th>
                     <th class="tp-cart-header-price">Giá</th>
@@ -14,6 +16,10 @@
                 @if (Session::has('cart') != null)
                     @foreach (Session::get('cart')->products as $idbt => $product)
                         <tr data-id="{{ $idbt }}">
+                            <td>
+                                <input type="checkbox" class="select-cart-item" name="cart_items[]"
+                                    value="{{ $idbt }}" checked>
+                            </td>
                             <!-- img -->
                             <td class="tp-cart-img">
                                 <a href="{{ route('chitietsanpham', $product['productInfo']->id) }}">
@@ -39,7 +45,8 @@
                             </td>
                             <!-- price -->
                             <td class="tp-cart-price">
-                                <span>
+                                <span class="item-price"
+                                    data-price="{{ isset($product['bienthe']->gia_moi) && $product['bienthe']->gia_moi > 0 ? $product['bienthe']->gia_moi : (isset($product['bienthe']->gia_cu) ? $product['bienthe']->gia_cu : 0) }}">
                                     @if (isset($product['bienthe']->gia_moi) && $product['bienthe']->gia_moi > 0)
                                         {{ number_format($product['bienthe']->gia_moi, 0, ',', '.') }} VNĐ
                                     @elseif (isset($product['bienthe']->gia_cu) && $product['bienthe']->gia_cu > 0)
@@ -75,7 +82,8 @@
                             </td>
                             <!-- action -->
                             <td class="tp-cart-action">
-                                <button class="tp-cart-action-btn" onclick="DeleteItemCart({{ $idbt }})">
+                                <button type="button" class="tp-cart-action-btn"
+                                    onclick="DeleteItemCart({{ $idbt }})">
                                     <svg width="10" height="10" viewBox="0 0 10 10" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">
                                         <path fill-rule="evenodd" clip-rule="evenodd"
@@ -123,36 +131,36 @@
                                                 'H:i d/m/Y',
                                             );
                                         @endphp
-                                        <option value="{{ $item->ma_khuyen_mai }}" >
-                                                            {{ $item->ma_khuyen_mai }} - Giảm
-                                                            {{ $item->phan_tram_khuyen_mai }}%
-                                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
-                                                             - HSD: {{ $hsdFormatted }}
-                                                        </option>
-                                                       @endforeach
-                                            @if (auth()->check())
-                                                @foreach ($maGiamGiaCaNhan as $item)
-                                                    @php
-
-                                                        $hsdFormatted = \Carbon\Carbon::parse(
-                                                            $item->ngay_ket_thuc,
-                                                        )->format('H:i d/m/Y');
-                                                    @endphp
                                         <option value="{{ $item->ma_khuyen_mai }}">
-                                            {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
+                                            {{ $item->ma_khuyen_mai }} - Giảm
                                             {{ $item->phan_tram_khuyen_mai }}%
                                             (tối đa {{ number_format($item->giam_toi_da) }}₫)
                                             - HSD: {{ $hsdFormatted }}
-
                                         </option>
                                     @endforeach
+                                    @if (auth()->check())
+                                        @foreach ($maGiamGiaCaNhan as $item)
+                                            @php
+
+                                                $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format(
+                                                    'H:i d/m/Y',
+                                                );
+                                            @endphp
+                                            <option value="{{ $item->ma_khuyen_mai }}">
+                                                {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
+                                                {{ $item->phan_tram_khuyen_mai }}%
+                                                (tối đa {{ number_format($item->giam_toi_da) }}₫)
+                                                - HSD: {{ $hsdFormatted }}
+
+                                            </option>
+                                        @endforeach
                                     @endif
                                 </select>
                             </div>
 
                             <!-- Nút chọn mã -->
                             <div class="col-md-2">
-                                <button class="btn btn-outline-primary w-100"
+                                <button type="button" class="btn btn-outline-primary w-100"
                                     onclick="chooseDiscountCode()">Chọn</button>
                             </div>
                         </div>
@@ -164,7 +172,7 @@
                                     placeholder="Nhập mã thủ công">
                             </div>
                             <div class="col-md-2">
-                                <button class="btn btn-dark apply-discount-btn" onclick="discount()">Áp
+                                <button type="button" class="btn btn-dark apply-discount-btn" onclick="discount()">Áp
                                     dụng</button>
                             </div>
                         </div>
@@ -202,15 +210,24 @@
 
             $finalTotal = max(0, $totalPrice - $discountAmount);
         @endphp
-
+        <script>
+            let discountPercent = 0;
+            let maxDiscount = 0;
+            @if (Session::has('discount_percentage'))
+                discountPercent = {{ Session::get('discount_percentage') }};
+            @endif
+            @if (Session::has('maxDiscount'))
+                maxDiscount = {{ Session::get('maxDiscount') }};
+            @endif
+        </script>
         <!-- Tổng phụ -->
         <div class="tp-cart-checkout-top d-flex align-items-center justify-content-between">
             <span class="tp-cart-checkout-top-title">Tổng phụ</span>
-            <span class="tp-cart-checkout-top-price" style="font-size: 16px">
+            <span class="tp-cart-checkout-top-price" id="subtotal-price" style="font-size: 16px">
                 {{ number_format($totalPrice, 0, ',', '.') }} VNĐ
             </span>
-            
-</span>
+
+            </span>
 
         </div>
 
@@ -220,14 +237,14 @@
                 <div class="tp-cart-checkout-shipping-option text-black">
                     Mã giảm giá:
                     @if ($discountCode)
-                        <span class="text-dark">{{ $discountCode }}</span>
-                        <button onclick="DeleteDiscount()">x</button>
+                        <span id="discount-code-show" class="text-dark">{{ $discountCode }}</span>
+                        <button type="button" onclick="DeleteDiscount()">x</button>
                     @endif
                 </div>
 
                 <div class="tp-cart-checkout-shipping-option text-black">
                     Giảm giá:
-                    <span class="text-danger">
+                    <span id="discount-amount-show" class="text-danger">
                         {{ number_format($discountAmount, 0, ',', '.') }} VNĐ
                     </span>
                 </div>
@@ -237,23 +254,21 @@
         <!-- Tổng còn lại -->
         <div class="tp-cart-checkout-total d-flex align-items-center justify-content-between">
             <span>Còn lại</span>
-            <span>
+            <span id="total-price-show">
                 {{ number_format($finalTotal, 0, ',', '.') }} VNĐ
             </span>
         </div>
 
         <!-- Nút thanh toán -->
         <div class="tp-cart-checkout-proceed">
-            <a href="{{ route('thanhtoan') }}" class="tp-cart-checkout-btn w-100">Tiến hành thanh toán</a>
+            <button type="submit" class="tp-cart-checkout-btn w-100">Tiến hành thanh toán</button>
         </div>
     </div>
 </div>
 
 <input type="hidden" name="" id="total-quantity-list-cart" value="{{ $cart->totalProduct ?? 0 }}">
 
-<script src="{{ asset('assets/client/js/main.js') }}"></script>
 
-<script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
 <style>
     .apply-discount-btn {
         width: 100%;
