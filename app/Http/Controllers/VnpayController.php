@@ -226,7 +226,7 @@ class VnpayController extends Controller
                     $amountPaid = $inputData['vnp_Amount'] / 100; // Chuyển từ VND * 100 nếu cần.
                     if ((float)$amountPaid === (float)$hoaDon->tong_tien) {
 
-                        app(OrderService::class)->updatePaymentStatus($hoaDon->id, $formattedPayDate);
+                        app(OrderService::class)->updatePaymentStatus($hoaDon->id);
                         app(OrderService::class)->sendVoucherAfterPaid($hoaDon);
                         // Cập nhật trạng thái hóa đơn
 

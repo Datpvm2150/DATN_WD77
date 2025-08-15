@@ -267,6 +267,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 /////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
+// Đăng nhập bằng gg
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);

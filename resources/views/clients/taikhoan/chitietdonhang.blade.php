@@ -10,7 +10,7 @@
     <!-- Thông tin người đặt hàng -->
     <div class="card border-0 shadow-sm rounded-3 mb-4">
         <div class="card-header bg-light">
-            <h6 class="fw-semibold">Thông tin người đặt hàng</h6>
+            <h6 class="fw-semibold">Thông tin người nhận hàng</h6>
         </div>
         <div class="card-body">
             <div class="row gy-3">

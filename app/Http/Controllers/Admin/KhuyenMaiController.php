@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KhuyenMai;
@@ -105,8 +106,10 @@ class KhuyenMaiController extends Controller
     }
 
     public function update(Request $request, $id)
+
     {
         $khuyenMai = KhuyenMai::find($id);
+        // dd($request->all());
         if (!$khuyenMai) {
             return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
         }
@@ -181,7 +184,7 @@ class KhuyenMaiController extends Controller
             'ngay_ket_thuc' => $request->ngay_ket_thuc,
             'trang_thai' => 1,
         ]);
-
+        // dd($khuyenMai);
         // Cập nhật trạng thái theo ngày
         $now = Carbon::now();
         if ($khuyenMai->ngay_ket_thuc < $now) {
@@ -190,6 +193,8 @@ class KhuyenMaiController extends Controller
 
         return redirect()->route('admin.khuyen_mais.index')->with('success', 'Khuyến mãi đã được cập nhật thành công.');
     }
+
+
 
     public function destroy($id)
     {

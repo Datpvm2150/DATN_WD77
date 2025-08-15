@@ -102,6 +102,7 @@
 
                             $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
                                 ->where('trang_thai', 1)
+                                ->where('loai_ma', '!=', 'ma_doi_qua')
                                 ->get();
 
                             $maGiamGiaCaNhan = auth()->check()
