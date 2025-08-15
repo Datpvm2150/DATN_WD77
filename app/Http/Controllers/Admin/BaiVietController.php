@@ -60,6 +60,20 @@ class BaiVietController extends Controller
             'noi_dung' => 'required|string',
             'anh_bai_viet' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'danh_muc_id' => 'required|exists:danh_mucs,id',
+        ], [
+            'tieu_de.required' => 'Tiêu đề không được bỏ trống.',
+            'tieu_de.string' => 'Tiêu đề phải là chuỗi ký tự.',
+            'tieu_de.max' => 'Tiêu đề không được vượt quá 255 ký tự.',
+        
+            'noi_dung.required' => 'Nội dung không được bỏ trống.',
+            'noi_dung.string' => 'Nội dung phải là chuỗi ký tự.',
+        
+            'anh_bai_viet.image' => 'Ảnh bài viết phải là một tập tin hình ảnh.',
+            'anh_bai_viet.mimes' => 'Ảnh bài viết chỉ được có định dạng: jpeg, png, jpg, gif.',
+            'anh_bai_viet.max' => 'Kích thước ảnh bài viết không được vượt quá 2MB.',
+        
+            'danh_muc_id.required' => 'Vui lòng chọn danh mục.',
+            'danh_muc_id.exists' => 'Danh mục đã chọn không tồn tại.'
         ]);
 
         $param = $request->except('_token');

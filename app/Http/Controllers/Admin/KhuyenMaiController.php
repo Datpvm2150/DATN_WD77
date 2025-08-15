@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\KhuyenMai;
 use Carbon\Carbon;
@@ -269,15 +270,5 @@ class KhuyenMaiController extends Controller
             return redirect()->back()->with('success', 'khôi phục thành công');
         }
         return redirect()->back()->with('error', 'Khuyến mãi chưa bị xóa mềm');
-    }
-
-    public function forceDelete($id)
-    {
-        $khuyenMai = KhuyenMai::withTrashed()->find($id);
-        if ($khuyenMai) {
-            $khuyenMai->forceDelete();
-            return redirect()->route('admin.khuyen_mais.trash')->with('success', 'Khuyến mãi đã được xóa thành công.');
-        }
-        return redirect()->route('admin.khuyen_mais.trash')->with('success', 'Khuyến mãi không tồn tại.');
     }
 }

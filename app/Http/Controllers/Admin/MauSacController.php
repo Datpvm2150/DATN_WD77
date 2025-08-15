@@ -86,6 +86,8 @@ class MauSacController extends Controller
         }
 
         // Nếu không có biến thể nào còn số lượng, thực hiện xóa mềm
+        $mausac->trang_thai = false;
+        $mausac->save();
         $mausac->delete();
 
         return redirect()->route('admin.mausacs.index')->with('success', 'Xóa màu thành công!');
@@ -97,6 +99,8 @@ class MauSacController extends Controller
     }
     public function restore($id) {
         $mausac = MauSac::onlyTrashed()->findOrFail($id);
+        $mausac->trang_thai = true;
+        $mausac->save();
         $mausac->restore();
         return redirect()->route('admin.mausacs.trash')->with('success', 'Khôi phục thành công');
     }

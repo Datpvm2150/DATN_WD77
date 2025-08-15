@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 
-@section('title', 'Danh sách màu sắc')
+@section('title', 'Danh sách dung lượng')
 
 
 @section('css')
@@ -48,34 +48,27 @@
                             <thead>
                                 <tr>
                                     <th>ID</th>
-                                    <th>Tên màu</th>
-                                    <th>Mã màu</th>
-                                    <th>Màu hiển thị</th>
+                                    <th>Tên dung lượng</th>
                                     <th>Trạng thái</th>
-                                    <th>Hành động</th>
+                                    <th>Hành động</th>  
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($mausacs as $mau)
+                                @foreach ($dungluongs as $dungluong)
                                     <tr>
-                                        <td>{{ $mau->id }}</td>
-                                        <td>{{ $mau->ten_mau_sac }}</td>
-                                        <td>{{ $mau->ma_mau }}</td>
+                                        <td>{{ $dungluong->id }}</td>
+                                        <td>{{ $dungluong->ten_dung_luong }}</td>
                                         <td>
-                                            <div style="width: 15px; height: 15px; background-color: {{ $mau->ma_mau }};">
-                                            </div>
-                                        </td>
-                                        <td>
-                                            @if ($mau->trang_thai)
-                                                <span class="badge bg-success">Đang hoạt động</span>
+                                            @if ($dungluong->trang_thai == 1)
+                                                <span class="badge bg-success">Hoạt động</span>
                                             @else
-                                                <span class="badge bg-danger">Không hoạt động</span>
+                                                <span class="badge bg-danger">Ngừng hoạt động</span>
                                             @endif
                                         </td>
                                         <td>
                                     <div class="card-body">
                                         <div class="btn-group">
-                                            <form action="{{ route('admin.mausacs.restore', $mau->id) }}" method="POST" >
+                                            <form action="{{ route('admin.dungluongs.restore', $dungluong->id) }}" method="POST" >
                                                 @csrf
                                                 <button type="submit" class="btn btn-primary">Khôi phục</button>
                                             </form>
