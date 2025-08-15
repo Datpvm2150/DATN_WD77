@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VNPayController;
-
 use App\Http\Controllers\Admin\StaffDashboardController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
@@ -22,6 +21,7 @@ use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\SanPhamController;
 use App\Http\Controllers\Client\DoiQuaController;
 use App\Http\Controllers\Client\LienHeController;
+
 
 // Client Routes
 use App\Http\Controllers\Client\DanhgiaController;
@@ -45,6 +45,7 @@ use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
+
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -270,7 +271,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-    
+
     Route::get('login', [CustomerLoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [CustomerLoginController::class, 'login'])->name('login.post');
     Route::get('register', [CustomerRegisterController::class, 'showRegistrationForm'])->name('register');
@@ -377,6 +378,3 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Lich sử điểm
-
-
-
