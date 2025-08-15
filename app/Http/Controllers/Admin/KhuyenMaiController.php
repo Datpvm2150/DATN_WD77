@@ -136,35 +136,35 @@ class KhuyenMaiController extends Controller
         }
 
         // VALIDATE
-        $request->validate([
-            'ma_khuyen_mai' => 'required|string|unique:khuyen_mais,ma_khuyen_mai,' . $id,
-            'loai_ma' => 'required|in:cong_khai,ma_doi_qua',
-            'diem_can' => 'required_if:loai_ma,ma_doi_qua|nullable|integer|min:1|max:1000000',
-            'phan_tram_khuyen_mai' => 'required|integer|min:1|max:99',
-            'giam_toi_da' => 'required|nullable|integer|numeric|min:0|max:1000000000',
-            'ngay_bat_dau' => 'required|date',
-            'ngay_ket_thuc' => 'required|date|after_or_equal:ngay_bat_dau',
-        ], [
-            'ma_khuyen_mai.required' => 'Mã khuyến mãi không được để trống.',
-            'ma_khuyen_mai.unique' => 'Mã khuyến mãi đã tồn tại.',
-            'loai_ma.required' => 'Loại mã không được để trống.',
-            'loai_ma.in' => 'Loại mã không hợp lệ.',
-            'diem_can.required' => 'Điểm đổi không được để trống khi là mã đổi quà.',
-            'diem_can.integer' => 'Điểm đổi phải là số nguyên.',
-            'diem_can.min' => 'Điểm đổi phải >= 0.',
-            'phan_tram_khuyen_mai.required' => 'Phần trăm khuyến mãi không được để trống.',
-            'phan_tram_khuyen_mai.integer' => 'Phần trăm phải là số nguyên.',
-            'phan_tram_khuyen_mai.min' => 'Phần trăm phải > 0.',
-            'phan_tram_khuyen_mai.max' => 'Phần trăm phải < 100.',
-            'giam_toi_da.required' => 'Giảm tối đa không được để trống.',
-            'giam_toi_da.integer' => 'Giảm tối đa phải là số nguyên.',
-            'giam_toi_da.numeric' => 'Giảm tối đa phải là số.',
-            'giam_toi_da.min' => 'Giảm tối đa phải >= 0.',
-            'giam_toi_da.max' => 'Giảm tối đa phải nhỏ hơn 1 tỷ.',
-            'ngay_bat_dau.required' => 'Ngày bắt đầu không được để trống.',
-            'ngay_ket_thuc.required' => 'Ngày kết thúc không được để trống.',
-            'ngay_ket_thuc.after_or_equal' => 'Ngày kết thúc phải >= ngày bắt đầu.',
-        ]);
+        // $request->validate([
+        //     'ma_khuyen_mai' => 'required|string|unique:khuyen_mais,ma_khuyen_mai,' . $id,
+        //     'loai_ma' => 'required|in:cong_khai,ma_doi_qua',
+        //     'diem_can' => 'required_if:loai_ma,ma_doi_qua|nullable|integer|min:1|max:1000000',
+        //     'phan_tram_khuyen_mai' => 'required|integer|min:1|max:99',
+        //     'giam_toi_da' => 'required|nullable|integer|numeric|min:0|max:1000000000',
+        //     'ngay_bat_dau' => 'required|date',
+        //     'ngay_ket_thuc' => 'required|date|after_or_equal:ngay_bat_dau',
+        // ], [
+        //     'ma_khuyen_mai.required' => 'Mã khuyến mãi không được để trống.',
+        //     'ma_khuyen_mai.unique' => 'Mã khuyến mãi đã tồn tại.',
+        //     'loai_ma.required' => 'Loại mã không được để trống.',
+        //     'loai_ma.in' => 'Loại mã không hợp lệ.',
+        //     'diem_can.required' => 'Điểm đổi không được để trống khi là mã đổi quà.',
+        //     'diem_can.integer' => 'Điểm đổi phải là số nguyên.',
+        //     'diem_can.min' => 'Điểm đổi phải >= 0.',
+        //     'phan_tram_khuyen_mai.required' => 'Phần trăm khuyến mãi không được để trống.',
+        //     'phan_tram_khuyen_mai.integer' => 'Phần trăm phải là số nguyên.',
+        //     'phan_tram_khuyen_mai.min' => 'Phần trăm phải > 0.',
+        //     'phan_tram_khuyen_mai.max' => 'Phần trăm phải < 100.',
+        //     'giam_toi_da.required' => 'Giảm tối đa không được để trống.',
+        //     'giam_toi_da.integer' => 'Giảm tối đa phải là số nguyên.',
+        //     'giam_toi_da.numeric' => 'Giảm tối đa phải là số.',
+        //     'giam_toi_da.min' => 'Giảm tối đa phải >= 0.',
+        //     'giam_toi_da.max' => 'Giảm tối đa phải nhỏ hơn 1 tỷ.',
+        //     'ngay_bat_dau.required' => 'Ngày bắt đầu không được để trống.',
+        //     'ngay_ket_thuc.required' => 'Ngày kết thúc không được để trống.',
+        //     'ngay_ket_thuc.after_or_equal' => 'Ngày kết thúc phải >= ngày bắt đầu.',
+        // ]);
 
         // Logic cập nhật tùy theo loại mã
         $diemCan = null;

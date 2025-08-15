@@ -17,16 +17,14 @@ class TaiKhoanController extends Controller
     /**
      * Display a listing of the resource.
      */
-
-
     public function index()
     {
-        //lấy thông tin ng dùng đang đăng nhập
+        // Lấy thông tin người dùng đang đăng nhập
         $user = Auth::user();  // Lấy người dùng hiện tại
         $danhMucs = DanhMuc::all();
-        // lấy thông trạng thái mặc định "chờ xác nhận"
+        // Lấy thông trạng thái mặc định "chờ xác nhận"
         $donHangs = $user->hoaDons()->where('trang_thai', 1)->get();
-        // lấy thuộc tính
+        // Lấy thuộc tính
         $trang_thai_don_hang = HoaDon::TRANG_THAI;
 
         return view('clients.taikhoan.donhang', compact('danhMucs', 'donHangs', 'trang_thai_don_hang'));
@@ -53,8 +51,6 @@ class TaiKhoanController extends Controller
      */
     public function show(string $id)
     {
-        //
-
         // Lấy hóa đơn theo ID
         $hoaDon = HoaDon::query()->findOrFail($id);
 
@@ -73,8 +69,6 @@ class TaiKhoanController extends Controller
      */
     public function edit(string $id)
     {
-        //
-
         $user = Auth::user();
     }
 
@@ -83,8 +77,6 @@ class TaiKhoanController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
-
         $request->validate([
             'ten' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $id,
@@ -110,11 +102,9 @@ class TaiKhoanController extends Controller
             $users->anh_dai_dien = $filePath;
         }
 
-
-
         $users->save();
 
-        return redirect()->route('customer.profileUser')->with('success', 'cập nhật thông tin thành công');
+        return redirect()->route('customer.profileUser')->with('success', 'Cập nhật thông tin thành công');
     }
 
     /**
@@ -127,27 +117,24 @@ class TaiKhoanController extends Controller
 
     public function profileUser()
     {
-        // lấy thông tin người dùng đăng đăng nhập
+        // Lấy thông tin người dùng đăng nhập
         $profile = Auth::user();
         $lienhes = lien_hes::where('user_id', Auth::id())->with('adminPhanHoi.admin')->get();  // Lấy tất cả các bản ghi lien_hes cho người dùng này
         $danhMucs = DanhMuc::all();
-        // lấy danh sách đơn hàng
+        // Lấy danh sách đơn hàng
         $donHangs = $profile->hoaDons()->orderByDesc('id')->paginate(10);
         // Lấy các mã khuyến mãi cá nhân của user
         $maCaNhans = \App\Models\KhuyenMai::where('user_id', $profile->id)
-            ->orderByDesc('trang_thai') // Đẩy trang thái đang hoạt động lên đầu
+            ->orderByDesc('trang_thai') // Đẩy trạng thái đang hoạt động lên đầu
             ->orderBy('ngay_ket_thuc', 'asc') // Ưu tiên mã sắp hết hạn
             ->get();  // Lấy tất cả các mã khuyến mãi cá nhân của người dùng này
         // Lấy lịch sử đổi điểm lấy mã khuyến mại của user
         $lichSuDoiDiem = $profile->lichSuDoiDiem()
             ->orderByDesc('created_at')
             ->get();
-        // đến
+        // Trả về view
         return view('clients.taikhoan.profile', compact('donHangs', 'danhMucs', 'profile', 'lienhes', 'maCaNhans', 'lichSuDoiDiem'));
     }
-
-
-
 
     public function changePassword(Request $request)
     {
@@ -156,14 +143,19 @@ class TaiKhoanController extends Controller
         // Xác thực mật khẩu cũ, mật khẩu mới và xác nhận mật khẩu mới
         $request->validate([
             'mat_khau_cu' => 'required', // Bắt buộc phải nhập mật khẩu cũ
-            'mat_khau_moi' => 'required|min:8|confirmed' // Mật khẩu mới phải ít nhất 8 ký tự và khớp với xác nhận mật khẩu
+            'mat_khau_moi' => 'required|string|min:8|confirmed|different:mat_khau_cu' // Mật khẩu mới phải ít nhất 8 ký tự và khớp với xác nhận mật khẩu
+        ],[
+            'mat_khau_cu.required' => 'Mật khẩu cũ là bắt buộc.',
+            'mat_khau_moi.required' => 'Mật khẩu mới là bắt buộc.',
+            'mat_khau_moi.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
+            'mat_khau_moi.confirmed' => 'Xác nhận mật khẩu không khớp.',
+            'mat_khau_moi.different' => 'Mật khẩu mới phải khác mật khẩu cũ.'
         ]);
 
         // Kiểm tra mật khẩu cũ
         if (!Hash::check($request->input('mat_khau_cu'), $user->mat_khau)) {
-            return redirect()->back()->with('error', 'Mật khẩu cũ không đúng.');
+        return back()->withErrors(['mat_khau_cu' => 'Mật khẩu cũ không đúng.']);
         }
-
 
         // Cập nhật mật khẩu mới
         $user->mat_khau = Hash::make($request->input('mat_khau_moi'));
@@ -244,19 +236,18 @@ class TaiKhoanController extends Controller
         if ($status == 1) {
             $donHangs = $donHangs->where('trang_thai', 1); // Chờ xác nhận
         } elseif ($status == 2) {
-            $donHangs = $donHangs->where('trang_thai', 2); //Đã xác nhận
+            $donHangs = $donHangs->where('trang_thai', 2); // Đã xác nhận
         } elseif($status == 3) {
-            $donHangs = $donHangs->where('trang_thai', 3); // Đăng chuẩn bị
+            $donHangs = $donHangs->where('trang_thai', 3); // Đang chuẩn bị
         } elseif ($status == 4) {
             $donHangs = $donHangs->where('trang_thai', 4); // Đang giao
         } elseif ($status == 5) {
             $donHangs = $donHangs->whereIn('trang_thai', [5]); // Đã giao
         } elseif ($status == 6) {
             $donHangs = $donHangs->where('trang_thai', 6); // Đã hủy
-        }  elseif ($status == 7) {
+        } elseif ($status == 7) {
             $donHangs = $donHangs->where('trang_thai', 7); // Đã nhận hàng
-        } 
-
+        }
 
         $donHangs = $donHangs->get();
 
@@ -276,5 +267,71 @@ class TaiKhoanController extends Controller
             'html' => view('clients.taikhoan.list', compact('donHangs'))->render(),
             'counts' => $counts,
         ]);
+    }
+
+    /**
+     * Store a new order (Example method for creating order)
+     */
+    public function storeOrder(Request $request)
+    {
+        $request->validate([
+            'ten_nguoi_nhan' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'so_dien_thoai' => 'required|string|max:20',
+            'dia_chi_nhan_hang' => 'required|string',
+            'phuong_thuc_thanh_toan' => 'required|in:online,offline',
+            'items' => 'required|array',
+            'items.*.bien_the_san_pham_id' => 'required|exists:bien_the_san_phams,id',
+            'items.*.so_luong' => 'required|integer|min:1',
+        ]);
+
+        $user = Auth::user();
+        $tongTien = 0;
+        $tienShip = 50000; // Giả định tiền ship cố định
+        $giamGia = $request->input('giam_gia', 0);
+
+        // Tạo hóa đơn
+        $hoaDon = HoaDon::create([
+            'user_id' => $user->id,
+            'ma_hoa_don' => 'HD' . time(),
+            'ten_nguoi_nhan' => $request->input('ten_nguoi_nhan'),
+            'email' => $request->input('email'),
+            'so_dien_thoai' => $request->input('so_dien_thoai'),
+            'dia_chi_nhan_hang' => $request->input('dia_chi_nhan_hang'),
+            'ngay_dat_hang' => now(),
+            'ghi_chu' => $request->input('ghi_chu'),
+            'phuong_thuc_thanh_toan' => $request->input('phuong_thuc_thanh_toan'),
+            'trang_thai' => 1, // Chờ xác nhận
+            'giam_gia' => $giamGia,
+            'tong_tien' => 0, // Sẽ cập nhật sau
+        ]);
+
+        // Tạo chi tiết hóa đơn
+        foreach ($request->input('items') as $item) {
+            $bienTheSanPham = \App\Models\BienTheSanPham::with(['sanPham', 'dungLuong', 'mauSac'])->findOrFail($item['bien_the_san_pham_id']);
+            $thanhTien = $bienTheSanPham->gia * $item['so_luong'];
+            $tongTien += $thanhTien;
+
+            ChiTietHoaDon::create([
+                'hoa_don_id' => $hoaDon->id,
+                'bien_the_san_pham_id' => $bienTheSanPham->id,
+                'ten_san_pham' => $bienTheSanPham->sanPham->ten_san_pham,
+                'ten_dung_luong' => $bienTheSanPham->dungLuong ? $bienTheSanPham->dungLuong->ten_dung_luong : null,
+                'ten_mau_sac' => $bienTheSanPham->mauSac ? $bienTheSanPham->mauSac->ten_mau_sac : null,
+                'so_luong' => $item['so_luong'],
+                'don_gia' => $bienTheSanPham->gia,
+                'thanh_tien' => $thanhTien,
+            ]);
+
+            // Cập nhật số lượng tồn kho
+            $bienTheSanPham->so_luong -= $item['so_luong'];
+            $bienTheSanPham->save();
+        }
+
+        // Cập nhật tổng tiền cho hóa đơn
+        $hoaDon->tong_tien = $tongTien + $tienShip - $giamGia;
+        $hoaDon->save();
+
+        return redirect()->route('customer.profileUser')->with('success', 'Đặt hàng thành công!');
     }
 }
