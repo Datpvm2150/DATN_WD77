@@ -35,7 +35,7 @@
                                 <li><strong>Điểm cần:</strong> {{ $voucher->diem_can }}</li>
                                 <li>
                                     <strong>Số lượng còn lại:</strong>
-                                    {{ is_null($voucher->so_luong) ? 'Đã hết' : $voucher->so_luong }}
+                                    {{ is_null($voucher->so_luong) ? 'Không giới hạn' : ($voucher->so_luong <= 0 ? 'Đã hết' : $voucher->so_luong) }}
                                 </li>
                                 <li>
                                     <strong>Hạn dùng:</strong>

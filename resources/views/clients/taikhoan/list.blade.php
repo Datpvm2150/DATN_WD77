@@ -105,7 +105,7 @@
                     @elseif ($ord->trang_thai == 7)
                         <!-- Đã nhận hàng -->
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-primary">Xem</a>
-                        <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-warning">Đánh giá</a>
+                        {{-- <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-warning">Hoàn trả</a> --}}
                     @endif
                 </td>
             </tr>
