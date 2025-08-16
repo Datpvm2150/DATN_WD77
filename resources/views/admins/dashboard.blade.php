@@ -200,7 +200,7 @@
             </div>
             <div class="row g-3">
 
-                <!-- Tổng Doanh Thu -->
+                <!-- Tổng  Đơn Hàng Đang Chờ Xử Lý -->
                 <div class="col-md-6 col-xl-3">
                     <div class="card">
                         <div class="card-body">
@@ -222,7 +222,7 @@
                     </div>
                 </div>
 
-                <!-- Tổng Sản Phẩm -->
+                <!-- Tổng Đơn Hàng Đã Hoàn Thành -->
                 <div class="col-md-6 col-xl-3">
                     <div class="card">
                         <div class="card-body">
@@ -243,60 +243,8 @@
                         </div>
                     </div>
                 </div>
-
-
-            </div>
-
-            <!-- Kết thúc hàng -->
-
-            <!-- Bắt đầu Doanh số Hàng tháng -->
-            <div class="row">
-                <div class="col-md-6 col-xl-4">
-
-                    <div class="card overflow-hidden">
-                        <div class="card-header">
-                            <div class="d-flex align-items-center">
-                                <div class="border border-dark rounded-2 me-2 widget-icons-sections">
-                                    <i data-feather="tablet" class="widgets-icons"></i>
-                                </div>
-                                <h5 class="card-title mb-0">Top 4 Sản Phẩm Bán Chạy Nhất </h5>
-                            </div>
-                        </div>
-
-                        <div class="card-body">
-                            <ul class="list-group custom-group">
-                                @if ($san_pham_ban_chay && $san_pham_ban_chay->count() > 0)
-                                    @foreach ($san_pham_ban_chay as $san_pham)
-                                        <li class="list-group-item align-items-center d-flex justify-content-between">
-                                            <div class="product-list">
-                                                <img class="avatar-md p-1 rounded-circle bg-primary-subtle img-fluid me-3"
-                                                    src="{{ asset($san_pham->anh_san_pham) }}"
-                                                    alt="{{ asset($san_pham->anh_san_pham) }}">
-                                                <div class="product-body align-self-center">
-                                                    <h6 class="m-0 fw-semibold">{{ $san_pham->ten_san_pham }}</h6>
-                                                    <p class="mb-0 mt-1 text-muted">{{ $san_pham->ten_danh_muc }}</p>
-                                                </div>
-                                            </div>
-
-                                            <div class="product-price">
-                                                <h6 class="m-0 fw-semibold text-end">
-                                                    {{ number_format($san_pham->tong_doanh_thu) }}₫</h6>
-                                                <p class="mb-0 mt-1 text-muted">{{ $san_pham->tong_so_luong_ban }} Đã bán
-                                                </p>
-                                            </div>
-                                        </li>
-                                    @endforeach
-                                @else
-                                    <p>Chưa có dữ liệu sản phẩm bán chạy.</p>
-                                @endif
-                            </ul>
-                        </div>
-
-                    </div>
-
-                </div>
-                <!-- Bar Charts -->
-                <div class="col-md-6 col-xl-4">
+{{-- đánh giá sản phẩm --}}
+                <div class="col-md-6 col-xl-6">
                     <div class="card">
                         <div class="card-header">
                             <h5 class="card-title mb-0">Đánh giá gần đây</h5>
@@ -348,25 +296,59 @@
                         </div>
                     </div>
                 </div>
-            </div>
-
-
-
-
-
-
-        </div>
-        <div class="row">
-
-
-            <div class="col-lg-6">
 
             </div>
 
+            <!-- Kết thúc hàng -->
 
+            <!-- Bắt đầu Doanh số Hàng tháng -->
+            <div class="row">
+                <div class="col-12">
 
+                    <div class="card overflow-hidden">
+                        <div class="card-header">
+                            <div class="d-flex align-items-center">
+                                <div class="border border-dark rounded-2 me-2 widget-icons-sections">
+                                    <i data-feather="tablet" class="widgets-icons"></i>
+                                </div>
+                                <h5 class="card-title mb-0">Top 4 Sản Phẩm Bán Chạy Nhất </h5>
+                            </div>
+                        </div>
 
+                        <div class="card-body">
+                            <ul class="list-group custom-group">
+                                @if ($san_pham_ban_chay && $san_pham_ban_chay->count() > 0)
+                                    @foreach ($san_pham_ban_chay as $san_pham)
+                                        <li class="list-group-item align-items-center d-flex justify-content-between">
+                                            <div class="product-list">
+                                                <img class="avatar-md p-1 rounded-circle bg-primary-subtle img-fluid me-3"
+                                                    src="{{ asset($san_pham->anh_san_pham) }}"
+                                                    alt="{{ asset($san_pham->anh_san_pham) }}">
+                                                <div class="product-body align-self-center">
+                                                    <h6 class="m-0 fw-semibold">{{ $san_pham->ten_san_pham }}</h6>
+                                                    <p class="mb-0 mt-1 text-muted">{{ $san_pham->ten_danh_muc }}</p>
+                                                </div>
+                                            </div>
 
+                                            <div class="product-price">
+                                                <h6 class="m-0 fw-semibold text-end">
+                                                    {{ number_format($san_pham->tong_doanh_thu) }}₫</h6>
+                                                <p class="mb-0 mt-1 text-muted">{{ $san_pham->tong_so_luong_ban }} Đã bán
+                                                </p>
+                                            </div>
+                                        </li>
+                                    @endforeach
+                                @else
+                                    <p>Chưa có dữ liệu sản phẩm bán chạy.</p>
+                                @endif
+                            </ul>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
         </div>
     </div>
 

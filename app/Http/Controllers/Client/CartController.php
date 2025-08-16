@@ -53,12 +53,12 @@ class CartController extends Controller
         $existingQty = isset($newCart->products[$bienthe->id]) ? $newCart->products[$bienthe->id]['quantity'] : 0;
         $totalRequested = $existingQty + $quantity;
 
-        if ($totalRequested > $bienthe->so_luong) {
-            $soConLai = $bienthe->so_luong - $existingQty;
-            return response()->json([
-                'message' => 'Giỏ hàng vượt quá số lượng tồn kho. Bạn chỉ có thể thêm tối đa ' . $soConLai . ' sản phẩm nữa.'
-            ], 400);
-        }
+        // if ($totalRequested > $bienthe->so_luong) {
+        //     $soConLai = $bienthe->so_luong - $existingQty;
+        //     return response()->json([
+        //         'message' => 'Giỏ hàng vượt quá số lượng tồn kho. Bạn chỉ có thể thêm tối đa ' . $soConLai . ' sản phẩm nữa.'
+        //     ], 400);
+        // }
 
 
         $giaBan = $bienthe->gia_moi !== null ? $bienthe->gia_moi : $bienthe->gia_cu;
