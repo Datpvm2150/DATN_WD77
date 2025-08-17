@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
@@ -8,6 +9,7 @@ use App\Models\HoaDon;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+
 class StaffDashboardController extends Controller
 {
     public function index()
@@ -27,7 +29,7 @@ class StaffDashboardController extends Controller
             ->get();
 
         $nguoiDungNgayData = $nguoiDungTheoNgay->pluck('so_luong_nguoi_dung')->toArray();
-        $nguoiDungNgayLabels = $nguoiDungTheoNgay->pluck('ngay')->map(function($date) {
+        $nguoiDungNgayLabels = $nguoiDungTheoNgay->pluck('ngay')->map(function ($date) {
             return date('d/m', strtotime($date));
         })->toArray();
 
@@ -55,7 +57,7 @@ class StaffDashboardController extends Controller
             ->get();
 
         $doanhThuNgayData = $doanhThuTheoNgay->pluck('tong_doanh_thu')->toArray();
-        $ngayLabels = $doanhThuTheoNgay->pluck('ngay')->map(function($date) {
+        $ngayLabels = $doanhThuTheoNgay->pluck('ngay')->map(function ($date) {
             return date('d/m', strtotime($date));
         })->toArray();
 
@@ -67,27 +69,33 @@ class StaffDashboardController extends Controller
             ->get();
 
         $doanh_thu_data = $doanh_thu_theo_thang->pluck('doanh_thu')->toArray();
-        $thang_labels = $doanh_thu_theo_thang->map(function($item) {
+        $thang_labels = $doanh_thu_theo_thang->map(function ($item) {
             return $item->thang . '/' . $item->nam;
         })->toArray();
 
         // 7. Thống kê sản phẩm bán chạy
         $san_pham_ban_chay = SanPham::select(
+
             'san_phams.id',
             'san_phams.ten_san_pham',
             'danh_mucs.ten_danh_muc',
             'san_phams.anh_san_pham',
             DB::raw('SUM(chi_tiet_hoa_dons.so_luong) as tong_so_luong_ban'),
-            DB::raw('SUM(chi_tiet_hoa_dons.so_luong * bien_the_san_phams.gia_moi) as tong_doanh_thu')
+            DB::raw('SUM(chi_tiet_hoa_dons.so_luong *
+        CASE
+            WHEN bien_the_san_phams.gia_moi IS NOT NULL AND bien_the_san_phams.gia_moi > 0
+                THEN bien_the_san_phams.gia_moi
+            ELSE bien_the_san_phams.gia_cu
+        END
+    ) as tong_doanh_thu')
         )
-        ->join('bien_the_san_phams', 'san_phams.id', '=', 'bien_the_san_phams.san_pham_id')
-        ->join('chi_tiet_hoa_dons', 'bien_the_san_phams.id', '=', 'chi_tiet_hoa_dons.bien_the_san_pham_id')
-        ->join('danh_mucs', 'san_phams.danh_muc_id', '=', 'danh_mucs.id')
-        ->groupBy('san_phams.id', 'san_phams.ten_san_pham', 'san_phams.anh_san_pham', 'danh_mucs.ten_danh_muc')
-        ->orderBy('tong_so_luong_ban', 'desc')
-        ->take(4)
-        ->get();
-
+            ->join('bien_the_san_phams', 'san_phams.id', '=', 'bien_the_san_phams.san_pham_id')
+            ->join('chi_tiet_hoa_dons', 'bien_the_san_phams.id', '=', 'chi_tiet_hoa_dons.bien_the_san_pham_id')
+            ->join('danh_mucs', 'san_phams.danh_muc_id', '=', 'danh_mucs.id')
+            ->groupBy('san_phams.id', 'san_phams.ten_san_pham', 'san_phams.anh_san_pham', 'danh_mucs.ten_danh_muc')
+            ->orderBy('tong_so_luong_ban', 'desc')
+            ->take(4)
+            ->get();
         // 8. Thống kê số lượng đơn hàng
         $ngay_dau_tien_don_hang = HoaDon::min('created_at');
         $so_ngay_don_hang = $ngay_dau_tien_don_hang ? $ngay_hien_tai->diffInDays(Carbon::parse($ngay_dau_tien_don_hang)) + 1 : 0;
@@ -104,7 +112,7 @@ class StaffDashboardController extends Controller
             ->get();
 
         $donNgayData = $donTheoNgay->pluck('so_luong_don')->toArray();
-        $donNgayLabels = $donTheoNgay->pluck('ngay')->map(function($date) {
+        $donNgayLabels = $donTheoNgay->pluck('ngay')->map(function ($date) {
             return date('d/m', strtotime($date));
         })->toArray();
         // 9. Thống kê số lượng sản phẩm theo danh mục từ bảng biến thể sản phẩm
@@ -175,54 +183,54 @@ class StaffDashboardController extends Controller
             'phan_tram_doanh_thu',
             'labelsKhuyenMai',
             'dataKhuyenMai',
-            'labelsSanPham' ,
-            'dataInStock' ,
-            'dataLowStock' ,
+            'labelsSanPham',
+            'dataInStock',
+            'dataLowStock',
             'dataOutOfStock'
         ));
     }
     public function thongKeDoanhThu(Request $request)
-{
-    $start = $request->start_date ?? Carbon::now()->startOfMonth()->toDateString();
-    $end = $request->end_date ?? Carbon::now()->endOfMonth()->toDateString();
-    $groupBy = $request->group_by ?? 'day';
+    {
+        $start = $request->start_date ?? Carbon::now()->startOfMonth()->toDateString();
+        $end = $request->end_date ?? Carbon::now()->endOfMonth()->toDateString();
+        $groupBy = $request->group_by ?? 'day';
 
-    $query = HoaDon::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']);
+        $query = HoaDon::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']);
 
-    switch ($groupBy) {
-        case 'month':
-            $data = $query->selectRaw('DATE_FORMAT(created_at, "%m/%Y") as label, SUM(tong_tien) as revenue')
-                ->groupBy('label')
-                ->orderByRaw('MIN(created_at)')
-                ->get();
-            break;
-        case 'year':
-            $data = $query->selectRaw('YEAR(created_at) as label, SUM(tong_tien) as revenue')
-                ->groupBy('label')
-                ->orderBy('label')
-                ->get();
-            break;
-        case 'day':
-        default:
-            $data = $query->selectRaw('DATE(created_at) as label, SUM(tong_tien) as revenue')
-                ->groupBy('label')
-                ->orderBy('label')
-                ->get();
-            break;
-    }
-
-    $labels = $data->pluck('label')->map(function ($label) use ($groupBy) {
-        if ($groupBy === 'day') {
-            return Carbon::parse($label)->format('d/m/Y');
+        switch ($groupBy) {
+            case 'month':
+                $data = $query->selectRaw('DATE_FORMAT(created_at, "%m/%Y") as label, SUM(tong_tien) as revenue')
+                    ->groupBy('label')
+                    ->orderByRaw('MIN(created_at)')
+                    ->get();
+                break;
+            case 'year':
+                $data = $query->selectRaw('YEAR(created_at) as label, SUM(tong_tien) as revenue')
+                    ->groupBy('label')
+                    ->orderBy('label')
+                    ->get();
+                break;
+            case 'day':
+            default:
+                $data = $query->selectRaw('DATE(created_at) as label, SUM(tong_tien) as revenue')
+                    ->groupBy('label')
+                    ->orderBy('label')
+                    ->get();
+                break;
         }
-        return $label;
-    })->toArray();
 
-    $revenues = $data->pluck('revenue')->toArray();
-    $doanhThu = array_sum($revenues);
+        $labels = $data->pluck('label')->map(function ($label) use ($groupBy) {
+            if ($groupBy === 'day') {
+                return Carbon::parse($label)->format('d/m/Y');
+            }
+            return $label;
+        })->toArray();
 
-    return view('admins.doanhthu', compact('labels', 'revenues', 'doanhThu'));
-}
+        $revenues = $data->pluck('revenue')->toArray();
+        $doanhThu = array_sum($revenues);
+
+        return view('admins.doanhthu', compact('labels', 'revenues', 'doanhThu'));
+    }
 
     public function user()
     {

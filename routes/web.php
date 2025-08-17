@@ -318,8 +318,11 @@ Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])-
 Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
 
-// Thanh toán
-Route::get('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
+
+
+//thanh toan
+Route::post('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
+
 Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
 Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
 Route::post('/clear-discount', [ThanhToanController::class, 'clearDiscount'])->name('clear.discount');
