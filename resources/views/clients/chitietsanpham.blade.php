@@ -192,8 +192,6 @@
                                         </div>
 
                                     </div>
-
-                                    <!-- Dung Lượng Variation -->
                                     <!-- Dung Lượng Variation -->
                                     <div class="tp-product-details-variation-item">
                                         <h4 class="tp-product-details-variation-title" id="capacity-title">Dung lượng:

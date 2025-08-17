@@ -47,6 +47,7 @@
                                     <th scope="col">ID</th>
                                     <th scope="col">Dung lượng</th>
                                     <th scope="col">Hành động</th>
+                                    <th scope="col">Thao tác</th>
                                 </tr>
                             </thead>
                             <tbody>
