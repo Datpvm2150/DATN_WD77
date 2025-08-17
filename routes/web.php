@@ -282,10 +282,9 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/donhang', [TaiKhoanController::class, 'index'])->name('donhang');
     Route::put('changepassword', [TaiKhoanController::class, 'changePassword'])->name('changePassword');
     Route::match(['get', 'post'], '/{id}/chitietdonhang', [TaiKhoanController::class, 'show'])->name('donhang.chitiet');
-    Route::post('/{id}/cancel', [TaiKhoanController::class, 'cancelOrder'])->name('cancelOrder'); // hủy đơn hàng
+    Route::post('/{id}/cancel', [TaiKhoanController::class, 'cancelOrder'])->name('cancelOrder');
     Route::post('/{id}/getOrder', [TaiKhoanController::class, 'getOrder'])->name('getOrder');
-    Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('customer.orders.filter');
-    // quên mk customer
+    Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('orders.filter');
     Route::get('/show-form-forgot', [CustomerForgotPassword::class, 'ShowformForgotPasswword'])->name('forgotPassword');
     Route::post('/forgot-password', [CustomerForgotPassword::class, 'SendEmailForgot'])->name('password.email');
     Route::get('reset-password/{token}', [CustomerForgotPassword::class, 'formResetPassword'])->name('password.reset');
@@ -301,8 +300,6 @@ Route::get('/baiviet/{danh_muc}', [TrangBaiVietController::class, 'filterByCateg
 Route::get('/lienhe', [LienHeController::class, 'index'])->name('lienhe');
 Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store');
 
-
-
 // Client
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
@@ -310,7 +307,7 @@ Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
 Route::get('/404', [TrangChuController::class, 'index'])->name('error404');
 Route::get('/500', [TrangChuController::class, 'index'])->name('error500');
 
-// giỏ hàng
+// Giỏ hàng
 Route::get('/Cart-Index', [CartController::class, 'index'])->name('cart.index');
 Route::get('/Cart-List-Drop', [CartController::class, 'CartListDrop'])->name('cart.list.drop');
 Route::get('/Cart-List', [CartController::class, 'CartList'])->name('cart.list');
@@ -321,8 +318,7 @@ Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])-
 Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
 
-
-//thanh toan
+// Thanh toán
 Route::get('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
 Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
 Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
@@ -333,15 +329,12 @@ Route::post('/zalopay/callback', [ThanhToanController::class, 'handleZaloPayCall
 Route::post('/customer/orders/retry-payment/{id}', [ThanhToanController::class, 'retryPayment'])->name('customer.retryPayment');
 Route::post('/remove-discount', [ThanhToanController::class, 'removeDiscount'])->name('removeDiscount');
 
+// Sản phẩm
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
-
 Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
-//danhgia
-// Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
 
 // Chi tiết sản phẩm
-
 Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->name('chitietsanpham');
 Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
 Route::get('/sanpham/lay-gia-bien-the', [ChiTietSanPhamController::class, 'layGiaBienThe'])->name('sanpham.lay_gia_bien_the');
@@ -351,20 +344,17 @@ Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'repl
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
 Route::get('/san-pham/check-so-luong', [ChiTietSanPhamController::class, 'checkQuantityInCart'])->name('sanpham.check_quantity');
 
-
-
 Route::get('/vnpay/return', [VnpayController::class, 'handleReturn'])->name('vnpay.return');
 
-//yeu thich
+// Yêu thích
 Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
 
-// chat
+// Chat
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
 Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::class, 'loadMessages']);
-Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 
 // Điểm danh
 Route::middleware(['auth'])->group(function () {
@@ -376,8 +366,4 @@ Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');
 Route::middleware(['auth'])->group(function () {
     Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
 });
-
 // Lich sử điểm
-
-
-

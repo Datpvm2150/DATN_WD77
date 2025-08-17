@@ -354,3 +354,30 @@ function DeleteDiscount(){
         alertify.error('Có lỗi xảy ra, vui lòng thử lại sau!');
     });
 }
+
+// Xử lý tăng giảm số lượng ở trang chi tiết sản phẩm
+
+document.addEventListener('DOMContentLoaded', function () {
+    var plusBtn = document.querySelector('.tp-cart-plus');
+    var minusBtn = document.querySelector('.tp-cart-minus');
+    var input = document.querySelector('#so-luong-mua');
+    if (plusBtn && minusBtn && input) {
+        plusBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var val = parseInt(input.value) || 1;
+            var max = parseInt(input.getAttribute('data-max-quantity')) || 1;
+            if (val < max) {
+                input.value = val + 1;
+            } else {
+                alert('Vượt quá số lượng tồn kho!');
+            }
+        });
+        minusBtn.addEventListener('click', function (e) {
+            e.preventDefault();
+            var val = parseInt(input.value) || 1;
+            if (val > 1) {
+                input.value = val - 1;
+            }
+        });
+    }
+});

@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Models\User; 
 use App\Models\ChiTietHoaDon;
+
 class HoaDon extends Model
 {
     use HasFactory;
-
     use SoftDeletes;
 
     const TRANG_THAI = [
@@ -35,21 +35,13 @@ class HoaDon extends Model
     ];
 
     const CHO_XAC_NHAN = '1';
-
     const DA_XAC_NHAN = '2';
-
     const DANG_CHUAN_BI = '3';
-
     const DANG_VAN_CHUYEN = '4';
-
     const DA_GIAO_HANG = '5';
-
     const HUY_DON_HANG = '6';
-
     const DA_NHAN_HANG = '7';
-
     const THANH_TOAN_KHI_NHAN_HANG = 'Thanh toán khi nhận hàng';
-
     const THANH_TOAN_QUA_CHUYEN_KHOAN = 'Thanh toán qua chuyển khoản ngân hàng';
 
     protected $fillable = [
@@ -63,6 +55,7 @@ class HoaDon extends Model
         'ten_nguoi_nhan',
         'ngay_dat_hang',
         'ghi_chu',
+        'ly_do_huy', // Thêm trường này
         'thoi_gian_het_han',
         'phuong_thuc_thanh_toan',
         'thoi_gian_giao_dich',
