@@ -461,6 +461,7 @@ function DeleteDiscount() {
             }
         }
     });
+
 }
 document.addEventListener('DOMContentLoaded', function () {
     rebindCartEvents();
