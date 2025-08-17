@@ -3,7 +3,7 @@
         <table class="table">
             <thead>
                 <tr>
-                    <th><input type="checkbox" id="select-all-cart" checked /></th>
+                    <th><input type="checkbox" id="select-all-cart" /></th>
 
                     <th colspan="2" class="tp-cart-header-product">Sản phẩm</th>
                     <th class="tp-cart-header-price">Loại sản phẩm</th>
@@ -18,7 +18,7 @@
                         <tr data-id="{{ $idbt }}">
                             <td>
                                 <input type="checkbox" class="select-cart-item" name="cart_items[]"
-                                    value="{{ $idbt }}" checked>
+                                    value="{{ $idbt }}">
                             </td>
                             <!-- img -->
                             <td class="tp-cart-img">
@@ -211,13 +211,13 @@
             $finalTotal = max(0, $totalPrice - $discountAmount);
         @endphp
         <script>
-            let discountPercent = 0;
-            let maxDiscount = 0;
+            window.discountPercent = 0;
+            window.maxDiscount = 0;
             @if (Session::has('discount_percentage'))
-                discountPercent = {{ Session::get('discount_percentage') }};
+                window.discountPercent = {{ Session::get('discount_percentage') }};
             @endif
             @if (Session::has('maxDiscount'))
-                maxDiscount = {{ Session::get('maxDiscount') }};
+                window.maxDiscount = {{ Session::get('maxDiscount') }};
             @endif
         </script>
         <!-- Tổng phụ -->

@@ -48,7 +48,11 @@ class ThanhToanController extends Controller
 
         $cart = new Cart($oldCart);
 
-        $selectedItems = $request->input('cart_items', array_keys($cart->products ?? []));
+        $selectedItems = $request->input('cart_items');
+
+        if (empty($selectedItems)) {
+                return redirect()->back()->with('error', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
+            }
         $totalPrice = 0;
         $filteredProducts = [];
         foreach ($cart->products as $key => $product) {
@@ -181,7 +185,7 @@ class ThanhToanController extends Controller
             'new_giamgia' => 0 // sau khi xóa thì không còn giảm nữa
         ]);
     }
-     public function placeOrder(Request $request, OrderService $orderService)
+    public function placeOrder(Request $request, OrderService $orderService)
     {
         try {
             // Lấy giỏ hàng từ session
@@ -192,6 +196,7 @@ class ThanhToanController extends Controller
 
             // Lấy danh sách sản phẩm được chọn
             $selectedItems = $request->input('cart_items');
+
             $filteredProducts = [];
             $updatedTotalPrice = 0;
             $outOfStock = [];

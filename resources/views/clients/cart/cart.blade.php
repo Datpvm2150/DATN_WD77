@@ -30,7 +30,7 @@
                             <table class="table">
                                 <thead>
                                     <tr>
-                                        <th><input type="checkbox" id="select-all-cart" checked /></th>
+                                        <th><input type="checkbox" id="select-all-cart"  /></th>
 
                                         <th colspan="2" class="tp-cart-header-product">Sản phẩm</th>
                                         <th class="tp-cart-header-price">Loại sản phẩm</th>
@@ -46,7 +46,7 @@
                                             <tr data-id="{{ $idbt }}">
                                                 <td>
                                                     <input type="checkbox" class="select-cart-item" name="cart_items[]"
-                                                        value="{{ $idbt }}" checked>
+                                                        value="{{ $idbt }}" >
                                                 </td>
                                                 <td>
                                                     <!-- img -->
@@ -237,13 +237,13 @@
 
                         <div class="tp-cart-checkout-wrapper">
                             <script>
-                                let discountPercent = 0;
-                                let maxDiscount = 0;
+                                window.discountPercent = 0;
+                                window.maxDiscount = 0;
                                 @if (Session::has('discount_percentage'))
-                                    discountPercent = {{ Session::get('discount_percentage') }};
+                                    window.discountPercent = {{ Session::get('discount_percentage') }};
                                 @endif
                                 @if (Session::has('maxDiscount'))
-                                    maxDiscount = {{ Session::get('maxDiscount') }};
+                                    window.maxDiscount = {{ Session::get('maxDiscount') }};
                                 @endif
                             </script>
                             <div class="tp-cart-checkout-top d-flex align-items-center justify-content-between">
@@ -349,3 +349,14 @@
     </style>
 
 @endsection
+@push('scripts')
+    <script>
+        @if (session('success'))
+            alertify.success("{{ session('success') }}");
+        @endif
+
+        @if (session('error'))
+            alertify.error("{{ session('error') }}");
+        @endif
+    </script>
+@endpush
