@@ -22,12 +22,23 @@ class TaiKhoanController extends Controller
         // Lấy thông tin người dùng đang đăng nhập
         $user = Auth::user();  // Lấy người dùng hiện tại
         $danhMucs = DanhMuc::all();
-        // Lấy thông trạng thái mặc định "chờ xác nhận"
-        $donHangs = $user->hoaDons()->where('trang_thai', 1)->get();
+        // Lấy thông trạng thái mặc định "chờ xác nhận" - sắp xếp mới nhất lên trên
+        $donHangs = $user->hoaDons()->where('trang_thai', 1)->orderByDesc('created_at')->get();
         // Lấy thuộc tính
         $trang_thai_don_hang = HoaDon::TRANG_THAI;
 
-        return view('clients.taikhoan.donhang', compact('danhMucs', 'donHangs', 'trang_thai_don_hang'));
+        // Đếm số lượng theo từng trạng thái
+        $counts = [
+            1 => $user->hoaDons()->where('trang_thai', 1)->count(), // Chờ xác nhận
+            2 => $user->hoaDons()->where('trang_thai', 2)->count(), // Đã xác nhận
+            3 => $user->hoaDons()->where('trang_thai', 3)->count(), // Đang chuẩn bị
+            4 => $user->hoaDons()->where('trang_thai', 4)->count(), // Đang giao
+            5 => $user->hoaDons()->where('trang_thai', 5)->count(), // Đã giao
+            6 => $user->hoaDons()->where('trang_thai', 6)->count(), // Đã hủy
+            7 => $user->hoaDons()->where('trang_thai', 7)->count(), // Đã nhận hàng
+        ];
+
+        return view('clients.taikhoan.donhang', compact('danhMucs', 'donHangs', 'trang_thai_don_hang', 'counts'));
     }
 
     /**
@@ -144,7 +155,7 @@ class TaiKhoanController extends Controller
         $request->validate([
             'mat_khau_cu' => 'required', // Bắt buộc phải nhập mật khẩu cũ
             'mat_khau_moi' => 'required|string|min:8|confirmed|different:mat_khau_cu' // Mật khẩu mới phải ít nhất 8 ký tự và khớp với xác nhận mật khẩu
-        ],[
+        ], [
             'mat_khau_cu.required' => 'Mật khẩu cũ là bắt buộc.',
             'mat_khau_moi.required' => 'Mật khẩu mới là bắt buộc.',
             'mat_khau_moi.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự.',
@@ -154,7 +165,7 @@ class TaiKhoanController extends Controller
 
         // Kiểm tra mật khẩu cũ
         if (!Hash::check($request->input('mat_khau_cu'), $user->mat_khau)) {
-        return back()->withErrors(['mat_khau_cu' => 'Mật khẩu cũ không đúng.']);
+            return back()->withErrors(['mat_khau_cu' => 'Mật khẩu cũ không đúng.']);
         }
 
         // Cập nhật mật khẩu mới
@@ -166,38 +177,48 @@ class TaiKhoanController extends Controller
 
     public function cancelOrder($id, Request $request)
     {
-        // Tìm hóa đơn
         $orders = HoaDon::findOrFail($id);
 
-        if (!$orders) {
-            return redirect()->back()->with('error', 'Đơn hàng không tồn tại!');
+        // Kiểm tra quyền sở hữu
+        if ($orders->user_id !== Auth::id()) {
+            return response()->json(['message' => 'Bạn không có quyền hủy đơn hàng này!'], 403);
         }
 
         // Kiểm tra trạng thái đơn hàng
-        if (in_array($orders->trang_thai, [2, 3, 4, 5])) {
-            return redirect()->back()->with('error', 'Không thể hủy đơn hàng ở trạng thái này!');
+        if (!in_array($orders->trang_thai, [1, 2, 3])) {
+            return response()->json(['message' => 'Chỉ có thể hủy đơn hàng ở trạng thái Chờ xác nhận, Đã xác nhận hoặc Đang chuẩn bị!'], 400);
         }
 
-        // Lấy danh sách chi tiết hóa đơn
-        $chiTietHoaDons = ChiTietHoaDon::where('hoa_don_id', $orders->id)->get();
+        // Kiểm tra trạng thái thanh toán
+        if ($orders->trang_thai_thanh_toan !== 'Chưa thanh toán') {
+            return response()->json(['message' => 'Không thể hủy đơn hàng vì đơn hàng đã được thanh toán!'], 400);
+        }
+
+        // Yêu cầu lý do hủy cho trạng thái 2 và 3
+        if (in_array($orders->trang_thai, [2, 3])) {
+            $request->validate([
+                'ly_do_huy' => 'required|string|max:255',
+            ], [
+                'ly_do_huy.required' => 'Vui lòng nhập lý do hủy đơn hàng.',
+            ]);
+            $orders->ly_do_huy = $request->input('ly_do_huy');
+        }
 
         // Cập nhật số lượng tồn kho
+        $chiTietHoaDons = ChiTietHoaDon::where('hoa_don_id', $orders->id)->get();
         foreach ($chiTietHoaDons as $chiTiet) {
             $bienThe = $chiTiet->bienTheSanPham;
             if ($bienThe) {
-                $bienThe->so_luong += $chiTiet->so_luong; // Cộng lại số lượng vào kho
+                $bienThe->so_luong += $chiTiet->so_luong;
                 $bienThe->save();
             }
         }
 
         // Cập nhật trạng thái đơn hàng
-        $orders->trang_thai = 6; // Trạng thái "Đã hủy"
+        $orders->trang_thai = 6;
+        $orders->save();
 
-        if ($orders->save()) {
-            return redirect()->back()->with('success', 'Đã hủy đơn hàng thành công!');
-        } else {
-            return redirect()->back()->with('error', 'Đã có lỗi khi hủy!');
-        }
+        return response()->json(['message' => 'Đã hủy đơn hàng thành công!']);
     }
 
     public function getOrder($id, Request $request)
@@ -237,7 +258,7 @@ class TaiKhoanController extends Controller
             $donHangs = $donHangs->where('trang_thai', 1); // Chờ xác nhận
         } elseif ($status == 2) {
             $donHangs = $donHangs->where('trang_thai', 2); // Đã xác nhận
-        } elseif($status == 3) {
+        } elseif ($status == 3) {
             $donHangs = $donHangs->where('trang_thai', 3); // Đang chuẩn bị
         } elseif ($status == 4) {
             $donHangs = $donHangs->where('trang_thai', 4); // Đang giao
@@ -249,7 +270,8 @@ class TaiKhoanController extends Controller
             $donHangs = $donHangs->where('trang_thai', 7); // Đã nhận hàng
         }
 
-        $donHangs = $donHangs->get();
+        // Sắp xếp theo thứ tự mới nhất lên trên
+        $donHangs = $donHangs->orderByDesc('created_at')->get();
 
         // Đếm số lượng theo từng trạng thái
         $counts = [

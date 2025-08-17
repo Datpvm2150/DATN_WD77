@@ -456,6 +456,11 @@
                                         }
 
                                         function checkQuantityLimit(colorId, storageId, productId, quantityToAdd = 1) {
+                                            // Nếu chưa chọn màu sắc hoặc dung lượng, không cho phép tăng
+                                            if (!colorId || !storageId) {
+                                                return Promise.resolve(false);
+                                            }
+                                            
                                             return axios.post('/cart/check-stock', {
                                                     color_id: colorId,
                                                     storage_id: storageId,
@@ -467,7 +472,6 @@
                                                     console.error('Lỗi kiểm tra số lượng:', err);
                                                     return false;
                                                 });
-
                                         }
 
                                         function setupQuantityEvents() {
@@ -483,19 +487,23 @@
                                             minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
                                             minusBtn = newMinusBtn;
 
-                                            plusBtn.addEventListener("click", async (e) => {
+                                            plusBtn.addEventListener("click", (e) => {
                                                 e.preventDefault();
                                                 let currentQuantity = parseInt(input.value);
-                                                console.log(currentQuantity);
-
-
-                                                const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId, currentQuantity + 1);
-
-                                                if (canAdd) {
+                                                let maxQuantity = parseInt(input.getAttribute('data-max-quantity')) || 0;
+                                                
+                                                // Kiểm tra nếu chưa chọn màu sắc hoặc dung lượng
+                                                if (!selectedMauSacId || !selectedDungLuongId) {
+                                                    alertify.error('Vui lòng chọn màu sắc và dung lượng trước khi thay đổi số lượng!');
+                                                    return;
+                                                }
+                                                
+                                                // Kiểm tra số lượng tối đa
+                                                if (currentQuantity < maxQuantity) {
                                                     input.value = currentQuantity + 1;
+                                                    togglePlusButton(input, plusBtn);
                                                 } else {
-                                                    plusBtn.classList.add('disabled')
-                                                    alertify.error(`Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!`);
+                                                    alertify.error(`Số lượng tối đa là ${maxQuantity}!`);
                                                 }
                                             });
 

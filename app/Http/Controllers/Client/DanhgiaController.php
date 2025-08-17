@@ -8,7 +8,26 @@ use Illuminate\Http\Request;
 use App\Models\ChiTietHoaDon;
 
 class DanhgiaController extends Controller
-{ public function checkReviewEligibility(Request $request, $san_pham_id)
+{
+    public function showReviewForm($id)
+    {
+        // Lấy thông tin hóa đơn và các sản phẩm trong đơn hàng
+        $hoaDon = \App\Models\HoaDon::with(['chiTietHoaDons.bienTheSanPham.sanPham'])->findOrFail($id);
+        
+        // Kiểm tra quyền truy cập
+        if ($hoaDon->user_id !== auth()->id()) {
+            abort(403, 'Bạn không có quyền truy cập đơn hàng này.');
+        }
+        
+        // Kiểm tra trạng thái đơn hàng (chỉ cho phép đánh giá khi đã nhận hàng)
+        if ($hoaDon->trang_thai != 7) {
+            return redirect()->back()->with('error', 'Chỉ có thể đánh giá khi đơn hàng đã được nhận.');
+        }
+        
+        return view('clients.taikhoan.review_form', compact('hoaDon'));
+    }
+
+    public function checkReviewEligibility(Request $request, $san_pham_id)
     {
         // Xác thực nếu cần (nếu $san_pham_id luôn được truyền từ route thì không cần validate lại)
         $sanPhamId = $san_pham_id;

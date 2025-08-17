@@ -186,26 +186,17 @@ function bindCartEvents() {
             let quantity = parseInt(input.value) || 0;
             let maxQuantity = parseInt(input.getAttribute('data-max-quantity'));
             let idbt = this.closest('tr').dataset.id;
-            if (quantity < maxQuantity) {
-                // // quantity++;
-                // if (quantity >= maxQuantity) {
-                //     quantity = maxQuantity
-                //     input.value = maxQuantity;
-                // }
-                input.value = quantity;
-                UpdateItemCart(idbt, quantity);
-            }
+            
+            // Tăng số lượng lên 1
+            quantity++;
+            
             if (quantity > maxQuantity) {
                 quantity = maxQuantity;
                 alertify.error(`Số lượng không được lớn hơn ${maxQuantity}`);
-                input.value = maxQuantity;
             }
-            if (quantity >= maxQuantity) {
-                input.value = maxQuantity;
-                quantity = maxQuantity;
-                UpdateItemCart(idbt, quantity);
-                alertify.warning(`Sản phẩm chỉ còn ${maxQuantity}`);
-            }
+            
+            input.value = quantity;
+            UpdateItemCart(idbt, quantity);
             cartDropIndex();
             cartIndex();
         };
@@ -216,10 +207,17 @@ function bindCartEvents() {
             event.stopPropagation();
             let input = this.closest('.tp-product-quantity').querySelector('.cart-quantity');
             let quantity = parseInt(input.value) || 0;
-            console.log(quantity);
-            // quantity--;
-            input.value = quantity;
             let idbt = this.closest('tr').dataset.id;
+            
+            // Giảm số lượng xuống 1
+            quantity--;
+            
+            if (quantity < 1) {
+                quantity = 1;
+                alertify.warning('Số lượng tối thiểu là 1');
+            }
+            
+            input.value = quantity;
             UpdateItemCart(idbt, quantity);
             cartDropIndex();
             cartIndex();

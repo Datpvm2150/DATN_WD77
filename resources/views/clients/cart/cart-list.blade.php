@@ -115,46 +115,32 @@
                         <div class="row gx-2 gy-2 mb-2">
                             <!-- Dropdown chọn mã -->
                             <div class="col-md-10">
-                                <select id="select-discount-code" class="form-select">
-                                    <option value="">-- Chọn mã giảm giá --</option>
+                                <select id="select-discount-code" class="form-select discount-select">
+                                    <option value="">🎫 Chọn mã giảm giá có sẵn</option>
                                     @foreach ($maGiamGiaCongKhai as $item)
                                         @php
-
-                                            $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format(
-                                                'H:i d/m/Y',
-                                            );
+                                            $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y');
                                         @endphp
-                                        <option value="{{ $item->ma_khuyen_mai }}" >
-                                                            {{ $item->ma_khuyen_mai }} - Giảm
-                                                            {{ $item->phan_tram_khuyen_mai }}%
-                                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
-                                                             - HSD: {{ $hsdFormatted }}
-                                                        </option>
-                                                       @endforeach
-                                            @if (auth()->check())
-                                                @foreach ($maGiamGiaCaNhan as $item)
-                                                    @php
-
-                                                        $hsdFormatted = \Carbon\Carbon::parse(
-                                                            $item->ngay_ket_thuc,
-                                                        )->format('H:i d/m/Y');
-                                                    @endphp
-                                        <option value="{{ $item->ma_khuyen_mai }}">
-                                            {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
-                                            {{ $item->phan_tram_khuyen_mai }}%
-                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
-                                            - HSD: {{ $hsdFormatted }}
-
+                                        <option value="{{ $item->ma_khuyen_mai }}" class="discount-option">
+                                            🏷️ {{ $item->ma_khuyen_mai }} • Giảm {{ $item->phan_tram_khuyen_mai }}% (tối đa {{ number_format($item->giam_toi_da, 0, ',', '.') }}₫) • HSD: {{ $hsdFormatted }}
                                         </option>
                                     @endforeach
+                                    @if (auth()->check())
+                                        @foreach ($maGiamGiaCaNhan as $item)
+                                            @php
+                                                $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format('d/m/Y');
+                                            @endphp
+                                            <option value="{{ $item->ma_khuyen_mai }}" class="discount-option personal">
+                                                ⭐ {{ $item->ma_khuyen_mai }} (Cá nhân) • Giảm {{ $item->phan_tram_khuyen_mai }}% (tối đa {{ number_format($item->giam_toi_da, 0, ',', '.') }}₫) • HSD: {{ $hsdFormatted }}
+                                            </option>
+                                        @endforeach
                                     @endif
                                 </select>
                             </div>
 
                             <!-- Nút chọn mã -->
                             <div class="col-md-2">
-                                <button class="btn btn-outline-primary w-100"
-                                    onclick="chooseDiscountCode()">Chọn</button>
+                                <button class="btn btn-outline-primary w-100 select-btn" onclick="chooseDiscountCode()">Chọn</button>
                             </div>
                         </div>
 
@@ -165,8 +151,7 @@
                                     placeholder="Nhập mã thủ công">
                             </div>
                             <div class="col-md-2">
-                                <button class="btn btn-dark apply-discount-btn" onclick="discount()">Áp
-                                    dụng</button>
+                                <button class="btn btn-dark apply-discount-btn" onclick="discount()">Áp dụng</button>
                             </div>
                         </div>
 
@@ -210,9 +195,6 @@
             <span class="tp-cart-checkout-top-price" style="font-size: 16px">
                 {{ number_format($totalPrice, 0, ',', '.') }} VNĐ
             </span>
-            
-</span>
-
         </div>
 
         <!-- Giảm giá -->
@@ -255,6 +237,9 @@
 <script src="{{ asset('assets/client/js/main.js') }}"></script>
 
 <script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
+
+
+
 <style>
     .apply-discount-btn {
         width: 100%;
@@ -263,5 +248,66 @@
         justify-content: center;
         align-items: center;
         white-space: nowrap;
+    }
+
+    /* Chỉ styling cho dropdown select */
+    .discount-select {
+        border: 3px solid #e3e6ea;
+        border-radius: 12px;
+        padding: 16px 20px;
+        font-size: 14px;
+        font-weight: 500;
+        background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    .discount-select:hover {
+        border-color: #007bff;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 20px rgba(0, 123, 255, 0.15);
+    }
+
+    .discount-select:focus {
+        border-color: #007bff;
+        box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15), 0 4px 20px rgba(0, 123, 255, 0.2);
+        transform: translateY(-1px);
+        outline: none;
+    }
+
+    .discount-select option {
+        padding: 12px;
+        font-size: 14px;
+        line-height: 1.6;
+        border-radius: 8px;
+        margin: 2px 0;
+    }
+
+    .discount-select option:first-child {
+        background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+        color: white;
+        font-weight: 600;
+    }
+
+    .discount-select option.discount-option {
+        background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+        color: #1565c0;
+        font-weight: 500;
+        border-left: 4px solid #2196f3;
+    }
+
+    .discount-select option.discount-option.personal {
+        background: linear-gradient(135deg, #e8f5e8 0%, #f1f8e9 100%);
+        color: #2e7d32;
+        font-weight: 600;
+        border-left: 4px solid #4caf50;
+    }
+
+    /* Căn chỉnh nút chọn với dropdown */
+    .select-btn {
+        height: 58px !important;
+        display: flex;
+        align-items: center;
+        justify-content: center;
     }
 </style>
