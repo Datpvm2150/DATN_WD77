@@ -127,6 +127,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::put('/{id}/update', [DungLuongController::class, 'update'])->name('update');
         Route::post('/{id}/onOffDungLuong', [DungLuongController::class, 'onOffDungLuong'])->name('onOffDungLuong');
         Route::delete('/{id}/destroy', [DungLuongController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [DungLuongController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [DungLuongController::class, 'restore'])->name('restore');
     });
 
     // Tag
@@ -149,6 +151,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::put('/{id}/update', [MauSacController::class, 'update'])->name('update');
         Route::post('/{id}/onOffMauSac', [MauSacController::class, 'onOffMauSac'])->name('onOffMauSac');
         Route::delete('/{id}/destroy', [MauSacController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [MauSacController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [MauSacController::class, 'restore'])->name('restore');
     });
 
     // Khuyến mãi
@@ -164,7 +168,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
         Route::get('/trash', [KhuyenMaiController::class, 'trash'])->name('trash');
         Route::post('/restore/{id}', [KhuyenMaiController::class, 'restore'])->name('restore');
-        Route::delete('/force-delete/{id}', [KhuyenMaiController::class, 'forceDelete'])->name('forceDelete');
     });
     // Đánh giá
     Route::prefix('Danhgias')->name('Danhgias.')->group(function () {

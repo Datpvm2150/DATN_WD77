@@ -96,7 +96,20 @@ class DungLuongController extends Controller
         if(count($countDungLuong) > 0){
             return redirect()->back()->with('error','Dung lượng đã có sản phẩm, không thể xóa! ');
         }
+        $dungluongs->trang_thai = false;
+        $dungluongs->save();
         $dungluongs->delete();
         return redirect()->route('admin.dungluongs.index')->with('success', 'Xóa kích cỡ dung lượng thành công');
+    }
+    public function trash() {
+        $dungluongs = DungLuong::onlyTrashed()->get();
+        return view('admins.dungluongs.trash', compact('dungluongs'));
+    }
+    public function restore($id) {
+        $dungluong = DungLuong::onlyTrashed()->findOrFail($id);
+        $dungluong->trang_thai = true;
+        $dungluong->save();
+        $dungluong->restore();
+        return redirect()->route('admin.dungluongs.trash')->with('success', 'Khôi phục thành công');
     }
 }
