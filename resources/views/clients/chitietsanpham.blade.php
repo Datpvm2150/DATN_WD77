@@ -450,6 +450,7 @@
                                             const plusBtn = document.querySelector('.tp-cart-plus');
                                             input.value = 1;
                                             input.setAttribute('data-max-quantity', so_luong);
+                                            plusBtn.classList.remove('disabled');
                                             togglePlusButton(input, plusBtn);
                                         }
 
@@ -481,25 +482,32 @@
                                             minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
                                             minusBtn = newMinusBtn;
 
-                                            plusBtn.addEventListener("click", async (e) => {
+                                            plusBtn.addEventListener("click", (e) => {
                                                 e.preventDefault();
-                                                let currentQuantity = parseInt(input.value);
-                                                console.log(currentQuantity);
+                                                e.stopImmediatePropagation();
+                                                e.stopPropagation();
+                                                const currentQuantity = parseInt(input.value) || 1;
+                                                const max = parseInt(input.dataset.maxQuantity) || 1;
 
+                                                if (!selectedMauSacId || !selectedDungLuongId) {
+                                                    alertify.error('Vui lòng chọn màu sắc và dung lượng trước khi tăng số lượng.');
+                                                    return;
+                                                }
 
-                                                const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId, currentQuantity + 1);
-
-                                                if (canAdd) {
+                                                if (currentQuantity < max) {
                                                     input.value = currentQuantity + 1;
                                                 } else {
-                                                    plusBtn.classList.add('disabled')
-                                                    alertify.error(`Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!`);
+                                                    alertify.error(`Đã đạt số lượng tối đa (${max}) cho biến thể này.`);
                                                 }
+
+                                                togglePlusButton(input, plusBtn);
                                             });
 
 
                                             minusBtn.addEventListener("click", function(e) {
                                                 e.preventDefault();
+                                                e.stopImmediatePropagation();
+                                                e.stopPropagation();
                                                 let current = parseInt(input.value) || 1;
                                                 if (current > 1) input.value = current - 1;
                                                 togglePlusButton(input, plusBtn);
