@@ -12,6 +12,9 @@ class ChiTietHoaDon extends Model
     protected $fillable = [
         'bien_the_san_pham_id',
         'hoa_don_id',
+        'ten_san_pham',
+        'ten_dung_luong',
+        'ten_mau_sac',
         'so_luong',
         'don_gia',
         'thanh_tien'

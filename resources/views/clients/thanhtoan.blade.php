@@ -99,6 +99,9 @@
 
                         <div class="tp-checkout-bill-form">
                             <form id="orderForm">
+                                 @foreach ($cartToCheckout->products as $key => $product)
+                                    <input type="hidden" name="cart_items[]" value="{{ $key }}">
+                                @endforeach
                                 <div class="tp-checkout-bill-inner">
                                     <div class="row">
                                         <!-- Họ tên và Số điện thoại -->
@@ -188,7 +191,7 @@
                                     <h4>Tổng</h4>
                                 </li>
                                 {{-- sửa giá --}}
-                                @foreach ($cart->products as $product)
+                                @foreach ($cartToCheckout->products as $product)
                                     @php
                                         $giaMoi = $product['bienthe']->gia_moi ?? null;
                                         $giaCu = $product['bienthe']->gia_cu ?? null;
@@ -210,7 +213,7 @@
 
                                 <li class="tp-order-info-list-subtotal">
                                     <span>Tổng phụ</span>
-                                    <span>{{ number_format($cart->totalPrice) }} VND</span>
+                                    <span>{{ number_format($cartToCheckout->totalPrice) }} VND</span>
                                 </li>
                                 <li class="tp-order-info-list-subtotal">
                                     <span>Giảm giá</span>
@@ -352,7 +355,8 @@
         document.getElementById('submitOrder').addEventListener('click', function(event) {
             event.preventDefault();
             let isValid = true;
-
+            const cartItems = Array.from(document.querySelectorAll('input[name="cart_items[]"]'))
+            .map(input => input.value);
             const name = document.getElementById('name');
             const phone = document.getElementById('phone');
             const email = document.getElementById('email');
@@ -435,7 +439,8 @@
                             email: email.value,
                             address: address.value,
                             payment_method: paymentMethod,
-                            note: note
+                            note: note,
+                            cart_items: cartItems
                         })
                     })
                     .then(response => response.json())

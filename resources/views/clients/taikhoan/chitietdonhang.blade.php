@@ -16,30 +16,30 @@
             <div class="row gy-3">
                 <!-- Cột bên trái -->
                 <div class="col-lg-6">
-                    <p><strong class="text-dark">Mã đơn hàng:</strong> <span  class="text-dark">{{ $hoaDon->ma_hoa_don }}</span  class="text-dark"></p>
-                    <p><strong class="text-dark">Tên người nhận:</strong> <span  class="text-dark">{{ $hoaDon->ten_nguoi_nhan }}</span  class="text-dark"></p>
-                    <p><strong class="text-dark">Email:</strong> <span  class="text-dark">{{ $hoaDon->email }}</span  class="text-dark"></p>
-                    <p><strong class="text-dark">Điện thoại:</strong> <span  class="text-dark">{{ $hoaDon->so_dien_thoai }}</span  class="text-dark"></p>
-                    <p><strong class="text-dark">Địa chỉ:</strong> <span  class="text-dark">{{ $hoaDon->dia_chi_nhan_hang }}</span  class="text-dark"></p>
+                    <p><strong class="text-dark">Mã đơn hàng:</strong> <span class="text-dark">{{ $hoaDon->ma_hoa_don }}</span></p>
+                    <p><strong class="text-dark">Tên người nhận:</strong> <span class="text-dark">{{ $hoaDon->ten_nguoi_nhan }}</span></p>
+                    <p><strong class="text-dark">Email:</strong> <span class="text-dark">{{ $hoaDon->email }}</span></p>
+                    <p><strong class="text-dark">Điện thoại:</strong> <span class="text-dark">{{ $hoaDon->so_dien_thoai }}</span></p>
+                    <p><strong class="text-dark">Địa chỉ:</strong> <span class="text-dark">{{ $hoaDon->dia_chi_nhan_hang }}</span></p>
                 </div>
 
                 <!-- Cột bên phải -->
                 <div class="col-lg-6">
-                    <p><strong class="text-dark">Ghi chú:</strong> <span  class="text-dark">{{ $hoaDon->ghi_chu }}</span  class="text-dark"></p>
+                    <p><strong class="text-dark">Ghi chú:</strong> <span class="text-dark">{{ $hoaDon->ghi_chu }}</span></p>
                     <p><strong class="text-dark">Trạng thái đơn hàng:</strong> 
-                        <span  class="text-dark" class="badge bg-info text-dark">{{ $trangThaiHoaDon[$hoaDon->trang_thai] }}</span  class="text-dark">
+                        <span class="badge bg-info text-dark">{{ $trangThaiHoaDon[$hoaDon->trang_thai] }}</span>
                     </p>
-                    <p><strong class="text-dark">Phương thức thanh toán:</strong> <span  class="text-dark">{{ $phuongThucThanhToan[$hoaDon->phuong_thuc_thanh_toan] }}</span  class="text-dark"></p>
+                    <p><strong class="text-dark">Phương thức thanh toán:</strong> <span class="text-dark">{{ $phuongThucThanhToan[$hoaDon->phuong_thuc_thanh_toan] }}</span></p>
                     <p><strong class="text-dark">Thanh toán:</strong> 
-                    <span class="badge {{ $hoaDon->trang_thai_thanh_toan == 'Đã thanh toán' ? 'bg-success text-light' : 'bg-warning text-dark' }}">
-                        {{ $trangThaiThanhToan[$hoaDon->trang_thai_thanh_toan] }}
-                    </span>
+                        <span class="badge {{ $hoaDon->trang_thai_thanh_toan == 'Đã thanh toán' ? 'bg-success text-light' : 'bg-warning text-dark' }}">
+                            {{ $trangThaiThanhToan[$hoaDon->trang_thai_thanh_toan] }}
+                        </span>
                     </p>
                     <p><strong class="text-dark">Giảm giá:</strong> 
-                        <span   class="text-danger">-{{ number_format($hoaDon->giam_gia, 0, '', '.') }} đ</span  class="text-dark">
+                        <span class="text-danger">-{{ number_format($hoaDon->giam_gia, 0, '', '.') }} đ</span>
                     </p>
                     <p><strong class="text-dark">Tiền ship:</strong> 
-                        <span  class="text-dark" class="text-success">{{ number_format(50000, 0, '', '.') }} đ</span  class="text-dark">
+                        <span class="text-success">{{ number_format(50000, 0, '', '.') }} đ</span>
                     </p>
                     <p class="fw-bold text-orange fs-5">Tổng tiền: {{ number_format($hoaDon->tong_tien, 0, '', '.') }} đ</p>
                 </div>
@@ -78,20 +78,12 @@
                         <!-- Thông tin sản phẩm -->
                         <td>{{ $chiTiet->bienTheSanPham->sanPham->ma_san_pham }}</td>
                         <td>
-                            {{ $chiTiet->bienTheSanPham->sanPham->ten_san_pham }}
+                            {{ $chiTiet->ten_san_pham }}
                             <br>
                             <small class="text-dark">
-                                @if(isset($chiTiet->bienTheSanPham->dungLuong))
-                                    Dung lượng: {{ $chiTiet->bienTheSanPham->dungLuong->ten_dung_luong }}
-                                @else
-                                    Dung lượng: Không có
-                                @endif
+                                Dung lượng: {{ $chiTiet->ten_dung_luong ?? 'Không có' }}
                                 <br>
-                                @if(isset($chiTiet->bienTheSanPham->mauSac))
-                                    Màu sắc: {{ $chiTiet->bienTheSanPham->mauSac->ten_mau_sac }}
-                                @else
-                                    Màu sắc: Không có
-                                @endif
+                                Màu sắc: {{ $chiTiet->ten_mau_sac ?? 'Không có' }}
                             </small>
                         </td>
 
@@ -132,5 +124,5 @@
 </style>
 
 <!-- Modal Đánh Giá -->
-@include( 'clients.taikhoan.review_modal')
+@include('clients.taikhoan.review_modal')
 @endsection

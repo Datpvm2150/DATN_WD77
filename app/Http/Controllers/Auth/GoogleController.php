@@ -6,36 +6,35 @@ use Laravel\Socialite\Facades\Socialite;
 use App\Models\User;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class GoogleController extends Controller
 {
      public function redirectToGoogle()
     {
-        return Socialite::driver('google')->redirect();
+        // Sử dụng stateless để tránh lỗi liên quan đến session khi triển khai qua proxy/CDN
+        return Socialite::driver('google')->stateless()->redirect();
     }
 
     public function handleGoogleCallback()
     {
         try {
-            $googleUser = Socialite::driver('google')->user();
+            $googleUser = Socialite::driver('google')->stateless()->user();
 
-            // Check if a user with this email exists
-            $user = User::where('email', $googleUser->email)->first();
-            if (!$user) {
-                // Create a new user if not found
-                $user = User::create([
-                    'ten' => $googleUser->name,
-                    'email' => $googleUser->email,
-                    'google_id' => $googleUser->id,
-                    'mat_khau' => bcrypt(uniqid()), // Random hashed password
-                ]);
-            }
+            $user = User::updateOrCreate(
+                ['email' => $googleUser->getEmail()],
+                [
+                    'name' => $googleUser->getName(),
+                    'google_id' => $googleUser->getId(),
+                    'avatar' => $googleUser->getAvatar(),
+                ]
+            );
 
-            // Log in the user
             Auth::login($user);
-            return redirect()->route('trangchu')->with('success', 'Login successful!');
-        } catch (Exception $e) {
-            return redirect()->route('customer.login')->with('error', 'Something went wrong: ' . $e->getMessage());
+
+            return redirect()->route('trangchu');
+        } catch (\Exception $e) {
+            return redirect()->route('customer.login')->with('error', 'Đăng nhập Google thất bại!');
         }
     }
 }

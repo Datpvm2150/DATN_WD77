@@ -452,6 +452,7 @@
                                             const plusBtn = document.querySelector('.tp-cart-plus');
                                             input.value = 1;
                                             input.setAttribute('data-max-quantity', so_luong);
+                                            plusBtn.classList.remove('disabled');
                                             togglePlusButton(input, plusBtn);
                                         }
 
@@ -483,25 +484,32 @@
                                             minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
                                             minusBtn = newMinusBtn;
 
-                                            plusBtn.addEventListener("click", async (e) => {
+                                            plusBtn.addEventListener("click", (e) => {
                                                 e.preventDefault();
-                                                let currentQuantity = parseInt(input.value);
-                                                console.log(currentQuantity);
+                                                e.stopImmediatePropagation();
+                                                e.stopPropagation();
+                                                const currentQuantity = parseInt(input.value) || 1;
+                                                const max = parseInt(input.dataset.maxQuantity) || 1;
 
+                                                if (!selectedMauSacId || !selectedDungLuongId) {
+                                                    alertify.error('Vui lòng chọn màu sắc và dung lượng trước khi tăng số lượng.');
+                                                    return;
+                                                }
 
-                                                const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId, currentQuantity + 1);
-
-                                                if (canAdd) {
+                                                if (currentQuantity < max) {
                                                     input.value = currentQuantity + 1;
                                                 } else {
-                                                    plusBtn.classList.add('disabled')
-                                                    alertify.error(`Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!`);
+                                                    alertify.error(`Đã đạt số lượng tối đa (${max}) cho biến thể này.`);
                                                 }
+
+                                                togglePlusButton(input, plusBtn);
                                             });
 
 
                                             minusBtn.addEventListener("click", function(e) {
                                                 e.preventDefault();
+                                                e.stopImmediatePropagation();
+                                                e.stopPropagation();
                                                 let current = parseInt(input.value) || 1;
                                                 if (current > 1) input.value = current - 1;
                                                 togglePlusButton(input, plusBtn);
@@ -807,7 +815,7 @@
                             <!-- actions -->
                         </div>
                     </div>
-                    <div class="tp-product-details-bottom pb-140">
+                    <div class="tp-product-details-bottom pb-80">
                         <div class="container">
                             <div class="row">
                                 <div class="col-xl-12">
@@ -1046,45 +1054,37 @@
                                                                                                     class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
                                                                                             @endfor
                                                                                         </div>
-                                                                                        <!-- <div>
+                                                                                         <div>
                                                                                                             <span>Phân loại hàng:</span>
                                                                                                            @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
-    @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
-    {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                @if ($index < $danhgia->bienTheDaMua->count() - 1)
+                                                                                @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
+                                                                                  {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
+                                                                                 @if ($index < $danhgia->bienTheDaMua->count() - 1)
     ,
-    @endif
-    @endforeach
-@else
-    <p>Không có biến thể nào được mua từ sản phẩm này.</p>
-    @endif
-                                                                                                        </div> -->
+                                                                                        @endif
+                                                                                       @endforeach
+                                                                                           @else
+                                                                                            <p>Không có biến thể nào được mua từ sản phẩm này.</p>
+                                                                                              @endif
+                                                                                                        </div>
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>
                                                                                     a {
                                                                                         display: flex;
-                                                                                        /* Arrange img and div next to each other */
                                                                                         align-items: flex-start;
-                                                                                        /* Align vertically at the top */
                                                                                     }
-
                                                                                     .review-info {
                                                                                         margin-left: 10px;
-                                                                                        /* Add some space between image and review info */
                                                                                         display: flex;
                                                                                         flex-direction: column;
-                                                                                        /* Stack content vertically inside the div */
                                                                                     }
-
                                                                                     .tp-product-details-review-avater-title {
                                                                                         margin-bottom: 5px;
-                                                                                        /* Add spacing between the name and the date */
-                                                                                    }
 
-                                                                                    .review-info div {
+                                                                                    }
+                                                                                 .review-info div {
                                                                                         margin-bottom: 5px;
-                                                                                        /* Add spacing between each section (name, stars, etc.) */
                                                                                     }
                                                                                 </style>
                                                                             </div>
@@ -1189,11 +1189,6 @@
                                                                     margin-top: 10px;
                                                                 }
                                                             </style>
-
-                                                            {{-- form đánh giá và nhận xét --}}
-
-
-
                                                         </div>
                                                     </div>
 
@@ -1203,17 +1198,10 @@
                                     </div>
                                 </div>
                             </div>
-
-
-
-
-
-
     </section>
-    <!-- product details area end -->
-
-    <!-- related product area start -->
-    <section class="tp-related-product pt-95 pb-120">
+    <style>
+    </style>
+    <section class="tp-related-product  pb-50">
         <div class="container">
             <div class="row">
                 <div class="tp-section-title-wrapper-6 text-center mb-40">
@@ -1232,7 +1220,7 @@
                                         <div class="tp-product-thumb-3 mb-15 fix p-relative z-index-1">
                                             <a href="{{ route('chitietsanpham', ['id' => $sanPham->id]) }}">
                                                 <img src="{{ asset($sanPham->anh_san_pham) }}"
-                                                    alt="{{ $sanPham->ten_san_pham }}">
+                                                    alt="{{ $sanPham->ten_san_pham }}" style="width: 100%; height: 250px; object-fit: cover; display: block;">
                                             </a>
 
                                             <!-- product action -->
@@ -1241,8 +1229,6 @@
                                                 <div class="tp-product-action-item-3 d-flex flex-column">
                                                 </div>
                                             </div>
-
-
                                         </div>
                                         <div class="tp-product-content-3">
                                             <div class="tp-product-tag-3">
@@ -1252,11 +1238,37 @@
                                                 <a
                                                     href="{{ route('chitietsanpham', ['id' => $sanPham->id]) }}">{{ $sanPham->ten_san_pham }}</a>
                                             </h3>
-                                            <div class="tp-product-price-wrapper-3">
-                                                <span class="tp-product-price-3">
-                                                    {{ $sanPham->bienthesanphams->first() ? number_format($sanPham->bienthesanphams->first()->gia_moi) : 'Giá không có sẵn' }}
-                                                </span>
-                                            </div>
+                                         <div class="tp-product-price-wrapper-3">
+    @php
+        $bienThe = $sanPham->bienthesanphams->first();
+        $giaCu = $bienThe->gia_cu ?? 0;
+        $giaMoi = $bienThe->gia_moi ?? null;
+    @endphp
+
+    @if ($giaMoi !== null && $giaMoi > 0)
+        @if ($giaCu > 0 && $giaMoi < $giaCu)
+            <span class="tp-product-price-3 old-price" style="text-decoration: line-through; color: #888;">
+                {{ number_format($giaCu, 0, ',', '.') }}₫
+            </span>
+            <span class="tp-product-price-3 new-price" style="margin-left: 8px; font-weight: bold; color: #cc0000;">
+                {{ number_format($giaMoi, 0, ',', '.') }}₫
+            </span>
+        @else
+            <span class="tp-product-price-3 new-price" style="font-weight: 600; color: #222;">
+                {{ number_format($giaMoi, 0, ',', '.') }}₫
+            </span>
+        @endif
+    @elseif ($giaCu > 0)
+        <span class="tp-product-price-3" style="font-weight: 600; color: #333;">
+            {{ number_format($giaCu, 0, ',', '.') }}₫
+        </span>
+    @else
+        <span class="tp-product-price-3" style="color: #999;">
+            Giá không có sẵn
+        </span>
+    @endif
+</div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -1270,6 +1282,7 @@
             </div>
         </div>
     </section>
+
     <!-- related product area end -->
 
     <div class="modal fade tp-product-modal" id="producQuickViewModal" tabindex="-1"
