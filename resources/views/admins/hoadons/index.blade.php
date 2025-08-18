@@ -287,7 +287,7 @@
                 button.addEventListener('click', function() {
                     const orderId = this.getAttribute('data-id');
                     const form = document.getElementById('cancelOrderForm');
-                    form.action = `/admin/hoadons/${orderId}`;
+                    form.action = `/admin/hoadons/${orderId}/destroy`;
                 });
             });
         });

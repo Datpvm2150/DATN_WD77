@@ -51,8 +51,8 @@ class ThanhToanController extends Controller
         $selectedItems = $request->input('cart_items');
 
         if (empty($selectedItems)) {
-                return redirect()->back()->with('error', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
-            }
+            return redirect()->back()->with('error', 'Vui lòng chọn ít nhất một sản phẩm để thanh toán.');
+        }
         $totalPrice = 0;
         $filteredProducts = [];
         foreach ($cart->products as $key => $product) {
@@ -313,6 +313,9 @@ class ThanhToanController extends Controller
                 ChiTietHoaDon::create([
                     'hoa_don_id' => $hoaDon->id,
                     'bien_the_san_pham_id' => $bienThe->id,
+                    'ten_san_pham' => $bienThe->sanPham->ten_san_pham ?? null,
+                    'ten_dung_luong' => $bienThe->dungLuong->ten_dung_luong ?? null,
+                    'ten_mau_sac' => $bienThe->mauSac->ten_mau_sac ?? null,
                     'so_luong' => $item['quantity'],
                     'don_gia' => $gia,
                     'thanh_tien' => $item['quantity'] * $gia,
@@ -375,19 +378,11 @@ class ThanhToanController extends Controller
                         'message' => 'Đặt hàng thành công, thanh toán khi nhận hàng. Sau khi thanh toán, mã giảm giá sẽ được gửi.'
                     ]);
 
-
-                case 'Thanh toán qua ví điện tử':
-                    return app(EWalletController::class)->processPayment(
-                        $tongTienSauGiam,
-                        $hoaDon->ma_hoa_don,
-                        $request->ewallet_id
-                    );
-
                 default:
                     return response()->json(['success' => false, 'message' => 'Phương thức thanh toán không hợp lệ'], 400);
             }
         } catch (\Exception $e) {
-            \Log::error("Lỗi khi đặt hàng: " . $e->getMessage());
+            Log::error("Lỗi khi đặt hàng: " . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Đã xảy ra lỗi khi đặt hàng'], 500);
         }
     }
@@ -427,6 +422,9 @@ class ThanhToanController extends Controller
             ChiTietHoaDon::create([
                 'hoa_don_id' => $hoaDon->id,
                 'bien_the_san_pham_id' => $item['bienthe']->id,
+                'ten_san_pham'   => $item['bienthe']->sanPham->ten_san_pham ?? null,
+                'ten_dung_luong' => $item['bienthe']->dungLuong->ten_dung_luong ?? null,
+                'ten_mau_sac'    => $item['bienthe']->mauSac->ten_mau_sac ?? null,
                 'so_luong' => $item['quantity'],
                 'don_gia' => $item['bienthe']->gia_moi,
                 'thanh_tien' => $item['quantity'] * $item['bienthe']->gia_moi,
@@ -624,4 +622,4 @@ class ThanhToanController extends Controller
         // Nếu không thể thanh toán lại (đã thanh toán hoặc hết hạn)
         return back()->with('error', 'Không thể thanh toán lại đơn hàng này.');
     }
-} 
+}

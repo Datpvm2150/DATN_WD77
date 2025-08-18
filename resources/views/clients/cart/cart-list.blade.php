@@ -102,7 +102,7 @@
         <div class="row align-items-end">
             <div class="col-xl-6 col-md-8">
                 <div class="tp-cart-coupon">
-                    <div class="tp-cart-coupon-input-box">
+                    {{-- <div class="tp-cart-coupon-input-box">
                         <label class="form-label fw-bold mb-2">Mã giảm giá</label>
 
                         @php
@@ -178,6 +178,83 @@
                             </div>
                         </div>
 
+                    </div> --}}
+                    <div class="tp-cart-coupon-input-box">
+                        <label class="form-label fw-bold mb-2">Mã giảm giá</label>
+
+                        @php
+                            use Illuminate\Support\Carbon;
+
+                            $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
+                                ->where('trang_thai', 1)
+                                ->where('loai_ma', '!=', 'ma_doi_qua')
+                                ->get();
+
+                            $maGiamGiaCaNhan = auth()->check()
+                                ? \App\Models\KhuyenMai::where('user_id', auth()->id())
+                                    ->where('trang_thai', 1)
+                                    ->get()
+                                : collect();
+                        @endphp
+
+                        <div class="row gx-2 gy-2 mb-2">
+                            <!-- Dropdown chọn mã -->
+                            <div class="col-md-10">
+                                <select id="select-discount-code" class="form-select discount-select">
+                                    <option value="">🎫 Chọn mã giảm giá có sẵn</option>
+                                    @foreach ($maGiamGiaCongKhai as $item)
+                                        @php
+                                            $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format(
+                                                'd/m/Y',
+                                            );
+                                        @endphp
+
+                                        <option value="{{ $item->ma_khuyen_mai }}" class="discount-option">
+                                            🏷️ {{ $item->ma_khuyen_mai }} • Giảm
+                                            {{ $item->phan_tram_khuyen_mai }}% (tối đa
+                                            {{ number_format($item->giam_toi_da, 0, ',', '.') }}₫) •
+                                            HSD: {{ $hsdFormatted }}
+                                        </option>
+                                    @endforeach
+                                    @if (auth()->check())
+                                        @foreach ($maGiamGiaCaNhan as $item)
+                                            @php
+
+                                                $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format(
+                                                    'd/m/Y',
+                                                );
+                                            @endphp
+                                            <option value="{{ $item->ma_khuyen_mai }}"
+                                                class="discount-option personal">
+                                                ⭐ {{ $item->ma_khuyen_mai }} (Cá nhân) • Giảm
+                                                {{ $item->phan_tram_khuyen_mai }}% (tối đa
+                                                {{ number_format($item->giam_toi_da, 0, ',', '.') }}₫)
+                                                • HSD: {{ $hsdFormatted }}
+                                            </option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
+
+                            <!-- Nút chọn mã -->
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-outline-primary w-100 select-btn"
+                                    onclick="chooseDiscountCode()">Chọn</button>
+                            </div>
+                        </div>
+
+                        <!-- Nhập mã thủ công -->
+                        <div class="row gx-2 gy-2 align-items-center">
+                            <div class="col-md-10">
+                                <input type="text" id="discount-code" class="form-control"
+                                    placeholder="Nhập mã thủ công">
+                            </div>
+                            <div class="col-md-2">
+                                 <button type="button" class="btn btn-dark apply-discount-btn" onclick="discount()">Áp
+                                    dụng</button>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 
@@ -268,7 +345,7 @@
 </div>
 
 <input type="hidden" name="" id="total-quantity-list-cart" value="{{ $cart->totalProduct ?? 0 }}">
-
+<script src="{{ asset('assets/client/js/anhnt.js') }}"></script>
 
 <style>
     .apply-discount-btn {
