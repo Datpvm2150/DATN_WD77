@@ -302,15 +302,20 @@ class SanPhamController extends Controller
 
         $old_anh_san_pham = $sanpham->anh_san_pham;
         // Xử lý mảng rỗng giá_moi => null
+        // $request->merge([
+        //     'gia_moi' => array_map(function ($item) {
+        //         return $item === '' ? null : $item; // nếu trống => null
+        //     }, $request->input('gia_moi', [])),
+        //     'new_gia_moi' => array_map(function ($item) {
+        //         return $item === '' ? null : $item; // nếu trống => null
+        //     }, $request->input('new_gia_moi', [])),
+        // ]);
         $request->merge([
             'gia_moi' => array_map(function ($item) {
-                return ($item === '' || $item == 0) ? null : $item;
+                return $item === '' ? null : $item;
             }, $request->input('gia_moi', [])),
-
-            'new_gia_moi' => array_map(function ($item) {
-                return ($item === '' || $item == 0) ? null : $item;
-            }, $request->input('new_gia_moi', [])),
         ]);
+
 
         $validator = Validator::make($request->all(), [
             'ma_san_pham' => ['string', 'max:255', Rule::unique('san_phams', 'ma_san_pham')->ignore($id)],
@@ -374,7 +379,7 @@ class SanPhamController extends Controller
             'gia_cu.*.max' => 'Giá cũ phải nhỏ hơn 4 tỷ.',
 
             'gia_moi.*.numeric' => 'Giá mới phải là số.',
-            'gia_moi.*.min' => 'Giá mới phải lớn hơn hoặc bằng 1.',
+            'gia_moi.*' => 'Giá mới phải lớn hơn hoặc bằng 1.',
             'gia_moi.*.max' => 'Giá mới phải nhỏ hơn 4 tỷ.',
 
             'so_luong.*.required' => 'Số lượng không được để trống.',
