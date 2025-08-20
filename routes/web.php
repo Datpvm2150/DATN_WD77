@@ -194,7 +194,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     //Thống kê
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/doanhthu', [DashboardController::class, 'doanhthu'])->name('doanhthu');
-    Route::get('/admin/doanh-thu', [StaffDashboardController::class, 'thongKeDoanhThu'])->name('admin.doanhthu');
+    Route::get('/admin/doanh-thu', [DashboardController::class, 'thongKeDoanhThu'])->name('admin.doanhthu');
     Route::get('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
     Route::get('/tk-sanpham-banchay', [DashboardController::class, 'sanPhamBanChay'])->name('thongke.sanpham.banchay');
     Route::get('/tk-sanpham-kho', [DashboardController::class, 'sanPhamBanKho'])->name('thongke.sanpham.kho');
@@ -363,6 +363,7 @@ Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.
 // Chat
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
 Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::class, 'loadMessages']);
+Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 
 // Điểm danh
 Route::middleware(['auth'])->group(function () {
