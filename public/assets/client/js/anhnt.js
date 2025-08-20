@@ -39,11 +39,11 @@ async function addToCart(productId) {
             return false;
         }
 
-        // const canAdd = await checkQuantityLimit(mauSacId, dungLuongId, productId, quantity);
-        // if (!canAdd) {
-        //     alertify.error("Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!");
-        //     return false;
-        // }
+        const canAdd = await checkQuantityLimit(mauSacId, dungLuongId, productId, quantity);
+        if (!canAdd) {
+            alertify.error("Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!");
+            return false;
+        }
 
         const response = await $.ajax({
             url: "/Add-Cart/" + productId,

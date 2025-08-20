@@ -301,21 +301,16 @@ class SanPhamController extends Controller
         $sanpham = SanPham::withTrashed()->find($id);
 
         $old_anh_san_pham = $sanpham->anh_san_pham;
-        // Xử lý mảng rỗng giá_moi => null
-        // $request->merge([
-        //     'gia_moi' => array_map(function ($item) {
-        //         return $item === '' ? null : $item; // nếu trống => null
-        //     }, $request->input('gia_moi', [])),
-        //     'new_gia_moi' => array_map(function ($item) {
-        //         return $item === '' ? null : $item; // nếu trống => null
-        //     }, $request->input('new_gia_moi', [])),
-        // ]);
+         // Xử lý mảng rỗng giá_moi => null
         $request->merge([
             'gia_moi' => array_map(function ($item) {
-                return $item === '' ? null : $item;
+                return ($item === '' || $item == 0) ? null : $item;
             }, $request->input('gia_moi', [])),
-        ]);
 
+            'new_gia_moi' => array_map(function ($item) {
+                return ($item === '' || $item == 0) ? null : $item;
+            }, $request->input('new_gia_moi', [])),
+        ]);
 
         $validator = Validator::make($request->all(), [
             'ma_san_pham' => ['string', 'max:255', Rule::unique('san_phams', 'ma_san_pham')->ignore($id)],

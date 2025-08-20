@@ -321,6 +321,7 @@ Route::get('/Delete-Item-List-Cart/{id}', [CartController::class, 'DeleteItemLis
 Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])->name('cart.update.item');
 Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
+Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 
 
 
