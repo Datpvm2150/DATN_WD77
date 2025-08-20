@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\KhuyenMai;
 use Carbon\Carbon;
@@ -249,17 +250,15 @@ class KhuyenMaiController extends Controller
 
     public function trash(Request $request)
     {
-        $query = KhuyenMai::query();
-        if ($request->has(('ngay_bat_dau')) && $request->input('ngay_ket_thuc')) {
+        $query = KhuyenMai::onlyTrashed(); // vì bạn chỉ tìm trong thùng rác
+        if ($request->filled('ngay_bat_dau')) {
             $query->where('ngay_bat_dau', '>=', $request->input('ngay_bat_dau'));
         }
-
-        if ($request->has('ngay_ket_thuc') && $request->input('ngay_ket_thuc')) {
+        if ($request->filled('ngay_ket_thuc')) {
             $query->where('ngay_ket_thuc', '<=', $request->input('ngay_ket_thuc'));
         }
-
-        $KhuyenMais = $query->onlyTrashed()->get();
-        return view('admins.khuyen_mais.trash', compact('KhuyenMais'));
+        $KhuyenMais = $query->get();
+        return view('admins.khuyen_mais.trash', compact('KhuyenMais'));        
     }
 
     public function restore($id)
@@ -272,15 +271,5 @@ class KhuyenMaiController extends Controller
             return redirect()->back()->with('success', 'khôi phục thành công');
         }
         return redirect()->back()->with('error', 'Khuyến mãi chưa bị xóa mềm');
-    }
-
-    public function forceDelete($id)
-    {
-        $khuyenMai = KhuyenMai::withTrashed()->find($id);
-        if ($khuyenMai) {
-            $khuyenMai->forceDelete();
-            return redirect()->route('admin.khuyen_mais.trash')->with('success', 'Khuyến mãi đã được xóa thành công.');
-        }
-        return redirect()->route('admin.khuyen_mais.trash')->with('success', 'Khuyến mãi không tồn tại.');
     }
 }

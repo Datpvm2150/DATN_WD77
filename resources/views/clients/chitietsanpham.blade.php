@@ -419,6 +419,8 @@
                                                 togglePlusButton(input, plusBtn);
                                             }
 
+
+
                                             function checkQuantityLimit(colorId, storageId, productId, quantityToAdd = 1) {
                                                 return axios.post('/cart/check-stock', {
                                                         color_id: colorId,
@@ -447,10 +449,16 @@
                                                 minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
                                                 minusBtn = newMinusBtn;
 
+
                                                 plusBtn.addEventListener("click", async (e) => {
                                                     e.preventDefault();
                                                     let currentQuantity = parseInt(input.value);
                                                     console.log(currentQuantity);
+
+                                                if (!selectedMauSacId || !selectedDungLuongId) {
+                                                    alertify.error('Vui lòng chọn màu sắc và dung lượng trước khi tăng số lượng.');
+                                                    return;
+                                                }
 
 
                                                     const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId, currentQuantity + 1);
@@ -470,6 +478,7 @@
                                                     if (current > 1) input.value = current - 1;
                                                     togglePlusButton(input, plusBtn);
                                                 });
+
 
                                                 input.addEventListener("input", function() {
                                                     let raw = input.value.replace(/[^\d]/g, '');

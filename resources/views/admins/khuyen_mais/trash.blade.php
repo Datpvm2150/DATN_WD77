@@ -85,26 +85,11 @@
                                 <td>
                                     <div class="card-body">
                                         <div class="btn-group">
-                                            <button class="btn btn-primary dropdown-toggle" type="button"
-                                                data-bs-toggle="dropdown" aria-haspopup="true"
-                                                aria-expanded="false">Thao tác<i
-                                                    class="mdi mdi-chevron-down"></i></button>
-                                            <div class="dropdown-menu">
-                                                <form action="{{ route('admin.khuyen_mais.restore', $khuyenmai->id) }}" method="POST" >
-                                                    @csrf
-                                                    <button type="submit" class="dropdown-item">Khôi phục</button>
-                                                </form>
-                                            
-                                                <form action="{{ route('admin.khuyen_mais.forceDelete', $khuyenmai->id) }}" method="POST" onsubmit="return confirm('Bạn có chắc chắn muốn xóa khuyến mãi này?');">
-                                                    @method('DELETE')
-                                                    @csrf
-                                                    <button type="submit" class="dropdown-item">Xóa vĩnh viễn</button>
-                                                </form>
-
-                                            </div>
+                                            <form action="{{ route('admin.khuyen_mais.restore', $khuyenmai->id) }}" method="POST" >
+                                                @csrf
+                                                <button type="submit" class="btn btn-primary">Khôi phục</button>
+                                            </form>
                                         </div>
-
-
                                     </div>
                                 </td>
                             </tr>
