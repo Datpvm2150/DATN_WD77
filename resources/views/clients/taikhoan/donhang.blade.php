@@ -86,7 +86,7 @@
     // Tự động reload đơn hàng mỗi 10 giây (10000 ms)
     setInterval(function () {
         loadOrders(currentStatus);
-    }, 1000); // Có thể chỉnh 5s, 15s tùy bạn
+    }, 10000); // Có thể chỉnh 5s, 15s tùy bạn
 
     function loadOrders(status) {
         $.ajax({

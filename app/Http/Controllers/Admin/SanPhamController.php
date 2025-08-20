@@ -301,7 +301,7 @@ class SanPhamController extends Controller
         $sanpham = SanPham::withTrashed()->find($id);
 
         $old_anh_san_pham = $sanpham->anh_san_pham;
-        // Xử lý mảng rỗng giá_moi => null
+         // Xử lý mảng rỗng giá_moi => null
         $request->merge([
             'gia_moi' => array_map(function ($item) {
                 return ($item === '' || $item == 0) ? null : $item;
@@ -374,7 +374,7 @@ class SanPhamController extends Controller
             'gia_cu.*.max' => 'Giá cũ phải nhỏ hơn 4 tỷ.',
 
             'gia_moi.*.numeric' => 'Giá mới phải là số.',
-            'gia_moi.*.min' => 'Giá mới phải lớn hơn hoặc bằng 1.',
+            'gia_moi.*' => 'Giá mới phải lớn hơn hoặc bằng 1.',
             'gia_moi.*.max' => 'Giá mới phải nhỏ hơn 4 tỷ.',
 
             'so_luong.*.required' => 'Số lượng không được để trống.',

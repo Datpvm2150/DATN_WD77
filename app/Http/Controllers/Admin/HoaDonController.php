@@ -8,7 +8,7 @@ use App\Services\OrderService;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log as FacadesLog;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 
 class HoaDonController extends Controller
 {
@@ -130,16 +130,32 @@ class HoaDonController extends Controller
                 }
             }
             $hoadon->trang_thai = $newState;
+
+            //Nếu trạng thái mới là "Đã giao hàng" thì tự động cập nhật thanh toán
+            if ($newState == '5') {
+                $hoadon->trang_thai_thanh_toan = 'Đã thanh toán';
+                $hoadon->thoi_gian_giao_dich = now();
+
+                try {
+                    $orderService = app(OrderService::class);
+                    $orderService->updatePaymentStatus($hoadon->id);
+                    $orderService->sendVoucherAfterPaid($hoadon);
+                } catch (\Exception $e) {
+                    Log::error("Lỗi khi gửi mã giảm giá sau thanh toán: " . $e->getMessage());
+                }
+            }
         }
 
         if ($request->has('trang_thai_thanh_toan') && $hoadon->trang_thai_thanh_toan != $request->input('trang_thai_thanh_toan')) {
             $hoadon->trang_thai_thanh_toan = $request->input('trang_thai_thanh_toan');
             if ($request->input('trang_thai_thanh_toan') === 'Đã thanh toán') {
-                $hoadon->thoi_gian_giao_dich = now();
+                $hoadon->thoi_gian_giao_dich = now(); // cập nhật thời gian thanh toán
+              
+
                 try {
                     $orderService = app(OrderService::class);
-                    $orderService->updatePaymentStatus($hoadon->id);
-                    $orderService->sendVoucherAfterPaid($hoadon);
+                    $orderService->updatePaymentStatus($hoadon->id); // Cập nhật mã đã dùng
+                    $orderService->sendVoucherAfterPaid($hoadon); // Gửi mã nếu đủ điều kiện
                 } catch (\Exception $e) {
                     Log::error("Lỗi khi gửi mã giảm giá sau thanh toán: " . $e->getMessage());
                 }
