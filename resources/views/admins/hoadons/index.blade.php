@@ -53,21 +53,25 @@
                         <form action="{{ route('admin.hoadons.index') }}" method="GET"
                             style="max-width: 1000px; margin: 20px auto; padding: 20px; border: 1px solid #ccc; border-radius: 5px; background-color: #f9f9f9; display: flex; align-items: center; gap: 10px; flex-wrap: nowrap;">
                             <div style="flex: 1; min-width: 170px;">
-                                <label for="ngay_bat_dau" style="display: block; font-weight: bold; margin-bottom: 5px;">Ngày bắt đầu:</label>
+                                <label for="ngay_bat_dau"
+                                    style="display: block; font-weight: bold; margin-bottom: 5px;">Ngày bắt đầu:</label>
                                 <input type="date" name="ngay_bat_dau" id="ngay_bat_dau"
                                     value="{{ request('ngay_bat_dau') }}"
                                     style="width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
                             </div>
 
                             <div style="flex: 1; min-width: 170px;">
-                                <label for="ngay_ket_thuc" style="display: block; font-weight: bold; margin-bottom: 5px;">Ngày kết thúc:</label>
+                                <label for="ngay_ket_thuc"
+                                    style="display: block; font-weight: bold; margin-bottom: 5px;">Ngày kết thúc:</label>
                                 <input type="date" name="ngay_ket_thuc" id="ngay_ket_thuc"
                                     value="{{ request('ngay_ket_thuc') }}"
                                     style="width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
                             </div>
 
                             <div style="flex: 1; min-width: 180px;">
-                                <label for="phuong_thuc_thanh_toan" style="display: block; font-weight: bold; margin-bottom: 5px;">Phương thức thanh toán:</label>
+                                <label for="phuong_thuc_thanh_toan"
+                                    style="display: block; font-weight: bold; margin-bottom: 5px;">Phương thức thanh
+                                    toán:</label>
                                 <select name="phuong_thuc_thanh_toan" id="phuong_thuc_thanh_toan"
                                     style="width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
                                     <option value="">Tất cả</option>
@@ -81,7 +85,8 @@
                             </div>
 
                             <div style="flex: 1; min-width: 170px;">
-                                <label for="trang_thai" style="display: block; font-weight: bold; margin-bottom: 5px;">Trạng thái đơn hàng:</label>
+                                <label for="trang_thai" style="display: block; font-weight: bold; margin-bottom: 5px;">Trạng
+                                    thái đơn hàng:</label>
                                 <select name="trang_thai" id="trang_thai"
                                     style="width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
                                     <option value="">Tất cả</option>
@@ -94,17 +99,21 @@
                             </div>
 
                             <div style="flex: 1; min-width: 170px;">
-                                <label for="trang_thai_thanh_toan" style="display: block; font-weight: bold; margin-bottom: 5px;">Trạng thái thanh toán:</label>
+                                <label for="trang_thai_thanh_toan"
+                                    style="display: block; font-weight: bold; margin-bottom: 5px;">Trạng thái thanh
+                                    toán:</label>
                                 <select name="trang_thai_thanh_toan" id="trang_thai_thanh_toan"
                                     style="width: 100%; padding: 6px; border: 1px solid #ccc; border-radius: 4px;">
                                     <option value="">Tất cả</option>
                                     <option value="Đã thanh toán"
-                                        {{ request('trang_thai_thanh_toan') == 'Đã thanh toán' ? 'selected' : '' }}>Đã thanh toán</option>
+                                        {{ request('trang_thai_thanh_toan') == 'Đã thanh toán' ? 'selected' : '' }}>Đã
+                                        thanh toán</option>
                                     <option value="Thanh toán thất bại"
                                         {{ request('trang_thai_thanh_toan') == 'Thanh toán thất bại' ? 'selected' : '' }}>
                                         Thanh toán thất bại</option>
                                     <option value="Chưa thanh toán"
-                                        {{ request('trang_thai_thanh_toan') == 'Chưa thanh toán' ? 'selected' : '' }}>Chưa thanh toán</option>
+                                        {{ request('trang_thai_thanh_toan') == 'Chưa thanh toán' ? 'selected' : '' }}>Chưa
+                                        thanh toán</option>
                                 </select>
                             </div>
 
@@ -166,14 +175,17 @@
                                                 <td style="color: red; font-weight: bold;">
                                                     {{ number_format($item->tong_tien, 0, '', '.') }}
                                                 </td>
-                                                <td style="color: {{ $item->phuong_thuc_thanh_toan == 'Thanh toán qua chuyển khoản ngân hàng' ? 'blue' : ($item->phuong_thuc_thanh_toan == 'Thanh toán khi nhận hàng' ? 'red' : 'black') }}">
+                                                <td
+                                                    style="color: {{ $item->phuong_thuc_thanh_toan == 'Thanh toán qua chuyển khoản ngân hàng' ? 'blue' : ($item->phuong_thuc_thanh_toan == 'Thanh toán khi nhận hàng' ? 'red' : 'black') }}">
                                                     {{ $item->phuong_thuc_thanh_toan }}
                                                 </td>
                                                 <td class="equal-td">
-                                                    <form action="{{ route('admin.hoadons.update', $item->id) }}" method="POST">
+                                                    <form action="{{ route('admin.hoadons.update', $item->id) }}"
+                                                        method="POST">
                                                         @csrf
                                                         @method('PUT')
-                                                        <select name="trang_thai" class="form-select w-100" onchange="this.form.submit()" required
+                                                        <select name="trang_thai" class="form-select w-100"
+                                                            onchange="this.form.submit()" required
                                                             @if ($item->trang_thai == 6 || $item->trang_thai == 7) disabled @endif>
                                                             @foreach ($trangThaiHoaDon as $key => $value)
                                                                 <option value="{{ $key }}"
@@ -190,14 +202,18 @@
                                                     </form>
                                                 </td>
                                                 <td class="equal-td">
-                                                    <form action="{{ route('admin.hoadons.update', $item->id) }}" method="POST">
+                                                    <form action="{{ route('admin.hoadons.update', $item->id) }}"
+                                                        method="POST">
                                                         @csrf
                                                         @method('PUT')
                                                         <select name="trang_thai_thanh_toan"
                                                             class="form-select badge w-75 text-white p-2 bg-{{ $item->trang_thai_thanh_toan === 'Chưa thanh toán' ? 'danger' : ($item->trang_thai_thanh_toan === 'Đã thanh toán' ? 'success' : 'secondary') }} text-white"
                                                             onchange="updateSelectBackground(this); this.form.submit()"
                                                             id="trang_thai_thanh_toan_{{ $item->id }}"
-                                                            @if ($item->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng' || $item->trang_thai == 6 || $item->trang_thai == 7) disabled @endif>
+                                                            @if (
+                                                                $item->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng' ||
+                                                                    $item->trang_thai == 6 ||
+                                                                    $item->trang_thai == 7) disabled @endif>
                                                             <option value="Chưa thanh toán"
                                                                 {{ $item->trang_thai_thanh_toan === 'Chưa thanh toán' ? 'selected' : '' }}
                                                                 @if ($item->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng') disabled @endif>
@@ -219,13 +235,18 @@
                                                     <div class="card-body">
                                                         <div class="btn-group">
                                                             <button class="btn btn-primary dropdown-toggle" type="button"
-                                                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Thao tác<i
+                                                                data-bs-toggle="dropdown" aria-haspopup="true"
+                                                                aria-expanded="false">Thao tác<i
                                                                     class="mdi mdi-chevron-down"></i></button>
                                                             <div class="dropdown-menu">
-                                                                <a class="dropdown-item" href="{{ route('admin.hoadons.show', $item->id) }}">Xem chi tiết</a>
-                                                                @if ($item->trang_thai != 4 && $item->trang_thai != 5 && $item->trang_thai != 6 && $item->trang_thai == 7)
-                                                                    <a class="dropdown-item cancel-order" href="#" data-bs-toggle="modal"
-                                                                        data-bs-target="#cancelOrderModal" data-id="{{ $item->id }}">Hủy đơn hàng</a>
+                                                                <a class="dropdown-item"
+                                                                    href="{{ route('admin.hoadons.show', $item->id) }}">Xem
+                                                                    chi tiết</a>
+                                                                @if (in_array($item->trang_thai, [1, 2, 3]))
+                                                                    <a class="dropdown-item cancel-order" href="#"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#cancelOrderModal"
+                                                                        data-id="{{ $item->id }}">Hủy đơn hàng</a>
                                                                 @endif
                                                             </div>
                                                         </div>
@@ -245,12 +266,14 @@
             </div>
 
             <!-- Modal for Cancel Reason -->
-            <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+            <div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel"
+                aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
                             <h5 class="modal-title" id="cancelOrderModalLabel">Lý do hủy đơn hàng</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                aria-label="Close"></button>
                         </div>
                         <form id="cancelOrderForm" action="" method="POST">
                             @csrf

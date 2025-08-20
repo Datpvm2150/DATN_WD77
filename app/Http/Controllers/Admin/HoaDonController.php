@@ -8,7 +8,7 @@ use App\Services\OrderService;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log as FacadesLog;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 
 class HoaDonController extends Controller
 {
@@ -17,7 +17,7 @@ class HoaDonController extends Controller
     {
         // Đặt tiêu đề cho trang
         $title = "Danh sách đơn hàng";
-        
+
         // Lấy các tham số lọc từ request
         $ngayBatDau = $request->input('ngay_bat_dau');
         $ngayKetThuc = $request->input('ngay_ket_thuc');
@@ -77,25 +77,25 @@ class HoaDonController extends Controller
     {
         // Đặt tiêu đề cho trang
         $title = "Thông tin chi tiết đơn hàng";
-        
+
         // Tìm đơn hàng theo ID, ném lỗi nếu không tìm thấy
         $hoaDon = HoaDon::query()->findOrFail($id);
-        
+
         // Lấy chi tiết đơn hàng cùng với thông tin sản phẩm
         $chiTietHoaDons = $hoaDon->chiTietHoaDons()->with(['bienTheSanPham.sanPham'])->get();
-        
+
         // Tính tổng thành tiền
         $tongThanhTien = $chiTietHoaDons->sum('thanh_tien');
-        
+
         // Phí vận chuyển cố định
         $tienShip = 50000;
-        
+
         // Giảm giá (nếu có)
         $giamGia = $hoaDon->giam_gia ?? 0;
-        
+
         // Tính tổng tiền cuối cùng
         $tongTienCuoi = $tongThanhTien + $tienShip - $giamGia;
-        
+
         // Lấy danh sách trạng thái và phương thức thanh toán từ model
         $trangThaiHoaDon = HoaDon::TRANG_THAI;
         $phuongThucThanhToan = HoaDon::PHUONG_THUC_THANH_TOAN;
@@ -165,11 +165,10 @@ class HoaDonController extends Controller
                 }
             }
             $hoadon->trang_thai = $newState;
-        }
+            // Nếu trạng thái đơn hàng là "Đã thanh toán" thì set luôn trạng thái thanh toán
+            if ($newState == 5) {
 
-        if ($request->has('trang_thai_thanh_toan') && $hoadon->trang_thai_thanh_toan != $request->input('trang_thai_thanh_toan')) {
-            $hoadon->trang_thai_thanh_toan = $request->input('trang_thai_thanh_toan');
-            if ($request->input('trang_thai_thanh_toan') === 'Đã thanh toán') {
+                $hoadon->trang_thai_thanh_toan = 'Đã thanh toán';
                 $hoadon->thoi_gian_giao_dich = now();
 
                 try {
@@ -177,17 +176,21 @@ class HoaDonController extends Controller
                     $orderService->updatePaymentStatus($hoadon->id);
                     $orderService->sendVoucherAfterPaid($hoadon);
                 } catch (\Exception $e) {
-                    Log::error("Lỗi khi gửi mã giảm giá sau thanh toán: " . $e->getMessage());
+                    Log::error("Lỗi khi xử lý sau thanh toán: " . $e->getMessage());
+                }
+            } else {
+                if ($request->filled('trang_thai_thanh_toan')) {
+                    $hoadon->trang_thai_thanh_toan = $request->input('trang_thai_thanh_toan');
                 }
             }
         }
+
+
 
         if ($request->has('trang_thai_thanh_toan') && $hoadon->trang_thai_thanh_toan != $request->input('trang_thai_thanh_toan')) {
             $hoadon->trang_thai_thanh_toan = $request->input('trang_thai_thanh_toan');
             if ($request->input('trang_thai_thanh_toan') === 'Đã thanh toán') {
                 $hoadon->thoi_gian_giao_dich = now(); // cập nhật thời gian thanh toán
-              
-
                 try {
                     $orderService = app(OrderService::class);
                     $orderService->updatePaymentStatus($hoadon->id); // Cập nhật mã đã dùng

@@ -1,10 +1,10 @@
 <!-- Hiển thị thông báo flash -->
-@if (session('success'))
+{{-- @if (session('success'))
     <div class="alert alert-success" role="alert">{{ session('success') }}</div>
-@endif
-@if (session('error'))
+@endif --}}
+{{-- @if (session('error'))
     <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
-@endif
+@endif --}}
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -46,7 +46,7 @@
                         <form action="{{ route('customer.cancelOrder', $ord->id) }}" method="POST" class="d-inline"
                             onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
                             @csrf
-                            @method('DELETE')
+                            {{-- @method('DELETE') --}}
                             <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
                         </form>
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
@@ -80,7 +80,7 @@
                                     class="d-inline auto-cancel-form"
                                     data-expiration-time="{{ $ord->thoi_gian_het_han }}">
                                     @csrf
-                                    @method('DELETE')
+                                    {{-- @method('DELETE') --}}
                                     <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
                                 </form>
                             @endif
@@ -127,7 +127,7 @@
             </div>
             <form id="cancelOrderForm" action="" method="POST">
                 @csrf
-                @method('DELETE')
+                {{-- @method('DELETE') --}}
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="ly_do_huy" class="form-label">Lý do hủy đơn hàng</label>
@@ -159,20 +159,20 @@
         });
 
         // Xử lý tự động xác nhận nhận hàng
-        const autoConfirmForms = document.querySelectorAll('.auto-confirm-form');
-        autoConfirmForms.forEach(form => {
-            const deliveryTime = form.getAttribute('data-delivery-time');
-            if (deliveryTime) {
-                const deliveryDate = new Date(deliveryTime).getTime();
-                const currentTime = new Date().getTime();
-                const timeDiff = deliveryDate + 7 * 24 * 60 * 60 * 1000 - currentTime; // 7 ngày
-                if (timeDiff <= 0) {
-                    form.submit();
-                } else {
-                    setTimeout(() => form.submit(), timeDiff);
-                }
-            }
-        });
+        // const autoConfirmForms = document.querySelectorAll('.auto-confirm-form');
+        // autoConfirmForms.forEach(form => {
+        //     const deliveryTime = form.getAttribute('data-delivery-time');
+        //     if (deliveryTime) {
+        //         const deliveryDate = new Date(deliveryTime).getTime();
+        //         const currentTime = new Date().getTime();
+        //         const timeDiff = deliveryDate + 7 * 24 * 60 * 60 * 1000 - currentTime; // 7 ngày
+        //         if (timeDiff <= 0) {
+        //             form.submit();
+        //         } else {
+        //             setTimeout(() => form.submit(), timeDiff);
+        //         }
+        //     }
+        // });
 
         // Xử lý khi nhấn nút hủy
         document.querySelectorAll('.cancel-order').forEach(button => {
@@ -199,7 +199,6 @@
                     'X-CSRF-TOKEN': '{{ csrf_token() }}'
                 },
                 body: JSON.stringify({
-                    _method: 'DELETE',
                     ly_do_huy: lyDoHuy
                 })
             })
@@ -235,7 +234,7 @@
         });
     });
 
-    @if (isset($message))
-        alert('Thông báo: ' + @json($message));
-    @endif
+    // @if (isset($message))
+    //     alert('Thông báo: ' + @json($message));
+    // @endif
 </script>

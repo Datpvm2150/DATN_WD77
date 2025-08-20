@@ -92,6 +92,7 @@ class OrderService
             Log::error("Không thể gửi email: " . $e->getMessage());
         }
 
-        return back()->with('success', 'Cập nhật trạng thái thanh toán thành công.');
+        return redirect()->route('customer.donhang');
+
     }
 }
