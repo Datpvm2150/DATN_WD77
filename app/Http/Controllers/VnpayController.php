@@ -226,23 +226,8 @@ class VnpayController extends Controller
                     $amountPaid = $inputData['vnp_Amount'] / 100; // Chuyển từ VND * 100 nếu cần.
                     if ((float)$amountPaid === (float)$hoaDon->tong_tien) {
 
-                        app(OrderService::class)->updatePaymentStatus($hoaDon->id, $formattedPayDate);
+                        app(OrderService::class)->updatePaymentStatus($hoaDon->id);
                         app(OrderService::class)->sendVoucherAfterPaid($hoaDon);
-                        // Cập nhật trạng thái hóa đơn
-
-                        // $hoaDon->trang_thai_thanh_toan = HoaDon::TRANG_THAI_THANH_TOAN['Đã thanh toán'];
-                        // $hoaDon->thoi_gian_giao_dich = $formattedPayDate;
-                        // $hoaDon->save();
-                        // Tăng số lần sử dụng mã cá nhân nếu có
-                        // if ($hoaDon->ma_khuyen_mai) {
-                        //     $discount = KhuyenMai::where('ma_khuyen_mai', $hoaDon->ma_khuyen_mai)->first();
-                        //     if ($discount && $discount->loai_ma === 'ca_nhan') {
-                        //         $discount->increment('da_su_dung');
-                        //     }
-                        // }
-
-                        // Gửi email xác nhận
-                        // Mail::to($hoaDon->email)->send(new InvoiceCreated($hoaDon));
                         session()->flash('js', '<script>sessionStorage.setItem("orderMessage", "Thanh toán thành công!");</script>');
                         return redirect()->route('customer.donhang');
                     } else {

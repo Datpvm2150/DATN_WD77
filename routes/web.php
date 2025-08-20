@@ -194,7 +194,7 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     //Thống kê
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/doanhthu', [DashboardController::class, 'doanhthu'])->name('doanhthu');
-    Route::get('/admin/doanh-thu', [StaffDashboardController::class, 'thongKeDoanhThu'])->name('admin.doanhthu');
+    Route::get('/admin/doanh-thu', [DashboardController::class, 'thongKeDoanhThu'])->name('admin.doanhthu');
     Route::get('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
     Route::get('/tk-sanpham-banchay', [DashboardController::class, 'sanPhamBanChay'])->name('thongke.sanpham.banchay');
     Route::get('/tk-sanpham-kho', [DashboardController::class, 'sanPhamBanKho'])->name('thongke.sanpham.kho');
@@ -271,6 +271,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 /////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
+// Đăng nhập bằng gg
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
@@ -320,6 +321,7 @@ Route::get('/Delete-Item-List-Cart/{id}', [CartController::class, 'DeleteItemLis
 Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])->name('cart.update.item');
 Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
+Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 
 
 
@@ -361,6 +363,7 @@ Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.
 // Chat
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
 Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::class, 'loadMessages']);
+Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 
 // Điểm danh
 Route::middleware(['auth'])->group(function () {

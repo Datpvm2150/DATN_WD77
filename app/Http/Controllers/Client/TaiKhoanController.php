@@ -18,7 +18,9 @@ class TaiKhoanController extends Controller
     {
         $user = Auth::user();
         $danhMucs = DanhMuc::all();
+        // Lấy thông trạng thái mặc định "chờ xác nhận"
         $donHangs = $user->hoaDons()->where('trang_thai', 1)->get();
+        // Lấy thuộc tính
         $trang_thai_don_hang = HoaDon::TRANG_THAI;
 
         return view('clients.taikhoan.donhang', compact('danhMucs', 'donHangs', 'trang_thai_don_hang'));
@@ -204,7 +206,7 @@ class TaiKhoanController extends Controller
             $donHangs = $donHangs->where('trang_thai', 7);
         }
 
-        $donHangs = $donHangs->get();
+        $donHangs = $donHangs->orderByDesc('id')->get();
 
         $counts = [
             1 => HoaDon::where('user_id', $userId)->where('trang_thai', 1)->count(),

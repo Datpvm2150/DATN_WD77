@@ -23,12 +23,9 @@ class CustomerForgotPassword extends Controller
     }
 
     public function SendEmailForgot(Request $request){
-            $request->validate(['email' => 'required|email'], [
-            'email.required' => 'Email không được để trống.',
-            'email.email' => 'Email không hợp lệ.',
-            ]);
-            $status = Password::broker('users')->sendResetLink(
-      
+        $request->validate(['email' => 'required|email']);
+
+        $status = Password::broker('users')->sendResetLink(
             $request->only('email'),
             function ($user, $token) {
 
@@ -37,7 +34,6 @@ class CustomerForgotPassword extends Controller
                     'token' => $token,
                     'email' => $user->getEmailForPasswordReset(),
                 ], false));
-              
 
                 // Sử dụng Notification với URL custom
                 $user->notify(new CustomerForgotPasswordNoti($path));

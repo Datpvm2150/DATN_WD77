@@ -1,3 +1,4 @@
+
 @extends('layouts.admin')
 
 @section('title', 'Thống Kê Sản Phẩm Bán Chạy')
@@ -9,7 +10,8 @@
     <!-- Bộ lọc -->
     <form method="GET" action="{{ route('admin.thongke.sanpham.banchay') }}">
         <div class="row g-3 mb-4">
-            <div class="col-md-3">
+            <!-- Chọn thời gian nhanh -->
+            <div class="col-md-2">
                 <label for="thoi_gian" class="form-label">Thời gian:</label>
                 <select name="thoi_gian" id="thoi_gian" class="form-select">
                     <option value="day" {{ $thoiGian === 'day' ? 'selected' : '' }}>Hôm nay</option>
@@ -17,6 +19,8 @@
                     <option value="month" {{ $thoiGian === 'month' ? 'selected' : '' }}>Tháng này</option>
                 </select>
             </div>
+
+            <!-- Chọn danh mục -->
             <div class="col-md-3">
                 <label for="danh_muc_id" class="form-label">Danh mục sản phẩm:</label>
                 <select name="danh_muc_id" id="danh_muc_id" class="form-select">
@@ -28,6 +32,20 @@
                     @endforeach
                 </select>
             </div>
+
+            <!-- Ngày bắt đầu -->
+            <div class="col-md-2">
+                <label for="start_date" class="form-label">Từ ngày:</label>
+                <input type="date" name="start_date" id="start_date" value="{{ $startDate ?? '' }}" class="form-control">
+            </div>
+
+            <!-- Ngày kết thúc -->
+            <div class="col-md-2">
+                <label for="end_date" class="form-label">Đến ngày:</label>
+                <input type="date" name="end_date" id="end_date" value="{{ $endDate ?? '' }}" class="form-control">
+            </div>
+
+            <!-- Nút lọc -->
             <div class="col-md-3 d-flex align-items-end">
                 <button type="submit" class="btn btn-primary w-100">Lọc</button>
             </div>
@@ -118,3 +136,4 @@
     }
 </style>
 @endsection
+

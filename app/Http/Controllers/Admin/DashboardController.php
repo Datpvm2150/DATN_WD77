@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Http\Controllers\Admin;
 
 use App\Models\DanhMuc;
@@ -230,18 +229,6 @@ class DashboardController extends Controller
         $dataLowStock = $lowStockProducts->pluck('so_luong')->toArray(); // Sản phẩm sắp hết hàng
         $dataOutOfStock = $outOfStockProducts->pluck('so_luong')->toArray();
         // Sản phẩm hết hàng// Đảm bảo rằng các mảng dữ liệu đều có cùng độ dài
-
-
-
-
-
-
-
-
-
-
-
-
         // 12. Trả về view
         return view('admins.dashboard', compact(
             'tong_doanh_thu',
@@ -324,55 +311,74 @@ class DashboardController extends Controller
             'revenues' => $revenues,
         ]);
     }
-
-
     public function sanPhamBanChay(Request $request)
-    {
-        $thoiGian = $request->input('thoi_gian', 'day'); // Mặc định lọc theo ngày
-        $danhMucId = $request->input('danh_muc_id', null); // Lọc theo danh mục nếu có
-        $danhmucs = DanhMuc::all();
-        $query = DB::table('chi_tiet_hoa_dons')
-            ->join('hoa_dons', 'hoa_dons.id', '=', 'chi_tiet_hoa_dons.hoa_don_id')
-            ->join('bien_the_san_phams', 'bien_the_san_phams.id', '=', 'chi_tiet_hoa_dons.bien_the_san_pham_id')
-            ->join('san_phams', 'san_phams.id', '=', 'bien_the_san_phams.san_pham_id')
-            ->join('danh_mucs', 'danh_mucs.id', '=', 'san_phams.danh_muc_id')
-            ->select(
-                'san_phams.id',
-                'san_phams.ten_san_pham',
-                'danh_mucs.ten_danh_muc as danh_muc',
-                DB::raw('SUM(chi_tiet_hoa_dons.so_luong) as so_luong_ban'),
-                DB::raw('SUM(chi_tiet_hoa_dons.so_luong *
-            CASE
-                WHEN bien_the_san_phams.gia_moi IS NOT NULL AND bien_the_san_phams.gia_moi > 0
-                    THEN bien_the_san_phams.gia_moi
-                ELSE bien_the_san_phams.gia_cu
-            END
-        ) as tong_tien')
-            )
-            ->where('hoa_dons.trang_thai', 7)
-            ->groupBy('san_phams.id', 'san_phams.ten_san_pham', 'danh_mucs.ten_danh_muc');
+{
+    $thoiGian = $request->input('thoi_gian', 'day'); // Mặc định lọc theo ngày
+    $danhMucId = $request->input('danh_muc_id', null); // Lọc theo danh mục nếu có
+    $startDate = $request->input('start_date'); // Ngày bắt đầu
+    $endDate = $request->input('end_date');     // Ngày kết thúc
 
-        // Lọc theo thời gian
+    $danhmucs = DanhMuc::all();
+
+    $query = DB::table('chi_tiet_hoa_dons')
+        ->join('hoa_dons', 'hoa_dons.id', '=', 'chi_tiet_hoa_dons.hoa_don_id')
+        ->join('bien_the_san_phams', 'bien_the_san_phams.id', '=', 'chi_tiet_hoa_dons.bien_the_san_pham_id')
+        ->join('san_phams', 'san_phams.id', '=', 'bien_the_san_phams.san_pham_id')
+        ->join('danh_mucs', 'danh_mucs.id', '=', 'san_phams.danh_muc_id')
+        ->select(
+            'san_phams.id',
+            'san_phams.ten_san_pham',
+            'danh_mucs.ten_danh_muc as danh_muc',
+            DB::raw('SUM(chi_tiet_hoa_dons.so_luong) as so_luong_ban'),
+            DB::raw('SUM(chi_tiet_hoa_dons.so_luong *
+                CASE
+                    WHEN bien_the_san_phams.gia_moi IS NOT NULL AND bien_the_san_phams.gia_moi > 0
+                        THEN bien_the_san_phams.gia_moi
+                    ELSE bien_the_san_phams.gia_cu
+                END
+            ) as tong_tien')
+        )
+        ->where('hoa_dons.trang_thai', 7)
+        ->groupBy('san_phams.id', 'san_phams.ten_san_pham', 'danh_mucs.ten_danh_muc');
+
+    // 1. Nếu chọn lọc theo khoảng ngày
+    if ($startDate && $endDate) {
+        $query->whereBetween('hoa_dons.ngay_dat_hang', [
+            Carbon::parse($startDate)->startOfDay(),
+            Carbon::parse($endDate)->endOfDay()
+        ]);
+    } else {
+        // 2. Nếu không có custom date → dùng filter sẵn có
         if ($thoiGian === 'day') {
             $query->whereDate('hoa_dons.ngay_dat_hang', Carbon::today());
         } elseif ($thoiGian === 'week') {
             $query->whereBetween('hoa_dons.ngay_dat_hang', [Carbon::now()->startOfWeek(), Carbon::now()->endOfWeek()]);
         } elseif ($thoiGian === 'month') {
-            $query->whereMonth('hoa_dons.ngay_dat_hang', Carbon::now()->month);
+            $query->whereMonth('hoa_dons.ngay_dat_hang', Carbon::now()->month)
+                  ->whereYear('hoa_dons.ngay_dat_hang', Carbon::now()->year);
         }
-
-        // Lọc theo danh mục sản phẩm nếu có
-        if ($danhMucId) {
-            $query->where('danh_mucs.id', $danhMucId);
-        }
-
-        // Lấy 5 sản phẩm bán chạy nhất
-        $sanPhamBanChay = $query->orderBy('so_luong_ban', 'desc')
-            ->take(5) // Lấy 5 sản phẩm bán chạy nhất
-            ->get();
-
-        return view('admins.dashboard.tk-spbc', compact('sanPhamBanChay', 'thoiGian', 'danhMucId', 'danhmucs'));
     }
+
+    // Lọc theo danh mục sản phẩm nếu có
+    if ($danhMucId) {
+        $query->where('danh_mucs.id', $danhMucId);
+    }
+
+    // Lấy 5 sản phẩm bán chạy nhất
+    $sanPhamBanChay = $query->orderBy('so_luong_ban', 'desc')
+        ->take(5)
+        ->get();
+
+    return view('admins.dashboard.tk-spbc', compact(
+        'sanPhamBanChay',
+        'thoiGian',
+        'danhMucId',
+        'danhmucs',
+        'startDate',
+        'endDate'
+    ));
+}
+
     public function sanPhamBanKho(Request $request)
     {
         // Lấy từ khóa tìm kiếm và trạng thái lọc
@@ -427,4 +433,50 @@ class DashboardController extends Controller
             'filterStatus'
         ));
     }
+     public function thongKeDoanhThu(Request $request)
+    {
+        $start = $request->start_date ?? Carbon::now()->startOfMonth()->toDateString();
+        $end = $request->end_date ?? Carbon::now()->endOfMonth()->toDateString();
+        $groupBy = $request->group_by ?? 'day';
+
+        $query = HoaDon::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']);
+
+        switch ($groupBy) {
+            case 'month':
+                $data = $query->selectRaw('DATE_FORMAT(created_at, "%m/%Y") as label, SUM(tong_tien) as revenue')
+                    ->groupBy('label')
+                    ->orderByRaw('MIN(created_at)')
+                    ->get();
+                break;
+            case 'year':
+                $data = $query->selectRaw('YEAR(created_at) as label, SUM(tong_tien) as revenue')
+                    ->groupBy('label')
+                    ->orderBy('label')
+                    ->get();
+                break;
+            case 'day':
+            default:
+                $data = $query->selectRaw('DATE(created_at) as label, SUM(tong_tien) as revenue')
+                    ->groupBy('label')
+                    ->orderBy('label')
+                    ->get();
+                break;
+        }
+
+        $labels = $data->pluck('label')->map(function ($label) use ($groupBy) {
+            if ($groupBy === 'day') {
+                return Carbon::parse($label)->format('d/m/Y');
+            }
+            return $label;
+        })->toArray();
+
+        $revenues = $data->pluck('revenue')->toArray();
+        $doanhThu = array_sum($revenues);
+
+        return view('admins.doanhthu', compact('labels', 'revenues', 'doanhThu'));
+    }
+public function user()
+   {
+        return view('admins.taikhoans.index');
+     }
 }

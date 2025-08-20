@@ -84,10 +84,10 @@
                    </div>
                    <div class="tp-contact-info-content">
                      <p data-info="mail">
-                        <a href="mailto:your_email@example.com">izone@gmail.com</a>
+                        <a href="mailto:your_email@example.com">ctstore@gmail.com</a>
                      </p>
                      <p data-info="phone">
-                        <a href="tel:123-456-7890">+(402) 763 282 46</a>
+                        <a href="tel:123-456-7890">+(84)398030867</a>
                      </p>
                    </div>
                  </div>

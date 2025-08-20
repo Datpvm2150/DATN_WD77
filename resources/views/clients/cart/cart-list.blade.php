@@ -110,6 +110,7 @@
 
                             $maGiamGiaCongKhai = \App\Models\KhuyenMai::whereNull('user_id')
                                 ->where('trang_thai', 1)
+                                ->where('loai_ma', '!=', 'ma_doi_qua')
                                 ->get();
 
                             $maGiamGiaCaNhan = auth()->check()
@@ -122,20 +123,20 @@
                         <div class="row gx-2 gy-2 mb-2">
                             <!-- Dropdown chọn mã -->
                             <div class="col-md-10">
-                                <select id="select-discount-code" class="form-select">
-                                    <option value="">-- Chọn mã giảm giá --</option>
+                                <select id="select-discount-code" class="form-select discount-select">
+                                    <option value="">🎫 Chọn mã giảm giá có sẵn</option>
                                     @foreach ($maGiamGiaCongKhai as $item)
                                         @php
-
                                             $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format(
-                                                'H:i d/m/Y',
+                                                'd/m/Y',
                                             );
                                         @endphp
-                                        <option value="{{ $item->ma_khuyen_mai }}">
-                                            {{ $item->ma_khuyen_mai }} - Giảm
-                                            {{ $item->phan_tram_khuyen_mai }}%
-                                            (tối đa {{ number_format($item->giam_toi_da) }}₫)
-                                            - HSD: {{ $hsdFormatted }}
+
+                                        <option value="{{ $item->ma_khuyen_mai }}" class="discount-option">
+                                            🏷️ {{ $item->ma_khuyen_mai }} • Giảm
+                                            {{ $item->phan_tram_khuyen_mai }}% (tối đa
+                                            {{ number_format($item->giam_toi_da, 0, ',', '.') }}₫) •
+                                            HSD: {{ $hsdFormatted }}
                                         </option>
                                     @endforeach
                                     @if (auth()->check())
@@ -143,15 +144,15 @@
                                             @php
 
                                                 $hsdFormatted = \Carbon\Carbon::parse($item->ngay_ket_thuc)->format(
-                                                    'H:i d/m/Y',
+                                                    'd/m/Y',
                                                 );
                                             @endphp
-                                            <option value="{{ $item->ma_khuyen_mai }}">
-                                                {{ $item->ma_khuyen_mai }}(Tặng) - Giảm
-                                                {{ $item->phan_tram_khuyen_mai }}%
-                                                (tối đa {{ number_format($item->giam_toi_da) }}₫)
-                                                - HSD: {{ $hsdFormatted }}
-
+                                            <option value="{{ $item->ma_khuyen_mai }}"
+                                                class="discount-option personal">
+                                                ⭐ {{ $item->ma_khuyen_mai }} (Cá nhân) • Giảm
+                                                {{ $item->phan_tram_khuyen_mai }}% (tối đa
+                                                {{ number_format($item->giam_toi_da, 0, ',', '.') }}₫)
+                                                • HSD: {{ $hsdFormatted }}
                                             </option>
                                         @endforeach
                                     @endif
@@ -160,7 +161,7 @@
 
                             <!-- Nút chọn mã -->
                             <div class="col-md-2">
-                                <button type="button" class="btn btn-outline-primary w-100"
+                                <button type="button" class="btn btn-outline-primary w-100 select-btn"
                                     onclick="chooseDiscountCode()">Chọn</button>
                             </div>
                         </div>
@@ -175,8 +176,8 @@
                                 <button type="button" class="btn btn-dark apply-discount-btn" onclick="discount()">Áp
                                     dụng</button>
                             </div>
-                        </div>
 
+                        </div>
                     </div>
                 </div>
 
@@ -267,6 +268,7 @@
 </div>
 
 <input type="hidden" name="" id="total-quantity-list-cart" value="{{ $cart->totalProduct ?? 0 }}">
+{{-- <script src="{{ asset('assets/client/js/anhnt.js') }}"></script> --}}
 
 
 <style>

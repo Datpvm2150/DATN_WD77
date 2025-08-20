@@ -24,7 +24,6 @@ async function addToCart(productId) {
     try {
         const quantityInput = document.querySelector('.tp-cart-input');
         const quantity = parseInt(quantityInput?.value) || 1;
-
         if (quantity < 1) {
             alertify.error("Số lượng sản phẩm phải lớn hơn 0");
             return false;
@@ -418,7 +417,7 @@ function discount() {
     const code = document.getElementById("discount-code").value;
 
     if (!code) {
-        showDiscountToast("Vui lòng nhập mã khuyến mãi.");
+        alertify.error("Vui lòng nhập mã khuyến mãi.");
         return;
     }
 
@@ -429,13 +428,14 @@ function discount() {
             $("#list-cart").html(data);
             bindCartEvents();
             rebindCartEvents(); // Gắn lại event sau khi thay HTML
+            alertify.success("Đã áp dụng mã giảm giá!");
         },
         error: function (xhr) {
             const json = xhr.responseJSON;
             if (json && json.message) {
-                showDiscountToast(json.message);
+                alertify.error(json.message);
             } else {
-                showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+                alertify.error("Đã xảy ra lỗi. Vui lòng thử lại sau.");
             }
         }
     });
@@ -450,7 +450,9 @@ function DeleteDiscount() {
                 bindCartEvents();
                 rebindCartEvents();
 
-            // rebindCartEvents(); // Gắn lại event sau khi thay HTML
+             setTimeout(() => {
+                showDiscountToast("Mã giảm giá đã được áp dụng thành công!");
+            }, 200);
         },
         error: function (xhr) {
             const json = xhr.responseJSON;
@@ -461,7 +463,6 @@ function DeleteDiscount() {
             }
         }
     });
-
 }
 document.addEventListener('DOMContentLoaded', function () {
     rebindCartEvents();
@@ -471,34 +472,6 @@ function saveCheckedState() {
     document.querySelectorAll('.select-cart-item:checked').forEach(cb => {
         checkedItems.push(cb.value);
     });
-}
-
-// Xử lý tăng giảm số lượng ở trang chi tiết sản phẩm
-
-document.addEventListener('DOMContentLoaded', function () {
-    var plusBtn = document.querySelector('.tp-cart-plus');
-    var minusBtn = document.querySelector('.tp-cart-minus');
-    var input = document.querySelector('#so-luong-mua');
-    if (plusBtn && minusBtn && input) {
-        plusBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            var val = parseInt(input.value) || 1;
-            var max = parseInt(input.getAttribute('data-max-quantity')) || 1;
-            if (val < max) {
-                input.value = val + 1;
-            } else {
-                alert('Vượt quá số lượng tồn kho!');
-            }
-        });
-        minusBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            var val = parseInt(input.value) || 1;
-            if (val > 1) {
-                input.value = val - 1;
-            }
-        });
-    }
-});
     localStorage.setItem("checkedCartItems", JSON.stringify(checkedItems));
 }
 

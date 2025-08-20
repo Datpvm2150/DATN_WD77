@@ -46,19 +46,25 @@
                         <form action="{{ route('customer.cancelOrder', $ord->id) }}" method="POST" class="d-inline"
                             onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
                             @csrf
+                            @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
                         </form>
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
                             class="btn btn-sm btn-primary">Xem</a>
-                        @if ($ord->phuong_thuc_thanh_toan == 'Thanh toán qua chuyển khoản ngân hàng' &&
+                        @if (
+                            $ord->phuong_thuc_thanh_toan == 'Thanh toán qua chuyển khoản ngân hàng' &&
                                 $ord->trang_thai_thanh_toan == 'Chưa thanh toán' &&
                                 $ord->trang_thai == 1)
                             @php
                                 $thoiGianConLai = $ord->thoi_gian_het_han
-                                    ? \Carbon\Carbon::parse($ord->thoi_gian_het_han)->diffForHumans(now(), ['parts' => 2])
+                                    ? \Carbon\Carbon::parse($ord->thoi_gian_het_han)->diffForHumans(now(), [
+                                        'parts' => 2,
+                                    ])
                                     : null;
                             @endphp
-                            @if ($ord->trang_thai_thanh_toan === App\Models\HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán'] && $ord->thoi_gian_het_han > now())
+                            @if (
+                                $ord->trang_thai_thanh_toan === App\Models\HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán'] &&
+                                    $ord->thoi_gian_het_han > now())
                                 <form action="{{ route('customer.retryPayment', $ord->id) }}" method="POST"
                                     class="d-inline">
                                     @csrf
@@ -74,11 +80,14 @@
                                     class="d-inline auto-cancel-form"
                                     data-expiration-time="{{ $ord->thoi_gian_het_han }}">
                                     @csrf
+                                    @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
                                 </form>
                             @endif
                         @endif
                     @elseif (in_array($ord->trang_thai, [2, 3]))
+                        <!-- Đã xác nhận, Đang chuẩn bị -->
+                        <a href="#" class="btn btn-sm btn-danger cancel-order" data-id="{{ $ord->id }}">Hủy</a>
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
                             class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 4)
@@ -94,6 +103,7 @@
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
                             class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 7)
+                        <!-- Đã nhận hàng -->
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-primary">Xem</a>
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-warning">Đánh giá</a>
                     @endif
@@ -107,8 +117,34 @@
     </tbody>
 </table>
 
+<!-- Modal để nhập lý do hủy -->
+<div class="modal fade" id="cancelOrderModal" tabindex="-1" aria-labelledby="cancelOrderModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="cancelOrderModalLabel">Lý do hủy đơn hàng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form id="cancelOrderForm" action="" method="POST">
+                @csrf
+                @method('DELETE')
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="ly_do_huy" class="form-label">Lý do hủy đơn hàng</label>
+                        <textarea class="form-control" id="ly_do_huy" name="ly_do_huy" rows="4" required></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="submit" class="btn btn-danger">Hủy đơn hàng</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
+    document.addEventListener('DOMContentLoaded', function() {
         // Xử lý tự động hủy đơn hàng hết hạn
         const autoCancelForms = document.querySelectorAll('.auto-cancel-form');
         autoCancelForms.forEach(form => {
@@ -137,5 +173,69 @@
                 }
             }
         });
+
+        // Xử lý khi nhấn nút hủy
+        document.querySelectorAll('.cancel-order').forEach(button => {
+            button.addEventListener('click', function () {
+                const orderId = this.getAttribute('data-id');
+                const form = document.getElementById('cancelOrderForm');
+                form.action = `/customer/${orderId}/cancel`;
+                document.getElementById('ly_do_huy').value = '';
+                $('#cancelOrderModal').modal('show');
+            });
+        });
+
+        // Xử lý submit form hủy đơn hàng
+        document.getElementById('cancelOrderForm').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const form = this;
+            const action = form.action;
+            const lyDoHuy = document.getElementById('ly_do_huy').value;
+
+            fetch(action, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    _method: 'DELETE',
+                    ly_do_huy: lyDoHuy
+                })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    $('#cancelOrderModal').modal('hide');
+                    const toastElement = document.getElementById('toastMessage');
+                    const toastBody = document.getElementById('toastBody');
+                    toastBody.textContent = data.message || 'Đã hủy đơn hàng thành công!';
+                    toastElement.classList.remove('text-bg-danger');
+                    toastElement.classList.add('text-bg-success');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                    // Tải lại danh sách đơn hàng
+                    $.ajax({
+                        url: '{{ route('customer.orders.filter') }}',
+                        method: 'GET',
+                        data: { status: {{ session('currentStatus', 1) }} },
+                        success: function (response) {
+                            $('#order-list').html(response.html);
+                        }
+                    });
+                })
+                .catch(error => {
+                    const toastElement = document.getElementById('toastMessage');
+                    const toastBody = document.getElementById('toastBody');
+                    toastBody.textContent = error.responseJSON?.message || 'Đã có lỗi khi hủy đơn hàng!';
+                    toastElement.classList.remove('text-bg-success');
+                    toastElement.classList.add('text-bg-danger');
+                    const toast = new bootstrap.Toast(toastElement);
+                    toast.show();
+                });
+        });
     });
+
+    @if (isset($message))
+        alert('Thông báo: ' + @json($message));
+    @endif
 </script>

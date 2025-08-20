@@ -7,7 +7,8 @@ use App\Models\HoaDon;
 use App\Services\OrderService;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Log as FacadesLog;
+use Illuminate\Support\Facades\Log; 
 
 class HoaDonController extends Controller
 {
@@ -166,18 +167,31 @@ class HoaDonController extends Controller
             $hoadon->trang_thai = $newState;
         }
 
-        // Cập nhật trạng thái thanh toán
         if ($request->has('trang_thai_thanh_toan') && $hoadon->trang_thai_thanh_toan != $request->input('trang_thai_thanh_toan')) {
-            if ($hoadon->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng' && $request->input('trang_thai_thanh_toan') !== 'Đã thanh toán') {
-                return redirect()->route('admin.hoadons.index')->with('error', 'Đơn hàng thanh toán qua chuyển khoản ngân hàng chỉ có thể có trạng thái thanh toán là "Đã thanh toán".');
-            }
             $hoadon->trang_thai_thanh_toan = $request->input('trang_thai_thanh_toan');
             if ($request->input('trang_thai_thanh_toan') === 'Đã thanh toán') {
                 $hoadon->thoi_gian_giao_dich = now();
+
                 try {
                     $orderService = app(OrderService::class);
                     $orderService->updatePaymentStatus($hoadon->id);
                     $orderService->sendVoucherAfterPaid($hoadon);
+                } catch (\Exception $e) {
+                    Log::error("Lỗi khi gửi mã giảm giá sau thanh toán: " . $e->getMessage());
+                }
+            }
+        }
+
+        if ($request->has('trang_thai_thanh_toan') && $hoadon->trang_thai_thanh_toan != $request->input('trang_thai_thanh_toan')) {
+            $hoadon->trang_thai_thanh_toan = $request->input('trang_thai_thanh_toan');
+            if ($request->input('trang_thai_thanh_toan') === 'Đã thanh toán') {
+                $hoadon->thoi_gian_giao_dich = now(); // cập nhật thời gian thanh toán
+              
+
+                try {
+                    $orderService = app(OrderService::class);
+                    $orderService->updatePaymentStatus($hoadon->id); // Cập nhật mã đã dùng
+                    $orderService->sendVoucherAfterPaid($hoadon); // Gửi mã nếu đủ điều kiện
                 } catch (\Exception $e) {
                     Log::error("Lỗi khi gửi mã giảm giá sau thanh toán: " . $e->getMessage());
                 }

@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KhuyenMai;
 use Carbon\Carbon;
+
 
 class KhuyenMaiController extends Controller
 {
@@ -106,8 +107,10 @@ class KhuyenMaiController extends Controller
     }
 
     public function update(Request $request, $id)
+
     {
         $khuyenMai = KhuyenMai::find($id);
+        // dd($request->all());
         if (!$khuyenMai) {
             return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
         }
@@ -124,7 +127,7 @@ class KhuyenMaiController extends Controller
 
         if ($request->loai_ma === 'ma_doi_qua' && $khuyenMai->loai_ma === 'cong_khai') {
             // Mã đã có user sử dụng thì không được chuyển
-            $isUsed = DB::table('don_hangs') 
+            $isUsed = DB::table('don_hangs')
                         ->where('ma_khuyen_mai', $khuyenMai->ma_khuyen_mai)
                         ->exists();
 
@@ -182,7 +185,7 @@ class KhuyenMaiController extends Controller
             'ngay_ket_thuc' => $request->ngay_ket_thuc,
             'trang_thai' => 1,
         ]);
-
+        // dd($khuyenMai);
         // Cập nhật trạng thái theo ngày
         $now = Carbon::now();
         if ($khuyenMai->ngay_ket_thuc < $now) {
@@ -191,6 +194,8 @@ class KhuyenMaiController extends Controller
 
         return redirect()->route('admin.khuyen_mais.index')->with('success', 'Khuyến mãi đã được cập nhật thành công.');
     }
+
+
 
     public function destroy($id)
     {
@@ -213,7 +218,7 @@ class KhuyenMaiController extends Controller
         if (!$khuyenMai) {
             return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
         }
-        // So sánh ngày hiện tại với ngày kết thúc của khuyến mãi 
+        // So sánh ngày hiện tại với ngày kết thúc của khuyến mãi
         $now = Carbon::now();
         if ($khuyenMai->ngay_ket_thuc < $now) {
             // Nếu ngày hiện tại đã qua ngày kết thúc
@@ -257,7 +262,7 @@ class KhuyenMaiController extends Controller
             $query->where('ngay_ket_thuc', '<=', $request->input('ngay_ket_thuc'));
         }
         $KhuyenMais = $query->get();
-        return view('admins.khuyen_mais.trash', compact('KhuyenMais'));        
+        return view('admins.khuyen_mais.trash', compact('KhuyenMais'));
     }
 
     public function restore($id)

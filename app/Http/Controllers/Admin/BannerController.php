@@ -28,7 +28,7 @@ class BannerController extends Controller
     {
         $request->validate(
             [
-                'ten_banner.*' => 'required|string|max:255',
+                'ten_banner.*' => 'required|string|max:50',
                 'hinh_anh' => 'required',
                 'hinh_anh.*' => 'image|mimes:jpg,jpeg,png,gif|max:2048',
                 'url_lien_ket.*' => 'nullable',
@@ -36,7 +36,7 @@ class BannerController extends Controller
             [
                 'ten_banner.*.required' => 'Tên banner không được để trống.',
                 'ten_banner.*.string' => 'Tên banner phải là một đoạn chuỗi.',
-                'ten_banner.*.max' => 'Tên banner phải < 255 ký tự.',
+                'ten_banner.*.max' => 'Tên banner phải < 50 ký tự.',
 
                 'hinh_anh.required' => 'Hình ảnh banner không được để trống.',
                 'hinh_anh.*.image' => 'Hình ảnh phải là ảnh',
@@ -50,7 +50,7 @@ class BannerController extends Controller
         $url_lien_kets = $request->input('url_lien_ket'); // lay danh sach url lien ket
         // Duyệt qua tất cả ảnh và tạo banner cho từng ảnh
         foreach ($hinh_anhs as $index => $file) {
-            //Lưu file ảnh vào thư mục storage hoặc public(nếu cần)
+            //Lưu file ảnh vào thư mục storage hoặc public
             $fileName = time() . '-' . $file->getClientOriginalName();
             $filePath = $file->storeAs('banners', $fileName, 'public');
             //Taọ mới banner cho mỗi ảnh
@@ -61,7 +61,7 @@ class BannerController extends Controller
             $banner->url_lien_ket = $url_lien_kets[$index] ?? null; //Lưu url liên kết nếu có
             $banner->save();
         }
-        //  // Redirect lại trang hoặc thông báo thành công
+         // Redirect lại trang hoặc thông báo thành công
         return redirect()->route('admin.banners.index')->with('success', 'Banner đã được thêm thành công.');
     }
     //Xem banner
@@ -90,14 +90,14 @@ class BannerController extends Controller
     {
         $request->validate([
             'ten_banner' => 'required',
-            'ten_banner.*' => 'required|string|max:255',
+            'ten_banner.*' => 'required|string|max:50',
             'anh_banner.*' => 'nullable|image|mimes:jpg,jpeg,png,gif,bmp,webp,svg|max:2048',
             'url_lien_ket.*' => 'required',
         ], [
             'ten_banner.required' => 'Tên banner không được để trống.',
             'ten_banner.*.required' => 'Tên banner không được để trống.',
             'ten_banner.*.string' => 'Tên banner phải là một đoạn chuỗi.',
-            'ten_banner.*.max' => 'Tên banner phải < 255 ký tự.',
+            'ten_banner.*.max' => 'Tên banner phải < 50 ký tự.',
 
             'anh_banner.*.image' => 'Hình ảnh phải là ảnh',
             'anh_banner.*.mimes' => 'Hình ảnh phải có định dạng jpg,jpeg,png,gif,bmp,webp,svg.',
@@ -127,7 +127,7 @@ class BannerController extends Controller
         if (!$banner) {
             return redirect()->route('admin.banners.index')->with('error', 'Banner không tồn tại');
         }
-        $banner->trang_thai = !$banner->trang_thai; // Toggle trạng thái
+        $banner->trang_thai = !$banner->trang_thai;
         $banner->save();
 
         return redirect()->back()->with('success', $banner->trang_thai ? 'Hoạt động banner' : 'Ngừng hoạt động banner');
