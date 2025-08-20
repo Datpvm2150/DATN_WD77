@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\KhuyenMai;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class KhuyenMaiController extends Controller
 {
@@ -123,7 +124,7 @@ class KhuyenMaiController extends Controller
 
         if ($request->loai_ma === 'ma_doi_qua' && $khuyenMai->loai_ma === 'cong_khai') {
             // Mã đã có user sử dụng thì không được chuyển
-            $isUsed = DB::table('don_hangs') 
+            $isUsed = DB::table('don_hangs')
                         ->where('ma_khuyen_mai', $khuyenMai->ma_khuyen_mai)
                         ->exists();
 
@@ -212,7 +213,7 @@ class KhuyenMaiController extends Controller
         if (!$khuyenMai) {
             return redirect()->route('admin.khuyen_mais.index')->with('error', 'Khuyến mãi không tồn tại.');
         }
-        // So sánh ngày hiện tại với ngày kết thúc của khuyến mãi 
+        // So sánh ngày hiện tại với ngày kết thúc của khuyến mãi
         $now = Carbon::now();
         if ($khuyenMai->ngay_ket_thuc < $now) {
             // Nếu ngày hiện tại đã qua ngày kết thúc
