@@ -174,13 +174,13 @@
                                                         @csrf
                                                         @method('PUT')
                                                         <select name="trang_thai" class="form-select w-100" onchange="this.form.submit()" required
-                                                            @if ($item->trang_thai == 4 || $item->trang_thai == 5 || $item->trang_thai == 6 || $item->trang_thai == 7) disabled @endif>
+                                                            @if ($item->trang_thai == 6 || $item->trang_thai == 7) disabled @endif>
                                                             @foreach ($trangThaiHoaDon as $key => $value)
                                                                 <option value="{{ $key }}"
                                                                     {{ $key == $item->trang_thai ? 'selected' : '' }}
                                                                     @if (
                                                                         $key != $item->trang_thai &&
-                                                                            (($item->trang_thai < 5 && ($key != $item->trang_thai + 1 || $key == 6 || $key == 7)) ||
+                                                                            (($item->trang_thai < 5 && $key != $item->trang_thai + 1) ||
                                                                                 ($item->trang_thai == 5 && !in_array($key, [6, 7])) ||
                                                                                 $item->trang_thai >= 6)) disabled @endif>
                                                                     {{ $value }}
@@ -195,11 +195,12 @@
                                                         @method('PUT')
                                                         <select name="trang_thai_thanh_toan"
                                                             class="form-select badge w-75 text-white p-2 bg-{{ $item->trang_thai_thanh_toan === 'Chưa thanh toán' ? 'danger' : ($item->trang_thai_thanh_toan === 'Đã thanh toán' ? 'success' : 'secondary') }} text-white"
-                                                            onchange="updateSelectBackground(this)"
+                                                            onchange="updateSelectBackground(this); this.form.submit()"
                                                             id="trang_thai_thanh_toan_{{ $item->id }}"
-                                                            @if ($item->trang_thai == 4 || $item->trang_thai == 5 || $item->trang_thai == 6 || $item->trang_thai == 7) disabled @endif>
+                                                            @if ($item->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng' || $item->trang_thai == 6 || $item->trang_thai == 7) disabled @endif>
                                                             <option value="Chưa thanh toán"
-                                                                {{ $item->trang_thai_thanh_toan === 'Chưa thanh toán' ? 'selected' : '' }}>
+                                                                {{ $item->trang_thai_thanh_toan === 'Chưa thanh toán' ? 'selected' : '' }}
+                                                                @if ($item->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng') disabled @endif>
                                                                 Chưa thanh toán
                                                             </option>
                                                             <option value="Đã thanh toán"
@@ -207,7 +208,8 @@
                                                                 Đã thanh toán
                                                             </option>
                                                             <option value="Thanh toán thất bại"
-                                                                {{ $item->trang_thai_thanh_toan === 'Thanh toán thất bại' ? 'selected' : '' }}>
+                                                                {{ $item->trang_thai_thanh_toan === 'Thanh toán thất bại' ? 'selected' : '' }}
+                                                                @if ($item->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng') disabled @endif>
                                                                 Thanh toán thất bại
                                                             </option>
                                                         </select>
@@ -221,7 +223,7 @@
                                                                     class="mdi mdi-chevron-down"></i></button>
                                                             <div class="dropdown-menu">
                                                                 <a class="dropdown-item" href="{{ route('admin.hoadons.show', $item->id) }}">Xem chi tiết</a>
-                                                                @if ($item->trang_thai != 4 && $item->trang_thai != 5 && $item->trang_thai != 6 && $item->trang_thai != 7)
+                                                                @if ($item->trang_thai != 4 && $item->trang_thai != 5 && $item->trang_thai != 6 && $item->trang_thai == 7)
                                                                     <a class="dropdown-item cancel-order" href="#" data-bs-toggle="modal"
                                                                         data-bs-target="#cancelOrderModal" data-id="{{ $item->id }}">Hủy đơn hàng</a>
                                                                 @endif

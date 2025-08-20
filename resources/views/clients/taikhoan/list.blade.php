@@ -1,3 +1,10 @@
+<!-- Hiển thị thông báo flash -->
+@if (session('success'))
+    <div class="alert alert-success" role="alert">{{ session('success') }}</div>
+@endif
+@if (session('error'))
+    <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
+@endif
 <table class="table table-bordered">
     <thead>
         <tr>
@@ -35,13 +42,11 @@
                     @endif
                 </td>
                 <td>
-                    <!-- Thao tác tương ứng với từng trạng thái -->
                     @if ($ord->trang_thai == 1)
-                        <!-- Chờ xác nhận -->
                         <form action="{{ route('customer.cancelOrder', $ord->id) }}" method="POST" class="d-inline"
                             onsubmit="return confirm('Bạn có chắc chắn muốn hủy đơn hàng này không?');">
                             @csrf
-                            {{-- @method('DELETE') --}}
+                            @method('DELETE')
                             <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
                         </form>
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
@@ -75,23 +80,20 @@
                                     class="d-inline auto-cancel-form"
                                     data-expiration-time="{{ $ord->thoi_gian_het_han }}">
                                     @csrf
-                                    {{-- @method('DELETE') --}}
+                                    @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-danger">Hủy</button>
                                 </form>
                             @endif
                         @endif
                     @elseif (in_array($ord->trang_thai, [2, 3]))
                         <!-- Đã xác nhận, Đang chuẩn bị -->
-                        <a href="#" class="btn btn-sm btn-danger cancel-order"
-                            data-id="{{ $ord->id }}">Hủy</a>
+                        <a href="#" class="btn btn-sm btn-danger cancel-order" data-id="{{ $ord->id }}">Hủy</a>
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
                             class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 4)
-                        <!-- Đang vận chuyển -->
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
                             class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 5)
-                        <!-- Đã giao hàng -->
                         <form id="confirm-receive-form-{{ $ord->id }}"
                             action="{{ route('customer.getOrder', $ord->id) }}" method="POST"
                             class="d-inline auto-confirm-form" data-delivery-time="{{ $ord->updated_at }}">
@@ -102,10 +104,8 @@
                             class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 7)
                         <!-- Đã nhận hàng -->
-                        <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
-                            class="btn btn-sm btn-primary">Xem</a>
-                        <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-warning">Đánh
-                            giá</a>
+                        <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-primary">Xem</a>
+                        <a href="{{ route('customer.donhang.chitiet', $ord->id) }}" class="btn btn-sm btn-warning">Đánh giá</a>
                     @endif
                 </td>
             </tr>
@@ -127,7 +127,7 @@
             </div>
             <form id="cancelOrderForm" action="" method="POST">
                 @csrf
-                {{-- @method('DELETE') --}}
+                @method('DELETE')
                 <div class="modal-body">
                     <div class="mb-3">
                         <label for="ly_do_huy" class="form-label">Lý do hủy đơn hàng</label>
@@ -176,7 +176,7 @@
 
         // Xử lý khi nhấn nút hủy
         document.querySelectorAll('.cancel-order').forEach(button => {
-            button.addEventListener('click', function() {
+            button.addEventListener('click', function () {
                 const orderId = this.getAttribute('data-id');
                 const form = document.getElementById('cancelOrderForm');
                 form.action = `/customer/${orderId}/cancel`;
@@ -186,23 +186,23 @@
         });
 
         // Xử lý submit form hủy đơn hàng
-        document.getElementById('cancelOrderForm').addEventListener('submit', function(e) {
+        document.getElementById('cancelOrderForm').addEventListener('submit', function (e) {
             e.preventDefault();
             const form = this;
             const action = form.action;
             const lyDoHuy = document.getElementById('ly_do_huy').value;
 
             fetch(action, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}'
-                    },
-                    body: JSON.stringify({
-                        ly_do_huy: lyDoHuy
-                    })
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                },
+                body: JSON.stringify({
+                    _method: 'DELETE',
+                    ly_do_huy: lyDoHuy
                 })
-
+            })
                 .then(response => response.json())
                 .then(data => {
                     $('#cancelOrderModal').modal('hide');
@@ -217,10 +217,8 @@
                     $.ajax({
                         url: '{{ route('customer.orders.filter') }}',
                         method: 'GET',
-                        data: {
-                            status: {{ session('currentStatus', 1) }}
-                        },
-                        success: function(response) {
+                        data: { status: {{ session('currentStatus', 1) }} },
+                        success: function (response) {
                             $('#order-list').html(response.html);
                         }
                     });
@@ -228,8 +226,7 @@
                 .catch(error => {
                     const toastElement = document.getElementById('toastMessage');
                     const toastBody = document.getElementById('toastBody');
-                    toastBody.textContent = error.responseJSON?.message ||
-                        'Đã có lỗi khi hủy đơn hàng!';
+                    toastBody.textContent = error.responseJSON?.message || 'Đã có lỗi khi hủy đơn hàng!';
                     toastElement.classList.remove('text-bg-success');
                     toastElement.classList.add('text-bg-danger');
                     const toast = new bootstrap.Toast(toastElement);
