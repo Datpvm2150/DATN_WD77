@@ -24,7 +24,6 @@ async function addToCart(productId) {
     try {
         const quantityInput = document.querySelector('.tp-cart-input');
         const quantity = parseInt(quantityInput?.value) || 1;
-
         if (quantity < 1) {
             alertify.error("Số lượng sản phẩm phải lớn hơn 0");
             return false;
@@ -413,12 +412,11 @@ function chooseDiscountCode() {
         document.getElementById("discount-code").value = selectedCode;
     }
 }
-
 function discount() {
     const code = document.getElementById("discount-code").value;
 
     if (!code) {
-        showDiscountToast("Vui lòng nhập mã khuyến mãi.");
+        alertify.error("Vui lòng nhập mã khuyến mãi.");
         return;
     }
 
@@ -429,13 +427,14 @@ function discount() {
             $("#list-cart").html(data);
             bindCartEvents();
             rebindCartEvents(); // Gắn lại event sau khi thay HTML
+            alertify.success("Đã áp dụng mã giảm giá!");
         },
         error: function (xhr) {
             const json = xhr.responseJSON;
             if (json && json.message) {
-                showDiscountToast(json.message);
+                alertify.error(json.message);
             } else {
-                showDiscountToast("Đã xảy ra lỗi. Vui lòng thử lại sau.");
+                alertify.error("Đã xảy ra lỗi. Vui lòng thử lại sau.");
             }
         }
     });
