@@ -412,6 +412,7 @@ function chooseDiscountCode() {
         document.getElementById("discount-code").value = selectedCode;
     }
 }
+
 function discount() {
     const code = document.getElementById("discount-code").value;
 
@@ -447,7 +448,11 @@ function DeleteDiscount() {
         success: function (data) {
             $("#list-cart").html(data);
                 bindCartEvents();
-                rebindCartEvents(); // Gắn lại event sau khi thay HTML
+                rebindCartEvents();
+
+             setTimeout(() => {
+                showDiscountToast("Mã giảm giá đã được áp dụng thành công!");
+            }, 200);
         },
         error: function (xhr) {
             const json = xhr.responseJSON;
@@ -458,7 +463,6 @@ function DeleteDiscount() {
             }
         }
     });
-
 }
 document.addEventListener('DOMContentLoaded', function () {
     rebindCartEvents();
@@ -468,34 +472,6 @@ function saveCheckedState() {
     document.querySelectorAll('.select-cart-item:checked').forEach(cb => {
         checkedItems.push(cb.value);
     });
-}
-
-// Xử lý tăng giảm số lượng ở trang chi tiết sản phẩm
-
-document.addEventListener('DOMContentLoaded', function () {
-    var plusBtn = document.querySelector('.tp-cart-plus');
-    var minusBtn = document.querySelector('.tp-cart-minus');
-    var input = document.querySelector('#so-luong-mua');
-    if (plusBtn && minusBtn && input) {
-        plusBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            var val = parseInt(input.value) || 1;
-            var max = parseInt(input.getAttribute('data-max-quantity')) || 1;
-            if (val < max) {
-                input.value = val + 1;
-            } else {
-                alert('Vượt quá số lượng tồn kho!');
-            }
-        });
-        minusBtn.addEventListener('click', function (e) {
-            e.preventDefault();
-            var val = parseInt(input.value) || 1;
-            if (val > 1) {
-                input.value = val - 1;
-            }
-        });
-    }
-});
     localStorage.setItem("checkedCartItems", JSON.stringify(checkedItems));
 }
 

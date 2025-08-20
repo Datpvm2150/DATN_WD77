@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Models\KhuyenMai;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
+
 
 class KhuyenMaiController extends Controller
 {
@@ -258,7 +258,7 @@ class KhuyenMaiController extends Controller
             $query->where('ngay_ket_thuc', '<=', $request->input('ngay_ket_thuc'));
         }
         $KhuyenMais = $query->get();
-        return view('admins.khuyen_mais.trash', compact('KhuyenMais'));        
+        return view('admins.khuyen_mais.trash', compact('KhuyenMais'));
     }
 
     public function restore($id)
