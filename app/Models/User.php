@@ -17,6 +17,7 @@ class User extends Authenticatable implements MustVerifyEmail
     protected $fillable = [
         'ten',
         'email',
+        'google_id',
         'mat_khau',
         'so_dien_thoai',
         'anh_dai_dien',
@@ -80,6 +81,8 @@ class User extends Authenticatable implements MustVerifyEmail
 
     public function lichSuDoiDiem()
     {
-        return $this->hasMany(LichSuDiem::class)->where('loai', 'doi_diem');
+        return $this->hasMany(LichSuDiem::class, 'user_id', 'id')
+                    ->where('loai', 'doi_diem');
     }
+
 }

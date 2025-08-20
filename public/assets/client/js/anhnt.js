@@ -447,9 +447,7 @@ function DeleteDiscount() {
         success: function (data) {
             $("#list-cart").html(data);
                 bindCartEvents();
-                rebindCartEvents();
-
-            // rebindCartEvents(); // Gắn lại event sau khi thay HTML
+                rebindCartEvents(); // Gắn lại event sau khi thay HTML
         },
         error: function (xhr) {
             const json = xhr.responseJSON;
@@ -460,6 +458,7 @@ function DeleteDiscount() {
             }
         }
     });
+
 }
 document.addEventListener('DOMContentLoaded', function () {
     rebindCartEvents();

@@ -54,7 +54,6 @@
                                                         <li>
                                                             Tên người nhận: <b>{{ $hoaDon->ten_nguoi_nhan }}</b>
                                                         </li>
-
                                                         <li>Email người nhận: <b>{{ $hoaDon->email }}</b></li>
                                                         <li>Số điện thoại người nhận: <b>{{ $hoaDon->so_dien_thoai }}</b>
                                                         </li>
@@ -67,7 +66,6 @@
                                                         <li>Trạng thái đơn hàng:
                                                             <b>{{ $trangThaiHoaDon[$hoaDon->trang_thai] }}</b>
                                                         </li>
-
                                                         <li>Phương thức thanh toán:
                                                             <b>{{ $phuongThucThanhToan[$hoaDon->phuong_thuc_thanh_toan] }}</b>
                                                         </li>
@@ -90,7 +88,6 @@
                                                                 </form>
                                                             @endif
                                                         </li>
-
                                                         <li>
                                                             Trạng thái thanh toán:
                                                             <b
@@ -134,23 +131,12 @@
                                                         </td>
                                                         <td>{{ $chiTiet->bienTheSanPham->sanPham->ma_san_pham }}</td>
                                                         <td>
-                                                            {{ $chiTiet->bienTheSanPham->sanPham->ten_san_pham }}
+                                                            {{ $chiTiet->ten_san_pham }}
                                                             <br>
                                                             <small class="text-muted">
-                                                                <!-- Kiểm tra sự tồn tại của biến thể -->
-                                                                @if (isset($chiTiet->bienTheSanPham->dungLuong))
-                                                                    Dung lượng:
-                                                                    {{ $chiTiet->bienTheSanPham->dungLuong->ten_dung_luong }}
-                                                                @else
-                                                                    Dung lượng: Không có
-                                                                @endif
+                                                                Dung lượng: {{ $chiTiet->ten_dung_luong ?? 'Không có' }}
                                                                 <br>
-                                                                @if (isset($chiTiet->bienTheSanPham->mauSac))
-                                                                    Màu sắc:
-                                                                    {{ $chiTiet->bienTheSanPham->mauSac->ten_mau_sac }}
-                                                                @else
-                                                                    Màu sắc: Không có
-                                                                @endif
+                                                                Màu sắc: {{ $chiTiet->ten_mau_sac ?? 'Không có' }}
                                                             </small>
                                                         </td>
                                                         <td>{{ number_format($chiTiet->don_gia, 0, '', '.') }} đ</td>
@@ -209,15 +195,12 @@
                                                             </tbody>
                                                         </table>
                                                     </td>
-
                                                 </tr>
-
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
-
 
                             <div class="d-print-none">
                                 <div class="float-end">
@@ -236,7 +219,6 @@
 
     </div> <!-- container-fluid -->
 
-    </div> <!-- content -->
 @endsection
 
 @section('js')
