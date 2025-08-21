@@ -35,7 +35,6 @@ use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\YeuThichController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Admin\AdminLienHeController;
-use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Client\TrangBaiVietController;
@@ -45,7 +44,7 @@ use App\Http\Controllers\Auth\CustomerRegisterController;
 use App\Http\Controllers\Client\ChiTietSanPhamController;
 use App\Http\Controllers\Client\SanPhamDanhMucController;
 use App\Http\Controllers\Auth\AdminForgotPasswordController;
-
+use App\Http\Controllers\Auth\CustomerForgotPasswordController;
 
 // Admin đăng ký đăng nhập
 Route::prefix('admin')->name('admin.')->group(function () {
@@ -286,10 +285,10 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::post('/{id}/getOrder', [TaiKhoanController::class, 'getOrder'])->name('getOrder');
     Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('customer.orders.filter');
     // quên mk customer
-    Route::get('/show-form-forgot', [CustomerForgotPassword::class, 'ShowformForgotPasswword'])->name('forgotPassword');
-    Route::post('/forgot-password', [CustomerForgotPassword::class, 'SendEmailForgot'])->name('password.email');
-    Route::get('reset-password/{token}', [CustomerForgotPassword::class, 'formResetPassword'])->name('password.reset');
-    Route::post('reset-pass', [CustomerForgotPassword::class, 'resetPassword'])->name('password.change');
+    Route::get('/show-form-forgot', [CustomerForgotPasswordController::class, 'ShowformForgotPasswword'])->name('forgotPassword');
+    Route::post('/forgot-password', [CustomerForgotPasswordController::class, 'SendEmailForgot'])->name('password.email');
+    Route::get('reset-password/{token}', [CustomerForgotPasswordController::class, 'formResetPassword'])->name('password.reset');
+    Route::post('reset-pass', [CustomerForgotPasswordController::class, 'resetPassword'])->name('password.change');
 });
 
 // Bài viết

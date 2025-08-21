@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\CustomerForgotPasswordNoti;
 
-class CustomerForgotPassword extends Controller
+class CustomerForgotPasswordController extends Controller
 {
     // Hiển thị form nhập email để quên mật khẩu
     public function ShowformForgotPasswword()
