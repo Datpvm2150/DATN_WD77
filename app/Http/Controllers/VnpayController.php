@@ -363,15 +363,6 @@ class VnpayController extends Controller
 
         return $response;
     }
-    public function tracuu()
-    {
-
-        return view('admins.hoadons.tracuu');
-    }
-    public function hoantien()
-    {
-        return view('admins.hoadons.hoantien');
-    }
     public function refundTransaction(Request $request)
     {
         // Validate the incoming request data

@@ -321,7 +321,7 @@
             color: #ff4d4d;
         }
 
-        <style>#loadingSpinner {
+        #loadingSpinner {
             position: fixed;
             top: 50%;
             left: 50%;
