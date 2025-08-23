@@ -302,7 +302,7 @@ class ThanhToanController extends Controller
                 'phuong_thuc_thanh_toan' => $request->payment_method,
                 'trang_thai' => HoaDon::CHO_XAC_NHAN,
                 'trang_thai_thanh_toan' => HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán'],
-                'thoi_gian_het_han' => now()->addDays(1),
+                'thoi_gian_het_han' => now()->addMinutes(15),
             ]);
 
             // Lưu chi tiết hóa đơn và cập nhật tồn kho
@@ -448,7 +448,7 @@ class ThanhToanController extends Controller
 
     public function retryPayment($id)
     {
-        // Tìm hóa đơn theo ID
+        // Tìm hóa đơn theo ID 
         $order = HoaDon::findOrFail($id);
 
         // Kiểm tra nếu trạng thái thanh toán là 'Chưa thanh toán' và thời gian hết hạn chưa qua

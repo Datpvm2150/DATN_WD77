@@ -63,19 +63,19 @@ class TrangSanPhamController extends Controller
                     foreach ($request->price as $priceRange) {
                         switch ($priceRange) {
                             case 'duoi-5-trieu':
-                                $query->orWhere('gia_moi', '<', 5000000);
+                                $query->orWhereRaw("COALESCE(NULLIF(gia_moi,0), gia_cu) < 5000000");
                                 break;
                             case '5-den-10-trieu':
-                                $query->orWhereBetween('gia_moi', [5000000, 10000000]);
+                                $query->orWhereRaw("COALESCE(gia_moi, gia_cu) BETWEEN 5000000 AND 10000000");
                                 break;
                             case '10-den-20-trieu':
-                                $query->orWhereBetween('gia_moi', [10000000, 20000000]);
+                                $query->orWhereRaw("COALESCE(gia_moi, gia_cu) BETWEEN 10000000 AND 20000000");
                                 break;
                             case '20-den-30-trieu':  
-                                $query->orWhereBetween('gia_moi', [20000000, 30000000]);
+                                $query->orWhereRaw("COALESCE(gia_moi, gia_cu) BETWEEN 20000000 AND 30000000");
                                 break;
                             case 'tren-30-trieu':  
-                                $query->orWhere('gia_moi', '>', 30000000);
+                                $query->orWhereRaw("COALESCE(gia_moi, gia_cu) > 30000000");
                                 break;
                         }
                     }

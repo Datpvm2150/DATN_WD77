@@ -19,7 +19,7 @@ class TaiKhoanController extends Controller
         $user = Auth::user();
         $danhMucs = DanhMuc::all();
         // Lấy thông trạng thái mặc định "chờ xác nhận"
-        $donHangs = $user->hoaDons()->where('trang_thai', 1)->get();
+        $donHangs = $user->hoaDons()->where('trang_thai', 1)->orderBy('created_at', 'desc')->get();
         // Lấy thuộc tính
         $trang_thai_don_hang = HoaDon::TRANG_THAI;
 
