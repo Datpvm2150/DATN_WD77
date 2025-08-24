@@ -9,7 +9,6 @@ use App\Models\SanPham;
 use App\Models\HoaDon;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Models\lien_hes;
 use App\Models\ChiTietHoaDon;
 use App\Models\DanhGiaSanPham;
 
@@ -96,19 +95,10 @@ class DashboardController extends Controller
             ->orderBy('tong_so_luong_ban', 'desc')
             ->take(5)
             ->get();
-
-        $totalResolved = lien_hes::where('trang_thai_phan_hoi', 'resolved')
-            ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
-            ->count(); // Đã phản hồi
-
-        $totalPending = lien_hes::where('trang_thai_phan_hoi', 'pending')
-            ->whereBetween('created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
-            ->count(); // Chưa phản hồi
         $reviews = DanhGiaSanPham::whereBetween('created_at', [$startDate, $endDate]) // Lọc theo khoảng thời gian
             ->latest()
-            ->take(7) // Lấy 8 bản ghi mới nhất
+            ->take(7) // Lấy 7 bản ghi mới nhất
             ->get();
-
 
         // 2. Thống kê người dùng đăng ký theo ngày trong tháng hiện tại
         $nguoiDungTheoNgay = User::selectRaw('DATE(created_at) as ngay, COUNT(id) as so_luong_nguoi_dung')
@@ -118,27 +108,13 @@ class DashboardController extends Controller
             ->orderBy('ngay', 'asc')
             ->get();
 
-        $nguoiDungNgayData = $nguoiDungTheoNgay->pluck('so_luong_nguoi_dung')->toArray();
-        $nguoiDungNgayLabels = $nguoiDungTheoNgay->pluck('ngay')->map(function ($date) {
-            return date('d/m', strtotime($date));
-        })->toArray();
-
-        // 3. Thống kê người dùng trung bình và hôm nay
-        $ngay_dau_tien_nguoi_dung = User::min('created_at');
-        $ngay_hien_tai = today();
-        $so_ngay = $ngay_dau_tien_nguoi_dung ? $ngay_hien_tai->diffInDays(Carbon::parse($ngay_dau_tien_nguoi_dung)) + 1 : 0;
-        $nguoi_dung_trung_binh = $so_ngay > 0 ? $tong_nguoi_dung / $so_ngay : 0;
-        $nguoi_dung_hom_nay = User::whereDate('created_at', $ngay_hien_tai)->count();
-        $phan_tram_nguoi_dung = $nguoi_dung_trung_binh > 0 ? round(($nguoi_dung_hom_nay / $nguoi_dung_trung_binh) * 100 - 100) : -100;
-
         // 4. Thống kê doanh thu trung bình và hôm nay
+        $ngay_hien_tai = today();
         $ngay_dau_tien_hoa_don = HoaDon::where('trang_thai', 7)->min('created_at');
         $so_ngay_hoa_don = $ngay_dau_tien_hoa_don ? $ngay_hien_tai->diffInDays(Carbon::parse($ngay_dau_tien_hoa_don)) + 1 : 0;
-        $doanh_thu_trung_binh = $so_ngay_hoa_don > 0 ? $tong_doanh_thu / $so_ngay_hoa_don : 0;
         $doanh_thu_hom_nay = HoaDon::where('trang_thai', 7)
             ->whereDate('created_at', $ngay_hien_tai)
             ->sum('tong_tien');
-        $phan_tram_doanh_thu = $doanh_thu_trung_binh > 0 ? round(($doanh_thu_hom_nay - $doanh_thu_trung_binh) / $doanh_thu_trung_binh * 100) : 0;
 
         // 5. Thống kê doanh thu theo ngày trong tháng hiện tại
         $doanhThuTheoNgay = HoaDon::selectRaw('DATE(created_at) as ngay, SUM(tong_tien) as tong_doanh_thu')
@@ -169,15 +145,10 @@ class DashboardController extends Controller
             return $item->thang . '/' . $item->nam;
         })->toArray();
 
-
-
         // 8. Thống kê số lượng đơn hàng
         $ngay_dau_tien_don_hang = HoaDon::min('created_at');
         $so_ngay_don_hang = $ngay_dau_tien_don_hang ? $ngay_hien_tai->diffInDays(Carbon::parse($ngay_dau_tien_don_hang)) + 1 : 0;
-        $don_hang_trung_binh = $so_ngay_don_hang > 0 ? $tong_don_hang / $so_ngay_don_hang : 0;
         $don_hang_hom_nay = HoaDon::whereDate('created_at', $ngay_hien_tai)->count();
-        $phan_tram_don_hang = $don_hang_trung_binh > 0 ? round(($don_hang_hom_nay - $don_hang_trung_binh) / $don_hang_trung_binh * 100) : 0;
-
         // Thống kê đơn hàng theo ngày
         $donTheoNgay = HoaDon::selectRaw('DATE(created_at) as ngay, COUNT(id) as so_luong_don')
             ->whereMonth('created_at', now()->month)
@@ -240,21 +211,14 @@ class DashboardController extends Controller
             'san_pham_ban_chay',
             'doanhThuNgayData',
             'ngayLabels',
-            'nguoiDungNgayData',
-            'nguoiDungNgayLabels',
-            'phan_tram_nguoi_dung',
-            'phan_tram_don_hang',
             'donNgayData',
             'donNgayLabels',
             'labelsDanhMuc',
             'dataDanhMuc',
-            'phan_tram_doanh_thu',
             'labelsSanPham',
             'dataInStock',
             'dataLowStock',
             'dataOutOfStock',
-            'totalPending',
-            'totalResolved',
             'tong_don_hang_da_xu_ly',
             'tong_don_hang_chua_xu_ly',
             'filter',
@@ -262,55 +226,8 @@ class DashboardController extends Controller
 
         ));
     }
-    public function doanhthu(Request $request)
-    {
-        // Lấy thông tin từ form
-        $startDate = $request->input('start_date');
-        $endDate = $request->input('end_date');
-        $groupBy = $request->input('group_by', 'day'); // Mặc định thống kê theo ngày
-        $paymentStatus = $request->input('payment_status'); // Lọc theo trạng thái thanh toán
-
-        // Xây dựng truy vấn
-        $query = DB::table('hoa_dons')
-            ->selectRaw("
-                CASE
-                    WHEN '$groupBy' = 'day' THEN DATE(ngay_dat_hang)
-                    WHEN '$groupBy' = 'month' THEN DATE_FORMAT(ngay_dat_hang, '%Y-%m')
-                    WHEN '$groupBy' = 'year' THEN YEAR(ngay_dat_hang)
-                END as period,
-                SUM(tong_tien) as revenue
-            ")
-            ->where('trang_thai', 7);
 
 
-
-        // Lọc theo ngày bắt đầu và kết thúc
-        if ($startDate && $endDate) {
-            $query->whereBetween('ngay_dat_hang', [
-                Carbon::parse($startDate)->startOfDay(),
-                Carbon::parse($endDate)->endOfDay(),
-            ]);
-        }
-
-        // Nhóm và sắp xếp theo khoảng thời gian (day, month, year)
-        $data = $query->groupBy('period')
-            ->orderBy('period', 'asc')
-            ->get();
-
-        // Lấy labels và revenues để hiển thị biểu đồ
-        $labels = $data->pluck('period')->toArray();
-        $revenues = $data->pluck('revenue')->toArray();
-
-        // Tính tổng doanh thu
-        $doanhThu = array_sum($revenues);
-
-        // Trả về view với dữ liệu
-        return view('admins.dashboard.doanhthu', [
-            'doanhThu' => $doanhThu,
-            'labels' => $labels,
-            'revenues' => $revenues,
-        ]);
-    }
     public function sanPhamBanChay(Request $request)
 {
     $thoiGian = $request->input('thoi_gian', 'day'); // Mặc định lọc theo ngày
@@ -432,48 +349,6 @@ class DashboardController extends Controller
             'search',
             'filterStatus'
         ));
-    }
-     public function thongKeDoanhThu(Request $request)
-    {
-        $start = $request->start_date ?? Carbon::now()->startOfMonth()->toDateString();
-        $end = $request->end_date ?? Carbon::now()->endOfMonth()->toDateString();
-        $groupBy = $request->group_by ?? 'day';
-
-        $query = HoaDon::whereBetween('created_at', [$start . ' 00:00:00', $end . ' 23:59:59']);
-
-        switch ($groupBy) {
-            case 'month':
-                $data = $query->selectRaw('DATE_FORMAT(created_at, "%m/%Y") as label, SUM(tong_tien) as revenue')
-                    ->groupBy('label')
-                    ->orderByRaw('MIN(created_at)')
-                    ->get();
-                break;
-            case 'year':
-                $data = $query->selectRaw('YEAR(created_at) as label, SUM(tong_tien) as revenue')
-                    ->groupBy('label')
-                    ->orderBy('label')
-                    ->get();
-                break;
-            case 'day':
-            default:
-                $data = $query->selectRaw('DATE(created_at) as label, SUM(tong_tien) as revenue')
-                    ->groupBy('label')
-                    ->orderBy('label')
-                    ->get();
-                break;
-        }
-
-        $labels = $data->pluck('label')->map(function ($label) use ($groupBy) {
-            if ($groupBy === 'day') {
-                return Carbon::parse($label)->format('d/m/Y');
-            }
-            return $label;
-        })->toArray();
-
-        $revenues = $data->pluck('revenue')->toArray();
-        $doanhThu = array_sum($revenues);
-
-        return view('admins.doanhthu', compact('labels', 'revenues', 'doanhThu'));
     }
 public function user()
    {
