@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VNPayController;
-use App\Http\Controllers\Admin\StaffDashboardController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -15,8 +14,6 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\HoaDonController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\BaiVietController;
-use App\Http\Controllers\Admin\ChatBotController;
-use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\SanPhamController;
 use App\Http\Controllers\Client\DoiQuaController;
@@ -24,7 +21,6 @@ use App\Http\Controllers\Client\LienHeController;
 
 
 // Client Routes
-use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DungLuongController;
 use App\Http\Controllers\Admin\KhuyenMaiController;
@@ -35,6 +31,7 @@ use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\YeuThichController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Admin\AdminLienHeController;
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Auth\CustomerLoginController;
@@ -193,8 +190,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     //Thống kê
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/doanhthu', [DashboardController::class, 'doanhthu'])->name('doanhthu');
-    Route::get('/admin/doanh-thu', [DashboardController::class, 'thongKeDoanhThu'])->name('admin.doanhthu');
     Route::get('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
     Route::get('/tk-sanpham-banchay', [DashboardController::class, 'sanPhamBanChay'])->name('thongke.sanpham.banchay');
     Route::get('/tk-sanpham-kho', [DashboardController::class, 'sanPhamBanKho'])->name('thongke.sanpham.kho');
@@ -209,11 +204,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     });
     // Chat
     Route::prefix('chat')->name('chat.')->group(function () {
-        Route::get('/', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('index');
-        Route::get('/{id}/messages', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
-        Route::post('/{id}/send', [App\Http\Controllers\Admin\ChatController::class, 'send'])->name('send');
+        Route::get('/', [ChatController::class, 'index'])->name('index');
+        Route::get('/{id}/messages', [ChatController::class, 'show'])->name('show');
+        Route::post('/{id}/send', [ChatController::class, 'send'])->name('send');
     });
-    Route::post('/chat-rooms/{room}/mark-read', [App\Http\Controllers\Admin\ChatController::class, 'markMessagesAsRead']);
+    Route::post('/chat-rooms/{room}/mark-read', [ChatController::class, 'markMessagesAsRead']);
 
     Route::post('/set-admin-online', function (Request $request) {
         $user = User::where('id', $request->user_id)->first();
@@ -274,7 +269,6 @@ Route::prefix('admin')->name('admin.')->group(function () {
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-
     Route::get('login', [CustomerLoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [CustomerLoginController::class, 'login'])->name('login.post');
     Route::get('register', [CustomerRegisterController::class, 'showRegistrationForm'])->name('register');
@@ -320,6 +314,7 @@ Route::get('/Delete-Item-List-Cart/{id}', [CartController::class, 'DeleteItemLis
 Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])->name('cart.update.item');
 Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
+Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
 
 
 
@@ -361,7 +356,7 @@ Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.
 // Chat
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
 Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::class, 'loadMessages']);
-Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
+
 
 // Điểm danh
 Route::middleware(['auth'])->group(function () {

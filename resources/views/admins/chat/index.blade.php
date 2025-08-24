@@ -175,10 +175,6 @@
     <div class="chat-box">
         <div class="sidebar-chat">
             <ul id="chatRoomList">
-                {{-- @foreach ($chatRooms as $room)
-                    <li onclick="selectRoom({{ $room->id }}, '{{ $room->customer->ten }}')">{{ $room->customer->email }}
-                    </li>
-                @endforeach --}}
                 @foreach ($chatRooms as $room)
                     <li id="room-{{ $room->id }}"
                         onclick="selectRoom({{ $room->id }}, '{{ $room->customer->email }}')">
@@ -231,14 +227,14 @@
 
         function selectRoom(id, name) {
             currentRoomId = id;
-            document.getElementById('messages').innerHTML = '';
-            fetchMessages(id);
+            document.getElementById('messages').innerHTML = ''; //Xóa nội dung messages
+            fetchMessages(id);//load tin nhắn cũ
             document.querySelectorAll('li[id^="room-"]').forEach(el => {
                 el.classList.remove('room-selected');
             });
 
             document.getElementById(`room-${currentRoomId}`).classList.add('room-selected');
-
+// đánh dấu tin nhắn đã đọc và update badge
             axios.post('/admin/chat-rooms/' + currentRoomId + '/mark-read')
                 .then(response => {
                     const badge = document.querySelector(`#room-${currentRoomId} .unread-badge`);
@@ -253,9 +249,9 @@
                         totalBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
                     }
                 });
-            localStorage.setItem('chatRoomId', id);
+            localStorage.setItem('localStorage', id); //lưu localStorage vào localStorage
             if (typeof listenToRoom === 'function') {
-                listenToRoom(id);
+                listenToRoom(id); //Gọi listenToRoom(id) để bắt realtime event cho phòng đó.
             }
         }
 
