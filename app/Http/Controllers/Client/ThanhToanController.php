@@ -302,7 +302,7 @@ class ThanhToanController extends Controller
                 'phuong_thuc_thanh_toan' => $request->payment_method,
                 'trang_thai' => HoaDon::CHO_XAC_NHAN,
                 'trang_thai_thanh_toan' => HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán'],
-                'thoi_gian_het_han' => now()->addDays(1),
+                'thoi_gian_het_han' => now()->addMinutes(15),
             ]);
 
             // Lưu chi tiết hóa đơn và cập nhật tồn kho
@@ -378,18 +378,12 @@ class ThanhToanController extends Controller
                         'message' => 'Đặt hàng thành công, thanh toán khi nhận hàng. Sau khi thanh toán, mã giảm giá sẽ được gửi.'
                     ]);
 
-                case 'Thanh toán qua ví điện tử':
-                    return app(EWalletController::class)->processPayment(
-                        $tongTienSauGiam,
-                        $hoaDon->ma_hoa_don,
-                        $request->ewallet_id
-                    );
 
                 default:
                     return response()->json(['success' => false, 'message' => 'Phương thức thanh toán không hợp lệ'], 400);
             }
         } catch (\Exception $e) {
-            \Log::error("Lỗi khi đặt hàng: " . $e->getMessage());
+            Log::error("Lỗi khi đặt hàng: " . $e->getMessage());
             return response()->json(['success' => false, 'message' => 'Đã xảy ra lỗi khi đặt hàng'], 500);
         }
     }
@@ -454,7 +448,7 @@ class ThanhToanController extends Controller
 
     public function retryPayment($id)
     {
-        // Tìm hóa đơn theo ID
+        // Tìm hóa đơn theo ID 
         $order = HoaDon::findOrFail($id);
 
         // Kiểm tra nếu trạng thái thanh toán là 'Chưa thanh toán' và thời gian hết hạn chưa qua

@@ -311,7 +311,7 @@
                                 <div class="border border-dark rounded-2 me-2 widget-icons-sections">
                                     <i data-feather="tablet" class="widgets-icons"></i>
                                 </div>
-                                <h5 class="card-title mb-0">Top 4 Sản Phẩm Bán Chạy Nhất </h5>
+                                <h5 class="card-title mb-0">Top 5 Sản Phẩm Bán Chạy Nhất </h5>
                             </div>
                         </div>
 
@@ -371,8 +371,6 @@
         window.thangLabels = @json($thang_labels); // Gán nhãn tháng
         window.doanhThuNgayData = @json($doanhThuNgayData); // Gán dữ liệu doanh thu theo ngày
         window.ngayLabels = @json($ngayLabels); // Gán nhãn ngày
-        window.nguoiDungNgayData = @json($nguoiDungNgayData); // Gán dữ liệu doanh thu theo ngày
-        window.nguoiDungNgayLabels = @json($nguoiDungNgayLabels); // Gán nhãn ngày
         window.donNgayData = @json($donNgayData); // Gán dữ liệu đơn hàng theo ngày
         window.donNgayLabels = @json($donNgayLabels); // Gán nhãn ngày
         window.dataDanhMuc = @json($dataDanhMuc); // Gán dữ liệu danh mục
@@ -381,9 +379,5 @@
         window.dataLowStock = @json($dataLowStock); // Sản phẩm sắp hết hàng
         window.dataOutOfStock = @json($dataOutOfStock); // Sản phẩm hết hàng
         window.labelsSanPham = @json($labelsSanPham); // Gán
-        window.contactData = {
-            totalResolved: {{ $totalResolved }},
-            totalPending: {{ $totalPending }}
-        };
     </script>
 @endsection

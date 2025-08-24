@@ -94,7 +94,6 @@ class ChatController extends Controller
 
         broadcast(new \App\Events\SendMessage($message));
 
-        // For now, just return a simple response
         return response()->json([
             'status' => 'success',
             'response' => $message,

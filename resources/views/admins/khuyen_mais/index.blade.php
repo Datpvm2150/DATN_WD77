@@ -12,6 +12,11 @@
     <link href="{{ asset('assets/admin/libs/datatables.net-select-bs5/css/select.bootstrap5.min.css') }}" rel="stylesheet"
         type="text/css" />
 @endsection
+{{-- <style>
+    #datatable {
+    visibility: hidden;
+}
+</style> --}}
 @section('content')
     <div class="container-xxl">
 
@@ -186,6 +191,14 @@
 @endsection
 
 @section('js')
+<script>
+    $(document).ready(function () {
+    $('#datatable').DataTable();
+    $('#datatable').css("visibility", "visible");
+});
+
+</script>
+
     <!-- DataTables JS -->
     <script src="{{ asset('assets/admin/libs/datatables.net/js/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('assets/admin/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>

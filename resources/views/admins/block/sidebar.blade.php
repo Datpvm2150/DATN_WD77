@@ -32,9 +32,6 @@
                                 <a href="{{route('admin.dashboard')}}" class="tp-link">Dashboard</a>
                             </li>
                             <li>
-                                <a class='tp-link' href="{{ route('admin.doanhthu') }}">Doanh thu</a>
-                            </li>
-                            <li>
                                 <a class='tp-link' href="{{ route('admin.thongke.sanpham.banchay') }}">Sản phẩm bán
                                     chạy</a>
                             </li>
@@ -252,7 +249,7 @@
                     </div>
                 </li>
 
-                
+
 
                 {{-- Liên hệ --}}
                 <li>

@@ -40,6 +40,12 @@ class MauSacController extends Controller
     }
     public function update(Request $request, string $id)
     {
+        $mausac = MauSac::findOrFail($id);
+        //  Kiểm tra nếu màu sắc đã được gán cho biến thể sản phẩm
+            if ($mausac->bienTheSanPhams()->exists()) {
+                return redirect()->route('admin.mausacs.index')
+                    ->with('error', 'Màu sắc này đã được sử dụng cho sản phẩm, không thể chỉnh sửa!');
+            }
         $request->validate([
             'ten_mau_sac' => 'required|string|max:50|unique:mau_sacs,ten_mau_sac,' . $id,
             'ma_mau' => 'required|string|max:7|unique:mau_sacs,ma_mau,' . $id
@@ -53,7 +59,7 @@ class MauSacController extends Controller
         ]);
 
         $params = $request->except('_token');
-        $mausac = MauSac::findOrFail($id);
+        
         $mausac->update($params);
 
         return redirect()->route('admin.mausacs.index')->with('success', 'Cập nhật màu thành công (-_-)');

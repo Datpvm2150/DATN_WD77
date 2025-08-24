@@ -1,7 +1,5 @@
 <div class="tp-header-area p-relative z-index-11">
 
-
-
    <!-- header main start -->
    <div class="tp-header-main tp-header-sticky">
       <div class="container">
