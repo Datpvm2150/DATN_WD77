@@ -8,7 +8,7 @@ use App\Services\OrderService;
 use Illuminate\Validation\Rule;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log as FacadesLog;
-use Illuminate\Support\Facades\Log; 
+use Illuminate\Support\Facades\Log;
 
 class HoaDonController extends Controller
 {
