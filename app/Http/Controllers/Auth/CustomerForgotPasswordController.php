@@ -8,21 +8,26 @@ use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Facades\Hash;
 use App\Notifications\CustomerForgotPasswordNoti;
 
-class CustomerForgotPassword extends Controller
+class CustomerForgotPasswordController extends Controller
 {
+    // Hiển thị form nhập email để quên mật khẩu
     public function ShowformForgotPasswword()
     {
         return view('auth.passwords.customer-email');
     }
 
-    public function formResetPassword(Request $request, $token = null){
+    // Hiển thị form reset mật khẩu (nhập mật khẩu mới)
+    public function formResetPassword(Request $request, $token = null)
+    {
         return view('auth.passwords.customer-reset')->with([
             'token' => $token,
             'email' => $request->email
         ]);
     }
 
-    public function SendEmailForgot(Request $request){
+    // Gửi email reset mật khẩu
+    public function SendEmailForgot(Request $request)
+    {
         $request->validate(['email' => 'required|email']);
 
         $status = Password::broker('users')->sendResetLink(
@@ -35,7 +40,6 @@ class CustomerForgotPassword extends Controller
                     'email' => $user->getEmailForPasswordReset(),
                 ], false));
 
-                // Sử dụng Notification với URL custom
                 $user->notify(new CustomerForgotPasswordNoti($path));
             }
         );
@@ -56,6 +60,7 @@ class CustomerForgotPassword extends Controller
                 // }
     }
 
+    // Xử lý reset mật khẩu
     public function resetPassword(Request $request)
     {
         $request->validate([
@@ -68,7 +73,7 @@ class CustomerForgotPassword extends Controller
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($customer, $password) {
                 $customer->forceFill([
-                    'mat_khau' => Hash::make($password), // Sử dụng cột 'mat_khau'
+                    'mat_khau' => Hash::make($password), // Cột mật khẩu trong DB là 'mat_khau'
                 ])->save();
             }
         );
