@@ -33,6 +33,7 @@ class CustomerForgotPasswordController extends Controller
         $status = Password::broker('users')->sendResetLink(
             $request->only('email'),
             function ($user, $token) {
+
                 // Tùy chỉnh URL
                 $path = url(route('customer.password.reset', [
                     'token' => $token,
@@ -47,6 +48,16 @@ class CustomerForgotPasswordController extends Controller
             ? back()->with(['status' => __($status)])
             : back()->withErrors(['email' => __($status)]);
 
+                // // Kiểm tra các trạng thái cụ thể
+                // if ($status === Password::RESET_LINK_SENT) {
+                //     return back()->with(['status' => __($status)]);
+                // } elseif ($status === Password::INVALID_USER) {
+                //     return back()->withErrors(['email' => 'Chúng tôi không tìm thấy người dùng với địa chỉ email này.']);
+                // } elseif ($status === Password::RESET_THROTTLED) {
+                //     return back()->withErrors(['email' => 'Quá nhiều yêu cầu. Vui lòng thử lại sau.']);
+                // } else {
+                //     return back()->withErrors(['email' => __($status)]);
+                // }
     }
 
     // Xử lý reset mật khẩu
