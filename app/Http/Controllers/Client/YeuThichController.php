@@ -30,10 +30,10 @@ class YeuThichController extends Controller
         $userId = $request->user()->id; // Bạn có thể thay bằng $request->user()->id khi có đăng nhập
         Log::info('add to love: ', ['user_id' => $userId, 'product_id' => $id]);
         if ($product->users()->where('user_id', $userId)->exists()) {
-            $product->users()->detach($userId);
+            $product->users()->detach($userId); // Bỏ yêu thích
             return Auth::user()->sanPhamYeuThichs()->count();
         } else {
-            $product->users()->attach($userId);
+            $product->users()->attach($userId);// Thêm yêu thích
             return Auth::user()->sanPhamYeuThichs()->count();
         }
     }

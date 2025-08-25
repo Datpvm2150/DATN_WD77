@@ -52,6 +52,12 @@ async function addToCart(productId) {
                 quantity: quantity,
                 mauSacId: mauSacId,
                 dungLuongId: dungLuongId,
+            }, success: function (data) {
+                quantityInput.value = 1;
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                console.error("Lỗi khi thêm giỏ hàng:", textStatus, errorThrown);
+                alertify.error('Thêm sản phẩm vào giỏ hàng thất bại!');
             }
         });
 

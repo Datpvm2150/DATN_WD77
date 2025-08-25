@@ -449,10 +449,13 @@
                                             plusBtn.addEventListener("click", async (e) => {
                                                 e.preventDefault();
                                                 let currentQuantity = parseInt(input.value);
-                                                 let max = parseInt(input.dataset.maxQuantity) || 1;
-                                                // console.log(currentQuantity);
-                                                // const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId,
-                                                //     currentQuantity + 1);
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
+                                                const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId,
+                                                    currentQuantity + 1);
+                                                if (!canAdd) {
+                                                    alertify.error("Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!");
+                                                    return false;
+                                                }
 
                                                 if (currentQuantity < max) {
                                                     input.value = currentQuantity + 1;
@@ -1247,4 +1250,6 @@
             </div>
         </div>
     </section>
+    <!-- related product area end -->
+
 @endsection

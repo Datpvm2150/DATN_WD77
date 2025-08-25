@@ -11,7 +11,7 @@ use App\Mail\InvoiceCreated;
 use App\Models\KhuyenMai;
 use App\Services\OrderService;
 use Illuminate\Support\Facades\Mail;
-
+use Illuminate\Support\Facades\Session;
 
 class VnpayController extends Controller
 {
@@ -228,6 +228,31 @@ class VnpayController extends Controller
 
                         app(OrderService::class)->updatePaymentStatus($hoaDon->id);
                         app(OrderService::class)->sendVoucherAfterPaid($hoaDon);
+                         $oldCart = Session::get('cart');
+                        if ($oldCart && isset($oldCart->products)) {
+                            $hoaDon->load('chiTietHoaDons');
+                            Log::info('Hoa Don with Details:', ['hoaDon' => $hoaDon->chiTietHoaDons->toArray()]);
+                            if ($hoaDon->chiTietHoaDons && $hoaDon->chiTietHoaDons->count() > 0) {
+                                foreach ($hoaDon->chiTietHoaDons as $item) {
+                                    unset($oldCart->products[$item->bien_the_san_pham_id]);
+                                }
+                            }
+
+                            $oldCart->totalPrice = 0;
+                            $oldCart->totalProduct = 0;
+
+                            foreach ($oldCart->products as $cartItem) {
+                                $gia = $cartItem['bienthe']->gia_moi ?? $cartItem['bienthe']->gia_cu;
+                                $oldCart->totalPrice += $cartItem['quantity'] * $gia;
+                                $oldCart->totalProduct += $cartItem['quantity'];
+                            }
+
+                            if (count($oldCart->products) > 0) {
+                                Session::put('cart', $oldCart);
+                            } else {
+                                Session::forget('cart');
+                            }
+                        }
                         session()->flash('js', '<script>sessionStorage.setItem("orderMessage", "Thanh toán thành công!");</script>');
                         return redirect()->route('customer.donhang');
                     } else {
