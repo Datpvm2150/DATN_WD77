@@ -107,13 +107,15 @@
                                         <!-- Họ tên và Số điện thoại -->
                                         <div class="col-md-12">
                                             <div class="tp-checkout-input">
-                                                <label>Liên hệ <span>*</span></label>
+                                                <label style="font-size: 20px;">Liên hệ <span>*</span></label><br>
+                                                <label>Họ và tên</label>
                                                 <input type="text" id="name" placeholder="Họ và tên"
                                                     value="{{ Auth::user()->ten ?? '' }}" required>
                                                 <div class="invalid-feedback">Vui lòng nhập họ và tên.</div>
 
                                             </div>
                                             <div class="tp-checkout-input">
+                                                <label>Số điện thoại</label>
                                                 <input type="text" id="phone" placeholder="Số điện thoại"
                                                     value="{{ Auth::user()->so_dien_thoai ?? '' }}" required>
                                                 <div class="invalid-feedback">Vui lòng nhập số điện thoại hợp lệ.</div>
@@ -124,6 +126,7 @@
                                         <!-- Email -->
                                         <div class="col-md-12">
                                             <div class="tp-checkout-input">
+                                                 <label>Email</label>
                                                 <input type="text" id="email" placeholder="Email"
                                                     value="{{ Auth::user()->email ?? '' }}" required>
                                                 <div class="invalid-feedback">Vui lòng nhập địa chỉ email hợp lệ.</div>
@@ -318,7 +321,7 @@
             color: #ff4d4d;
         }
 
-        <style>#loadingSpinner {
+        #loadingSpinner {
             position: fixed;
             top: 50%;
             left: 50%;

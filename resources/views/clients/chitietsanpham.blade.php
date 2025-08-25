@@ -272,259 +272,248 @@
                                     </style>
 
 
-                                        <script>
-                                            let sanPhamId = {{ $sanpham->id }};
-                                            let selectedMauSacId = null;
-                                            let selectedDungLuongId = null;
-                                            let allVariants = [];
+                                    <script>
+                                        let sanPhamId = {{ $sanpham->id }};
+                                        let selectedMauSacId = null;
+                                        let selectedDungLuongId = null;
+                                        let allVariants = [];
 
-                                            document.addEventListener("DOMContentLoaded", function() {
-                                                fetchAllVariants();
-                                                setupQuantityEvents();
+                                        document.addEventListener("DOMContentLoaded", function() {
+                                            fetchAllVariants();
+                                            setupQuantityEvents();
+                                        });
+
+                                        function fetchAllVariants() {
+                                            $.ajax({
+                                                url: "{{ route('sanpham.get_all_variants') }}",
+                                                method: "GET",
+                                                data: {
+                                                    san_pham_id: sanPhamId
+                                                },
+                                                success: function(response) {
+                                                    allVariants = response;
+                                                    setupVariantEvents();
+                                                },
+                                                error: function() {
+                                                    alert("Không thể tải danh sách biến thể.");
+                                                }
+                                            });
+                                        }
+
+                                        function setupVariantEvents() {
+                                            document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
+                                                button.addEventListener('click', function() {
+                                                    if (this.classList.contains('disabled')) return;
+
+                                                    const id = this.getAttribute('data-mau-sac-id');
+                                                    selectedMauSacId = (selectedMauSacId === id) ? null : id;
+
+                                                    document.querySelectorAll('.tp-color-variation-btn').forEach(btn => btn.classList
+                                                        .remove('active'));
+                                                    if (selectedMauSacId) this.classList.add('active');
+
+                                                    updateAvailableOptions();
+                                                    fetchPrice();
+                                                });
                                             });
 
-                                            function fetchAllVariants() {
+                                            document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
+                                                button.addEventListener('click', function() {
+                                                    if (this.classList.contains('disabled')) return;
+
+                                                    const id = this.getAttribute('data-dung-luong-id');
+                                                    selectedDungLuongId = (selectedDungLuongId === id) ? null : id;
+
+                                                    document.querySelectorAll('.tp-size-variation-btn').forEach(btn => btn.classList.remove(
+                                                        'active'));
+                                                    if (selectedDungLuongId) this.classList.add('active');
+
+                                                    updateAvailableOptions();
+                                                    fetchPrice();
+                                                });
+                                            });
+                                        }
+
+                                        function updateAvailableOptions() {
+                                            document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
+                                                const dungLuongId = button.getAttribute('data-dung-luong-id');
+                                                const exists = allVariants.some(variant =>
+                                                    (!selectedMauSacId || variant.mau_sac_id == selectedMauSacId) &&
+                                                    variant.dung_luong_id == dungLuongId
+                                                );
+                                                button.classList.toggle('disabled', !exists);
+                                            });
+
+                                            document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
+                                                const mauSacId = button.getAttribute('data-mau-sac-id');
+                                                const exists = allVariants.some(variant =>
+                                                    (!selectedDungLuongId || variant.dung_luong_id == selectedDungLuongId) &&
+                                                    variant.mau_sac_id == mauSacId
+                                                );
+                                                button.classList.toggle('disabled', !exists);
+                                            });
+                                        }
+
+
+
+                                        function fetchPrice() {
+                                            if (selectedMauSacId && selectedDungLuongId) {
                                                 $.ajax({
-                                                    url: "{{ route('sanpham.get_all_variants') }}",
-                                                    method: "GET",
+                                                    url: '{{ route('sanpham.lay_gia_bien_the') }}',
+                                                    method: 'GET',
                                                     data: {
-                                                        san_pham_id: sanPhamId
+                                                        san_pham_id: sanPhamId,
+                                                        mau_sac_id: selectedMauSacId,
+                                                        dung_luong_id: selectedDungLuongId
                                                     },
-                                                    success: function(response) {
-                                                        allVariants = response;
-                                                        setupVariantEvents();
+                                                    success: function(res) {
+                                                        if (res.status === 'success') {
+                                                            const format = (num) => new Intl.NumberFormat('vi-VN', {
+                                                                style: 'currency',
+                                                                currency: 'VND'
+                                                            }).format(num);
+
+                                                            const giaCu = res.gia_cu;
+                                                            const giaMoi = res.gia_moi;
+
+                                                            // ✅ Ưu tiên hiển thị giá mới nếu có
+                                                            if (giaMoi !== null && giaMoi > 0) {
+                                                                $('#new-price').text(format(giaMoi));
+
+                                                                // Nếu giá mới nhỏ hơn giá cũ → hiển thị giá cũ bị gạch
+                                                                if (giaCu > 0 && giaMoi < giaCu) {
+                                                                    $('#old-price').text(format(giaCu)).show();
+                                                                } else {
+                                                                    $('#old-price').hide();
+                                                                }
+                                                            } else {
+                                                                // Không có giá mới → hiển thị giá cũ
+                                                                $('#new-price').text(format(giaCu));
+                                                                $('#old-price').hide();
+                                                            }
+
+                                                            //  Hiển thị số lượng tồn kho nếu có
+                                                            if (typeof res.so_luong !== 'undefined') {
+                                                                $('#available-quantity').text('Số lượng còn lại: ' + res.so_luong);
+                                                                capNhatSoLuongTonKho(res.so_luong);
+                                                            } else {
+                                                                $('#available-quantity').text('Số lượng còn lại: Không xác định');
+                                                                capNhatSoLuongTonKho(1);
+                                                            }
+                                                        } else {
+                                                            alert(res.message);
+                                                        }
                                                     },
                                                     error: function() {
-                                                        alert("Không thể tải danh sách biến thể.");
+                                                        alert('Lỗi khi gọi API.');
                                                     }
                                                 });
                                             }
+                                        }
 
-                                            function setupVariantEvents() {
-                                                document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
-                                                    button.addEventListener('click', function() {
-                                                        if (this.classList.contains('disabled')) return;
+                                        function capNhatSoLuongTonKho(so_luong) {
+                                            const input = document.querySelector('#so-luong-mua');
+                                            const plusBtn = document.querySelector('.tp-cart-plus');
+                                            input.value = 1;
+                                            input.setAttribute('data-max-quantity', so_luong);
+                                            togglePlusButton(input, plusBtn);
+                                        }
 
-                                                        const id = this.getAttribute('data-mau-sac-id');
-                                                        selectedMauSacId = (selectedMauSacId === id) ? null : id;
-
-                                                        document.querySelectorAll('.tp-color-variation-btn').forEach(btn => btn.classList
-                                                            .remove('active'));
-                                                        if (selectedMauSacId) this.classList.add('active');
-
-                                                        updateAvailableOptions();
-                                                        fetchPrice();
-                                                    });
+                                        function checkQuantityLimit(colorId, storageId, productId, quantityToAdd = 1) {
+                                            return axios.post('/cart/check-stock', {
+                                                    color_id: colorId,
+                                                    storage_id: storageId,
+                                                    product_id: productId,
+                                                    quantity: quantityToAdd
+                                                })
+                                                .then(res => res.data.valid === true)
+                                                .catch(err => {
+                                                    console.error('Lỗi kiểm tra số lượng:', err);
+                                                    return false;
                                                 });
 
-                                                document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
-                                                    button.addEventListener('click', function() {
-                                                        if (this.classList.contains('disabled')) return;
+                                        }
 
-                                                        const id = this.getAttribute('data-dung-luong-id');
-                                                        selectedDungLuongId = (selectedDungLuongId === id) ? null : id;
+                                        function setupQuantityEvents() {
+                                            let input = document.querySelector('#so-luong-mua');
+                                            let plusBtn = document.querySelector('.tp-cart-plus');
+                                            let minusBtn = document.querySelector('.tp-cart-minus');
 
-                                                        document.querySelectorAll('.tp-size-variation-btn').forEach(btn => btn.classList.remove(
-                                                            'active'));
-                                                        if (selectedDungLuongId) this.classList.add('active');
+                                            // Xóa event cũ nếu có
+                                            plusBtn.replaceWith(plusBtn.cloneNode(true));
+                                            minusBtn.replaceWith(minusBtn.cloneNode(true));
 
-                                                        updateAvailableOptions();
-                                                        fetchPrice();
-                                                    });
-                                                });
-                                            }
+                                            plusBtn = document.querySelector('.tp-cart-plus');
+                                            minusBtn = document.querySelector('.tp-cart-minus');
 
-                                            function updateAvailableOptions() {
-                                                document.querySelectorAll('.tp-size-variation-btn').forEach(button => {
-                                                    const dungLuongId = button.getAttribute('data-dung-luong-id');
-                                                    const exists = allVariants.some(variant =>
-                                                        (!selectedMauSacId || variant.mau_sac_id == selectedMauSacId) &&
-                                                        variant.dung_luong_id == dungLuongId
-                                                    );
-                                                    button.classList.toggle('disabled', !exists);
-                                                });
+                                            plusBtn.addEventListener("click", async (e) => {
+                                                e.preventDefault();
+                                                let currentQuantity = parseInt(input.value);
+                                                 let max = parseInt(input.dataset.maxQuantity) || 1;
+                                                // console.log(currentQuantity);
+                                                // const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId,
+                                                //     currentQuantity + 1);
 
-                                                document.querySelectorAll('.tp-color-variation-btn').forEach(button => {
-                                                    const mauSacId = button.getAttribute('data-mau-sac-id');
-                                                    const exists = allVariants.some(variant =>
-                                                        (!selectedDungLuongId || variant.dung_luong_id == selectedDungLuongId) &&
-                                                        variant.mau_sac_id == mauSacId
-                                                    );
-                                                    button.classList.toggle('disabled', !exists);
-                                                });
-                                            }
-
-
-
-                                            function fetchPrice() {
-                                                if (selectedMauSacId && selectedDungLuongId) {
-                                                    $.ajax({
-                                                        url: '{{ route('sanpham.lay_gia_bien_the') }}',
-                                                        method: 'GET',
-                                                        data: {
-                                                            san_pham_id: sanPhamId,
-                                                            mau_sac_id: selectedMauSacId,
-                                                            dung_luong_id: selectedDungLuongId
-                                                        },
-                                                        success: function(res) {
-                                                            if (res.status === 'success') {
-                                                                const format = (num) => new Intl.NumberFormat('vi-VN', {
-                                                                    style: 'currency',
-                                                                    currency: 'VND'
-                                                                }).format(num);
-
-                                                                const giaCu = res.gia_cu;
-                                                                const giaMoi = res.gia_moi;
-
-                                                                // ✅ Ưu tiên hiển thị giá mới nếu có
-                                                                if (giaMoi !== null && giaMoi > 0) {
-                                                                    $('#new-price').text(format(giaMoi));
-
-                                                                    // Nếu giá mới nhỏ hơn giá cũ → hiển thị giá cũ bị gạch
-                                                                    if (giaCu > 0 && giaMoi < giaCu) {
-                                                                        $('#old-price').text(format(giaCu)).show();
-                                                                    } else {
-                                                                        $('#old-price').hide();
-                                                                    }
-                                                                } else {
-                                                                    // Không có giá mới → hiển thị giá cũ
-                                                                    $('#new-price').text(format(giaCu));
-                                                                    $('#old-price').hide();
-                                                                }
-
-                                                                //  Hiển thị số lượng tồn kho nếu có
-                                                                if (typeof res.so_luong !== 'undefined') {
-                                                                    $('#available-quantity').text('Số lượng còn lại: ' + res.so_luong);
-                                                                    capNhatSoLuongTonKho(res.so_luong);
-                                                                } else {
-                                                                    $('#available-quantity').text('Số lượng còn lại: Không xác định');
-                                                                    capNhatSoLuongTonKho(1);
-                                                                }
-                                                            } else {
-                                                                alert(res.message);
-                                                            }
-                                                        },
-                                                        error: function() {
-                                                            alert('Lỗi khi gọi API.');
-                                                        }
-                                                    });
+                                                if (currentQuantity < max) {
+                                                    input.value = currentQuantity + 1;
+                                                    togglePlusButton(input, plusBtn);
+                                                } else {
+                                                    plusBtn.classList.add('disabled')
+                                                    alertify.error(`Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!`);
                                                 }
-                                            }
-
-                                            function capNhatSoLuongTonKho(so_luong) {
-                                                const input = document.querySelector('#so-luong-mua');
-                                                const plusBtn = document.querySelector('.tp-cart-plus');
-                                                input.value = 1;
-                                                input.setAttribute('data-max-quantity', so_luong);
+                                            });
+                                            minusBtn.addEventListener("click", function(e) {
+                                                e.preventDefault();
+                                                let current = parseInt(input.value) || 1;
+                                                if (current > 1) input.value = current - 1;
                                                 togglePlusButton(input, plusBtn);
-                                            }
+                                            });
 
+                                            input.addEventListener("input", function() {
+                                                let raw = input.value.replace(/[^\d]/g, '');
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
 
-
-                                            function checkQuantityLimit(colorId, storageId, productId, quantityToAdd = 1) {
-                                                return axios.post('/cart/check-stock', {
-                                                        color_id: colorId,
-                                                        storage_id: storageId,
-                                                        product_id: productId,
-                                                        quantity: quantityToAdd
-                                                    })
-                                                    .then(res => res.data.valid === true)
-                                                    .catch(err => {
-                                                        console.error('Lỗi kiểm tra số lượng:', err);
-                                                        return false;
-                                                    });
-
-                                            }
-
-                                            function setupQuantityEvents() {
-                                                let input = document.querySelector('#so-luong-mua');
-                                                let plusBtn = document.querySelector('.tp-cart-plus');
-                                                let minusBtn = document.querySelector('.tp-cart-minus');
-
-                                                const newPlusBtn = plusBtn.cloneNode(true);
-                                                plusBtn.parentNode.replaceChild(newPlusBtn, plusBtn);
-                                                plusBtn = newPlusBtn;
-
-                                                const newMinusBtn = minusBtn.cloneNode(true);
-                                                minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
-                                                minusBtn = newMinusBtn;
-
-
-                                                plusBtn.addEventListener("click", async (e) => {
-                                                    e.preventDefault();
-                                                    let currentQuantity = parseInt(input.value);
-                                                    console.log(currentQuantity);
-
-                                                if (!selectedMauSacId || !selectedDungLuongId) {
-                                                    alertify.error('Vui lòng chọn màu sắc và dung lượng trước khi tăng số lượng.');
+                                                if (raw === '') {
+                                                    input.value = '';
                                                     return;
                                                 }
 
-
-                                                    const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId, currentQuantity + 1);
-
-                                                    if (canAdd) {
-                                                        input.value = currentQuantity + 1;
-                                                    } else {
-                                                        plusBtn.classList.add('disabled')
-                                                        alertify.error(`Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!`);
-                                                    }
-                                                });
-
-
-                                                minusBtn.addEventListener("click", function(e) {
-                                                    e.preventDefault();
-                                                    let current = parseInt(input.value) || 1;
-                                                    if (current > 1) input.value = current - 1;
-                                                    togglePlusButton(input, plusBtn);
-                                                });
-
-
-                                                input.addEventListener("input", function() {
-                                                    let raw = input.value.replace(/[^\d]/g, '');
-                                                    let max = parseInt(input.dataset.maxQuantity) || 1;
-
-                                                    if (raw === '') {
-                                                        input.value = '';
-                                                        return;
-                                                    }
-
-                                                    let val = parseInt(raw);
-                                                    if (val < 1) {
-                                                        alert("Số lượng tối thiểu là 1.");
-                                                        val = 1;
-                                                    } else if (val > max) {
-                                                        alert("Vượt quá số lượng tồn kho (" + max + ").");
-                                                        val = max;
-                                                    }
-
-                                                    input.value = val;
-                                                    togglePlusButton(input, plusBtn);
-                                                });
-
-                                                input.addEventListener("blur", function() {
-                                                    let val = parseInt(input.value) || 1;
-                                                    let max = parseInt(input.dataset.maxQuantity) || 1;
-                                                    if (val < 1) val = 1;
-                                                    if (val > max) val = max;
-                                                    input.value = val;
-                                                    togglePlusButton(input, plusBtn);
-                                                });
-
-                                                togglePlusButton(input, plusBtn);
-                                            }
-
-                                            function togglePlusButton(input, plusBtn) {
-                                                const current = parseInt(input.value) || 1;
-                                                const max = parseInt(input.dataset.maxQuantity) || 1;
-
-                                                if (current >= max) {
-                                                    plusBtn.classList.add('disabled');
-                                                } else {
-                                                    plusBtn.classList.remove('disabled');
+                                                let val = parseInt(raw);
+                                                if (val < 1) {
+                                                    alert("Số lượng tối thiểu là 1.");
+                                                    val = 1;
+                                                } else if (val > max) {
+                                                    alert("Vượt quá số lượng tồn kho (" + max + ").");
+                                                    val = max;
                                                 }
+
+                                                input.value = val;
+                                                togglePlusButton(input, plusBtn);
+                                            });
+
+                                            input.addEventListener("blur", function() {
+                                                let val = parseInt(input.value) || 1;
+                                                let max = parseInt(input.dataset.maxQuantity) || 1;
+                                                if (val < 1) val = 1;
+                                                if (val > max) val = max;
+                                                input.value = val;
+                                                togglePlusButton(input, plusBtn);
+                                            });
+
+                                            togglePlusButton(input, plusBtn);
+                                        }
+
+                                        function togglePlusButton(input, plusBtn) {
+                                            const current = parseInt(input.value) || 1;
+                                            const max = parseInt(input.dataset.maxQuantity) || 1;
+
+                                            if (current >= max) {
+                                                plusBtn.classList.add('disabled');
+                                            } else {
+                                                plusBtn.classList.remove('disabled');
                                             }
-                                        </script>
+                                        }
+                                    </script>
 
                                     <div class="tp-product-details-add-to-cart mb-15 w-100">
                                         <button class="tp-product-details-add-to-cart-btn w-100"
@@ -1019,19 +1008,23 @@
                                                                                                     class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
                                                                                             @endfor
                                                                                         </div>
-                                                                                         <div>
-                                                                                                            <span>Phân loại hàng:</span>
-                                                                                                           @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
-                                                                                @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
-                                                                                  {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                                                                                 @if ($index < $danhgia->bienTheDaMua->count() - 1)
-    ,
-                                                                                        @endif
-                                                                                       @endforeach
-                                                                                           @else
-                                                                                            <p>Không có biến thể nào được mua từ sản phẩm này.</p>
-                                                                                              @endif
-                                                                                                        </div>
+                                                                                        <div>
+                                                                                            <span>Phân loại hàng:</span>
+                                                                                            @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
+                                                                                                @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
+                                                                                                    {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }}
+                                                                                                    -
+                                                                                                    {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
+                                                                                                    @if ($index < $danhgia->bienTheDaMua->count() - 1)
+                                                                                                        ,
+                                                                                                    @endif
+                                                                                                @endforeach
+                                                                                            @else
+                                                                                                <p>Không có biến thể nào
+                                                                                                    được mua từ sản phẩm
+                                                                                                    này.</p>
+                                                                                            @endif
+                                                                                        </div>
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>
@@ -1039,16 +1032,19 @@
                                                                                         display: flex;
                                                                                         align-items: flex-start;
                                                                                     }
+
                                                                                     .review-info {
                                                                                         margin-left: 10px;
                                                                                         display: flex;
                                                                                         flex-direction: column;
                                                                                     }
+
                                                                                     .tp-product-details-review-avater-title {
                                                                                         margin-bottom: 5px;
 
                                                                                     }
-                                                                                 .review-info div {
+
+                                                                                    .review-info div {
                                                                                         margin-bottom: 5px;
                                                                                     }
                                                                                 </style>
@@ -1185,7 +1181,8 @@
                                         <div class="tp-product-thumb-3 mb-15 fix p-relative z-index-1">
                                             <a href="{{ route('chitietsanpham', ['id' => $sanPham->id]) }}">
                                                 <img src="{{ asset($sanPham->anh_san_pham) }}"
-                                                    alt="{{ $sanPham->ten_san_pham }}" style="width: 100%; height: 250px; object-fit: cover; display: block;">
+                                                    alt="{{ $sanPham->ten_san_pham }}"
+                                                    style="width: 100%; height: 250px; object-fit: cover; display: block;">
                                             </a>
 
                                             <!-- product action -->
@@ -1203,36 +1200,40 @@
                                                 <a
                                                     href="{{ route('chitietsanpham', ['id' => $sanPham->id]) }}">{{ $sanPham->ten_san_pham }}</a>
                                             </h3>
-                                         <div class="tp-product-price-wrapper-3">
-    @php
-        $bienThe = $sanPham->bienthesanphams->first();
-        $giaCu = $bienThe->gia_cu ?? 0;
-        $giaMoi = $bienThe->gia_moi ?? null;
-    @endphp
+                                            <div class="tp-product-price-wrapper-3">
+                                                @php
+                                                    $bienThe = $sanPham->bienthesanphams->first();
+                                                    $giaCu = $bienThe->gia_cu ?? 0;
+                                                    $giaMoi = $bienThe->gia_moi ?? null;
+                                                @endphp
 
-    @if ($giaMoi !== null && $giaMoi > 0)
-        @if ($giaCu > 0 && $giaMoi < $giaCu)
-            <span class="tp-product-price-3 old-price" style="text-decoration: line-through; color: #888;">
-                {{ number_format($giaCu, 0, ',', '.') }}₫
-            </span>
-            <span class="tp-product-price-3 new-price" style="margin-left: 8px; font-weight: bold; color: #cc0000;">
-                {{ number_format($giaMoi, 0, ',', '.') }}₫
-            </span>
-        @else
-            <span class="tp-product-price-3 new-price" style="font-weight: 600; color: #222;">
-                {{ number_format($giaMoi, 0, ',', '.') }}₫
-            </span>
-        @endif
-    @elseif ($giaCu > 0)
-        <span class="tp-product-price-3" style="font-weight: 600; color: #333;">
-            {{ number_format($giaCu, 0, ',', '.') }}₫
-        </span>
-    @else
-        <span class="tp-product-price-3" style="color: #999;">
-            Giá không có sẵn
-        </span>
-    @endif
-</div>
+                                                @if ($giaMoi !== null && $giaMoi > 0)
+                                                    @if ($giaCu > 0 && $giaMoi < $giaCu)
+                                                        <span class="tp-product-price-3 old-price"
+                                                            style="text-decoration: line-through; color: #888;">
+                                                            {{ number_format($giaCu, 0, ',', '.') }}₫
+                                                        </span>
+                                                        <span class="tp-product-price-3 new-price"
+                                                            style="margin-left: 8px; font-weight: bold; color: #cc0000;">
+                                                            {{ number_format($giaMoi, 0, ',', '.') }}₫
+                                                        </span>
+                                                    @else
+                                                        <span class="tp-product-price-3 new-price"
+                                                            style="font-weight: 600; color: #222;">
+                                                            {{ number_format($giaMoi, 0, ',', '.') }}₫
+                                                        </span>
+                                                    @endif
+                                                @elseif ($giaCu > 0)
+                                                    <span class="tp-product-price-3"
+                                                        style="font-weight: 600; color: #333;">
+                                                        {{ number_format($giaCu, 0, ',', '.') }}₫
+                                                    </span>
+                                                @else
+                                                    <span class="tp-product-price-3" style="color: #999;">
+                                                        Giá không có sẵn
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -1246,7 +1247,6 @@
             </div>
         </div>
     </section>
-
     <!-- related product area end -->
 
     <div class="modal fade tp-product-modal" id="producQuickViewModal" tabindex="-1"
@@ -1485,4 +1485,5 @@
             </div>
         </div>
     </div>
+
 @endsection
