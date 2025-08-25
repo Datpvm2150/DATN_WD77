@@ -248,18 +248,15 @@ class ThanhToanController extends Controller
                 'success' => false,
                 'message' => 'Một số vấn đề xảy ra khi cập nhật giỏ hàng.',
             ];
-            if (!empty($notFound)) $response['not_found'] = $notFound;
-            if (!empty($outOfStock)) $response['out_of_stock'] = $outOfStock;
-            if (!empty($insufficientStock)) $response['insufficient_stock'] = $insufficientStock;
+            if (!empty($notFound))
+                $response['not_found'] = $notFound;
+            if (!empty($outOfStock))
+                $response['out_of_stock'] = $outOfStock;
+            if (!empty($insufficientStock))
+                $response['insufficient_stock'] = $insufficientStock;
             if (!empty($notFound) || !empty($outOfStock) || !empty($insufficientStock)) {
                 return response()->json($response);
             }
-
-            // Tạo giỏ hàng chỉ với sản phẩm đã mua
-            $cart->products = $filteredProducts;
-            $cart->totalPrice = $updatedTotalPrice;
-
-
 
             // Áp dụng giảm giá trên tổng tiền sản phẩm đã chọn
             $discountCode = Session::get('discount_code', null);
@@ -274,7 +271,8 @@ class ThanhToanController extends Controller
                     $discountPercentage = 0;
                 }
             }
-            $originalTotal = $cart->totalPrice;
+            // Sử dụng $updatedTotalPrice thay vì $cart->totalPrice
+            $originalTotal = $updatedTotalPrice;
             $discountAmount = $originalTotal * ($discountPercentage / 100);
             if ($maxDiscount > 0 && $discountAmount > $maxDiscount) {
                 $discountAmount = $maxDiscount;
@@ -305,10 +303,11 @@ class ThanhToanController extends Controller
                 'thoi_gian_het_han' => now()->addMinutes(15),
             ]);
 
-            // Lưu chi tiết hóa đơn và cập nhật tồn kho
-            foreach ($cart->products as $item) {
+            // Lưu chi tiết hóa đơn và cập nhật tồn kho chỉ cho sản phẩm đã chọn
+            foreach ($filteredProducts as $item) {
                 $bienThe = BienTheSanPham::find($item['bienthe']->id);
-                if (!$bienThe) continue;
+                if (!$bienThe)
+                    continue;
                 $gia = $item['bienthe']->gia_moi ?? $item['bienthe']->gia_cu;
                 ChiTietHoaDon::create([
                     'hoa_don_id' => $hoaDon->id,
@@ -324,26 +323,6 @@ class ThanhToanController extends Controller
                 $bienThe->save();
             }
 
-            $oldCart = Session::get('cart');
-            Log::info("selectedItems:", $selectedItems);
-            Log::info("oldCart:", (array) $oldCart);
-            if ($oldCart && isset($oldCart->products)) {
-                foreach ($selectedItems as $key) {
-                    unset($oldCart->products[$key]);
-                }
-                $oldCart->totalPrice = 0;
-                $oldCart->totalProduct = 0;
-                foreach ($oldCart->products as $item) {
-                    $gia = $item['bienthe']->gia_moi ?? $item['bienthe']->gia_cu;
-                    $oldCart->totalPrice += $item['quantity'] * $gia;
-                    $oldCart->totalProduct += $item['quantity'];
-                }
-                if (count($oldCart->products) > 0) {
-                    Session::put('cart', $oldCart);
-                } else {
-                    Session::forget('cart');
-                }
-            }
             Session::forget('discount_code');
             Session::forget('discount_percentage');
             Session::forget('maxDiscount');
@@ -356,7 +335,7 @@ class ThanhToanController extends Controller
                         $hoaDon->ma_hoa_don,
                         "Thanh toán đơn hàng #$hoaDon->ma_hoa_don"
                     );
-
+                    break;
                 case 'Thanh toán khi nhận hàng':
                     $hoaDon->update([
                         'trang_thai_thanh_toan' => HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán'],
@@ -373,12 +352,35 @@ class ThanhToanController extends Controller
                             $discount->save();
                         }
                     }
+                    $oldCart = Session::get('cart');
+                    if ($oldCart && isset($oldCart->products)) {
+                        foreach ($oldCart->products as $cartKey => $cartItem) {
+                            // Chỉ xóa sản phẩm đã chọn khỏi giỏ hàng
+                            if (in_array($cartKey, array_keys($filteredProducts))) {
+                                unset($oldCart->products[$cartKey]);
+                            }
+                        }
+
+                        $oldCart->totalPrice = 0;
+                        $oldCart->totalProduct = 0;
+                        foreach ($oldCart->products as $item) {
+                            $gia = $item['bienthe']->gia_moi ?? $item['bienthe']->gia_cu;
+                            $oldCart->totalPrice += $item['quantity'] * $gia;
+                            $oldCart->totalProduct += $item['quantity'];
+                        }
+
+                        if (count($oldCart->products) > 0) {
+                            Session::put('cart', $oldCart);
+                        } else {
+                            Session::forget('cart');
+                        }
+                    }
                     return response()->json([
                         'success' => true,
                         'message' => 'Đặt hàng thành công, thanh toán khi nhận hàng. Sau khi thanh toán, mã giảm giá sẽ được gửi.'
                     ]);
 
-
+                    break;
                 default:
                     return response()->json(['success' => false, 'message' => 'Phương thức thanh toán không hợp lệ'], 400);
             }
@@ -448,7 +450,7 @@ class ThanhToanController extends Controller
 
     public function retryPayment($id)
     {
-        // Tìm hóa đơn theo ID 
+        // Tìm hóa đơn theo ID
         $order = HoaDon::findOrFail($id);
 
         // Kiểm tra nếu trạng thái thanh toán là 'Chưa thanh toán' và thời gian hết hạn chưa qua
