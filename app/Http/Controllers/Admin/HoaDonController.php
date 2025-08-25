@@ -175,6 +175,13 @@ class HoaDonController extends Controller
                     $orderService = app(OrderService::class);
                     $orderService->updatePaymentStatus($hoadon->id);
                     $orderService->sendVoucherAfterPaid($hoadon);
+                    // Cộng số lượng đã bán cho sản phẩm
+                    foreach ($hoadon->chiTietHoaDons as $chiTiet) {
+                        $bienThe = $chiTiet->bienTheSanPham;
+                        if ($bienThe && $bienThe->sanPham) {
+                            $bienThe->sanPham->increment('da_ban', $chiTiet->so_luong);
+                        }
+                    }
                 } catch (\Exception $e) {
                     Log::error("Lỗi khi xử lý sau thanh toán: " . $e->getMessage());
                 }
