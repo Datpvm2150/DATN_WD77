@@ -74,7 +74,6 @@
         </div>
         <div class="cartmini__checkout-btn">
             <a href="{{ route('cart.index') }}" class="tp-btn mb-10 w-100"> Xem giỏ hàng</a>
-            <a href="{{ route('thanhtoan') }}" class="tp-btn tp-btn-border w-100"> Thanh toán</a>
         </div>
     </div>
 @else

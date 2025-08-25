@@ -37,22 +37,7 @@
                </div>
                <div class="tp-login-option">
                  <div class="tp-login-social mb-10 d-flex flex-wrap align-items-center justify-content-center">
-                   {{-- <div class="tp-login-option-item has-google">
-                     <a href="#">
-                        <img src="{{ asset('assets/client/img/icon/login/google.svg') }}" alt="">
-                        Sign in with google
-                     </a>
-                   </div>
-                   <div class="tp-login-option-item">
-                     <a href="#">
-                        <img src="{{ asset('assets/client/img/icon/login/facebook.svg') }}" alt="">
-                     </a>
-                   </div>
-                   <div class="tp-login-option-item">
-                     <a href="#">
-                        <img class="apple" src="{{ asset('assets/client/img/icon/login/apple.svg') }}" alt="">
-                     </a>
-                   </div> --}}
+                   
                  </div>
                  <div class="tp-login-mail text-center mb-40">
                    <p>Quên mật khẩu <a href="#"></a></p>

@@ -32,9 +32,6 @@
                                 <a href="{{route('admin.dashboard')}}" class="tp-link">Dashboard</a>
                             </li>
                             <li>
-                                <a class='tp-link' href="{{ route('admin.doanhthu') }}">Doanh thu</a>
-                            </li>
-                            <li>
                                 <a class='tp-link' href="{{ route('admin.thongke.sanpham.banchay') }}">Sản phẩm bán
                                     chạy</a>
                             </li>
@@ -171,6 +168,7 @@
                         <ul class="nav-second-level">
                             <li><a class='tp-link' href="{{ route('admin.dungluongs.index') }}">Danh sách</a></li>
                             <li><a class='tp-link' href="{{ route('admin.dungluongs.create') }}">Thêm mới</a></li>
+                            <li><a class='tp-link' href="{{ route('admin.dungluongs.trash') }}">Thùng rác <i class="fas fa-trash-alt"></i> </a></li>
                         </ul>
                     </div>
                 </li>
@@ -201,8 +199,7 @@
                         <ul class="nav-second-level">
                             <li><a class='tp-link' href="{{ route('admin.khuyen_mais.index') }}">Danh sách</a></li>
                             <li><a class='tp-link' href="{{ route('admin.khuyen_mais.create') }}">Thêm mới</a></li>
-                            <li><a class='tp-link' href="{{ route('admin.khuyen_mais.trash') }}">Thùng rác <i
-                                        class="fas fa-trash-alt"></i> </a></li>
+                            <li><a class='tp-link' href="{{ route('admin.khuyen_mais.trash') }}">Thùng rác <i class="fas fa-trash-alt"></i> </a></li>
                         </ul>
                     </div>
                 </li>
@@ -233,6 +230,7 @@
                         <ul class="nav-second-level">
                             <li><a class='tp-link' href="{{ route('admin.mausacs.index') }}">Danh sách</a></li>
                             <li><a class='tp-link' href="{{ route('admin.mausacs.create') }}">Thêm mới</a></li>
+                            <li><a class='tp-link' href="{{ route('admin.mausacs.trash') }}">Thùng rác <i class="fas fa-trash-alt"></i> </a></li>
                         </ul>
                     </div>
                 </li>
@@ -251,7 +249,7 @@
                     </div>
                 </li>
 
-                
+
 
                 {{-- Liên hệ --}}
                 <li>

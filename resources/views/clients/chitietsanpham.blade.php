@@ -2,40 +2,6 @@
 
 @section('content')
     <!-- breadcrumb area start -->
-    <section class="breadcrumb__area breadcrumb__style-2 include-bg pt-50 pb-20">
-        <div class="container">
-            <div class="row">
-                <div class="col-xxl-12">
-                    <div class="breadcrumb__content p-relative z-index-1">
-                        <div class="breadcrumb__list has-icon">
-                            <span class="breadcrumb-icon">
-                                <svg width="17" height="17" viewBox="0 0 17 17" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg">
-                                    <path
-                                        d="M1.42393 16H15.5759C15.6884 16 15.7962 15.9584 15.8758 15.8844C15.9553 15.8104 16 15.71 16 15.6054V6.29143C16 6.22989 15.9846 6.1692 15.9549 6.11422C15.9252 6.05923 15.8821 6.01147 15.829 5.97475L8.75305 1.07803C8.67992 1.02736 8.59118 1 8.5 1C8.40882 1 8.32008 1.02736 8.24695 1.07803L1.17098 5.97587C1.11791 6.01259 1.0748 6.06035 1.04511 6.11534C1.01543 6.17033 0.999976 6.23101 1 6.29255V15.6063C1.00027 15.7108 1.04504 15.8109 1.12451 15.8847C1.20398 15.9585 1.31165 16 1.42393 16ZM10.1464 15.2107H6.85241V10.6202H10.1464V15.2107ZM1.84866 6.48977L8.4999 1.88561L15.1517 6.48977V15.2107H10.9946V10.2256C10.9946 10.1209 10.95 10.0206 10.8704 9.94654C10.7909 9.87254 10.683 9.83096 10.5705 9.83096H6.42848C6.316 9.83096 6.20812 9.87254 6.12858 9.94654C6.04904 10.0206 6.00435 10.1209 6.00435 10.2256V15.2107H1.84806L1.84866 6.48977Z"
-                                        fill="#55585B" stroke="#55585B" stroke-width="0.5" />
-                                </svg>
-                            </span>
-                            <span><a href="#">Home</a></span>
-                            <span><a
-                                    href="#">{{ $sanpham->danhMuc ? $sanpham->danhMuc->ten_danh_muc : '' }}</a></span>
-                            <span>
-                                @php
-                                    $tenSanPham = $sanpham->ten_san_pham;
-                                    // Kiểm tra nếu chữ cái đầu chưa viết hoa
-                                    if (mb_strtoupper(mb_substr($tenSanPham, 0, 1)) !== mb_substr($tenSanPham, 0, 1)) {
-                                        $tenSanPham = mb_convert_case($tenSanPham, MB_CASE_TITLE, 'UTF-8');
-                                    }
-                                @endphp
-
-                                {{ $tenSanPham }}
-                            </span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
     <section class="tp-product-details-area">
         <div class="tp-product-details-top pb-115">
             <div class="container">
@@ -192,8 +158,6 @@
                                         </div>
 
                                     </div>
-
-                                    <!-- Dung Lượng Variation -->
                                     <!-- Dung Lượng Variation -->
                                     <div class="tp-product-details-variation-item">
                                         <h4 class="tp-product-details-variation-title" id="capacity-title">Dung lượng:
@@ -475,31 +439,29 @@
                                             let plusBtn = document.querySelector('.tp-cart-plus');
                                             let minusBtn = document.querySelector('.tp-cart-minus');
 
-                                            const newPlusBtn = plusBtn.cloneNode(true);
-                                            plusBtn.parentNode.replaceChild(newPlusBtn, plusBtn);
-                                            plusBtn = newPlusBtn;
+                                            // Xóa event cũ nếu có
+                                            plusBtn.replaceWith(plusBtn.cloneNode(true));
+                                            minusBtn.replaceWith(minusBtn.cloneNode(true));
 
-                                            const newMinusBtn = minusBtn.cloneNode(true);
-                                            minusBtn.parentNode.replaceChild(newMinusBtn, minusBtn);
-                                            minusBtn = newMinusBtn;
+                                            plusBtn = document.querySelector('.tp-cart-plus');
+                                            minusBtn = document.querySelector('.tp-cart-minus');
 
                                             plusBtn.addEventListener("click", async (e) => {
                                                 e.preventDefault();
                                                 let currentQuantity = parseInt(input.value);
-                                                console.log(currentQuantity);
+                                                 let max = parseInt(input.dataset.maxQuantity) || 1;
+                                                // console.log(currentQuantity);
+                                                // const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId,
+                                                //     currentQuantity + 1);
 
-
-                                                const canAdd = await checkQuantityLimit(selectedMauSacId, selectedDungLuongId, sanPhamId, currentQuantity + 1);
-
-                                                if (canAdd) {
+                                                if (currentQuantity < max) {
                                                     input.value = currentQuantity + 1;
+                                                    togglePlusButton(input, plusBtn);
                                                 } else {
                                                     plusBtn.classList.add('disabled')
                                                     alertify.error(`Số lượng bạn chọn đã vượt mức tối đa của sản phẩm này!`);
                                                 }
                                             });
-
-
                                             minusBtn.addEventListener("click", function(e) {
                                                 e.preventDefault();
                                                 let current = parseInt(input.value) || 1;
@@ -1046,19 +1008,23 @@
                                                                                                     class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
                                                                                             @endfor
                                                                                         </div>
-                                                                                         <div>
-                                                                                                            <span>Phân loại hàng:</span>
-                                                                                                           @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
-                                                                                @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
-                                                                                  {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }} - {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                                                                                 @if ($index < $danhgia->bienTheDaMua->count() - 1)
-    ,
-                                                                                        @endif
-                                                                                       @endforeach
-                                                                                           @else
-                                                                                            <p>Không có biến thể nào được mua từ sản phẩm này.</p>
-                                                                                              @endif
-                                                                                                        </div>
+                                                                                        <div>
+                                                                                            <span>Phân loại hàng:</span>
+                                                                                            @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
+                                                                                                @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
+                                                                                                    {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }}
+                                                                                                    -
+                                                                                                    {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
+                                                                                                    @if ($index < $danhgia->bienTheDaMua->count() - 1)
+                                                                                                        ,
+                                                                                                    @endif
+                                                                                                @endforeach
+                                                                                            @else
+                                                                                                <p>Không có biến thể nào
+                                                                                                    được mua từ sản phẩm
+                                                                                                    này.</p>
+                                                                                            @endif
+                                                                                        </div>
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>
@@ -1066,16 +1032,19 @@
                                                                                         display: flex;
                                                                                         align-items: flex-start;
                                                                                     }
+
                                                                                     .review-info {
                                                                                         margin-left: 10px;
                                                                                         display: flex;
                                                                                         flex-direction: column;
                                                                                     }
+
                                                                                     .tp-product-details-review-avater-title {
                                                                                         margin-bottom: 5px;
 
                                                                                     }
-                                                                                 .review-info div {
+
+                                                                                    .review-info div {
                                                                                         margin-bottom: 5px;
                                                                                     }
                                                                                 </style>
@@ -1212,7 +1181,8 @@
                                         <div class="tp-product-thumb-3 mb-15 fix p-relative z-index-1">
                                             <a href="{{ route('chitietsanpham', ['id' => $sanPham->id]) }}">
                                                 <img src="{{ asset($sanPham->anh_san_pham) }}"
-                                                    alt="{{ $sanPham->ten_san_pham }}" style="width: 100%; height: 250px; object-fit: cover; display: block;">
+                                                    alt="{{ $sanPham->ten_san_pham }}"
+                                                    style="width: 100%; height: 250px; object-fit: cover; display: block;">
                                             </a>
 
                                             <!-- product action -->
@@ -1230,37 +1200,40 @@
                                                 <a
                                                     href="{{ route('chitietsanpham', ['id' => $sanPham->id]) }}">{{ $sanPham->ten_san_pham }}</a>
                                             </h3>
-                                         <div class="tp-product-price-wrapper-3">
-    @php
-        $bienThe = $sanPham->bienthesanphams->first();
-        $giaCu = $bienThe->gia_cu ?? 0;
-        $giaMoi = $bienThe->gia_moi ?? null;
-    @endphp
+                                            <div class="tp-product-price-wrapper-3">
+                                                @php
+                                                    $bienThe = $sanPham->bienthesanphams->first();
+                                                    $giaCu = $bienThe->gia_cu ?? 0;
+                                                    $giaMoi = $bienThe->gia_moi ?? null;
+                                                @endphp
 
-    @if ($giaMoi !== null && $giaMoi > 0)
-        @if ($giaCu > 0 && $giaMoi < $giaCu)
-            <span class="tp-product-price-3 old-price" style="text-decoration: line-through; color: #888;">
-                {{ number_format($giaCu, 0, ',', '.') }}₫
-            </span>
-            <span class="tp-product-price-3 new-price" style="margin-left: 8px; font-weight: bold; color: #cc0000;">
-                {{ number_format($giaMoi, 0, ',', '.') }}₫
-            </span>
-        @else
-            <span class="tp-product-price-3 new-price" style="font-weight: 600; color: #222;">
-                {{ number_format($giaMoi, 0, ',', '.') }}₫
-            </span>
-        @endif
-    @elseif ($giaCu > 0)
-        <span class="tp-product-price-3" style="font-weight: 600; color: #333;">
-            {{ number_format($giaCu, 0, ',', '.') }}₫
-        </span>
-    @else
-        <span class="tp-product-price-3" style="color: #999;">
-            Giá không có sẵn
-        </span>
-    @endif
-</div>
-
+                                                @if ($giaMoi !== null && $giaMoi > 0)
+                                                    @if ($giaCu > 0 && $giaMoi < $giaCu)
+                                                        <span class="tp-product-price-3 old-price"
+                                                            style="text-decoration: line-through; color: #888;">
+                                                            {{ number_format($giaCu, 0, ',', '.') }}₫
+                                                        </span>
+                                                        <span class="tp-product-price-3 new-price"
+                                                            style="margin-left: 8px; font-weight: bold; color: #cc0000;">
+                                                            {{ number_format($giaMoi, 0, ',', '.') }}₫
+                                                        </span>
+                                                    @else
+                                                        <span class="tp-product-price-3 new-price"
+                                                            style="font-weight: 600; color: #222;">
+                                                            {{ number_format($giaMoi, 0, ',', '.') }}₫
+                                                        </span>
+                                                    @endif
+                                                @elseif ($giaCu > 0)
+                                                    <span class="tp-product-price-3"
+                                                        style="font-weight: 600; color: #333;">
+                                                        {{ number_format($giaCu, 0, ',', '.') }}₫
+                                                    </span>
+                                                @else
+                                                    <span class="tp-product-price-3" style="color: #999;">
+                                                        Giá không có sẵn
+                                                    </span>
+                                                @endif
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

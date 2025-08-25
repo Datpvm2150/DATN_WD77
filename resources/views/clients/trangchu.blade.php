@@ -25,7 +25,7 @@
                                         <h3 class="tp-slider-title"
                                             style="max-height: 4.5em; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis;">
                                             {{ $bannersHea->ten_banner }}</h3>
-                                        {{-- <div class="tp-slider-btn">
+                                        <div class="tp-slider-btn">
                                             <a href="{{ $bannersHea->url_lien_ket }}"
                                                 class="tp-btn tp-btn-2 tp-btn-white">Xem ngay
                                                 <svg width="17" height="14" viewBox="0 0 17 14" fill="none"
@@ -37,7 +37,7 @@
                                                         stroke-linejoin="round" />
                                                 </svg>
                                             </a>
-                                        </div> --}}
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-xl-7 col-lg-6 col-md-6">
@@ -850,7 +850,7 @@
                                                             alt="product-electronic">
                                                     </a>
 
-                                                    
+
                                                     @if ($randProduct->is_hot)
                                                         <div class="tp-product-badge">
                                                             <span class="product-hot">Hot</span>

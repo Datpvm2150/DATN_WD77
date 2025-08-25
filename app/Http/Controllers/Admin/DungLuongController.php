@@ -39,64 +39,91 @@ class DungLuongController extends Controller
         }
     }
 
-    public function edit(string $id){
+    public function edit(string $id)
+    {
         $dungluongs = DungLuong::query()->findOrFail($id);
-        return view('admins.dungluongs.update',compact('dungluongs'));
+        return view('admins.dungluongs.update', compact('dungluongs'));
     }
 
-    public function update(Request $request,string $id)  {
-        if($request->isMethod("PUT")){
-            $validDungLuong = $request->validate([
-                'ten_dung_luong' =>[
-                    'required',
-                    'string',
-                    'max:255',
-                    'unique:dung_luongs,ten_dung_luong,' .$id,
-                ]
+    public function update(Request $request, string $id)
+    {
+        if ($request->isMethod("PUT")) {
+            $dungluongs = DungLuong::query()->findOrFail($id);
+            //  Kiểm tra nếu dung lượng đã được gán cho biến thể sản phẩm
+            if ($dungluongs->bienTheSanPhams()->exists()) {
+                return redirect()->route('admin.dungluongs.index')
+                    ->with('error', 'Dung lượng này đã được sử dụng cho sản phẩm, không thể chỉnh sửa!');
+            }
+            $validDungLuong = $request->validate(
+                [
+                    'ten_dung_luong' => [
+                        'required',
+                        'string',
+                        'max:255',
+                        'unique:dung_luongs,ten_dung_luong,' . $id,
+                    ]
                 ],
                 [
                     'ten_dung_luong.required' => 'Tên dung lượng không được để trống!',
                     'ten_dung_luong.string' => 'Tên dung lượng phải là một chuỗi!',
                     'ten_dung_luong.max' => 'Tên dung lượng không quá 255 ký tự!',
                     'ten_dung_luong.unique' => 'Tên dung lượng đã tồn tại'
-                ]);
-                $params = $request->except('_token','_method');
-                $dungluongs = DungLuong::query()->findOrFail($id);
-                $dungluongs->update($params);
-                return redirect()->route('admin.dungluongs.index')->with('success','Cập nhật thành công');
+                ]
+            );
+            $params = $request->except('_token', '_method');
+
+            $dungluongs->update($params);
+            return redirect()->route('admin.dungluongs.index')->with('success', 'Cập nhật thành công');
         }
     }
 
-    public function onOffDungLuong($id)  {
+    public function onOffDungLuong($id)
+    {
         $dungluong = DungLuong::find($id);
-        if(!$dungluong){
-            return redirect()->route('admin.banners.index')->with('error','Dung lượng không tồn tại');
+        if (!$dungluong) {
+            return redirect()->route('admin.banners.index')->with('error', 'Dung lượng không tồn tại');
         }
-        if($dungluong->trang_thai == true){
+        if ($dungluong->trang_thai == true) {
             $countDungLuong = $dungluong->bienTheSanPhams()->withTrashed()->get();
-            if(count($countDungLuong) > 0){
-                return redirect()->back()->with('error','Dung lượng đã có sản phẩm, không thể ngừng hoạt động!');
+            if (count($countDungLuong) > 0) {
+                return redirect()->back()->with('error', 'Dung lượng đã có sản phẩm, không thể ngừng hoạt động!');
             }
             $dungluong->trang_thai = false;
             $dungluong->save();
-            return redirect()->back()->with('success','Ngừng hoạt động dung lượng');
+            return redirect()->back()->with('success', 'Ngừng hoạt động dung lượng');
         } else {
             $dungluong->trang_thai = true;
             $dungluong->save();
-            return redirect()->back()->with('success','Hoạt động dung lượng');
+            return redirect()->back()->with('success', 'Hoạt động dung lượng');
         }
     }
 
-    public function destroy(string $id)  {
+    public function destroy(string $id)
+    {
         $dungluongs = DungLuong::findOrFail($id);
-        if(!$dungluongs){
-            return redirect()->back()->with('error','Không tìm thấy dung lượng!');
+        if (!$dungluongs) {
+            return redirect()->back()->with('error', 'Không tìm thấy dung lượng!');
         }
         $countDungLuong = $dungluongs->bienTheSanPhams()->withTrashed()->get();
-        if(count($countDungLuong) > 0){
-            return redirect()->back()->with('error','Dung lượng đã có sản phẩm, không thể xóa! ');
+        if (count($countDungLuong) > 0) {
+            return redirect()->back()->with('error', 'Dung lượng đã có sản phẩm, không thể xóa! ');
         }
+        $dungluongs->trang_thai = false;
+        $dungluongs->save();
         $dungluongs->delete();
         return redirect()->route('admin.dungluongs.index')->with('success', 'Xóa kích cỡ dung lượng thành công');
+    }
+    public function trash()
+    {
+        $dungluongs = DungLuong::onlyTrashed()->get();
+        return view('admins.dungluongs.trash', compact('dungluongs'));
+    }
+    public function restore($id)
+    {
+        $dungluong = DungLuong::onlyTrashed()->findOrFail($id);
+        $dungluong->trang_thai = true;
+        $dungluong->save();
+        $dungluong->restore();
+        return redirect()->route('admin.dungluongs.trash')->with('success', 'Khôi phục thành công');
     }
 }

@@ -5,7 +5,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\VNPayController;
-use App\Http\Controllers\Admin\StaffDashboardController;
 use App\Http\Controllers\Admin\TagController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AdminController;
@@ -15,8 +14,6 @@ use App\Http\Controllers\Admin\BannerController;
 use App\Http\Controllers\Admin\HoaDonController;
 use App\Http\Controllers\Admin\MauSacController;
 use App\Http\Controllers\Admin\BaiVietController;
-use App\Http\Controllers\Admin\ChatBotController;
-use App\Http\Controllers\Admin\ChatLogController;
 use App\Http\Controllers\Admin\DanhMucController;
 use App\Http\Controllers\Admin\SanPhamController;
 use App\Http\Controllers\Client\DoiQuaController;
@@ -24,7 +21,6 @@ use App\Http\Controllers\Client\LienHeController;
 
 
 // Client Routes
-use App\Http\Controllers\Client\DanhgiaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DungLuongController;
 use App\Http\Controllers\Admin\KhuyenMaiController;
@@ -35,6 +31,7 @@ use App\Http\Controllers\Client\TrangChuController;
 use App\Http\Controllers\Client\YeuThichController;
 use App\Http\Controllers\Client\ThanhToanController;
 use App\Http\Controllers\Admin\AdminLienHeController;
+use App\Http\Controllers\Auth\CustomerForgotPassword;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Auth\CustomerLoginController;
 use App\Http\Controllers\Client\TrangBaiVietController;
@@ -126,6 +123,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::put('/{id}/update', [DungLuongController::class, 'update'])->name('update');
         Route::post('/{id}/onOffDungLuong', [DungLuongController::class, 'onOffDungLuong'])->name('onOffDungLuong');
         Route::delete('/{id}/destroy', [DungLuongController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [DungLuongController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [DungLuongController::class, 'restore'])->name('restore');
     });
 
     // Tag
@@ -148,6 +147,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::put('/{id}/update', [MauSacController::class, 'update'])->name('update');
         Route::post('/{id}/onOffMauSac', [MauSacController::class, 'onOffMauSac'])->name('onOffMauSac');
         Route::delete('/{id}/destroy', [MauSacController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [MauSacController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [MauSacController::class, 'restore'])->name('restore');
     });
 
     // Khuyến mãi
@@ -163,7 +164,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::delete('/{id}', [KhuyenMaiController::class, 'destroy'])->name('destroy');
         Route::get('/trash', [KhuyenMaiController::class, 'trash'])->name('trash');
         Route::post('/restore/{id}', [KhuyenMaiController::class, 'restore'])->name('restore');
-        Route::delete('/force-delete/{id}', [KhuyenMaiController::class, 'forceDelete'])->name('forceDelete');
     });
     // Đánh giá
     Route::prefix('Danhgias')->name('Danhgias.')->group(function () {
@@ -189,8 +189,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
 
     //Thống kê
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/doanhthu', [DashboardController::class, 'doanhthu'])->name('doanhthu');
-    Route::get('/admin/doanh-thu', [StaffDashboardController::class, 'thongKeDoanhThu'])->name('admin.doanhthu');
     Route::get('/dashboard/filter', [DashboardController::class, 'filter'])->name('dashboard.filter');
     Route::get('/tk-sanpham-banchay', [DashboardController::class, 'sanPhamBanChay'])->name('thongke.sanpham.banchay');
     Route::get('/tk-sanpham-kho', [DashboardController::class, 'sanPhamBanKho'])->name('thongke.sanpham.kho');
@@ -205,11 +203,11 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
     });
     // Chat
     Route::prefix('chat')->name('chat.')->group(function () {
-        Route::get('/', [App\Http\Controllers\Admin\ChatController::class, 'index'])->name('index');
-        Route::get('/{id}/messages', [App\Http\Controllers\Admin\ChatController::class, 'show'])->name('show');
-        Route::post('/{id}/send', [App\Http\Controllers\Admin\ChatController::class, 'send'])->name('send');
+        Route::get('/', [ChatController::class, 'index'])->name('index');
+        Route::get('/{id}/messages', [ChatController::class, 'show'])->name('show');
+        Route::post('/{id}/send', [ChatController::class, 'send'])->name('send');
     });
-    Route::post('/chat-rooms/{room}/mark-read', [App\Http\Controllers\Admin\ChatController::class, 'markMessagesAsRead']);
+    Route::post('/chat-rooms/{room}/mark-read', [ChatController::class, 'markMessagesAsRead']);
 
     Route::post('/set-admin-online', function (Request $request) {
         $user = User::where('id', $request->user_id)->first();
@@ -267,10 +265,10 @@ Route::prefix('admin')->name('admin.')->group(function () {
 });
 
 /////////////////////////////////////NGUOI DUNG TRANG WEB //////////////////////////////////////////
+// Đăng nhập bằng gg
 Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/auth/google', [GoogleController::class, 'redirectToGoogle'])->name('auth.google');
     Route::get('/auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-
     Route::get('login', [CustomerLoginController::class, 'showLoginForm'])->name('login');
     Route::post('login', [CustomerLoginController::class, 'login'])->name('login.post');
     Route::get('register', [CustomerRegisterController::class, 'showRegistrationForm'])->name('register');
@@ -281,7 +279,7 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::get('/donhang', [TaiKhoanController::class, 'index'])->name('donhang');
     Route::put('changepassword', [TaiKhoanController::class, 'changePassword'])->name('changePassword');
     Route::match(['get', 'post'], '/{id}/chitietdonhang', [TaiKhoanController::class, 'show'])->name('donhang.chitiet');
-    Route::post('/{id}/cancel', [TaiKhoanController::class, 'cancelOrder'])->name('cancelOrder'); // hủy đơn hàng
+    Route::post('/{id}/cancel', [TaiKhoanController::class, 'cancelOrder'])->name('cancelOrder');
     Route::post('/{id}/getOrder', [TaiKhoanController::class, 'getOrder'])->name('getOrder');
     Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('customer.orders.filter');
     // quên mk customer
@@ -300,8 +298,6 @@ Route::get('/baiviet/{danh_muc}', [TrangBaiVietController::class, 'filterByCateg
 Route::get('/lienhe', [LienHeController::class, 'index'])->name('lienhe');
 Route::post('/lienhe', [LienHeController::class, 'store'])->name('lienhe.store');
 
-
-
 // Client
 // Trang chủ
 Route::get('/', [TrangChuController::class, 'index'])->name('/');
@@ -309,7 +305,7 @@ Route::get('/trangchu', [TrangChuController::class, 'index'])->name('trangchu');
 Route::get('/404', [TrangChuController::class, 'index'])->name('error404');
 Route::get('/500', [TrangChuController::class, 'index'])->name('error500');
 
-// giỏ hàng
+// Giỏ hàng
 Route::get('/Cart-Index', [CartController::class, 'index'])->name('cart.index');
 Route::get('/Cart-List-Drop', [CartController::class, 'CartListDrop'])->name('cart.list.drop');
 Route::get('/Cart-List', [CartController::class, 'CartList'])->name('cart.list');
@@ -319,10 +315,13 @@ Route::get('/Delete-Item-List-Cart/{id}', [CartController::class, 'DeleteItemLis
 Route::get('/Update-Item-Cart/{id}', [CartController::class, 'UpdateItemCart'])->name('cart.update.item');
 Route::get('/Discount-Cart/{disscountCode}', [CartController::class, 'discount'])->name('cart.disscount');
 Route::get('/DeleteDiscount', [CartController::class, 'DeleteDiscount'])->name('cart.DeleteDiscount');
+Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
+
 
 
 //thanh toan
-Route::get('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
+Route::post('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoan');
+
 Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
 Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
 Route::post('/clear-discount', [ThanhToanController::class, 'clearDiscount'])->name('clear.discount');
@@ -332,15 +331,12 @@ Route::post('/zalopay/callback', [ThanhToanController::class, 'handleZaloPayCall
 Route::post('/customer/orders/retry-payment/{id}', [ThanhToanController::class, 'retryPayment'])->name('customer.retryPayment');
 Route::post('/remove-discount', [ThanhToanController::class, 'removeDiscount'])->name('removeDiscount');
 
+// Sản phẩm
 Route::get('/san-pham', [TrangSanPhamController::class, 'index'])->name('san-pham');
 Route::get('/danh-muc/{danh_muc_id}', [SanPhamDanhMucController::class, 'index'])->name('sanpham.danhmuc');
-
 Route::get('/search', [TrangSanPhamController::class, 'search'])->name('search.sanpham');
-//danhgia
-// Route::post('/reviews', [DanhgiaController::class, 'storeReview'])->name('reviews.store');
 
 // Chi tiết sản phẩm
-
 Route::get('/chitietsanpham/{id}', [ChiTietSanPhamController::class, 'show'])->name('chitietsanpham');
 Route::get('/sanphamtag/{id}', [TagController::class, 'sanphamtag'])->name('sanphamtag');
 Route::get('/sanpham/lay-gia-bien-the', [ChiTietSanPhamController::class, 'layGiaBienThe'])->name('sanpham.lay_gia_bien_the');
@@ -350,20 +346,18 @@ Route::post('/danh-gia/{danhGia}/reply', [ChiTietSanPhamController::class, 'repl
 Route::put('/danh-gia/tra-loi/{traLoi}', [ChiTietSanPhamController::class, 'editReply'])->name('admin.danhgia.editReply');
 Route::get('/san-pham/check-so-luong', [ChiTietSanPhamController::class, 'checkQuantityInCart'])->name('sanpham.check_quantity');
 
-
-
 Route::get('/vnpay/return', [VnpayController::class, 'handleReturn'])->name('vnpay.return');
 
-//yeu thich
+// Yêu thích
 Route::get('/Add-To-Love/{id}', [YeuThichController::class, 'addToLove'])->name('love.add');
 Route::get('/yeuthich', [YeuThichController::class, 'showYeuThich'])->name('yeuthich');
 Route::get('/Delete-From-Love/{id}', [YeuThichController::class, 'deleteLove'])->name('love.delete');
 Route::get('/Loved-List', [YeuThichController::class, 'lovedList'])->name('love.list');
 
-// chat
+// Chat
 Route::post('/chat/send', [App\Http\Controllers\Client\ChatController::class, 'send'])->name('chat.send');
 Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::class, 'loadMessages']);
-Route::post('/cart/check-stock', [CartController::class, 'checkStock']);
+
 
 // Điểm danh
 Route::middleware(['auth'])->group(function () {
@@ -375,5 +369,4 @@ Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');
 Route::middleware(['auth'])->group(function () {
     Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
 });
-
 // Lich sử điểm

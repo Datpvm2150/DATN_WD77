@@ -213,7 +213,9 @@
                                                             <input type="number" class="form-control"
                                                                 id="gia_moi-{{ $index }}" name="gia_moi[]"
 
-                                                                value="{{ old('gia_moi.' . $index, $bienthesanpham->gia_moi) }}">
+                                                               value="{{ old('gia_moi.' . $index, $bienthesanpham->gia_moi !== null ? $bienthesanpham->gia_moi : '') }}"
+
+                                                                >
                                                             @error('gia_moi.' . $index)
                                                                 <p class="text-danger">{{ $message }}</p>
                                                             @enderror
@@ -341,7 +343,7 @@
                                         <div class="col-md-2">
                                             <label for="new_so_luong-${variantCount}" class="form-label">Số lượng:</label>
                                             <input type="number" class="form-control" id="new_so_luong-${variantCount}" name="new_so_luong[]" min="0">
-                                            @error('new_so_luong.0')
+                                            @error('new_so_luong.0 ')
                                                 <p class="text-danger">{{ $message }}</p>
                                             @enderror
                                         </div>

@@ -19,7 +19,6 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withSchedule(function (\Illuminate\Console\Scheduling\Schedule $schedule) {
         $schedule->command('orders:cancel-expired')->everyFiveMinutes();
-        $schedule->command('promotions:update-expired')->everyMinute();
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(CheckDisscountMiddleware::class);

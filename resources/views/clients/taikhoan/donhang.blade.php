@@ -6,8 +6,8 @@
             <h3 class="profile__info-title">Lịch sử đơn hàng</h3>
             @if (session('success'))
             <div class="alert alert-success" role="alert">{{ session('success') }}</div>
-            @endif
-            @if (session('error'))
+        @endif
+        @if (session('error'))
             <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
             @endif
             <!-- Thanh trạng thái -->
@@ -72,8 +72,8 @@
         $(document).ready(function () {
     let currentStatus = 1;
 
-    // Load lần đầu
-    loadOrders(currentStatus);
+            // Load lần đầu
+            loadOrders(currentStatus);
 
     // Gửi AJAX khi click trạng thái
     $('.filter-link').on('click', function () {
@@ -86,7 +86,7 @@
     // Tự động reload đơn hàng mỗi 10 giây (10000 ms)
     setInterval(function () {
         loadOrders(currentStatus);
-    }, 1000); // Có thể chỉnh 5s, 15s tùy bạn
+    }, 10000); // Có thể chỉnh 5s, 15s tùy bạn
 
     function loadOrders(status) {
         $.ajax({
@@ -134,5 +134,4 @@
 
 
     </script>
-    
 @endsection

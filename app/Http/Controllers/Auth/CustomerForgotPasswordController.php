@@ -33,6 +33,7 @@ class CustomerForgotPasswordController extends Controller
         $status = Password::broker('users')->sendResetLink(
             $request->only('email'),
             function ($user, $token) {
+                // Tùy chỉnh URL
                 $path = url(route('customer.password.reset', [
                     'token' => $token,
                     'email' => $user->getEmailForPasswordReset(),
@@ -45,6 +46,7 @@ class CustomerForgotPasswordController extends Controller
         return $status === Password::RESET_LINK_SENT
             ? back()->with(['status' => __($status)])
             : back()->withErrors(['email' => __($status)]);
+
     }
 
     // Xử lý reset mật khẩu

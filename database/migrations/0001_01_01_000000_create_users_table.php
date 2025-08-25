@@ -17,11 +17,11 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('mat_khau');
-            $table->string('so_dien_thoai')->nullable()->change();
+            $table->string('so_dien_thoai')->nullable();
             $table->string('anh_dai_dien')->nullable();
             $table->enum('vai_tro', ['admin', 'staff', 'user'])->default('user');
             $table->text('dia_chi')->nullable();
-             $table->date('ngay_sinh')->nullable()->change();
+            $table->date('ngay_sinh')->nullable()->change();
             $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
