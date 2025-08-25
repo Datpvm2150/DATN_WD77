@@ -284,10 +284,10 @@ Route::prefix('customer')->name('customer.')->group(function () {
     Route::post('/{id}/getOrder', [TaiKhoanController::class, 'getOrder'])->name('getOrder');
     Route::get('orders/filter', [TaiKhoanController::class, 'filterOrders'])->name('customer.orders.filter');
     // quên mk customer
-    Route::get('/show-form-forgot', [CustomerForgotPassword::class, 'ShowformForgotPasswword'])->name('forgotPassword');
-    Route::post('/forgot-password', [CustomerForgotPassword::class, 'SendEmailForgot'])->name('password.email');
-    Route::get('reset-password/{token}', [CustomerForgotPassword::class, 'formResetPassword'])->name('password.reset');
-    Route::post('reset-pass', [CustomerForgotPassword::class, 'resetPassword'])->name('password.change');
+    Route::get('/show-form-forgot', [CustomerForgotPasswordController::class, 'ShowformForgotPasswword'])->name('forgotPassword');
+    Route::post('/forgot-password', [CustomerForgotPasswordController::class, 'SendEmailForgot'])->name('password.email');
+    Route::get('reset-password/{token}', [CustomerForgotPasswordController::class, 'formResetPassword'])->name('password.reset');
+    Route::post('reset-pass', [CustomerForgotPasswordController::class, 'resetPassword'])->name('password.change');
 });
 
 // Bài viết
@@ -370,4 +370,5 @@ Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');
 Route::middleware(['auth'])->group(function () {
     Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
 });
+
 // Lich sử điểm
