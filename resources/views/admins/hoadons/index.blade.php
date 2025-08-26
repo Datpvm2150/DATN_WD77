@@ -324,6 +324,10 @@
 
             if (confirm('Bạn có chắc chắn thay đổi trạng thái thành "' + selectedOption + '" không?')) {
                 form.submit();
+                // Tự động load lại trang sau 1.5s (đợi backend xử lý xong)
+                setTimeout(function() {
+                    location.reload();
+                }, 1500);
             } else {
                 selectElement.value = defaultValue;
             }
