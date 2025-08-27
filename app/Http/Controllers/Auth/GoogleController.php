@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
@@ -10,7 +11,7 @@ use Illuminate\Support\Str;
 
 class GoogleController extends Controller
 {
-     public function redirectToGoogle()
+    public function redirectToGoogle()
     {
         // Sử dụng stateless để tránh lỗi liên quan đến session khi triển khai qua proxy/CDN
         return Socialite::driver('google')->stateless()->redirect();
@@ -24,9 +25,10 @@ class GoogleController extends Controller
             $user = User::updateOrCreate(
                 ['email' => $googleUser->getEmail()],
                 [
-                    'name' => $googleUser->getName(),
+                    'ten' => $googleUser->getName(),
                     'google_id' => $googleUser->getId(),
-                    'avatar' => $googleUser->getAvatar(),
+                    'anh_dai_dien' => $googleUser->getAvatar(),
+                    'mat_khau' => bcrypt(Str::random(16)),                    
                 ]
             );
 

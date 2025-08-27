@@ -49,7 +49,7 @@ class DanhGiaSanPhamController extends Controller
     {
         
         // Lấy chi tiết đánh giá và các câu trả lời
-        $danhGia = DanhGiaSanPham::with(['user', 'traLois.user'])
+        $danhGia = DanhGiaSanPham::with(['user', 'replies.user'])
             ->findOrFail($danhGiaId);
             $title = 'Chi tiết đánh giá sản phẩm';
         // Lấy các ID hóa đơn của người dùng có trạng thái là 'hoàn thành'

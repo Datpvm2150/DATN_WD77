@@ -115,7 +115,10 @@ class HoaDonController extends Controller
         if (in_array($hoadon->trang_thai, [6, 7])) {
             return redirect()->back()->with('error', 'Không thể cập nhật trạng thái vì đơn hàng đã hủy hoặc đã nhận.');
         }
-
+        // Kiểm tra nếu trạng thái hiện tại là 5 và cố gắng chuyển sang trạng thái 6
+        if ($hoadon->trang_thai == 5 && $request->input('trang_thai') == 6) {
+            return redirect()->route('admin.hoadons.index')->with('error', 'Không thể chuyển đơn hàng từ "Đã giao hàng" sang "Đơn hàng đã hủy".');
+        }
         // Xử lý đơn hàng thanh toán qua chuyển khoản ngân hàng
         if ($hoadon->phuong_thuc_thanh_toan === 'Thanh toán qua chuyển khoản ngân hàng') {
             // Đảm bảo trạng thái thanh toán là "Đã thanh toán"

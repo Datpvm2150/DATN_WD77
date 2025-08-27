@@ -234,7 +234,5 @@
         });
     });
 
-    // @if (isset($message))
-    //     alert('Thông báo: ' + @json($message));
-    // @endif
+   
 </script>

@@ -188,12 +188,16 @@
                                                             onchange="this.form.submit()" required
                                                             @if ($item->trang_thai == 6 || $item->trang_thai == 7) disabled @endif>
                                                             @foreach ($trangThaiHoaDon as $key => $value)
+                                                                @if ($item->trang_thai == 5 && $key == 6)
+                                                                    <!-- Bỏ qua trạng thái 6 (Đơn hàng đã hủy) khi trạng thái hiện tại là 5 -->
+                                                                    @continue
+                                                                @endif
                                                                 <option value="{{ $key }}"
                                                                     {{ $key == $item->trang_thai ? 'selected' : '' }}
                                                                     @if (
                                                                         $key != $item->trang_thai &&
                                                                             (($item->trang_thai < 5 && $key != $item->trang_thai + 1) ||
-                                                                                ($item->trang_thai == 5 && !in_array($key, [6, 7])) ||
+                                                                                ($item->trang_thai == 5 && !in_array($key, [7])) ||
                                                                                 $item->trang_thai >= 6)) disabled @endif>
                                                                     {{ $value }}
                                                                 </option>
