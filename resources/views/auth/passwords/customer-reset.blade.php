@@ -37,23 +37,6 @@
                         </div>
                         <div class="tp-login-option">
                             <div class="tp-login-social mb-10 d-flex flex-wrap align-items-center justify-content-center">
-                                {{-- <div class="tp-login-option-item has-google">
-                                    <a href="#">
-                                        <img src="{{ asset('assets/client/img/icon/login/google.svg') }}" alt="">
-                                        Sign in with google
-                                    </a>
-                                </div>
-                                <div class="tp-login-option-item">
-                                    <a href="#">
-                                        <img src="{{ asset('assets/client/img/icon/login/facebook.svg') }}" alt="">
-                                    </a>
-                                </div>
-                                <div class="tp-login-option-item">
-                                    <a href="#">
-                                        <img class="apple" src="{{ asset('assets/client/img/icon/login/apple.svg') }}"
-                                            alt="">
-                                    </a>
-                                </div> --}}
                             </div>
                             <div class="tp-login-mail text-center mb-40">
                                 <p>Quên mật khẩu <a href="#"></a></p>
@@ -139,23 +122,13 @@
                                     <div class="tp-login-input-box">
                                         <div class="tp-login-input">
                                             <input class="form-control" type="password" id="password_confirmation"
-                                                name="password_confirmation" required placeholder="Nhập lại mật khẩu mới">>
+                                                name="password_confirmation" required placeholder="Nhập lại mật khẩu mới">
                                         </div>
                                         <div class="tp-login-input-title">
                                             <label for="email"> Nhập lại mật khẩu mới</label>
                                         </div>
                                     </div>
                                 </div>
-                                {{-- <div
-                                    class="tp-login-suggetions d-sm-flex align-items-center justify-content-between mb-20">
-                                    <div class="tp-login-remeber">
-                                        <input id="remeber" type="checkbox">
-                                        <label for="remeber">Nhớ tài khoản</label>
-                                    </div>
-                                    <div class="tp-login-forgot">
-                                        <a href="{{route('customer.forgotPassword')}}">Quên mật khẩu</a>
-                                    </div>
-                                </div> --}}
                                 <div class="tp-login-bottom">
                                     <button type="submit" class="tp-login-btn w-100">Thay đổi mật khẩu</button>
 

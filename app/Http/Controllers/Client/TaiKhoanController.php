@@ -17,9 +17,13 @@ class TaiKhoanController extends Controller
     public function index()
     {
         $user = Auth::user();
+        if(!$user) {
+            return redirect()->route('customer.login')->with('error', 'Chưa đăng nhập');
+        }
         $danhMucs = DanhMuc::all();
         // Lấy thông trạng thái mặc định "chờ xác nhận"
         $donHangs = $user->hoaDons()->where('trang_thai', 1)->orderBy('created_at', 'desc')->get();
+
         // Lấy thuộc tính
         $trang_thai_don_hang = HoaDon::TRANG_THAI;
 
