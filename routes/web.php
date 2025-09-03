@@ -361,9 +361,8 @@ Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::c
 
 
 // Điểm danh
-Route::middleware(['auth'])->group(function () {
+
     Route::post('/diem-danh', [DiemDanhController::class, 'diemDanh'])->name('diem-danh');
-});
 
 // Đổi quà
 Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');

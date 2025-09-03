@@ -3,7 +3,9 @@
 @section('title')
     {{ $title }}
 @endsection
-
+@push('meta')
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+@endpush
 @section('css')
     <style>
         .equal-td {
@@ -169,7 +171,7 @@
                                     </thead>
                                     <tbody>
                                         @foreach ($listHoaDon as $item)
-                                            <tr>
+                                            <tr data-order-id="{{ $item->id }}">
                                                 <td>{{ $item->ma_hoa_don }}</td>
                                                 <td>{{ \Carbon\Carbon::parse($item->ngay_dat_hang)->format('d-m-Y') }}</td>
                                                 <td style="color: red; font-weight: bold;">
@@ -301,7 +303,16 @@
 @endsection
 
 @section('js')
+    <!-- Pusher JS -->
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+
+    <!-- Realtime Orders JS -->
+    <script src="{{ asset('assets/admin/js/realtime-orders.js') }}"></script>
+
     <script>
+        // Set Pusher configuration
+        window.PUSHER_APP_KEY = '{{ env('PUSHER_APP_KEY') }}';
+        window.PUSHER_APP_CLUSTER = '{{ env('PUSHER_APP_CLUSTER') }}'
         document.addEventListener('DOMContentLoaded', function() {
             const selects = document.querySelectorAll('.form-select');
             selects.forEach(function(selectElement) {
@@ -352,4 +363,43 @@
             }
         }
     </script>
+    <style>
+        .new-order-highlight {
+            background-color: #d4edda !important;
+            animation: highlightNew 3s ease-in-out;
+        }
+
+        .updated-order-highlight {
+            background-color: #fff3cd !important;
+            animation: highlightUpdate 2s ease-in-out;
+        }
+
+        @keyframes highlightNew {
+            0% {
+                background-color: #d4edda;
+            }
+
+            50% {
+                background-color: #c3e6cb;
+            }
+
+            100% {
+                background-color: transparent;
+            }
+        }
+
+        @keyframes highlightUpdate {
+            0% {
+                background-color: #fff3cd;
+            }
+
+            50% {
+                background-color: #ffeaa7;
+            }
+
+            100% {
+                background-color: transparent;
+            }
+        }
+    </style>
 @endsection

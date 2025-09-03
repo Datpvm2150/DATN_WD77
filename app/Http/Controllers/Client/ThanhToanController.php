@@ -39,7 +39,7 @@ class ThanhToanController extends Controller
             ->unique(); // Loại bỏ các địa chỉ trùng lặp
 
         // Kiểm tra nếu có giỏ hàng trong session
-        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+        $oldCart = Session::has( 'cart') ? Session::get('cart') : null;
         if (!$oldCart) {
             // Nếu không có giỏ hàng, chuyển hướng đến trang đơn hàng
             return redirect()->to('http://127.0.0.1:8000/customer/donhang');
