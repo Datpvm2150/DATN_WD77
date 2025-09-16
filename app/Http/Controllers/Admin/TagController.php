@@ -13,7 +13,8 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = tag::all();
+        $tags = Tag::whereNull('deleted_at')->get(); // chỉ lấy tag chưa xóa mềm
+
         return view('admins.tags.index', compact('tags'));
     }
     // Hiển thị form tạo Tên tag
@@ -84,22 +85,38 @@ public function edit($id)
     
     public function destroy($id)
     {
-        // Tìm kiếm bản ghi Tên tag theo ID
+        // Tìm tag theo ID (kể cả chưa xóa)
         $tag = Tag::findOrFail($id);
 
-        // Kiểm tra xem có sản phẩm nào gắn tag này không
-        // if ($tag->sanPhams()->exists()) {
-        //     return redirect()->route('admin.tag.index')->with('error', 'Không thể xóa thẻ tag này vì có sản phẩm đang sử dụng.');
-        // }
+        // Nếu đang hoạt động thì không cho xóa
         if ($tag->trang_thai == 1) {
             return redirect()->route('admin.tag.index')->with('error', 'Không thể xóa thẻ tag này vì đang ở trạng thái hoạt động.');
         }
-        // Xóa bản ghi
+
+        // Thực hiện xóa mềm (chuyển vào thùng rác)
         $tag->delete();
-    
-        return redirect()->route('admin.tag.index')->with('success', 'Tên tag đã được xóa thành công.');
+
+        return redirect()->route('admin.tag.index')->with('success', 'Tên tag đã được đưa vào thùng rác.');
     }
+
+    // Hiển thị thùng rác
+    public function trash()
+    {
+        $tags = Tag::onlyTrashed()->get();
+        return view('admins.tags.trash', compact('tags'));
+    }
+
+    // Khôi phục tag
+    public function restore($id)
+    {
+        $tag = Tag::withTrashed()->findOrFail($id);
+        $tag->restore();
+        return redirect()->route('admin.tag.trash')->with('success', 'Tag đã được khôi phục.');
+    }
+
+    // Xóa vĩnh viễn
     
+
     public function onOffTag($id)
     {
         // Tìm kiếm bản ghi Tên tag theo ID

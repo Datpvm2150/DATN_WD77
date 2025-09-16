@@ -32,7 +32,7 @@ class DoiDiemController extends Controller
                 'giam_toi_da' => $khuyenMai->giam_toi_da,
                 'user_id' => $user->id,
                 'so_luong' => 1,
-                'da_su_dung' => 0,
+                'da_su_dung' => 0, 
                 'loai_ma' => 'ca_nhan',
                 'diem_can' => $khuyenMai->diem_can,
                 'ngay_bat_dau' => $khuyenMai->ngay_bat_dau,

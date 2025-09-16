@@ -269,95 +269,95 @@ class VnpayController extends Controller
 
         return view('payment.error', ['message' => 'Chữ ký không hợp lệ']);
     }
-    // public function queryTransaction(Request $request)
-    // {
-    //     // Validate the incoming request data
-    //     $request->validate([
-    //         'txnRef' => 'required',
-    //         'transactionDate' => 'required|date_format:YmdHis',
-    //     ]);
+    public function queryTransaction(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'txnRef' => 'required',
+            'transactionDate' => 'required|date_format:YmdHis',
+        ]);
 
-    //     // Generate random Request ID for this transaction
-    //     $vnp_RequestId = rand(1, 10000);
+        // Generate random Request ID for this transaction
+        $vnp_RequestId = rand(1, 10000);
 
-    //     // Define the required parameters for the API call
-    //     $vnp_Command = "querydr"; // API command for querying transaction
-    //     $vnp_TxnRef = $request->input('txnRef'); // Transaction reference
-    //     $vnp_OrderInfo = "Query transaction"; // Description of the transaction
-    //     $vnp_TransactionDate = $request->input('transactionDate'); // Date of the transaction
-    //     $vnp_CreateDate = now()->format('YmdHis'); // Time of request creation
-    //     $vnp_IpAddr = $request->ip(); // IP address of the client making the request
+        // Define the required parameters for the API call
+        $vnp_Command = "querydr"; // API command for querying transaction
+        $vnp_TxnRef = $request->input('txnRef'); // Transaction reference
+        $vnp_OrderInfo = "Query transaction"; // Description of the transaction
+        $vnp_TransactionDate = $request->input('transactionDate'); // Date of the transaction
+        $vnp_CreateDate = now()->format('YmdHis'); // Time of request creation
+        $vnp_IpAddr = $request->ip(); // IP address of the client making the request
 
-    //     // Log the incoming request data
-    //     Log::info("Query Transaction Request Data", [
-    //         'txnRef' => $vnp_TxnRef,
-    //         'transactionDate' => $vnp_TransactionDate,
-    //         'CreateDate' => $vnp_CreateDate,
-    //         'IpAddr' => $vnp_IpAddr,
-    //         'OrderInfo' => $vnp_OrderInfo
-    //     ]);
+        // Log the incoming request data
+        Log::info("Query Transaction Request Data", [
+            'txnRef' => $vnp_TxnRef,
+            'transactionDate' => $vnp_TransactionDate,
+            'CreateDate' => $vnp_CreateDate,
+            'IpAddr' => $vnp_IpAddr,
+            'OrderInfo' => $vnp_OrderInfo
+        ]);
 
-    //     // Load configuration parameters from the environment file
+        // Load configuration parameters from the environment file
 
-    //     $vnp_TmnCode = config('vnpay.vnp_TmnCode');
-    //     $vnp_HashSecret = config('vnpay.vnp_HashSecret');
-    //     $apiUrl = config('vnpay.vnp_TransactionApiUrl');
+        $vnp_TmnCode = config('vnpay.vnp_TmnCode');
+        $vnp_HashSecret = config('vnpay.vnp_HashSecret');
+        $apiUrl = config('vnpay.vnp_TransactionApiUrl');
 
-    //     // Prepare data to send in the request
-    //     $datarq = [
-    //         "vnp_RequestId" => $vnp_RequestId,
-    //         "vnp_Version" => "2.1.0",
-    //         "vnp_Command" => $vnp_Command,
-    //         "vnp_TmnCode" => $vnp_TmnCode,
-    //         "vnp_TxnRef" => $vnp_TxnRef,
-    //         "vnp_OrderInfo" => $vnp_OrderInfo,
-    //         "vnp_TransactionDate" => $vnp_TransactionDate,
-    //         "vnp_CreateDate" => $vnp_CreateDate,
-    //         "vnp_IpAddr" => $vnp_IpAddr,
-    //     ];
+        // Prepare data to send in the request
+        $datarq = [
+            "vnp_RequestId" => $vnp_RequestId,
+            "vnp_Version" => "2.1.0",
+            "vnp_Command" => $vnp_Command,
+            "vnp_TmnCode" => $vnp_TmnCode,
+            "vnp_TxnRef" => $vnp_TxnRef,
+            "vnp_OrderInfo" => $vnp_OrderInfo,
+            "vnp_TransactionDate" => $vnp_TransactionDate,
+            "vnp_CreateDate" => $vnp_CreateDate,
+            "vnp_IpAddr" => $vnp_IpAddr,
+        ];
 
-    //     // Format the data for hash generation
-    //     $format = '%s|%s|%s|%s|%s|%s|%s|%s|%s';
-    //     $dataHash = sprintf(
-    //         $format,
-    //         $datarq['vnp_RequestId'],
-    //         $datarq['vnp_Version'],
-    //         $datarq['vnp_Command'],
-    //         $datarq['vnp_TmnCode'],
-    //         $datarq['vnp_TxnRef'],
-    //         $datarq['vnp_TransactionDate'],
-    //         $datarq['vnp_CreateDate'],
-    //         $datarq['vnp_IpAddr'],
-    //         $datarq['vnp_OrderInfo']
-    //     );
+        // Format the data for hash generation
+        $format = '%s|%s|%s|%s|%s|%s|%s|%s|%s';
+        $dataHash = sprintf(
+            $format,
+            $datarq['vnp_RequestId'],
+            $datarq['vnp_Version'],
+            $datarq['vnp_Command'],
+            $datarq['vnp_TmnCode'],
+            $datarq['vnp_TxnRef'],
+            $datarq['vnp_TransactionDate'],
+            $datarq['vnp_CreateDate'],
+            $datarq['vnp_IpAddr'],
+            $datarq['vnp_OrderInfo']
+        );
 
-    //     // Generate checksum (HMAC SHA512)
-    //     $checksum = hash_hmac('SHA512', $dataHash, $vnp_HashSecret);
-    //     $datarq["vnp_SecureHash"] = $checksum;
+        // Generate checksum (HMAC SHA512)
+        $checksum = hash_hmac('SHA512', $dataHash, $vnp_HashSecret);
+        $datarq["vnp_SecureHash"] = $checksum;
 
-    //     // Log the data being sent to VNPay
-    //     Log::info("Data being sent to VNPay", $datarq);
+        // Log the data being sent to VNPay
+        Log::info("Data being sent to VNPay", $datarq);
 
-    //     // Call the VNPay API with the prepared data
-    //     $response = $this->callVNPayAPI('POST', $apiUrl, $datarq);
+        // Call the VNPay API with the prepared data
+        $response = $this->callVNPayAPI('POST', $apiUrl, $datarq);
 
-    //     // Decode the response
-    //     $apiResponse = json_decode($response, true);
+        // Decode the response
+        $apiResponse = json_decode($response, true);
 
-    //     // Log the response from VNPay
-    //     Log::info("VNPay API Response", $apiResponse);
+        // Log the response from VNPay
+        Log::info("VNPay API Response", $apiResponse);
 
-    //     // Check if the API response is valid
-    //     if ($apiResponse === null) {
-    //         return response()->json(['error' => 'Invalid response from VNPay', 'raw_response' => $response]);
-    //     }
+        // Check if the API response is valid
+        if ($apiResponse === null) {
+            return response()->json(['error' => 'Invalid response from VNPay', 'raw_response' => $response]);
+        }
 
-    //     // Return the result to the view
-    //     return view('admins.transaction-result', [
-    //         'response' => $apiResponse,
-    //         'rawResponse' => $response,
-    //     ]);
-    // }
+        // Return the result to the view
+        return view('admins.transaction-result', [
+            'response' => $apiResponse,
+            'rawResponse' => $response,
+        ]);
+    }
 
 
 
@@ -388,96 +388,96 @@ class VnpayController extends Controller
 
         return $response;
     }
-    // public function refundTransaction(Request $request)
-    // {
-    //     // Validate the incoming request data
-    //     $request->validate([
-    //         'TransactionType' => 'required|in:02,03', // 02: Hoàn toàn phần, 03: Hoàn một phần
-    //         'TxnRef' => 'required',
-    //         'Amount' => 'required|numeric|min:1',
-    //         'TransactionDate' => 'required|date_format:YmdHis',
-    //         'CreateBy' => 'required|string',
-    //     ]);
+    public function refundTransaction(Request $request)
+    {
+        // Validate the incoming request data
+        $request->validate([
+            'TransactionType' => 'required|in:02,03', // 02: Hoàn toàn phần, 03: Hoàn một phần
+            'TxnRef' => 'required',
+            'Amount' => 'required|numeric|min:1',
+            'TransactionDate' => 'required|date_format:YmdHis',
+            'CreateBy' => 'required|string',
+        ]);
 
-    //     // Generate the required parameters for the API call
-    //     $vnp_RequestId = rand(1, 10000); // Unique ID for the refund request
-    //     $vnp_Command = "refund"; // API command
-    //     $vnp_TransactionType = $request->input('TransactionType');
-    //     $vnp_TxnRef = $request->input('TxnRef');
-    //     $vnp_Amount = $request->input('Amount') * 100; // Convert amount to VND
-    //     $vnp_OrderInfo = "Hoan Tien Giao Dich"; // Description of the refund
-    //     $vnp_TransactionNo = "0"; // Default transaction number
-    //     $vnp_TransactionDate = $request->input('TransactionDate');
-    //     $vnp_CreateDate = now()->format('YmdHis');
-    //     $vnp_CreateBy = $request->input('CreateBy');
-    //     $vnp_IpAddr = $request->ip();
+        // Generate the required parameters for the API call
+        $vnp_RequestId = rand(1, 10000); // Unique ID for the refund request
+        $vnp_Command = "refund"; // API command
+        $vnp_TransactionType = $request->input('TransactionType');
+        $vnp_TxnRef = $request->input('TxnRef');
+        $vnp_Amount = $request->input('Amount') * 100; // Convert amount to VND
+        $vnp_OrderInfo = "Hoan Tien Giao Dich"; // Description of the refund
+        $vnp_TransactionNo = "0"; // Default transaction number
+        $vnp_TransactionDate = $request->input('TransactionDate');
+        $vnp_CreateDate = now()->format('YmdHis');
+        $vnp_CreateBy = $request->input('CreateBy');
+        $vnp_IpAddr = $request->ip();
 
-    //     // Load configuration parameters from the environment file
-    //     $vnp_TmnCode = config('vnpay.vnp_TmnCode');
-    //     $vnp_HashSecret = config('vnpay.vnp_HashSecret');
-    //     $apiUrl = config('vnpay.vnp_TransactionApiUrl');
+        // Load configuration parameters from the environment file
+        $vnp_TmnCode = config('vnpay.vnp_TmnCode');
+        $vnp_HashSecret = config('vnpay.vnp_HashSecret');
+        $apiUrl = config('vnpay.vnp_TransactionApiUrl');
 
-    //     // Prepare data to send in the refund request
-    //     $ispTxnRequest = [
-    //         "vnp_RequestId" => $vnp_RequestId,
-    //         "vnp_Version" => "2.1.0",
-    //         "vnp_Command" => $vnp_Command,
-    //         "vnp_TmnCode" => $vnp_TmnCode,
-    //         "vnp_TransactionType" => $vnp_TransactionType,
-    //         "vnp_TxnRef" => $vnp_TxnRef,
-    //         "vnp_Amount" => $vnp_Amount,
-    //         "vnp_OrderInfo" => $vnp_OrderInfo,
-    //         "vnp_TransactionNo" => $vnp_TransactionNo,
-    //         "vnp_TransactionDate" => $vnp_TransactionDate,
-    //         "vnp_CreateDate" => $vnp_CreateDate,
-    //         "vnp_CreateBy" => $vnp_CreateBy,
-    //         "vnp_IpAddr" => $vnp_IpAddr,
-    //     ];
+        // Prepare data to send in the refund request
+        $ispTxnRequest = [
+            "vnp_RequestId" => $vnp_RequestId,
+            "vnp_Version" => "2.1.0",
+            "vnp_Command" => $vnp_Command,
+            "vnp_TmnCode" => $vnp_TmnCode,
+            "vnp_TransactionType" => $vnp_TransactionType,
+            "vnp_TxnRef" => $vnp_TxnRef,
+            "vnp_Amount" => $vnp_Amount,
+            "vnp_OrderInfo" => $vnp_OrderInfo,
+            "vnp_TransactionNo" => $vnp_TransactionNo,
+            "vnp_TransactionDate" => $vnp_TransactionDate,
+            "vnp_CreateDate" => $vnp_CreateDate,
+            "vnp_CreateBy" => $vnp_CreateBy,
+            "vnp_IpAddr" => $vnp_IpAddr,
+        ];
 
-    //     // Format data for hash generation
-    //     $format = '%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s';
-    //     $dataHash = sprintf(
-    //         $format,
-    //         $ispTxnRequest['vnp_RequestId'],
-    //         $ispTxnRequest['vnp_Version'],
-    //         $ispTxnRequest['vnp_Command'],
-    //         $ispTxnRequest['vnp_TmnCode'],
-    //         $ispTxnRequest['vnp_TransactionType'],
-    //         $ispTxnRequest['vnp_TxnRef'],
-    //         $ispTxnRequest['vnp_Amount'],
-    //         $ispTxnRequest['vnp_TransactionNo'],
-    //         $ispTxnRequest['vnp_TransactionDate'],
-    //         $ispTxnRequest['vnp_CreateBy'],
-    //         $ispTxnRequest['vnp_CreateDate'],
-    //         $ispTxnRequest['vnp_IpAddr'],
-    //         $ispTxnRequest['vnp_OrderInfo']
-    //     );
+        // Format data for hash generation
+        $format = '%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s|%s';
+        $dataHash = sprintf(
+            $format,
+            $ispTxnRequest['vnp_RequestId'],
+            $ispTxnRequest['vnp_Version'],
+            $ispTxnRequest['vnp_Command'],
+            $ispTxnRequest['vnp_TmnCode'],
+            $ispTxnRequest['vnp_TransactionType'],
+            $ispTxnRequest['vnp_TxnRef'],
+            $ispTxnRequest['vnp_Amount'],
+            $ispTxnRequest['vnp_TransactionNo'],
+            $ispTxnRequest['vnp_TransactionDate'],
+            $ispTxnRequest['vnp_CreateBy'],
+            $ispTxnRequest['vnp_CreateDate'],
+            $ispTxnRequest['vnp_IpAddr'],
+            $ispTxnRequest['vnp_OrderInfo']
+        );
 
-    //     // Generate the secure hash
-    //     $checksum = hash_hmac('SHA512', $dataHash, $vnp_HashSecret);
-    //     $ispTxnRequest["vnp_SecureHash"] = $checksum;
+        // Generate the secure hash
+        $checksum = hash_hmac('SHA512', $dataHash, $vnp_HashSecret);
+        $ispTxnRequest["vnp_SecureHash"] = $checksum;
 
-    //     // Log the refund request data
-    //     Log::info("Refund Request Data", $ispTxnRequest);
+        // Log the refund request data
+        Log::info("Refund Request Data", $ispTxnRequest);
 
-    //     // Call the VNPay API with the prepared data
-    //     $response = $this->callVNPayAPI('POST', $apiUrl, $ispTxnRequest);
+        // Call the VNPay API with the prepared data
+        $response = $this->callVNPayAPI('POST', $apiUrl, $ispTxnRequest);
 
-    //     // Decode the response from the VNPay API
-    //     $apiResponse = json_decode($response, true);
+        // Decode the response from the VNPay API
+        $apiResponse = json_decode($response, true);
 
-    //     // Log the response from VNPay
-    //     Log::info("VNPay Refund API Response", $apiResponse);
+        // Log the response from VNPay
+        Log::info("VNPay Refund API Response", $apiResponse);
 
-    //     // Check if the API response is valid
-    //     if ($apiResponse === null) {
-    //         return response()->json(['error' => 'Invalid response from VNPay', 'raw_response' => $response]);
-    //     }
+        // Check if the API response is valid
+        if ($apiResponse === null) {
+            return response()->json(['error' => 'Invalid response from VNPay', 'raw_response' => $response]);
+        }
 
-    //     // Return the result to the view
-    //     return view('admins.refund-result', [
-    //         'response' => $apiResponse,
-    //         'rawResponse' => $response,
-    //     ]);
-    // }
+        // Return the result to the view
+        return view('admins.refund-result', [
+            'response' => $apiResponse,
+            'rawResponse' => $response,
+        ]);
+    }
 }

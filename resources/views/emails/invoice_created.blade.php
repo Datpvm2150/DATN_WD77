@@ -71,7 +71,7 @@
 <body>
     <div class="container">
         <div class="header">
-            <img src="{{ asset('assets/client/img/logo/favicon.png') }}" alt="Logo">
+            {{-- <img src="{{ asset('assets/client/img/logo/favicon.png') }}" alt="Logo"> --}}
             <h1>Cảm ơn bạn đã đặt hàng!</h1>
         </div>
         <div class="content">
@@ -96,10 +96,10 @@
             <tbody>
                 @foreach ($hoaDon->chiTietHoaDons as $chiTiet)
                     <tr>
-                        <td>
+                        {{-- <td>
                             <img src="{{ asset('storage/' . $chiTiet->bienTheSanPham->sanPham->hinh_anh) }}"
                                 alt="Ảnh sản phẩm" style="width: 50px; height: 50px; object-fit: cover;">
-                        </td>
+                        </td> --}}
                         <td>{{ $chiTiet->bienTheSanPham->sanPham->ten_san_pham }}</td>
                         <td>{{ $chiTiet->so_luong }}</td>
                         <td>{{ number_format($chiTiet->don_gia, 0, ',', '.') }} VND</td>

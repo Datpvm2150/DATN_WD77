@@ -83,20 +83,33 @@
                                                         href="{{ route('admin.danhmucs.edit', $danh_muc->id) }}">Sửa
                                                     </a>
                                                     <!-- Xóa -->
-                                                    @if($danh_muc->trashed())
-                                                    <!-- Khôi phục -->
-                                                    <form action="{{ route('admin.danhmucs.restore', $danh_muc->id) }}" method="POST" style="display: inline-block;">
-                                                        @csrf
-                                                        <button type="submit" class="dropdown-item">Khôi phục</button>
-                                                    </form>
-                                                    @else
-                                                        <!-- Xóa mềm -->
-                                                        <form action="{{ route('admin.danhmucs.softDelete', $danh_muc->id) }}" method="POST" style="display: inline-block;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                            <button type="submit" class="dropdown-item">Xóa</button>
-                                                        </form>
-                                                    @endif
+ @if($danh_muc->trashed())
+                <!-- Khôi phục -->
+                <form action="{{ route('admin.danhmucs.restore', $danh_muc->id) }}" method="POST" style="display:inline-block;">
+                    @csrf
+                    @method('PATCH')
+                    <button type="submit" class="dropdown-item">Khôi phục</button>
+                </form>
+
+                <!-- Xóa vĩnh viễn -->
+                <form action="{{ route('admin.danhmucs.forceDelete', $danh_muc->id) }}" method="POST" style="display:inline-block;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="dropdown-item" onclick="return confirm('Bạn có chắc muốn xóa vĩnh viễn danh mục này không?')">
+                        Xóa vĩnh viễn
+                    </button>
+                </form>
+            @else
+                <!-- Xóa mềm -->
+                <form action="{{ route('admin.danhmucs.destroy', $danh_muc->id) }}" method="POST" style="display:inline-block;">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="dropdown-item" onclick="return confirm('Bạn có chắc muốn đưa danh mục này vào thùng rác?')">
+                        Xóa
+                    </button>
+                </form>
+            @endif
+
                                                 </div>
                                             </div>
                                         </td>

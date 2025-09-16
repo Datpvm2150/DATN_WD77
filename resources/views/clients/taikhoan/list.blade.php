@@ -87,7 +87,7 @@
                         @endif
                     @elseif (in_array($ord->trang_thai, [2, 3]))
                         <!-- Đã xác nhận, Đang chuẩn bị -->
-                        <a href="#" class="btn btn-sm btn-danger cancel-order" data-id="{{ $ord->id }}">Hủy</a>
+                        
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
                             class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 4)

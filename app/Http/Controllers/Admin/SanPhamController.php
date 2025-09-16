@@ -313,7 +313,7 @@ class SanPhamController extends Controller
         ]);
 
         $validator = Validator::make($request->all(), [
-            'ma_san_pham' => ['string', 'max:255', Rule::unique('san_phams', 'ma_san_pham')->ignore($id)],
+            'ma_san_pham' => ['string', 'max:255', Rule::unique('san_phams', 'ma_san_pham')],
             'ten_san_pham' => ['required', 'string', 'max:255'],
             'danh_muc_id' => ['required', 'integer', 'exists:danh_mucs,id'],
             'anh_san_pham' => ['mimes:jpg,jpeg,png,gif,bmp,webp,svg', 'max:4048'],
@@ -568,7 +568,7 @@ class SanPhamController extends Controller
         }
 
         //tags
-        $newTags = $request->input('new_tags', []);
+        $newTags = $request->input('tag_id', []);
         if (!is_array($newTags)) {
             $newTags = [];
         }
@@ -594,7 +594,7 @@ class SanPhamController extends Controller
 
     public function destroy(string $id)
     {
-        $sanpham = Sanpham::withTrashed()->find($id);
+        $sanpham = SanPham::withTrashed()->find($id);
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
@@ -602,6 +602,7 @@ class SanPhamController extends Controller
         $sanpham->is_hot = false;
         $sanpham->save();
         $sanpham->delete();
+        
         return redirect()->back()->with('success', 'Xóa sản phẩm thành công');
     }
 
@@ -612,10 +613,12 @@ class SanPhamController extends Controller
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
         $bienthesanphams = BienTheSanPham::where('san_pham_id', $id)->get();
-        if (count($bienthesanphams) > 0) {
+        if ($bienthesanphams->count() > 0) {
             $sanpham->restore();
-            return redirect()->back()->with('success', 'Khôi phục sản phẩm thành công');
-        } else {
+            $bienthesanphams->each->restore(); // Khôi phục tất cả biến thể
+            return redirect()->back()->with('success', 'Khôi phục sản phẩm và biến thể thành công');
+        }
+        else {
             return redirect()->back()->with('error', 'Vui lòng khôi phục biến thể');
         }
     }

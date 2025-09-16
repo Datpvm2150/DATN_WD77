@@ -110,9 +110,12 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/{id}/show', [DanhMucController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [DanhMucController::class, 'edit'])->name('edit');
         Route::put('/{id}/update', [DanhMucController::class, 'update'])->name('update');
-        Route::delete('/{id}/destroy', [DanhMucController::class, 'destroy'])->name('destroy');
-        Route::delete('/{id}/softDelete', [DanhMucController::class, 'softDelete'])->name('softDelete');
-        Route::post('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
+        // Xóa mềm (đưa vào thùng rác)
+        Route::delete('/{id}', [DanhMucController::class, 'destroy'])->name('destroy');
+        // Khôi phục từ thùng rác
+        Route::patch('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
+        Route::get('trash', [DanhMucController::class, 'trash'])->name('trash');
+
     });
 
     // Dung lượng
@@ -137,6 +140,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::put('/{id}', [TagController::class, 'update'])->name('update');
         Route::post('/{id}/onOffTag', [TagController::class, 'onOffTag'])->name('onOffTag');
         Route::delete('/{id}', [TagController::class, 'destroy'])->name('destroy');
+        // 🗑 Thùng rác
+        Route::get('/trash', [TagController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [TagController::class, 'restore'])->name('restore');
+        
     });
 
     // Màu sắc
@@ -326,9 +333,9 @@ Route::post('/thanhtoan', [ThanhToanController::class, 'index'])->name('thanhtoa
 Route::post('/apply-discount', [ThanhToanController::class, 'applyDiscount'])->name('applyDiscount');
 Route::post('/place-order', [ThanhToanController::class, 'placeOrder'])->name('placeOrder');
 Route::post('/clear-discount', [ThanhToanController::class, 'clearDiscount'])->name('clear.discount');
-Route::get('/payment/callback', [ThanhToanController::class, 'callback'])->name('payment.callback');
-Route::post('/payment/notify', [ThanhToanController::class, 'notify'])->name('payment.notify');
-Route::post('/zalopay/callback', [ThanhToanController::class, 'handleZaloPayCallback'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
+// Route::get('/payment/callback', [ThanhToanController::class, 'callback'])->name('payment.callback');
+// Route::post('/payment/notify', [ThanhToanController::class, 'notify'])->name('payment.notify');
+// Route::post('/zalopay/callback', [ThanhToanController::class, 'handleZaloPayCallback'])->withoutMiddleware([\App\Http\Middleware\VerifyCsrfToken::class]);
 Route::post('/customer/orders/retry-payment/{id}', [ThanhToanController::class, 'retryPayment'])->name('customer.retryPayment');
 Route::post('/remove-discount', [ThanhToanController::class, 'removeDiscount'])->name('removeDiscount');
 
@@ -366,8 +373,6 @@ Route::post('/chat/load-message', [App\Http\Controllers\Client\ChatController::c
 
 // Đổi quà
 Route::get('/doiqua', [DoiQuaController::class, 'index'])->name('doiqua');
-Route::middleware(['auth'])->group(function () {
     Route::post('/doiqua/{id}', [DoiQuaController::class, 'redeem'])->name('doiqua.redeem');
-});
 
 // Lich sử điểm
