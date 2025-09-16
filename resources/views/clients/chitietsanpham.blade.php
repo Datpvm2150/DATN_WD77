@@ -1160,6 +1160,5 @@
             </div>
         </div>
     </section>
-
-
+    <!-- related product area end -->
 @endsection

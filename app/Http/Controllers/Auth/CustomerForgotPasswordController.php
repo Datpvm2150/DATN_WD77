@@ -28,7 +28,10 @@ class CustomerForgotPasswordController extends Controller
     // Gửi email reset mật khẩu
     public function SendEmailForgot(Request $request)
     {
-        $request->validate(['email' => 'required|email']);
+        $request->validate(['email' => 'required|email'],[
+            'email.required' => 'Email không được bỏ trống',
+            'email.email' => 'Email phải đúng định dạng'
+        ]);
 
         $status = Password::broker('users')->sendResetLink(
             $request->only('email'),
@@ -45,19 +48,8 @@ class CustomerForgotPasswordController extends Controller
         );
 
         return $status === Password::RESET_LINK_SENT
-            ? back()->with(['status' => __($status)])
-            : back()->withErrors(['email' => __($status)]);
-
-                // // Kiểm tra các trạng thái cụ thể
-                // if ($status === Password::RESET_LINK_SENT) {
-                //     return back()->with(['status' => __($status)]);
-                // } elseif ($status === Password::INVALID_USER) {
-                //     return back()->withErrors(['email' => 'Chúng tôi không tìm thấy người dùng với địa chỉ email này.']);
-                // } elseif ($status === Password::RESET_THROTTLED) {
-                //     return back()->withErrors(['email' => 'Quá nhiều yêu cầu. Vui lòng thử lại sau.']);
-                // } else {
-                //     return back()->withErrors(['email' => __($status)]);
-                // }
+            ? back()->with(['status' => 'Chúng tôi đã gửi link khôi phục mật khẩu vào email của bạn. Vui lòng kiểm tra hộp thư!'])
+            : back()->withErrors(['email' =>'Email này chưa được đăng ký trong hệ thống.']);
     }
 
     // Xử lý reset mật khẩu

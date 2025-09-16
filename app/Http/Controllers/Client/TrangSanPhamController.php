@@ -103,7 +103,7 @@ class TrangSanPhamController extends Controller
         
 
     public function search(Request $request){
-       $searchTerm = $request->get('search');
+       $searchTerm = $request->get(key: 'search');
 
        // Nếu không có từ khóa tìm kiếm, trả về mảng rỗng
        if (empty($searchTerm)) {

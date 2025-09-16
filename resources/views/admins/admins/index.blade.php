@@ -33,7 +33,6 @@
                             <th>Số điện thoại</th>
                             <th>Ngày tạo</th>
                             <th>Tuổi</th>
-                            <th>Chức vụ</th>
                             <th>Thao tác</th>
                         </tr>
                         </thead>
@@ -45,7 +44,6 @@
                                 <td>{{ $admin->so_dien_thoai }}</td>
                                 <td>{{ $admin->created_at ? $admin->created_at->format('d/m/Y') : 'Chưa xác định' }}</td>
                                 <td>{{ \Carbon\Carbon::parse($admin->ngay_sinh)->age }}</td>
-                                <td>{{ $admin->getRoleNames()->first() }}</td>
                                 <td>
                                     <a href="{{ route('admin.admins.show', $admin->id) }}" class="btn btn-info btn-sm">Xem chi tiết</a>
                                     <a href="{{ route('admin.admins.edit', $admin->id) }}" class="btn btn-primary btn-sm">Sửa</a>
@@ -65,11 +63,11 @@
     <script src="{{ asset('assets/admin/libs/datatables.net-bs5/js/dataTables.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/admin/libs/datatables.net-buttons/js/dataTables.buttons.min.js') }}"></script>
     <script src="{{ asset('assets/admin/libs/datatables.net-buttons/js/buttons.colVis.min.js') }}"></script>
-    <script src="{{ asset('assets/admin/libs/datatables.net-buttons/js/buttons.flash.min.js') }}</script>
-    <script src="{{ asset('assets/admin/libs/datatables.net-buttons/js/buttons.html5.min.js') }}</script>
-    <script src="{{ asset('assets/admin/libs/datatables.net-buttons/js/buttons.print.min.js') }}</script>
+    <script src="{{ asset('assets/admin/libs/datatables.net-buttons/js/buttons.flash.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/libs/datatables.net-buttons/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/libs/datatables.net-buttons/js/buttons.print.min.js') }}"></script>
     <script src="{{ asset('assets/admin/libs/datatables.net-buttons-bs5/js/buttons.bootstrap5.min.js') }}"></script>
-    <script src="{{ asset('assets/admin/libs/datatables.net-keytable/js/dataTables.keyTable.min.js') }}</script>
+    <script src="{{ asset('assets/admin/libs/datatables.net-keytable/js/dataTables.keyTable.min.js') }}"></script>
     <script src="{{ asset('assets/admin/libs/datatables.net-keytable-bs5/js/keyTable.bootstrap5.min.js') }}"></script>
     <script src="{{ asset('assets/admin/libs/datatables.net-responsive/js/dataTables.responsive.min.js') }}"></script>
     <script src="{{ asset('assets/admin/libs/datatables.net-responsive-bs5/js/responsive.bootstrap5.min.js') }}"></script>

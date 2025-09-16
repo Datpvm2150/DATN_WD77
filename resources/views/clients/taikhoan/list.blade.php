@@ -20,7 +20,7 @@
             <tr>
                 <td>{{ $ord->ma_hoa_don }}</td>
                 <td>{{ number_format($ord->tong_tien, 0, ',', '.') }} đ</td>
-                <td>{{ \Carbon\Carbon::parse($ord->ngay_dat_hang)->format('d-m-Y H:i:s') }}</td>
+                <td>{{ \Carbon\Carbon::parse($ord->created_at)->format('d-m-Y H:i:s') }}</td>
                 <td>
                     @if ($ord->trang_thai == 1)
                         <span class="text-danger">Chờ xác nhận</span>
@@ -87,7 +87,7 @@
                         @endif
                     @elseif (in_array($ord->trang_thai, [2, 3]))
                         <!-- Đã xác nhận, Đang chuẩn bị -->
-                        <a href="#" class="btn btn-sm btn-danger cancel-order" data-id="{{ $ord->id }}">Hủy</a>
+                        
                         <a href="{{ route('customer.donhang.chitiet', $ord->id) }}"
                             class="btn btn-sm btn-primary">Xem</a>
                     @elseif ($ord->trang_thai == 4)
@@ -145,34 +145,6 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Xử lý tự động hủy đơn hàng hết hạn
-        const autoCancelForms = document.querySelectorAll('.auto-cancel-form');
-        autoCancelForms.forEach(form => {
-            const expirationTime = form.getAttribute('data-expiration-time');
-            if (expirationTime) {
-                const expirationDate = new Date(expirationTime).getTime();
-                const currentTime = new Date().getTime();
-                if (expirationDate < currentTime) {
-                    form.submit();
-                }
-            }
-        });
-
-        // Xử lý tự động xác nhận nhận hàng
-        // const autoConfirmForms = document.querySelectorAll('.auto-confirm-form');
-        // autoConfirmForms.forEach(form => {
-        //     const deliveryTime = form.getAttribute('data-delivery-time');
-        //     if (deliveryTime) {
-        //         const deliveryDate = new Date(deliveryTime).getTime();
-        //         const currentTime = new Date().getTime();
-        //         const timeDiff = deliveryDate + 7 * 24 * 60 * 60 * 1000 - currentTime; // 7 ngày
-        //         if (timeDiff <= 0) {
-        //             form.submit();
-        //         } else {
-        //             setTimeout(() => form.submit(), timeDiff);
-        //         }
-        //     }
-        // });
 
         // Xử lý khi nhấn nút hủy
         document.querySelectorAll('.cancel-order').forEach(button => {
@@ -234,7 +206,5 @@
         });
     });
 
-    // @if (isset($message))
-    //     alert('Thông báo: ' + @json($message));
-    // @endif
+   
 </script>

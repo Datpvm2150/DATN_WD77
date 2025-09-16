@@ -39,7 +39,7 @@ class ThanhToanController extends Controller
             ->unique(); // Loại bỏ các địa chỉ trùng lặp
 
         // Kiểm tra nếu có giỏ hàng trong session
-        $oldCart = Session::has('cart') ? Session::get('cart') : null;
+        $oldCart = Session::has( 'cart') ? Session::get('cart') : null;
         if (!$oldCart) {
             // Nếu không có giỏ hàng, chuyển hướng đến trang đơn hàng
             return redirect()->to('http://127.0.0.1:8000/customer/donhang');
@@ -455,14 +455,11 @@ class ThanhToanController extends Controller
 
         // Kiểm tra nếu trạng thái thanh toán là 'Chưa thanh toán' và thời gian hết hạn chưa qua
         if ($order->trang_thai_thanh_toan === HoaDon::TRANG_THAI_THANH_TOAN['Chưa thanh toán'] && $order->thoi_gian_het_han > now()) {
-            // Xử lý thanh toán lại (ví dụ: chuyển hướng tới cổng thanh toán)
-            // Thực hiện thanh toán lại với cổng thanh toán (như ZaloPay, MoMo, v.v.)
-            $newMaHoaDon = date("ymd") . rand(100000, 999999);  // Tạo mã đơn mới
+            $newMaHoaDon = date("ymd") . rand(100000, 999999);
             $order->update([
-                'ma_hoa_don' => $newMaHoaDon,  // Cập nhật mã đơn mới
+                'ma_hoa_don' => $newMaHoaDon,  
 
             ]);
-            // Ví dụ: Chuyển hướng đến cổng thanh toán
             return app(VNPayController::class)->thanhToanLai($order->tong_tien,  $newMaHoaDon, "Thanh toán lại đơn hàng #$order->id");
         }
 

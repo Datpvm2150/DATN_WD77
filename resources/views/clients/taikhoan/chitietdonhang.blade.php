@@ -95,7 +95,15 @@
                         <!-- Thao tác -->
                         <td>
                             @if ($hoaDon->trang_thai == 7)
-                                <a href="#" class="btn btn-sm btn-warning rounded-pill" data-bs-toggle="modal" data-bs-target="#reviewModal" data-san-pham-id="{{ $chiTiet->bienTheSanPham->sanPham->id }}">Đánh giá</a>
+                                <a href="#" class="btn btn-sm btn-warning rounded-pill"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#reviewModal"
+                                    data-san-pham-id="{{ $chiTiet->bienTheSanPham->sanPham->id }}"
+                                    data-hoa-don-id="{{ $hoaDon->id }}"
+                                    data-chi-tiet-hoa-don-id="{{ $chiTiet->id }}">
+                                    Đánh giá    
+                                </a>
+
                             @else
                                 <span class="text-muted"><i class="fas fa-ban me-1"></i>Không thể đánh giá</span>
                             @endif

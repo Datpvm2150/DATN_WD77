@@ -17,9 +17,13 @@ class TaiKhoanController extends Controller
     public function index()
     {
         $user = Auth::user();
+        if(!$user) {
+            return redirect()->route('customer.login')->with('error', 'Chưa đăng nhập');
+        }
         $danhMucs = DanhMuc::all();
         // Lấy thông trạng thái mặc định "chờ xác nhận"
         $donHangs = $user->hoaDons()->where('trang_thai', 1)->orderBy('created_at', 'desc')->get();
+
         // Lấy thuộc tính
         $trang_thai_don_hang = HoaDon::TRANG_THAI;
 
@@ -74,6 +78,9 @@ class TaiKhoanController extends Controller
         ]);
 
         $users = Auth::user();
+        if(!$users) {
+            return redirect()->route('customer.login')->with('error', 'Chưa đăng nhập');
+        }
         $users->ten = $request->get('ten');
         $users->email = $request->get('email');
         $users->so_dien_thoai = $request->get('so_dien_thoai');
@@ -98,6 +105,9 @@ class TaiKhoanController extends Controller
     public function profileUser()
     {
         $profile = Auth::user();
+        if(!$profile) {
+            return redirect()->route('customer.login')->with('error', 'Chưa đăng nhập');
+        }
         $lienhes = lien_hes::where('user_id', Auth::id())->with('adminPhanHoi.admin')->get();
         $danhMucs = DanhMuc::all();
         $donHangs = $profile->hoaDons()->orderByDesc('id')->paginate(10);
@@ -113,7 +123,9 @@ class TaiKhoanController extends Controller
     public function changePassword(Request $request)
     {
         $user = Auth::user();
-
+        if(!$user) {
+            return redirect()->route('customer.login')->with('error', 'Chưa đăng nhập');
+        }
         $request->validate([
             'mat_khau_cu' => 'required',
             'mat_khau_moi' => 'required|string|min:8|confirmed|different:mat_khau_cu'

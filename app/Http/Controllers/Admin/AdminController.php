@@ -15,9 +15,9 @@ class AdminController extends Controller
     public function index()
     {
         $admins = User::where('vai_tro', 'admin') // <- thêm dòng này
-            ->whereHas('roles', function ($query) {
-                $query->where('name', 'admin');
-            })
+            // ->whereHas('roles', function ($query) {
+            //     $query->where('name', 'admin');
+            // })
             ->get();
 
         return view('admins.admins.index', compact('admins'));

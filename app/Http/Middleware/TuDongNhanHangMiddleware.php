@@ -8,7 +8,7 @@ use Illuminate\Support\Carbon;
 use Symfony\Component\HttpFoundation\Response;
 use App\Models\HoaDon;
 
-class checkTrangThaiDonHangMiddleware
+class TuDongNhanHangMiddleware
 {
     /**
      * Handle an incoming request.

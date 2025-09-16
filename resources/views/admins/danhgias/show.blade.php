@@ -58,7 +58,7 @@
                                 <div class="col-md-6">
                                     <!-- Câu trả lời của Admin (bên phải) -->
                                     <h5><b>Câu trả lời của Admin:</b></h5>
-                                    @foreach ($danhGia->traLois as $traLoi)
+                                    @foreach ($danhGia->replies as $traLoi)
                                         <div class="mb-2" id="response-{{ $traLoi->id }}">
                                             <p>
                                                 <strong>{{ $traLoi->user ? $traLoi->user->ten : 'Admin' }} (Admin):</strong>

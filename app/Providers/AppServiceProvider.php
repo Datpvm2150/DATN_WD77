@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Providers;
+use App\Observers\HoaDonObserver;
 use Illuminate\Support\Facades\View;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
@@ -44,5 +45,6 @@ class AppServiceProvider extends ServiceProvider
         DanhGiaSanPham::observe(NotificationObserver::class);
         HoaDon::observe(NotificationObserver::class);
         lien_hes::observe(NotificationObserver::class);
+        HoaDon::observe(HoaDonObserver::class);
     }
 }

@@ -1,7 +1,10 @@
 <?php
 
+use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\CheckDisscountMiddleware;
-use App\Http\Middleware\checkTrangThaiDonHangMiddleware;
+use App\Http\Middleware\thayDoiTrangThaiHuyMiddleware;
+use App\Http\Middleware\TuDongHuyDonHangMiddleware;
+use App\Http\Middleware\TuDongNhanHangMiddleware;
 use App\Models\HoaDon;
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Application;
@@ -22,7 +25,13 @@ return Application::configure(basePath: dirname(__DIR__))
     })
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->append(CheckDisscountMiddleware::class);
-        $middleware->append(checkTrangThaiDonHangMiddleware::class);
+        $middleware->append(TuDongNhanHangMiddleware::class);
+        $middleware->append(TuDongHuyDonHangMiddleware::class);
+        $middleware->alias([
+            // 'auth' => \App\Http\Middleware\Authenticate::class,
+            'auth' => \App\Http\Middleware\AdminMiddleware::class,
+        ]);
+        
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

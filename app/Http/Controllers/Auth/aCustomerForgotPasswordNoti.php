@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class CustomerForgotPasswordNoti extends Notification
+class aCustomerForgotPasswordNoti extends Notification
 {
     use Queueable;
 
