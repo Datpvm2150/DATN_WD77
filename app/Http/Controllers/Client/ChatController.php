@@ -44,6 +44,7 @@ class ChatController extends Controller
                 ]);
             } else {
                 $chatRoom->staff_id = $newStaff->id;
+                $chatRoom->is_active = true;
                 $chatRoom->save();
             }
         }

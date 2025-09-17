@@ -10,6 +10,7 @@ class ChatRoom extends Model
     protected $fillable = [
         'customer_id',
         'staff_id',
+        'is_active',
     ];
 
     public function customer()

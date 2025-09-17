@@ -36,9 +36,9 @@ class DeleteOldChatRooms extends Command
         })->get();
 
         foreach ($expiredRooms as $room) {
-            $room->delete();
+            $room->update(['is_active' => false]);
         }
 
-        $this->info('Đã xoá ' . $expiredRooms->count() . ' phòng chat cũ.');
+        $this->info('Đã ẩn ' . $expiredRooms->count() . ' phòng chat cũ.');
     }
 }
