@@ -127,7 +127,7 @@ class KhuyenMaiController extends Controller
 
         if ($request->loai_ma === 'ma_doi_qua' && $khuyenMai->loai_ma === 'cong_khai') {
             // Mã đã có user sử dụng thì không được chuyển
-            $isUsed = DB::table('don_hangs')
+            $isUsed = DB::table('hoa_dons')
                         ->where('ma_khuyen_mai', $khuyenMai->ma_khuyen_mai)
                         ->exists();
 
@@ -140,9 +140,9 @@ class KhuyenMaiController extends Controller
         $request->validate([
             'ma_khuyen_mai' => 'required|string|unique:khuyen_mais,ma_khuyen_mai,' . $id,
             'loai_ma' => 'required|in:cong_khai,ma_doi_qua',
-            'diem_can' => 'required_if:loai_ma,ma_doi_qua|nullable|integer|min:1|max:1000000',
+            'diem_can' => 'required_if:loai_ma,ma_doi_qua|nullable|integer|min:0|max:1000000',
             'phan_tram_khuyen_mai' => 'required|integer|min:1|max:99',
-            'giam_toi_da' => 'required|nullable|integer|numeric|min:0|max:1000000000',
+            'giam_toi_da' => 'required|integer|numeric|min:0|max:1000000000',
             'ngay_bat_dau' => 'required|date',
             'ngay_ket_thuc' => 'required|date|after_or_equal:ngay_bat_dau',
         ], [

@@ -29,13 +29,17 @@
                 <form id="reviewForm" method="POST">
                     @csrf
                     <input type="hidden" name="san_pham_id" id="sanPhamId" value="">
-                    <input type="hidden" name="user_id" id="userId" value="{{ auth()->user()->id ?? '' }}"> <!-- Thêm user_id -->
-                    
+                    <input type="hidden" name="user_id" id="userId" value="{{ auth()->user()->id ?? '' }}">
+                    <!-- Thêm user_id -->
+                    <input type="hidden" name="hoa_don_id" id="hoaDonId" value="">
+                    <input type="hidden" name="chi_tiet_hoa_don_id" id="chiTietHoaDonId" value="">
+
                     <div class="mb-3">
                         <label for="diemSo" class="form-label">Đánh giá:</label>
                         <div class="star-rating">
                             @for ($i = 5; $i >= 1; $i--)
-                                <input type="radio" id="star{{ $i }}" name="diem_so" value="{{ $i }}" />
+                                <input type="radio" id="star{{ $i }}" name="diem_so"
+                                    value="{{ $i }}" />
                                 <label for="star{{ $i }}" title="{{ $i }} sao">&#9733;</label>
                             @endfor
                         </div>
@@ -52,35 +56,43 @@
 </div>
 
 <script>
- document.addEventListener('DOMContentLoaded', () => {
-    const reviewModal = document.getElementById('reviewModal');
-    reviewModal.addEventListener('show.bs.modal', async (event) => {
-        const button = event.relatedTarget;
-        const sanPhamId = button.getAttribute('data-san-pham-id');
-        const reviewsList = document.getElementById('reviewsList');
-        const reviewsCheck = document.getElementById('reviewsCheck');
-        const avgRatingStars = document.getElementById('avgRatingStars');
-        const avgRatingText = document.getElementById('avgRatingText');
+    document.addEventListener('DOMContentLoaded', () => {
+        const reviewModal = document.getElementById('reviewModal');
+        reviewModal.addEventListener('show.bs.modal', async (event) => {
+            const button = event.relatedTarget;
+            const sanPhamId = button.getAttribute('data-san-pham-id');
+            const hoaDonId = button.getAttribute('data-hoa-don-id');
+            const chiTietHoaDonId = button.getAttribute('data-chi-tiet-hoa-don-id');
+            const reviewsList = document.getElementById('reviewsList');
+            const reviewsCheck = document.getElementById('reviewsCheck');
+            const avgRatingStars = document.getElementById('avgRatingStars');
+            const avgRatingText = document.getElementById('avgRatingText');
 
-        // Đặt san_pham_id vào input ẩn
-        document.getElementById('sanPhamId').value = sanPhamId;
+            // Đặt san_pham_id vào input ẩn
+            document.getElementById('sanPhamId').value = sanPhamId;
+            document.getElementById('hoaDonId').value = hoaDonId;
+            document.getElementById('chiTietHoaDonId').value = chiTietHoaDonId;
 
-        // Lấy user_id từ session (bằng cách gọi auth())
-        const userId = {{ auth()->user()->id ?? 'null' }};
-        document.getElementById('userId').value = userId;
 
-       
+            // Lấy user_id từ session (bằng cách gọi auth())
+            const userId = {{ auth()->user()->id ?? 'null' }};
+            document.getElementById('userId').value = userId;
 
-        try {
-            const reviewsResponse = await fetch(`/api/reviews/${sanPhamId}`);
-            const reviewsData = await reviewsResponse.json();
 
-            if (reviewsData.length) {
-                const avgRating = (reviewsData.reduce((sum, r) => sum + r.diem_so, 0) / reviewsData.length).toFixed(1);
-                avgRatingStars.innerHTML = `${'★'.repeat(Math.round(avgRating))}${'☆'.repeat(5 - Math.round(avgRating))}`;
-                avgRatingText.textContent = `Trung bình: ${avgRating} / 5 (${reviewsData.length} đánh giá)`;
 
-                reviewsList.innerHTML = reviewsData.slice(0, 3).map(review => `
+            try {
+                const reviewsResponse = await fetch(`/api/reviews/${sanPhamId}`);
+                const reviewsData = await reviewsResponse.json();
+
+                if (reviewsData.length) {
+                    const avgRating = (reviewsData.reduce((sum, r) => sum + r.diem_so, 0) /
+                        reviewsData.length).toFixed(1);
+                    avgRatingStars.innerHTML =
+                        `${'★'.repeat(Math.round(avgRating))}${'☆'.repeat(5 - Math.round(avgRating))}`;
+                    avgRatingText.textContent =
+                        `Trung bình: ${avgRating} / 5 (${reviewsData.length} đánh giá)`;
+
+                    reviewsList.innerHTML = reviewsData.slice(0, 3).map(review => `
                     <div class="review-item p-3 mb-3 border rounded shadow-sm">
                     <div class="d-flex justify-content-between align-items-center">
                     <strong class="text-primary">${review.user.ten}</strong>
@@ -90,89 +102,98 @@
                     </div>
 
                 `).join('');
-            } else {
-                reviewsList.innerHTML = '<p>Chưa có đánh giá nào.</p>';
+                } else {
+                    reviewsList.innerHTML = '<p>Chưa có đánh giá nào.</p>';
+                }
+            } catch {
+                reviewsList.innerHTML = '<p class="text-danger">Không thể tải đánh giá.</p>';
             }
-        } catch {
-            reviewsList.innerHTML = '<p class="text-danger">Không thể tải đánh giá.</p>';
-        }
-        
-        try {
-            const eligibilityResponse = await fetch(`/api/reviews/check-eligibility/${sanPhamId}?user_id=${userId}`);
-
-            const eligibilityData = await eligibilityResponse.json();
-
-            if (eligibilityData.eligible) {
-                document.getElementById('reviewForm').style.display = 'block';
-                reviewsCheck.innerHTML = '';
-            } else {
+            // gửi form đánh giá
+            // Kiểm tra điều kiện đánh giá
+            if (!userId) {
+                reviewsCheck.innerHTML =
+                    '<div class="alert alert-warning">Vui lòng đăng nhập để đánh giá sản phẩm.</div>';
                 document.getElementById('reviewForm').style.display = 'none';
-                reviewsCheck.innerHTML = `<div class="alert alert-warning">Bạn không đủ điều kiện để đánh giá (${eligibilityData.remainingReviews} lượt còn lại).</div>`;
                 return;
             }
-        } catch {
-            reviewsCheck.innerHTML = '<p class="text-danger">Không thể kiểm tra điều kiện đánh giá.</p>';
-            return;
-        }
-    });
+            try {
+                const eligibilityResponse = await fetch(
+                    `/api/reviews/check-eligibility/${sanPhamId}?user_id=${userId}`);
 
-    document.getElementById('reviewForm').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const formData = new FormData(e.target);
-        try {
-            const response = await fetch('/api/reviews', {
-                method: 'POST',
-                body: formData,
-            });
+                const eligibilityData = await eligibilityResponse.json();
 
-            if (response.ok) {
-                alert('Đánh giá đã được gửi!');
-                reviewModal.dispatchEvent(new Event('hide.bs.modal'));
-            } else {
-                const errorData = await response.json();
-                alert(errorData.error || 'Lỗi khi gửi đánh giá.'); // Hiển thị lỗi từ server nếu có
+                if (eligibilityData.eligible) {
+                    document.getElementById('reviewForm').style.display = 'block';
+                    reviewsCheck.innerHTML = '';
+                } else {
+                    document.getElementById('reviewForm').style.display = 'none';
+                    reviewsCheck.innerHTML =
+                        `<div class="alert alert-warning">Bạn không đủ điều kiện để đánh giá (${eligibilityData.remainingReviews} lượt còn lại).</div>`;
+                    return;
+                }
+            } catch {
+                reviewsCheck.innerHTML =
+                    '<p class="text-danger">Không thể kiểm tra điều kiện đánh giá.</p>';
+                return;
             }
-        } catch {
-            alert('Lỗi khi gửi đánh giá.');
-        }
+        });
+
+        document.getElementById('reviewForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(e.target);
+            try {
+                const response = await fetch('/api/reviews', {
+                    method: 'POST',
+                    body: formData,
+                });
+
+                if (response.ok) {
+                    alert('Đánh giá đã được gửi!');
+                    reviewModal.dispatchEvent(new Event('hide.bs.modal'));
+                } else {
+                    const errorData = await response.json();
+                    alert(errorData.error ||
+                        'Lỗi khi gửi đánh giá.'); // Hiển thị lỗi từ server nếu có
+                }
+            } catch {
+                alert('Lỗi khi gửi đánh giá.');
+            }
+        });
     });
-});
-
-
 </script>
 
 <style>
     .review-item {
-    background-color: #f9f9f9;
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
-    padding: 15px;
-    transition: all 0.3s ease-in-out;
-}
+        background-color: #f9f9f9;
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 15px;
+        transition: all 0.3s ease-in-out;
+    }
 
-.review-item strong {
-    font-size: 1.1rem;
-    color: #333;
-}
+    .review-item strong {
+        font-size: 1.1rem;
+        color: #333;
+    }
 
-.review-item .badge {
-    font-size: 0.9rem;
-    padding: 5px 10px;
-    border-radius: 12px;
-}
+    .review-item .badge {
+        font-size: 0.9rem;
+        padding: 5px 10px;
+        border-radius: 12px;
+    }
 
-.review-item p {
-    margin: 0;
-    color: #555;
-    font-size: 0.95rem;
-    line-height: 1.5;
-}
+    .review-item p {
+        margin: 0;
+        color: #555;
+        font-size: 0.95rem;
+        line-height: 1.5;
+    }
 
-.review-item:hover {
-    background-color: #f1f1f1;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    transform: scale(1.02);
-}
+    .review-item:hover {
+        background-color: #f1f1f1;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        transform: scale(1.02);
+    }
 
     .review-item {
         padding: 10px;

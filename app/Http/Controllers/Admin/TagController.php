@@ -13,7 +13,7 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = tag::all();
+        $tags = Tag::all();
         return view('admins.tags.index', compact('tags'));
     }
     // Hiển thị form tạo Tên tag
@@ -39,13 +39,13 @@ class TagController extends Controller
         'trang_thai' => 1, 
     ];
     
-    tag::create($data);
+    Tag::create($data);
     return redirect()->route('admin.tag.index')->with('success', 'Thẻ tag đã được tạo thành công.');
 }
 
 public function edit($id)
     {
-        $tag = tag::find($id);
+        $tag = Tag::find($id);
         if (!$tag) {
             return redirect()->route('admin.tags.index')->with('error', 'Khuyến mại không tồn tại');
         }
@@ -64,7 +64,7 @@ public function edit($id)
         ]);
 
         // Tìm kiếm bản ghi Tên tag theo ID
-        $tag = tag::find($id);
+        $tag = Tag::find($id);
 
         if (!$tag) {
             return redirect()->route('admin.tag.index')->with('error', 'Tên tag không tồn tại.');
@@ -99,7 +99,20 @@ public function edit($id)
     
         return redirect()->route('admin.tag.index')->with('success', 'Tên tag đã được xóa thành công.');
     }
-    
+    // Hiển thị thùng rác
+    public function trash()
+    {
+        $tags = Tag::onlyTrashed()->get();
+        return view('admins.tags.trash', compact('tags'));
+    }
+
+    // Khôi phục tag
+    public function restore($id)
+    {
+        $tag = Tag::withTrashed()->findOrFail($id);
+        $tag->restore();
+        return redirect()->route('admin.tag.trash')->with('success', 'Tag đã được khôi phục.');
+    }
     public function onOffTag($id)
     {
         // Tìm kiếm bản ghi Tên tag theo ID

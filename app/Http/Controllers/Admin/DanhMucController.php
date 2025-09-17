@@ -11,7 +11,7 @@ class DanhMucController extends Controller
 {
     public function index()
     {
-        $danhmucs = DanhMuc::withTrashed()->get();
+        $danhmucs = DanhMuc::all();
         return view('admins.danhmucs.index', compact('danhmucs'));
     }
 
@@ -119,13 +119,12 @@ class DanhMucController extends Controller
     public function destroy(string $id)
     {
         // Lấy danh mục theo ID
-        $danhMuc = DanhMuc::withTrashed()->findOrFail($id);
+        $danhMuc = DanhMuc::findOrFail($id);
 
-        // Xóa danh mục
-        if ($danhMuc->anh_danh_muc) {
-            // Xóa ảnh từ storage
-            Storage::disk('public')->delete($danhMuc->anh_danh_muc);
-        }
+        // Kiểm tra nếu còn sản phẩm active
+    if ($danhMuc->sanPhams()->whereNull('deleted_at')->exists()) {
+        return redirect()->back()->with('error', 'Danh mục này còn sản phẩm đang hoạt động, không thể xóa.');
+    }
 
         // Xóa bản ghi danh mục
         $danhMuc->delete();
@@ -133,19 +132,21 @@ class DanhMucController extends Controller
         // Chuyển hướng và thông báo thành công
         return back()->with('success', 'Xóa danh mục thành công!');
     }
-    // Xóa mềm
-    public function softDelete($id)
+    
+    public function forceDelete($id)
     {
-        $danhMuc = DanhMuc::find($id);
-        if ($danhMuc) {
-            // $sanPhamDanhMucs = $danhMuc->sanPhams()->withTrashed()->get();
-            // if (count($sanPhamDanhMucs) > 0) {
-            //     return redirect()->back()->with('error', 'Danh mục vẫn còn sản phẩm, không thể ngừng hoạt động.');
-            // }
-            $danhMuc->delete();
-            return redirect()->back()->with('success', 'Xóa mềm thành công.');
+        $danhMuc = DanhMuc::withTrashed()->findOrFail($id);
+
+        // Xóa ảnh nếu có
+        if ($danhMuc->anh_danh_muc) {
+            $path = str_replace('storage/', '', $danhMuc->anh_danh_muc);
+            Storage::disk('public')->delete($path);
         }
-        return redirect()->back()->with('error', 'Không tìm thấy dữ liệu.');
+
+        // Xóa vĩnh viễn
+        $danhMuc->forceDelete();
+
+        return redirect()->back()->with('success', 'Danh mục đã được xóa vĩnh viễn.');
     }
 
     public function restore($id)
@@ -156,5 +157,10 @@ class DanhMucController extends Controller
             return redirect()->back()->with('success', 'Khôi phục thành công.');
         }
         return redirect()->back()->with('error', 'Không tìm thấy dữ liệu.');
+    }
+    public function trash()
+    {
+        $danhmucs = DanhMuc::onlyTrashed()->get();
+        return view('admins.danhmucs.trash', compact('danhmucs'));
     }
 }

@@ -97,6 +97,7 @@ $("#datatable_length select[name*='datatable_length']").addClass('form-select fo
 $('#datatable').DataTable({
     "lengthMenu": [10, 30, 50, 100], // Thay đổi số lượng tùy chọn
     "pagingType": "full_numbers",    // Phân trang đầy đủ
+     "order": [[0, "desc"]],
     "language": {
         "lengthMenu": "Hiển thị _MENU_ mục mỗi trang", // Tùy chỉnh text
         "zeroRecords": "Không tìm thấy dữ liệu",

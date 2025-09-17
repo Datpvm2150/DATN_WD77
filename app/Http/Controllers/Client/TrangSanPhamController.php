@@ -63,7 +63,7 @@ class TrangSanPhamController extends Controller
                     foreach ($request->price as $priceRange) {
                         switch ($priceRange) {
                             case 'duoi-5-trieu':
-                                $query->orWhereRaw("COALESCE(gia_moi, gia_cu < 5000000");
+                                $query->orWhereRaw("COALESCE(gia_moi, gia_cu) < 5000000");
                                 break;
                             case '5-den-10-trieu':
                                 $query->orWhereRaw("COALESCE(gia_moi, gia_cu) BETWEEN 5000000 AND 10000000");
@@ -103,7 +103,7 @@ class TrangSanPhamController extends Controller
         
 
     public function search(Request $request){
-       $searchTerm = $request->get('search');
+       $searchTerm = $request->get(key: 'search');
 
        // Nếu không có từ khóa tìm kiếm, trả về mảng rỗng
        if (empty($searchTerm)) {
