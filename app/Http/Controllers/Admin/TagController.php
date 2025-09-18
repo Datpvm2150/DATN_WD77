@@ -13,7 +13,7 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = Tag::all();
+        $tags = tag::all();
         return view('admins.tags.index', compact('tags'));
     }
     // Hiển thị form tạo Tên tag
@@ -84,21 +84,20 @@ public function edit($id)
     
     public function destroy($id)
     {
-        // Tìm kiếm bản ghi Tên tag theo ID
+        // Tìm tag theo ID (kể cả chưa xóa)
         $tag = Tag::findOrFail($id);
 
-        // Kiểm tra xem có sản phẩm nào gắn tag này không
-        // if ($tag->sanPhams()->exists()) {
-        //     return redirect()->route('admin.tag.index')->with('error', 'Không thể xóa thẻ tag này vì có sản phẩm đang sử dụng.');
-        // }
+        // Nếu đang hoạt động thì không cho xóa
         if ($tag->trang_thai == 1) {
             return redirect()->route('admin.tag.index')->with('error', 'Không thể xóa thẻ tag này vì đang ở trạng thái hoạt động.');
         }
-        // Xóa bản ghi
+
+        // Thực hiện xóa mềm (chuyển vào thùng rác)
         $tag->delete();
-    
-        return redirect()->route('admin.tag.index')->with('success', 'Tên tag đã được xóa thành công.');
+
+        return redirect()->route('admin.tag.index')->with('success', 'Tên tag đã được đưa vào thùng rác.');
     }
+
     // Hiển thị thùng rác
     public function trash()
     {
@@ -113,6 +112,7 @@ public function edit($id)
         $tag->restore();
         return redirect()->route('admin.tag.trash')->with('success', 'Tag đã được khôi phục.');
     }
+    
     public function onOffTag($id)
     {
         // Tìm kiếm bản ghi Tên tag theo ID

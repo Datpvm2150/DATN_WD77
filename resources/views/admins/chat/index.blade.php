@@ -279,13 +279,13 @@
                     const container = document.getElementById('messages');
                     container.innerHTML = '';
                     data.messages.forEach(message => {
-                        const isSender = message.sender_id === {{ auth()->id() }};
+                        const isSender = message.sender_id === data.chatRoom.customer_id;
                         const isText = message.type === 'text';
                         const time = formatTime(message.created_at);
 
                         const div = document.createElement('div');
                         div.className =
-                            `message ${isSender ? 'message-sent' : 'message-received'} ${isText ? '' : 'p-0'}`;
+                            `message ${!isSender ? 'message-sent' : 'message-received'} ${isText ? '' : 'p-0'}`;
                         if (!isText) {
                             div.style.backgroundColor = 'transparent';
                         }
@@ -293,7 +293,7 @@
                         let content = '';
 
                         if (isText) {
-                            content = `<div>${isSender ? 'Bạn' : 'Customer'}: ${message.message}</div>`;
+                            content = `<div>${!isSender ? (message.sender_id === {{ auth()->id() }} ? 'Bạn' : message.sender.ten) : 'Customer'}: ${message.message}</div>`;
                         } else {
                             content = `
                                 <img src="/storage/${message.message}"

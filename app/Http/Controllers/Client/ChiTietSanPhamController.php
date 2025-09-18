@@ -191,47 +191,5 @@ class ChiTietSanPhamController extends Controller
         return response()->json($variants);
     }
 
-    public function reply(Request $request, $id)
-    {
-        // Kiểm tra xem người dùng có phải là admin không
-        if (Auth::user()->vai_tro === 'user') {
-            return redirect()->route('chitietsanpham')->with('error', 'Bạn không có quyền trả lời đánh giá!');
-        }
-
-        // Lấy đánh giá cần trả lời
-        $danhGia = DanhGiaSanPham::findOrFail($id);
-
-        // Tạo một bản ghi trả lời
-        TraLoi::create([
-            'danh_gia_id' => $danhGia->id,
-            'user_id' => Auth::id(),
-            'noi_dung' => $request->input('reply'),
-        ]);
-
-        // Sau khi trả lời đánh giá, chuyển hướng về trang chi tiết sản phẩm
-        return redirect()->route('chitietsanpham', ['id' => $danhGia->san_pham_id])->with('success', 'Trả lời đánh giá thành công!');
-    }
-    public function editReply(Request $request, TraLoi $traLoi)
-    {
-        // Kiểm tra quyền chỉnh sửa (chỉ chủ sở hữu hoặc admin mới có thể chỉnh sửa)
-        if (Auth::user()->id !== $traLoi->user_id && Auth::user()->vai_tro !== 'admin') {
-            return redirect()->route('chitietsanpham.index')->with('error', 'Bạn không có quyền sửa câu trả lời này.');
-        }
-
-        // Validate nội dung trả lời
-        $request->validate([
-            'reply' => 'required|string|max:1000',
-        ]);
-
-        // Cập nhật nội dung trả lời
-        $traLoi->noi_dung = $request->input('reply');
-        $traLoi->save();
-
-        // Lấy ID sản phẩm từ đánh giá liên quan
-        $sanPhamId = $traLoi->danhGiaSanPham->san_pham_id;
-
-        // Redirect về chi tiết sản phẩm sau khi sửa
-        return redirect()->route('chitietsanpham', ['id' => $sanPhamId])->with('success', 'Câu trả lời đã được cập nhật!');
-    }
 }
 

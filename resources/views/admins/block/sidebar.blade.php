@@ -129,7 +129,6 @@
                         <ul class="nav-second-level">
                             <li><a class='tp-link' href="{{ route('admin.danhmucs.index') }}">Danh sách</a></li>
                             <li><a class='tp-link' href="{{ route('admin.danhmucs.create') }}">Thêm mới</a></li>
-                            <li><a class='tp-link' href="{{ route('admin.danhmucs.trash') }}">Thùng rác <i class="fas fa-trash-alt"></i> </a></li>
                         </ul>
                     </div>
                 </li>
@@ -217,7 +216,6 @@
                         <ul class="nav-second-level">
                             <li><a class='tp-link' href="{{ route('admin.tag.index') }}">Danh sách</a></li>
                             <li><a class='tp-link' href="{{ route('admin.tag.create') }}">Thêm mới</a></li>
-                            <li><a class='tp-link' href="{{ route('admin.tag.trash') }}">Thùng rác <i class="fas fa-trash-alt"></i> </a></li>
                         </ul>
                     </div>
                 </li>

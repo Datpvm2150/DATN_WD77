@@ -596,7 +596,7 @@ class SanPhamController extends Controller
 
     public function destroy(string $id)
     {
-        $sanpham = Sanpham::find($id);
+        $sanpham = Sanpham::withTrashed()->find($id);
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
@@ -604,6 +604,7 @@ class SanPhamController extends Controller
         $sanpham->is_hot = false;
         $sanpham->save();
         $sanpham->delete();
+        
         return redirect()->back()->with('success', 'Xóa sản phẩm thành công');
     }
     public function trash()
@@ -618,23 +619,13 @@ class SanPhamController extends Controller
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
-        $bienthesanphams = BienTheSanPham::withTrashed()->where('san_pham_id', $id)->get();
-
-        $hasActiveVariant = $bienthesanphams->contains(function ($bt) {
-            return !$bt->trashed();
-        });
-        if (!$hasActiveVariant) {
-            $sanpham->restore();
-            foreach ($bienthesanphams as $bt) {
-                if ($bt->trashed()) {
-                    $bt->restore();
-                }
-            }
-        }
+        $bienthesanphams = BienTheSanPham::where('san_pham_id', $id)->get();
         if (count($bienthesanphams) > 0) {
             $sanpham->restore();
-            return redirect()->back()->with('success', 'Khôi phục sản phẩm thành công');
-        } else {
+            $bienthesanphams->each->restore(); // Khôi phục tất cả biến thể
+            return redirect()->back()->with('success', 'Khôi phục sản phẩm và biến thể thành công');
+        }
+        else {
             return redirect()->back()->with('error', 'Vui lòng khôi phục biến thể');
         }
     }
