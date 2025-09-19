@@ -38,7 +38,7 @@ class DanhGiaSanPhamController extends Controller
         }
 
         // Load các mối quan hệ (user, sản phẩm, câu trả lời)
-        $danhGias = $query->with(['user', 'sanPham', 'replies'])->get();
+        $danhGias = $query->with(['user', 'sanPham', 'replies']) ->orderBy('created_at', 'desc')->get();
 
         $sanPhams = SanPham::all(); // Lấy tất cả sản phẩm cho việc lọc
 

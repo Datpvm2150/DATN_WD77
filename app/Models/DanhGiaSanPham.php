@@ -24,7 +24,7 @@ class DanhGiaSanPham extends Model
 
     public function sanPham()
     {
-        return $this->belongsTo(SanPham::class);
+        return $this->belongsTo(SanPham::class)->withTrashed();
     }
     public function traLois()
     {

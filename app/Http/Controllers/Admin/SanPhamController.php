@@ -278,7 +278,7 @@ class SanPhamController extends Controller
     public function edit(string $id)
     {
 
-        $sanpham = SanPham::find($id);
+        $sanpham = SanPham::withTrashed()->find($id);
 
         if ($sanpham) {
 
@@ -299,7 +299,9 @@ class SanPhamController extends Controller
     {
         // sản phẩm
         $sanpham = SanPham::find($id);
-
+        if (!$sanpham) {
+            return redirect()->route("admin.sanphams.index")->with("error", "Không tìm thấy sản phẩm");
+        }
         $old_anh_san_pham = $sanpham->anh_san_pham;
         // Xử lý mảng rỗng giá_moi => null
         $request->merge([
@@ -584,8 +586,7 @@ class SanPhamController extends Controller
             }
         }
         if ($checkTrangThaiS >= count($sanphamUpdates)) {
-            $sanpham->delete();
-            
+            $sanpham->delete();            
             return redirect()->back()->with('error', 'Sản phẩm đã bị xóa do tất cả biến thể đều đã tắt!');
         }
         if (!$flag) {

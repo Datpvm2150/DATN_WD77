@@ -22,7 +22,7 @@ class BienTheSanPham extends Model
     ];
 
     public function sanPham(){
-        return $this->belongsTo(SanPham::class);
+        return $this->belongsTo(SanPham::class)->withTrashed();
     }
     public function dungLuong() {
         return $this->belongsTo(DungLuong::class);
