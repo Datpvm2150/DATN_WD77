@@ -611,7 +611,7 @@
                         messages.forEach(e => {
                             const isText = e.type === 'text';
                             const isSender = e.sender_id ==
-                            {{ auth()->id() }}; // true nếu là tin nhắn của user
+                                {{ auth()->id() }}; // true nếu là tin nhắn của user
                             const time = formatTime(e.created_at);
                             let msgHtml = ``;
 
@@ -651,6 +651,8 @@
                             document.querySelector('.chat-body').insertAdjacentHTML('beforeend',
                                 msgHtml);
                         });
+                        const chatBody = document.querySelector('.chat-body');
+                        chatBody.scrollTop = chatBody.scrollHeight;
 
                     })
                     .catch(error => {
@@ -673,7 +675,7 @@
         });
     </script>
     <script type="module">
-        let hasStartedListening = false;
+        let currentChannel = false;
 
         function formatTime(datetimeStr) {
             const date = new Date(datetimeStr);
@@ -684,49 +686,60 @@
             const minutes = date.getMinutes().toString().padStart(2, '0');
             return `${day}/${month}/${year} ${hours}:${minutes}`;
         }
+  function listenToRoom(chatRoomId) {
+            if (!chatRoomId) return;
+            const channelName = `conversation.${chatRoomId}`;
+            currentChannel = channelName;
 
-        function waitForChatRoomIdAndListen() {
-            const interval = setInterval(() => {
-                const chatRoomId = localStorage.getItem('chatRoomId');
-                console.log('[Chat] Kiểm tra chatRoomId:', chatRoomId);
-                if (chatRoomId && window.Echo && !hasStartedListening) {
-                    console.log('[Chat] Bắt đầu lắng nghe:', chatRoomId);
+            console.log('[Chat] Bắt đầu lắng nghe:', channelName);
 
-                    window.Echo.private('conversation.' + chatRoomId)
-                        .listen('.SendMessage', (e) => {
-                            console.log('New message received:', e.message);
-                            if (e.message && e.message.sender_id !== {{ auth()->id() }}) {
-                                if (e.message.type == 'text') {
-                                    const staffMessage = `<div class="message bot-message">
-                                    <img src="{{ asset('assets/client/img/icon/staff-support.jpg') }}" style="border-radius: 50%; border:rgba(0, 0, 0, 0.1) solid;" width="35" height="35" alt="">
-                                    <div class="message-text">${e.message.message}
-                                       </div>
-                                         <div class="message-time" style="font-size: 12px; color: #999; margin-top: 4px;">
-                                        ${formatTime(e.message.created_at)}
-                                    </div>
-                                    </div>`
-                                    document.querySelector(".chat-body").insertAdjacentHTML('beforeend',
-                                        staffMessage);
-                                } else {
-                                    const staffMessage = `<div class="message bot-message">
-                                    <img src="{{ asset('assets/client/img/icon/staff-support.jpg') }}" style="border-radius: 50%; border:rgba(0, 0, 0, 0.1) solid;" width="35" height="35" alt="">
-                                    <img src="/storage/${e.message.message}" class="attachment" >
-                                    <div class="message-time" style="font-size: 12px; color: #999; margin-top: 4px;">
-                                        ${formatTime(e.message.created_at)}
-                                    </div>
-                                    </div>`
-                                    document.querySelector(".chat-body").insertAdjacentHTML('beforeend',
-                                        staffMessage);
-                                }
+            window.Echo.private(channelName)
+                .listen('.SendMessage', (e) => {
+                    console.log('New message received:', e.message);
+                    const currentUserId = {{ auth()->id() }};
 
+                    if (e.message && e.message.sender_id !== currentUserId) {
+                        let staffMessage = '';
+
+                        if (e.message.type === 'text') {
+                            staffMessage = `
+                            <div class="message bot-message">
+                                <img src="{{ asset('assets/client/img/icon/staff-support.jpg') }}"
+                                    style="border-radius: 50%; border:rgba(0, 0, 0, 0.1) solid;"
+                                    width="35" height="35" alt="">
+                                <div class="message-text">${e.message.message}</div>
+                                <div class="message-time" style="font-size: 12px; color: #999; margin-top: 4px;">
+                                    ${formatTime(e.message.created_at)}
+                                </div>
+                            </div>`;
+                        } else {
+                            let imagePath = e.message.message;
+                            if (!imagePath.startsWith('storage/')) {
+                                imagePath = 'storage/' + imagePath;
                             }
-                        });
 
-                    hasStartedListening = true;
-                    clearInterval(interval);
-                }
-            }, 500);
+                            staffMessage = `
+        <div class="message bot-message">
+            <img src="{{ asset('assets/client/img/icon/staff-support.jpg') }}"
+                 style="border-radius: 50%; border:rgba(0, 0, 0, 0.1) solid;"
+                 width="35" height="35" alt="">
+            <img src="/${imagePath}" class="attachment">
+            <div class="message-time" style="font-size: 12px; color: #999; margin-top: 4px;">
+                ${formatTime(e.message.created_at)}
+            </div>
+        </div>`;
+                        }
+
+                        const chatBody = document.querySelector(".chat-body");
+                        chatBody.insertAdjacentHTML('beforeend', staffMessage);
+                        chatBody.scrollTop = chatBody.scrollHeight;
+                    }
+                });
         }
-        waitForChatRoomIdAndListen();
+
+        // Khi load trang, lấy chatRoomId từ localStorage để join
+        const chatRoomId = localStorage.getItem('chatRoomId');
+        listenToRoom(chatRoomId);
+
     </script>
 @endpush
