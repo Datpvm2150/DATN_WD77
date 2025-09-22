@@ -111,9 +111,9 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::get('/{id}/show', [DanhMucController::class, 'show'])->name('show');
         Route::get('/{id}/edit', [DanhMucController::class, 'edit'])->name('edit');
         Route::put('/{id}/update', [DanhMucController::class, 'update'])->name('update');
-        Route::delete('/{id}/destroy', [DanhMucController::class, 'destroy'])->name('destroy');
-        Route::delete('/{id}/softDelete', [DanhMucController::class, 'softDelete'])->name('softDelete');
-        Route::post('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
+        Route::delete('/{id}', [DanhMucController::class, 'destroy'])->name('destroy');
+        Route::patch('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
+        Route::get('trash', [DanhMucController::class, 'trash'])->name('trash');
     });
 
     // Dung lượng
@@ -138,6 +138,8 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::put('/{id}', [TagController::class, 'update'])->name('update');
         Route::post('/{id}/onOffTag', [TagController::class, 'onOffTag'])->name('onOffTag');
         Route::delete('/{id}', [TagController::class, 'destroy'])->name('destroy');
+        Route::get('/trash', [TagController::class, 'trash'])->name('trash');
+        Route::post('/restore/{id}', [TagController::class, 'restore'])->name('restore');
     });
 
     // Màu sắc

@@ -29,8 +29,11 @@
                 <form id="reviewForm" method="POST">
                     @csrf
                     <input type="hidden" name="san_pham_id" id="sanPhamId" value="">
-                    <input type="hidden" name="user_id" id="userId" value="{{ auth()->user()->id ?? '' }}"> <!-- Thêm user_id -->
-                    
+                    <input type="hidden" name="user_id" id="userId" value="{{ auth()->user()->id ?? '' }}">
+                    <!-- Thêm user_id -->
+                    <input type="hidden" name="hoa_don_id" id="hoaDonId" value="">
+                    <input type="hidden" name="chi_tiet_hoa_don_id" id="chiTietHoaDonId" value="">
+
                     <div class="mb-3">
                         <label for="diemSo" class="form-label">Đánh giá:</label>
                         <div class="star-rating">
@@ -53,28 +56,33 @@
 </div>
 
 <script>
- document.addEventListener('DOMContentLoaded', () => {
-    const reviewModal = document.getElementById('reviewModal');
-    reviewModal.addEventListener('show.bs.modal', async (event) => {
-        const button = event.relatedTarget;
-        const sanPhamId = button.getAttribute('data-san-pham-id');
-        const reviewsList = document.getElementById('reviewsList');
-        const reviewsCheck = document.getElementById('reviewsCheck');
-        const avgRatingStars = document.getElementById('avgRatingStars');
-        const avgRatingText = document.getElementById('avgRatingText');
+    document.addEventListener('DOMContentLoaded', () => {
+        const reviewModal = document.getElementById('reviewModal');
+        reviewModal.addEventListener('show.bs.modal', async (event) => {
+            const button = event.relatedTarget;
+            const sanPhamId = button.getAttribute('data-san-pham-id');
+            const hoaDonId = button.getAttribute('data-hoa-don-id');
+            const chiTietHoaDonId = button.getAttribute('data-chi-tiet-hoa-don-id');
+            const reviewsList = document.getElementById('reviewsList');
+            const reviewsCheck = document.getElementById('reviewsCheck');
+            const avgRatingStars = document.getElementById('avgRatingStars');
+            const avgRatingText = document.getElementById('avgRatingText');
 
-        // Đặt san_pham_id vào input ẩn
-        document.getElementById('sanPhamId').value = sanPhamId;
+            // Đặt san_pham_id vào input ẩn
+            document.getElementById('sanPhamId').value = sanPhamId;
+            document.getElementById('hoaDonId').value = hoaDonId;
+            document.getElementById('chiTietHoaDonId').value = chiTietHoaDonId;
+
 
             // Lấy user_id từ session (bằng cách gọi auth())
             const userId = {{ auth()->user()->id ?? 'null' }};
             document.getElementById('userId').value = userId;
 
-       
 
-        try {
-            const reviewsResponse = await fetch(`/api/reviews/${sanPhamId}`);
-            const reviewsData = await reviewsResponse.json();
+
+            try {
+                const reviewsResponse = await fetch(`/api/reviews/${sanPhamId}`);
+                const reviewsData = await reviewsResponse.json();
 
                 if (reviewsData.length) {
                     const avgRating = (reviewsData.reduce((sum, r) => sum + r.diem_so, 0) /
@@ -94,15 +102,23 @@
                     </div>
 
                 `).join('');
-            } else {
-                reviewsList.innerHTML = '<p>Chưa có đánh giá nào.</p>';
+                } else {
+                    reviewsList.innerHTML = '<p>Chưa có đánh giá nào.</p>';
+                }
+            } catch {
+                reviewsList.innerHTML = '<p class="text-danger">Không thể tải đánh giá.</p>';
             }
-        } catch {
-            reviewsList.innerHTML = '<p class="text-danger">Không thể tải đánh giá.</p>';
-        }
-        
-        try {
-            const eligibilityResponse = await fetch(`/api/reviews/check-eligibility/${sanPhamId}?user_id=${userId}`);
+            // gửi form đánh giá
+            // Kiểm tra điều kiện đánh giá
+            if (!userId) {
+                reviewsCheck.innerHTML =
+                    '<div class="alert alert-warning">Vui lòng đăng nhập để đánh giá sản phẩm.</div>';
+                document.getElementById('reviewForm').style.display = 'none';
+                return;
+            }
+            try {
+               const eligibilityResponse = await fetch(
+                    `/api/reviews/check-eligibility/${sanPhamId}?user_id=${userId}`);
 
                 const eligibilityData = await eligibilityResponse.json();
 

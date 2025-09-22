@@ -278,7 +278,7 @@ class SanPhamController extends Controller
     public function edit(string $id)
     {
 
-        $sanpham = SanPham::find($id);
+        $sanpham = SanPham::withTrashed()->find($id);
 
         if ($sanpham) {
 
@@ -299,7 +299,9 @@ class SanPhamController extends Controller
     {
         // sản phẩm
         $sanpham = SanPham::find($id);
-
+        if (!$sanpham) {
+            return redirect()->route("admin.sanphams.index")->with("error", "Không tìm thấy sản phẩm");
+        }
         $old_anh_san_pham = $sanpham->anh_san_pham;
         // Xử lý mảng rỗng giá_moi => null
         $request->merge([
@@ -584,8 +586,7 @@ class SanPhamController extends Controller
             }
         }
         if ($checkTrangThaiS >= count($sanphamUpdates)) {
-            $sanpham->delete();
-            
+            $sanpham->delete();            
             return redirect()->back()->with('error', 'Sản phẩm đã bị xóa do tất cả biến thể đều đã tắt!');
         }
         if (!$flag) {
@@ -596,7 +597,7 @@ class SanPhamController extends Controller
 
     public function destroy(string $id)
     {
-        $sanpham = Sanpham::withTrashed()->find($id);
+        $sanpham = Sanpham::find($id);
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
@@ -619,13 +620,23 @@ class SanPhamController extends Controller
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
-        $bienthesanphams = BienTheSanPham::where('san_pham_id', $id)->get();
+       $bienthesanphams = BienTheSanPham::withTrashed()->where('san_pham_id', $id)->get();
+
+        $hasActiveVariant = $bienthesanphams->contains(function ($bt) {
+            return !$bt->trashed();
+        });
+        if (!$hasActiveVariant) {
+            $sanpham->restore();
+            foreach ($bienthesanphams as $bt) {
+                if ($bt->trashed()) {
+                    $bt->restore();
+                }
+            }
+        }
         if (count($bienthesanphams) > 0) {
             $sanpham->restore();
-            $bienthesanphams->each->restore(); // Khôi phục tất cả biến thể
-            return redirect()->back()->with('success', 'Khôi phục sản phẩm và biến thể thành công');
-        }
-        else {
+            return redirect()->back()->with('success', 'Khôi phục sản phẩm thành công');
+        } else {
             return redirect()->back()->with('error', 'Vui lòng khôi phục biến thể');
         }
     }

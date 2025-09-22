@@ -266,7 +266,7 @@
                                     @foreach ($reviews as $index => $review)
                                         <tr>
                                             <td>{{ $index + 1 }}</td>
-                                            <td>{{ $review->sanPham->ten_san_pham }}</td>
+                                            <td>{{ $review->sanPham->ten_san_pham ?? 'khong có tên sản phẩm'}}</td>
                                             <td>
                                                 <span style="color: #f4b400;">
                                                     @for ($i = 0; $i < $review->diem_so; $i++)

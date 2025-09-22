@@ -236,62 +236,62 @@ class TaiKhoanController extends Controller
         ]);
     }
 
-    public function storeOrder(Request $request)
-    {
-        $request->validate([
-            'ten_nguoi_nhan' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'so_dien_thoai' => 'required|string|max:20',
-            'dia_chi_nhan_hang' => 'required|string',
-            'phuong_thuc_thanh_toan' => 'required|in:online,offline',
-            'items' => 'required|array',
-            'items.*.bien_the_san_pham_id' => 'required|exists:bien_the_san_phams,id',
-            'items.*.so_luong' => 'required|integer|min:1',
-        ]);
+    // public function storeOrder(Request $request)
+    // {
+    //     $request->validate([
+    //         'ten_nguoi_nhan' => 'required|string|max:255',
+    //         'email' => 'required|email|max:255',
+    //         'so_dien_thoai' => 'required|string|max:20',
+    //         'dia_chi_nhan_hang' => 'required|string',
+    //         'phuong_thuc_thanh_toan' => 'required|in:online,offline',
+    //         'items' => 'required|array',
+    //         'items.*.bien_the_san_pham_id' => 'required|exists:bien_the_san_phams,id',
+    //         'items.*.so_luong' => 'required|integer|min:1',
+    //     ]);
 
-        $user = Auth::user();
-        $tongTien = 0;
-        $tienShip = 50000;
-        $giamGia = $request->input('giam_gia', 0);
+    //     $user = Auth::user();
+    //     $tongTien = 0;
+    //     $tienShip = 50000;
+    //     $giamGia = $request->input('giam_gia', 0);
 
-        $hoaDon = HoaDon::create([
-            'user_id' => $user->id,
-            'ma_hoa_don' => 'HD' . time(),
-            'ten_nguoi_nhan' => $request->input('ten_nguoi_nhan'),
-            'email' => $request->input('email'),
-            'so_dien_thoai' => $request->input('so_dien_thoai'),
-            'dia_chi_nhan_hang' => $request->input('dia_chi_nhan_hang'),
-            'ngay_dat_hang' => now(),
-            'ghi_chu' => $request->input('ghi_chu'),
-            'phuong_thuc_thanh_toan' => $request->input('phuong_thuc_thanh_toan'),
-            'trang_thai' => 1,
-            'giam_gia' => $giamGia,
-            'tong_tien' => 0,
-        ]);
+    //     $hoaDon = HoaDon::create([
+    //         'user_id' => $user->id,
+    //         'ma_hoa_don' => 'HD' . time(),
+    //         'ten_nguoi_nhan' => $request->input('ten_nguoi_nhan'),
+    //         'email' => $request->input('email'),
+    //         'so_dien_thoai' => $request->input('so_dien_thoai'),
+    //         'dia_chi_nhan_hang' => $request->input('dia_chi_nhan_hang'),
+    //         'ngay_dat_hang' => now(),
+    //         'ghi_chu' => $request->input('ghi_chu'),
+    //         'phuong_thuc_thanh_toan' => $request->input('phuong_thuc_thanh_toan'),
+    //         'trang_thai' => 1,
+    //         'giam_gia' => $giamGia,
+    //         'tong_tien' => 0,
+    //     ]);
 
-        foreach ($request->input('items') as $item) {
-            $bienTheSanPham = \App\Models\BienTheSanPham::with(['sanPham', 'dungLuong', 'mauSac'])->findOrFail($item['bien_the_san_pham_id']);
-            $thanhTien = $bienTheSanPham->gia * $item['so_luong'];
-            $tongTien += $thanhTien;
+    //     foreach ($request->input('items') as $item) {
+    //         $bienTheSanPham = \App\Models\BienTheSanPham::with(['sanPham', 'dungLuong', 'mauSac'])->findOrFail($item['bien_the_san_pham_id']);
+    //         $thanhTien = $bienTheSanPham->gia * $item['so_luong'];
+    //         $tongTien += $thanhTien;
 
-            ChiTietHoaDon::create([
-                'hoa_don_id' => $hoaDon->id,
-                'bien_the_san_pham_id' => $bienTheSanPham->id,
-                'ten_san_pham' => $bienTheSanPham->sanPham->ten_san_pham,
-                'ten_dung_luong' => $bienTheSanPham->dungLuong ? $bienTheSanPham->dungLuong->ten_dung_luong : null,
-                'ten_mau_sac' => $bienTheSanPham->mauSac ? $bienTheSanPham->mauSac->ten_mau_sac : null,
-                'so_luong' => $item['so_luong'],
-                'don_gia' => $bienTheSanPham->gia,
-                'thanh_tien' => $thanhTien,
-            ]);
+    //         ChiTietHoaDon::create([
+    //             'hoa_don_id' => $hoaDon->id,
+    //             'bien_the_san_pham_id' => $bienTheSanPham->id,
+    //             'ten_san_pham' => $bienTheSanPham->sanPham->ten_san_pham,
+    //             'ten_dung_luong' => $bienTheSanPham->dungLuong ? $bienTheSanPham->dungLuong->ten_dung_luong : null,
+    //             'ten_mau_sac' => $bienTheSanPham->mauSac ? $bienTheSanPham->mauSac->ten_mau_sac : null,
+    //             'so_luong' => $item['so_luong'],
+    //             'don_gia' => $bienTheSanPham->gia,
+    //             'thanh_tien' => $thanhTien,
+    //         ]);
 
-            $bienTheSanPham->so_luong -= $item['so_luong'];
-            $bienTheSanPham->save();
-        }
+    //         $bienTheSanPham->so_luong -= $item['so_luong'];
+    //         $bienTheSanPham->save();
+    //     }
 
-        $hoaDon->tong_tien = $tongTien + $tienShip - $giamGia;
-        $hoaDon->save();
+    //     $hoaDon->tong_tien = $tongTien + $tienShip - $giamGia;
+    //     $hoaDon->save();
 
-        return redirect()->route('customer.profileUser')->with('success', 'Đặt hàng thành công!');
-    }
+    //     return redirect()->route('customer.profileUser')->with('success', 'Đặt hàng thành công!');
+    // }
 }
