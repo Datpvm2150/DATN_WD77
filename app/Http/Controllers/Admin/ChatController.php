@@ -16,13 +16,15 @@ class ChatController extends Controller
             ->withCount(['messages as unread_count' => function ($q) {
                 $q->where('is_read', false)->where('sender_id', '!=', Auth::id());
             }])
+            ->where('staff_id', Auth::id())
+            ->where('is_active', true)
             ->get();
         return view('admins.chat.index', compact('chatRooms'));
     }
 
     public function show($id)
     {
-        $chatRoom = ChatRoom::with(['messages', 'customer', 'staff'])->findOrFail($id);
+        $chatRoom = ChatRoom::with(['messages.sender', 'customer', 'staff'])->findOrFail($id);
         return response()->json([
             'chatRoom' => $chatRoom,
             'messages' => $chatRoom->messages,

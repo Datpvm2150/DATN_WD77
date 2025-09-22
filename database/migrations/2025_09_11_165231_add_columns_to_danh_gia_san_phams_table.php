@@ -12,18 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('danh_gia_san_phams', function (Blueprint $table) {
-            // $table->bigInteger('hoa_don_id')->unsigned()->nullable()->after('san_pham_id');
-            // $table->foreign('hoa_don_id')->references('id')->on('hoa_dons')->onDelete('cascade');           
-            // $table->unsignedBigInteger('chi_tiet_hoa_don_id')->nullable()->after('hoa_don_id');
-            // $table->foreign('chi_tiet_hoa_don_id')->references('id')->on('chi_tiet_hoa_dons')->onDelete('cascade');
+            
+
+            $table->unsignedBigInteger('chi_tiet_hoa_don_id')->after('hoa_don_id');
+            $table->foreign('chi_tiet_hoa_don_id')->references('id')->on('chi_tiet_hoa_dons')->onDelete('cascade');
 
             $table->unique(['user_id', 'hoa_don_id', 'chi_tiet_hoa_don_id', 'san_pham_id'], 'unique_review_per_order_item');
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::table('danh_gia_san_phams', function (Blueprint $table) {
@@ -33,4 +30,5 @@ return new class extends Migration
             $table->dropUnique('unique_review_per_order_item');
         });
     }
+
 };

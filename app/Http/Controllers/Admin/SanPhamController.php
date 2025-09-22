@@ -605,6 +605,7 @@ class SanPhamController extends Controller
         $sanpham->is_hot = false;
         $sanpham->save();
         $sanpham->delete();
+        
         return redirect()->back()->with('success', 'Xóa sản phẩm thành công');
     }
     public function trash()
@@ -619,7 +620,7 @@ class SanPhamController extends Controller
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
-        $bienthesanphams = BienTheSanPham::withTrashed()->where('san_pham_id', $id)->get();
+       $bienthesanphams = BienTheSanPham::withTrashed()->where('san_pham_id', $id)->get();
 
         $hasActiveVariant = $bienthesanphams->contains(function ($bt) {
             return !$bt->trashed();

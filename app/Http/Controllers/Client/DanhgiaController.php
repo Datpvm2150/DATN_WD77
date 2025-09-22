@@ -70,7 +70,7 @@ class DanhgiaController extends Controller
         $sanPhamId = $validated['san_pham_id'];
         $hoaDonId = $validated['hoa_don_id'];
         $chiTietHoaDonId = $validated['chi_tiet_hoa_don_id'];
-        // ✅ Bước 1: check chi tiết hóa đơn
+        //  Bước 1: check chi tiết hóa đơn
         $chiTietHoaDon = ChiTietHoaDon::where('id', $chiTietHoaDonId)
             ->where('hoa_don_id', $hoaDonId)
             ->whereHas('hoaDon', function ($query) use ($userId) {
@@ -94,7 +94,7 @@ class DanhgiaController extends Controller
             ], 403);
         }
 
-        // ✅ Bước 2: check trùng đánh giá
+        // Bước 2: check trùng đánh giá
         $daDanhGia = DanhGiaSanPham::where('san_pham_id', $sanPhamId)
             ->where('user_id', $userId)
             ->where('hoa_don_id', $hoaDonId)
@@ -106,7 +106,7 @@ class DanhgiaController extends Controller
             ], 403);
         }
 
-        // ✅ Bước 3: Lưu đánh giá
+        // Bước 3: Lưu đánh giá
         $review = DanhGiaSanPham::create([
             'san_pham_id' => $sanPhamId,
             'hoa_don_id' => $hoaDonId,

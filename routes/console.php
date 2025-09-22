@@ -11,3 +11,4 @@ Artisan::command('inspire', function () {
 
 Schedule::command('admin:set-offline')->everyMinute();
 Schedule::command('app:delete-old-chat-rooms')->everyTenMinutes();
+

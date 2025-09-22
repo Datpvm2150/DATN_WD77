@@ -247,7 +247,7 @@
     .chat-form .message-input {
         border: none;
         outline: none;
-        height: 47px;
+        /* height: 100px; */
         width: 100%;
         resize: none;
         max-height: 180px;

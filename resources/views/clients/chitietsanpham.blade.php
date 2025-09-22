@@ -1011,23 +1011,7 @@
                                                                                                     class="{{ $i <= $danhgia->diem_so ? 'text-warning' : 'text-muted' }}">★</span>
                                                                                             @endfor
                                                                                         </div>
-                                                                                        <div>
-                                                                                            <span>Phân loại hàng:</span>
-                                                                                            @if (!is_null($danhgia->bienTheDaMua) && $danhgia->bienTheDaMua->isNotEmpty())
-                                                                                                @foreach ($danhgia->bienTheDaMua as $index => $bienThe)
-                                                                                                    {{ $bienThe->mauSac->ten_mau_sac ?? 'Không xác định' }}
-                                                                                                    -
-                                                                                                    {{ $bienThe->dungLuong->ten_dung_luong ?? 'Không xác định' }}
-                                                                                                    @if ($index < $danhgia->bienTheDaMua->count() - 1)
-                                                                                                        ,
-                                                                                                    @endif
-                                                                                                @endforeach
-                                                                                            @else
-                                                                                                <p>Không có biến thể nào
-                                                                                                    được mua từ sản phẩm
-                                                                                                    này.</p>
-                                                                                            @endif
-                                                                                        </div>
+
                                                                                     </div>
                                                                                 </a>
                                                                                 <style>
@@ -1079,80 +1063,6 @@
                                                                 @endforeach
 
                                                             </div>
-
-
-
-                                                            <script>
-                                                                document.addEventListener('DOMContentLoaded', function() {
-                                                                    // Nút sửa câu trả lời
-                                                                    const editReplyButtons = document.querySelectorAll('.btn-edit-reply');
-                                                                    editReplyButtons.forEach(button => {
-                                                                        button.addEventListener('click', function() {
-                                                                            const replyId = this.dataset.replyId;
-                                                                            const form = this.nextElementSibling; // Form sửa
-                                                                            if (form) {
-                                                                                form.classList.remove('d-none'); // Hiển thị form sửa
-                                                                                this.style.display = 'none'; // Ẩn nút sửa
-                                                                            }
-                                                                        });
-                                                                    });
-
-                                                                    // Nút hủy sửa câu trả lời
-                                                                    const cancelEditButtons = document.querySelectorAll('.btn-cancel-edit');
-                                                                    cancelEditButtons.forEach(button => {
-                                                                        button.addEventListener('click', function() {
-                                                                            const form = this.closest('.edit-reply-form');
-                                                                            const editButton = form.previousElementSibling;
-                                                                            if (form && editButton) {
-                                                                                form.classList.add('d-none'); // Ẩn form sửa
-                                                                                editButton.style.display = ''; // Hiển thị lại nút sửa
-                                                                            }
-                                                                        });
-                                                                    });
-
-                                                                    // Nút trả lời
-                                                                    const replyButtons = document.querySelectorAll('.btn-reply');
-                                                                    replyButtons.forEach(button => {
-                                                                        button.addEventListener('click', function() {
-                                                                            const reviewId = this.dataset.reviewId;
-                                                                            const form = this.nextElementSibling;
-                                                                            if (form) {
-                                                                                form.classList.remove('d-none'); // Hiển thị form
-                                                                                this.style.display = 'none'; // Ẩn nút trả lời
-                                                                            }
-                                                                        });
-                                                                    });
-
-                                                                    // Nút hủy trả lời
-                                                                    const cancelButtons = document.querySelectorAll('.btn-cancel');
-                                                                    cancelButtons.forEach(button => {
-                                                                        button.addEventListener('click', function() {
-                                                                            const form = this.closest('.reply-form');
-                                                                            const replyButton = form.previousElementSibling;
-                                                                            if (form && replyButton) {
-                                                                                form.classList.add('d-none'); // Ẩn form
-                                                                                replyButton.style.display = ''; // Hiển thị lại nút trả lời
-                                                                            }
-                                                                        });
-                                                                    });
-                                                                });
-                                                            </script>
-
-                                                            <style>
-                                                                .tp-product-details-review-reply {
-                                                                    margin-left: 20px;
-                                                                    /* Thụt vào một chút */
-                                                                    border-left: 2px solid #ddd;
-                                                                    /* Thêm đường kẻ trái để làm nổi bật */
-                                                                    padding-left: 10px;
-                                                                    /* Thêm khoảng cách giữa đường kẻ và nội dung */
-                                                                }
-
-                                                                /* Thêm một chút style cho form sửa */
-                                                                .edit-reply-form {
-                                                                    margin-top: 10px;
-                                                                }
-                                                            </style>
                                                         </div>
                                                     </div>
 
@@ -1251,5 +1161,4 @@
         </div>
     </section>
     <!-- related product area end -->
-
 @endsection

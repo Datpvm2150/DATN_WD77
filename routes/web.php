@@ -114,8 +114,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth'])->group(function () 
         Route::delete('/{id}', [DanhMucController::class, 'destroy'])->name('destroy');
         Route::patch('/{id}/restore', [DanhMucController::class, 'restore'])->name('restore');
         Route::get('trash', [DanhMucController::class, 'trash'])->name('trash');
-
-        
     });
 
     // Dung lượng

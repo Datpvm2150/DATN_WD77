@@ -29,7 +29,6 @@ class ChiTietHoaDon extends Model
     {
         return $this->belongsTo(HoaDon::class);
     }
-
      public function danhGia()
     {
         return $this->hasOne(DanhGiaSanPham::class);

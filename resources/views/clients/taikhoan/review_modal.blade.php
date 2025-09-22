@@ -117,7 +117,7 @@
                 return;
             }
             try {
-                const eligibilityResponse = await fetch(
+               const eligibilityResponse = await fetch(
                     `/api/reviews/check-eligibility/${sanPhamId}?user_id=${userId}`);
 
                 const eligibilityData = await eligibilityResponse.json();
