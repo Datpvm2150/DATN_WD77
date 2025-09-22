@@ -18,9 +18,10 @@ class TuDongHuyDonHangMiddleware
     public function handle(Request $request, Closure $next): Response
     {
         $orders = HoaDon::where('phuong_thuc_thanh_toan', 'Thanh toán qua chuyển khoản ngân hàng')
-         ->where('thoi_gian_het_han', '<=', now())
-         ->where('trang_thai', 1)
-        ->get();
+            ->where('thoi_gian_het_han', '<=', now())
+            ->where('trang_thai', 1)
+            ->where('trang_thai_thanh_toan', 'Chưa thanh toán') // chỉ lấy đơn chưa thanh toán
+            ->get();
         foreach ($orders as $order) {
             $order->update(['trang_thai' => 6]);
         }

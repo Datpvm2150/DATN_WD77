@@ -1,8 +1,8 @@
 <!-- Hiển thị thông báo flash -->
 {{-- @if (session('success'))
     <div class="alert alert-success" role="alert">{{ session('success') }}</div>
-@endif --}}
-{{-- @if (session('error'))
+@endif 
+@if (session('error'))
     <div class="alert alert-danger" role="alert">{{ session('error') }}</div>
 @endif --}}
 <table class="table table-bordered">
