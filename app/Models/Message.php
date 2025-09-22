@@ -23,4 +23,11 @@ class Message extends Model
     {
         return $this->belongsTo(User::class, 'sender_id');
     }
+    protected static function booted()
+    {
+        static::created(function ($message) {
+            // Bật lại phòng chat khi có tin nhắn mới
+            $message->chatRoom()->update(['is_active' => true]);
+        });
+    }
 }
