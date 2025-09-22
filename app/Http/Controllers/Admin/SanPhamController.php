@@ -22,7 +22,7 @@ class SanPhamController extends Controller
 {
     public function index(Request $request)
     {
-        $query = SanPham::withTrashed()->with('bienTheSanPhams', 'hinhAnhSanPhams', 'tagSanPhams');
+        $query = SanPham::with('bienTheSanPhams', 'hinhAnhSanPhams', 'tagSanPhams');
         // Lọc theo danh mục
         if ($request->filled('danh_muc_id')) {
             $query->where('danh_muc_id', $request->danh_muc_id);
@@ -39,7 +39,7 @@ class SanPhamController extends Controller
                 $query->whereNotNull('deleted_at'); // Ngừng Hoạt động
             }
         }
-        $sanphams = $query->latest('id')->get();
+        $sanphams = $query->orderBy('id', 'desc')->get();
 
         // Lấy danh sách danh mục để hiển thị trong form lọc
         $danhMucs = DanhMuc::all();
@@ -256,7 +256,7 @@ class SanPhamController extends Controller
     }
     public function isHot(string $id, Request $request)
     {
-        $sanpham = SanPham::withTrashed()->find($id);
+        $sanpham = SanPham::find($id);
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
@@ -278,7 +278,7 @@ class SanPhamController extends Controller
     public function edit(string $id)
     {
 
-        $sanpham = SanPham::withTrashed()->find($id);
+        $sanpham = SanPham::find($id);
 
         if ($sanpham) {
 
@@ -298,10 +298,10 @@ class SanPhamController extends Controller
     public function update(string $id, Request $request)
     {
         // sản phẩm
-        $sanpham = SanPham::withTrashed()->find($id);
+        $sanpham = SanPham::find($id);
 
         $old_anh_san_pham = $sanpham->anh_san_pham;
-         // Xử lý mảng rỗng giá_moi => null
+        // Xử lý mảng rỗng giá_moi => null
         $request->merge([
             'gia_moi' => array_map(function ($item) {
                 return ($item === '' || $item == 0) ? null : $item;
@@ -585,6 +585,8 @@ class SanPhamController extends Controller
         }
         if ($checkTrangThaiS >= count($sanphamUpdates)) {
             $sanpham->delete();
+            
+            return redirect()->back()->with('error', 'Sản phẩm đã bị xóa do tất cả biến thể đều đã tắt!');
         }
         if (!$flag) {
             return redirect()->back()->with('success', 'Cập nhập sản phẩm thành công. Biến thể trùng sẽ không được thêm!');
@@ -594,7 +596,7 @@ class SanPhamController extends Controller
 
     public function destroy(string $id)
     {
-        $sanpham = SanPham::withTrashed()->find($id);
+        $sanpham = Sanpham::withTrashed()->find($id);
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
@@ -605,15 +607,20 @@ class SanPhamController extends Controller
         
         return redirect()->back()->with('success', 'Xóa sản phẩm thành công');
     }
-
+    public function trash()
+    {
+        $danhMucs = DanhMuc::onlyTrashed()->get();
+        $sanphams = SanPham::onlyTrashed()->get();
+        return view('admins.sanphams.trash', compact('sanphams', 'danhMucs'));
+    }
     public function restore(string $id)
     {
-        $sanpham = SanPham::withTrashed()->find($id);
+        $sanpham = SanPham::onlyTrashed()->find($id);
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
         $bienthesanphams = BienTheSanPham::where('san_pham_id', $id)->get();
-        if ($bienthesanphams->count() > 0) {
+        if (count($bienthesanphams) > 0) {
             $sanpham->restore();
             $bienthesanphams->each->restore(); // Khôi phục tất cả biến thể
             return redirect()->back()->with('success', 'Khôi phục sản phẩm và biến thể thành công');

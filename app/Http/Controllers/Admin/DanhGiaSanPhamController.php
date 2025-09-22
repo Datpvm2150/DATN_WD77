@@ -16,7 +16,7 @@ class DanhGiaSanPhamController extends Controller
     // Hiển thị danh sách đánh giá sản phẩm
     public function index(Request $request)
     {
-        $query = DanhGiaSanPham::query();
+        $query = DanhGiaSanPham::query();  
 
         // Lọc theo sản phẩm
         if ($request->has('san_pham') && $request->san_pham != '') {
@@ -37,7 +37,7 @@ class DanhGiaSanPhamController extends Controller
             }
         }
 
-        // Eager load các mối quan hệ (user, sản phẩm, câu trả lời)
+        // Load các mối quan hệ (user, sản phẩm, câu trả lời)
         $danhGias = $query->with(['user', 'sanPham', 'replies'])->get();
 
         $sanPhams = SanPham::all(); // Lấy tất cả sản phẩm cho việc lọc

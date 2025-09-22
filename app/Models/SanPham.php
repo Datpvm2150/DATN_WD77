@@ -12,7 +12,6 @@ class SanPham extends Model
     use SoftDeletes;
 
     protected $table = 'san_phams';
-
     protected $fillable = [
         'ma_san_pham',
         'ten_san_pham',

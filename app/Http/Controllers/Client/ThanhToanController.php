@@ -185,7 +185,7 @@ class ThanhToanController extends Controller
             'new_giamgia' => 0 // sau khi xóa thì không còn giảm nữa
         ]);
     }
-    public function placeOrder(Request $request, OrderService $orderService)
+    public function placeOrder(Request $request)
     {
         try {
             // Lấy giỏ hàng từ session

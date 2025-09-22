@@ -100,7 +100,7 @@ class TrangChuController extends Controller
                 ->get();
             $products = $products->concat($moreProducts);
         }
-
+        //   dd($products, $newProducts, $randProducts, $isLoved, $isLoved2, $isLoved3);
         return view('clients.trangchu', compact('bannersHeas', 'bannersSides', 'bannersFoots', 'danhMucs', 'khuyenMais', 'products', 'newProducts', 'randProducts', 'baiViets'));
     }
 }

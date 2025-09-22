@@ -13,8 +13,7 @@ class TagController extends Controller
 {
     public function index()
     {
-        $tags = Tag::whereNull('deleted_at')->get(); // chỉ lấy tag chưa xóa mềm
-
+        $tags = tag::all();
         return view('admins.tags.index', compact('tags'));
     }
     // Hiển thị form tạo Tên tag
@@ -40,13 +39,13 @@ class TagController extends Controller
         'trang_thai' => 1, 
     ];
     
-    tag::create($data);
+    Tag::create($data);
     return redirect()->route('admin.tag.index')->with('success', 'Thẻ tag đã được tạo thành công.');
 }
 
 public function edit($id)
     {
-        $tag = tag::find($id);
+        $tag = Tag::find($id);
         if (!$tag) {
             return redirect()->route('admin.tags.index')->with('error', 'Khuyến mại không tồn tại');
         }
@@ -65,7 +64,7 @@ public function edit($id)
         ]);
 
         // Tìm kiếm bản ghi Tên tag theo ID
-        $tag = tag::find($id);
+        $tag = Tag::find($id);
 
         if (!$tag) {
             return redirect()->route('admin.tag.index')->with('error', 'Tên tag không tồn tại.');
@@ -113,10 +112,7 @@ public function edit($id)
         $tag->restore();
         return redirect()->route('admin.tag.trash')->with('success', 'Tag đã được khôi phục.');
     }
-
-    // Xóa vĩnh viễn
     
-
     public function onOffTag($id)
     {
         // Tìm kiếm bản ghi Tên tag theo ID
