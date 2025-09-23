@@ -49,15 +49,4 @@ class DanhGiaSanPham extends Model
         return $this->belongsTo(HoaDon::class, 'hoa_don_id');
     }
 
-    // Quan hệ với chi tiết hóa đơn
-    public function chiTietHoaDon()
-    {
-        return $this->belongsTo(ChiTietHoaDon::class, 'chi_tiet_hoa_don_id');
-    }
-
-    // Quan hệ với hóa đơn
-    public function hoaDon()
-    {
-        return $this->belongsTo(HoaDon::class, 'hoa_don_id');
-    }
 }
