@@ -119,13 +119,12 @@ class DanhMucController extends Controller
    public function destroy(string $id)
     {
         // Lấy danh mục theo ID
-        $danhMuc = DanhMuc::withTrashed()->findOrFail($id);
+        $danhMuc = DanhMuc::findOrFail($id);
 
-        // Xóa danh mục
-        if ($danhMuc->anh_danh_muc) {
-            // Xóa ảnh từ storage
-            Storage::disk('public')->delete($danhMuc->anh_danh_muc);
-        }
+        // Kiểm tra nếu còn sản phẩm active
+    if ($danhMuc->sanPhams()->whereNull('deleted_at')->exists()) {
+        return redirect()->back()->with('error', 'Danh mục này còn sản phẩm đang hoạt động, không thể xóa.');
+    }
 
         // Xóa bản ghi danh mục
         $danhMuc->delete();
@@ -156,5 +155,10 @@ class DanhMucController extends Controller
             return redirect()->back()->with('success', 'Khôi phục thành công.');
         }
         return redirect()->back()->with('error', 'Không tìm thấy dữ liệu.');
+    }
+    public function trash()
+    {
+        $danhmucs = DanhMuc::onlyTrashed()->get();
+        return view('admins.danhmucs.trash', compact('danhmucs'));
     }
 }

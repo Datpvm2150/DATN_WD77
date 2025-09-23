@@ -230,7 +230,7 @@
                 inputs.forEach(function(input) {
                     input.addEventListener('change', function(e) {
                         if (e.target.value < 1) {
-                            e.target.value = 1;
+                            e.target.value = null;
                         }
                     });
                 });

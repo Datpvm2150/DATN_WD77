@@ -91,7 +91,7 @@
                                                     </form>
                                                     @else
                                                         <!-- Xóa mềm -->
-                                                        <form action="{{ route('admin.danhmucs.softDelete', $danh_muc->id) }}" method="POST" style="display: inline-block;">
+                                                        <form action="{{ route('admin.danhmucs.destroy', $danh_muc->id) }}" method="POST" style="display: inline-block;">
                                                             @csrf
                                                             @method('DELETE')
                                                             <button type="submit" class="dropdown-item">Xóa</button>

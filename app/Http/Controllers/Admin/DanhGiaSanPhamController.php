@@ -38,7 +38,7 @@ class DanhGiaSanPhamController extends Controller
         }
 
         // Load các mối quan hệ (user, sản phẩm, câu trả lời)
-        $danhGias = $query->with(['user', 'sanPham', 'replies'])->get();
+        $danhGias = $query->with(['user', 'sanPham', 'replies']) ->orderBy('created_at', 'desc')->get();
 
         $sanPhams = SanPham::all(); // Lấy tất cả sản phẩm cho việc lọc
 
@@ -54,7 +54,7 @@ class DanhGiaSanPhamController extends Controller
             $title = 'Chi tiết đánh giá sản phẩm';
         // Lấy các ID hóa đơn của người dùng có trạng thái là 'hoàn thành'
         $hoaDonIds = HoaDon::where('user_id', $danhGia->user_id)
-            ->where('trang_thai', 7) // Trạng thái = 7 (hoàn thành)
+            ->where('trang_thai', 7) 
             ->pluck('id');
 
         // Lấy các ID biến thể đã mua cho từng hóa đơn

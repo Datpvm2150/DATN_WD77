@@ -41,4 +41,5 @@ class DeleteOldChatRooms extends Command
 
         $this->info('Đã ẩn ' . $expiredRooms->count() . ' phòng chat cũ.');
     }
+
 }

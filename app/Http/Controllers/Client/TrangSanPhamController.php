@@ -110,7 +110,7 @@ class TrangSanPhamController extends Controller
            return response()->json([]);
        }
 
-       // Tìm kiếm sản phẩm theo từ khóa và giới hạn kết quả là 5 sản phẩm
+       // Tìm kiếm sản phẩm theo từ khóa và giới hạn kết quả là 5 sản phẩm 
        $sanPhams = SanPham::where('ten_san_pham', 'like', '%' . $searchTerm . '%')
            ->orWhere('ma_san_pham', 'like', '%' . $searchTerm . '%')
            ->whereNull('deleted_at') // Lọc sản phẩm đã xóa
