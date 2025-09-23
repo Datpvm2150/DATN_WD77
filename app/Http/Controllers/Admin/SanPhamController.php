@@ -601,7 +601,7 @@ class SanPhamController extends Controller
         if (!$sanpham) {
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
-        // tắt is hot sản phẩm
+        // tắt is hot sản phẩm 
         $sanpham->is_hot = false;
         $sanpham->save();
         $sanpham->delete();
@@ -621,7 +621,7 @@ class SanPhamController extends Controller
             return redirect()->back()->with('error', 'Sản phẩm không tồn tại');
         }
        $bienthesanphams = BienTheSanPham::withTrashed()->where('san_pham_id', $id)->get();
-
+       // Kiểm tra có biến thể nào đang hoạt động hay không
         $hasActiveVariant = $bienthesanphams->contains(function ($bt) {
             return !$bt->trashed();
         });
