@@ -61,7 +61,7 @@ class SanPhamController extends Controller
             $request->all(),
             [
                 'ma_san_pham' => ['required', 'string', 'max:255', 'unique:san_phams,ma_san_pham'],
-                'ten_san_pham' => ['required', 'string', 'max:255'],
+                'ten_san_pham' => ['required', 'string', 'max:255','unique:san_phams,ten_san_pham'],
                 'danh_muc_id' => ['required', 'integer', 'exists:danh_mucs,id'],
                 'anh_san_pham' => ['required', 'mimes:jpg,jpeg,png,gif,bmp,webp,svg', 'max:4048'],
                 'mo_ta' => ['nullable', 'string'],
@@ -84,6 +84,7 @@ class SanPhamController extends Controller
                 'ten_san_pham.required' => 'Tên sản phẩm không được để trống.',
                 'ten_san_pham.string' => 'Tên sản phẩm phải là chuỗi ký tự.',
                 'ten_san_pham.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
+                'ten_san_pham.unique' => 'Tên sản phẩm không được trùng.',
 
                 'danh_muc_id.required' => 'Danh mục ID không được để trống.',
                 'danh_muc_id.integer' => 'Danh mục ID phải là số nguyên.',
@@ -303,20 +304,9 @@ class SanPhamController extends Controller
             return redirect()->route("admin.sanphams.index")->with("error", "Không tìm thấy sản phẩm");
         }
         $old_anh_san_pham = $sanpham->anh_san_pham;
-        // Xử lý mảng rỗng giá_moi => null
-        $request->merge([
-            'gia_moi' => array_map(function ($item) {
-                return ($item === '' || $item == 0) ? null : $item;
-            }, $request->input('gia_moi', [])),
-
-            'new_gia_moi' => array_map(function ($item) {
-                return ($item === '' || $item == 0) ? null : $item;
-            }, $request->input('new_gia_moi', [])),
-        ]);
-
         $validator = Validator::make($request->all(), [
-            'ma_san_pham' => ['string', 'max:255', Rule::unique('san_phams', 'ma_san_pham')],
-            'ten_san_pham' => ['required', 'string', 'max:255'],
+            'ma_san_pham' => ['string', 'max:255'],
+            'ten_san_pham' => ['required', 'string', 'max:255',Rule::unique('san_phams', 'ten_san_pham')->ignore($id)],
             'danh_muc_id' => ['required', 'integer', 'exists:danh_mucs,id'],
             'anh_san_pham' => ['mimes:jpg,jpeg,png,gif,bmp,webp,svg', 'max:4048'],
             'mo_ta' => ['nullable', 'string'],
@@ -348,6 +338,7 @@ class SanPhamController extends Controller
             'ten_san_pham.required' => 'Tên sản phẩm không được để trống.',
             'ten_san_pham.string' => 'Tên sản phẩm phải là chuỗi ký tự.',
             'ten_san_pham.max' => 'Tên sản phẩm không được vượt quá 255 ký tự.',
+            'ten_san_pham.unique' => 'Tên sản phẩm không được trùng.',
 
             'danh_muc_id.required' => 'Danh mục ID không được để trống.',
             'danh_muc_id.integer' => 'Danh mục ID phải là số nguyên.',

@@ -27,7 +27,7 @@ class DeleteOldChatRooms extends Command
      */
     public function handle()
     {
-        $cutoff = Carbon::now()->subMinutes(30);
+        $cutoff = Carbon::now()->subMinutes(10);
 
         $expiredRooms = ChatRoom::whereHas('messages', function ($query) use ($cutoff) {
             $query->select('chat_room_id')
